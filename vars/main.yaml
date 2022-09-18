@@ -1,0 +1,8 @@
+---
+# Default user values
+default_user: "nelson"
+# secret_user_password is set in vars\vault.yaml
+
+# Netmaker Droplet
+netmaker_droplet:
+  - { name: 'netmaker01', state: 'present', tags: ['Netmaker', "VPN"] }
