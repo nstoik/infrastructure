@@ -1,0 +1,29 @@
+---
+- name: Setup Netmaker Droplet
+  hosts: localhost
+  gather_facts: False
+  vars_files:
+    - vars/vault.yaml
+    - vars/main.yaml
+
+  tasks:
+    - name: Configure DigitalOcean Droplet
+      include_role:
+        name: digitalocean
+      loop: "{{ netmaker_droplet }}"
+
+- name: Create user on Droplet
+  hosts: do_netmaker
+  gather_facts: False
+  vars_files:
+    - vars/vault.yaml
+    - vars/main.yaml
+  vars:
+    - ansible_ssh_host_key_checking: False
+
+  tasks:
+    - name: Import create_user role from digitalocean
+      include_role:
+        name: digitalocean
+        tasks_from: create_user
+      when: "netmaker_droplet[0].state == 'present'"

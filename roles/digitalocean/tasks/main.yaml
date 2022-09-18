@@ -1,0 +1,21 @@
+---
+# tasks file for digitalocean
+
+# Configure a DigitalOcean Droplet
+- name: Set Droplet State
+  community.digitalocean.digital_ocean_droplet:
+    oauth_token: "{{ secret_do_token }}"
+    state: "{{ item.state | default('present') }}"
+    name: "{{ item.name }}"
+    size: "{{ item.size | default(droplet_size) }}"
+    region: "{{ droplet_region }}"
+    image: "{{ droplet_image }}"
+    ssh_keys: "{{ droplet_ssh_key_ids }}"
+    tags: "{{ droplet_tags + item.tags | default([]) }}"
+    monitoring: true
+    project_name: "nelsonstoik"
+    unique_name: true
+  register: droplet_result
+
+- name: Refresh inventory
+  meta: refresh_inventory

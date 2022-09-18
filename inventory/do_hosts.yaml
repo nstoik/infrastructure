@@ -1,0 +1,33 @@
+# Digitalocean dynamic inventory configuration
+# The api_token is stored in the vault file and needs to be set as an
+# environment variable.
+# eg. export DO_API_TOKEN=do_v1_CHANGE_ME
+---
+plugin: community.digitalocean.digitalocean
+attributes:
+  - id
+  - name
+  - memory
+  - vcpus
+  - disk
+  - size
+  - image
+  - networks
+  - volume_ids
+  - tags
+  - region
+# filter only droplets with the tag "Ansible"
+filters:
+  - '"Ansible" in do_tags'
+# group droplets based on the tag
+keyed_groups:
+  - key: do_tags | lower
+    prefix: 'do'
+    separator: '_'
+compose:
+  # add the IP address of the droplet to the inventory
+  ansible_host: do_networks.v4 | selectattr('type','eq','public') | map(attribute='ip_address') | first
+  # add the droplet size to the inventory
+  class: do_size.description | lower
+  # add the droplet distribution to the inventory
+  distro: do_image.distribution | lower

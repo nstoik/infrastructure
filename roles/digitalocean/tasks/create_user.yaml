@@ -1,0 +1,44 @@
+---
+# Wait for the host to become reachable.
+- name: Wait for host to become reachable
+  remote_user: root
+  ansible.builtin.wait_for_connection:
+
+# create a new user using the root user
+- name: Create a new user on the Droplet
+  remote_user: root
+  ansible.builtin.user:
+    name: "{{ default_user }}"
+    password: "{{ secret_user_password | password_hash('sha512') }}"
+    update_password: on_create
+    groups: sudo
+    append: yes
+
+# create the user's ssh directory
+- name: Create the user's ssh directory
+  remote_user: root
+  ansible.builtin.file:
+    path: /home/{{ default_user }}/.ssh
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: 0700
+
+# copy the authorized_keys file from the root user to the new user
+- name: Copy the authorized_keys file from the root user to the new user
+  remote_user: root
+  ansible.builtin.copy:
+    remote_src: yes
+    src: /root/.ssh/authorized_keys
+    dest: /home/{{ default_user }}/.ssh/authorized_keys
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+
+# set the permissions and ownership on the authorized_keys file
+- name: Set the permissions and ownership on the authorized_keys file
+  remote_user: root
+  ansible.builtin.file:
+    path: /home/{{ default_user }}/.ssh/authorized_keys
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: 0600
