@@ -26,7 +26,11 @@ keyed_groups:
     separator: '_'
 compose:
   # add the IP address of the droplet to the inventory
-  ansible_host: do_networks.v4 | selectattr('type','eq','public') | map(attribute='ip_address') | first
+  ansible_host: >
+    do_networks.v4 |
+    selectattr('type','eq','public') |
+    map(attribute='ip_address') |
+    first
   # add the droplet size to the inventory
   class: do_size.description | lower
   # add the droplet distribution to the inventory

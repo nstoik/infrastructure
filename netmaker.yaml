@@ -1,7 +1,7 @@
 ---
 - name: Setup Netmaker Droplet
   hosts: localhost
-  gather_facts: False
+  gather_facts: false
   vars_files:
     - vars/vault.yaml
     - vars/main.yaml
@@ -14,12 +14,12 @@
 
 - name: Create user on Droplet
   hosts: do_netmaker
-  gather_facts: False
+  gather_facts: false
   vars_files:
     - vars/vault.yaml
     - vars/main.yaml
   vars:
-    - ansible_ssh_host_key_checking: False
+    - ansible_ssh_host_key_checking: false
 
   tasks:
     - name: Import create_user role from digitalocean

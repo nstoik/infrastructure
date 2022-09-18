@@ -18,4 +18,4 @@
   register: droplet_result
 
 - name: Refresh inventory
-  meta: refresh_inventory
+  ansible.builtin.meta: refresh_inventory

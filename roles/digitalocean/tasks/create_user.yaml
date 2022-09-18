@@ -12,7 +12,7 @@
     password: "{{ secret_user_password | password_hash('sha512') }}"
     update_password: on_create
     groups: sudo
-    append: yes
+    append: true
 
 # create the user's ssh directory
 - name: Create the user's ssh directory
@@ -25,14 +25,17 @@
     mode: 0700
 
 # copy the authorized_keys file from the root user to the new user
+# need to set mode to 'preserve' due to ansible documentation. The correct
+# mode is set in the next task
 - name: Copy the authorized_keys file from the root user to the new user
   remote_user: root
   ansible.builtin.copy:
-    remote_src: yes
+    remote_src: true
     src: /root/.ssh/authorized_keys
     dest: /home/{{ default_user }}/.ssh/authorized_keys
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
+    mode: preserve
 
 # set the permissions and ownership on the authorized_keys file
 - name: Set the permissions and ownership on the authorized_keys file

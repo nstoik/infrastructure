@@ -28,6 +28,7 @@ Inventory from DigtalOcean is dynamic using a plugin. The plugin configration is
 Linting can be done with the following commands
 
 ```bash
-yamllint
+yamllint .
+ansible-lint
 ansible-playbook digitalocean.yaml --syntax-check
 ```

@@ -5,4 +5,4 @@ default_user: "nelson"
 
 # Netmaker Droplet
 netmaker_droplet:
-  - { name: 'netmaker01', state: 'present', tags: ['Netmaker', "VPN"] }
+  - {name: 'netmaker01', state: 'absent', tags: ['Netmaker', "VPN"]}
