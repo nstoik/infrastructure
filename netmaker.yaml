@@ -1,5 +1,5 @@
 ---
-- name: Setup Netmaker Droplet
+- name: Create Netmaker Droplet
   hosts: localhost
   gather_facts: false
   vars_files:
@@ -12,7 +12,9 @@
         name: digitalocean
       loop: "{{ netmaker_droplet }}"
 
-- name: Create user on Droplet
+# This play will always run when the hosts group do_netmaker is defined and
+# there is at least one host in the group
+- name: Setup Netmaker Droplet
   hosts: do_netmaker
   gather_facts: false
   vars_files:
@@ -26,4 +28,14 @@
       include_role:
         name: digitalocean
         tasks_from: create_user
-      when: "netmaker_droplet[0].state == 'present'"
+
+    - name: Import main role from base
+      include_role:
+        name: base
+
+    - name: Import setup dotfiles role from base
+      include_role:
+        name: base
+        tasks_from: setup_dotfiles
+      vars:
+        dotbot_skip_ssh_authorized_file: true
