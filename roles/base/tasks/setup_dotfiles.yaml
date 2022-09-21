@@ -1,0 +1,85 @@
+---
+# tasks to setup dotfiles onto a host.
+
+# install ZSH
+- name: Install ZSH
+  ansible.builtin.package:
+    name: zsh
+    state: present
+  become: true
+
+# make the directory for the dotfiles
+- name: Make the directory for the dotfiles
+  ansible.builtin.file:
+    path: "{{ dotfiles_dir }}"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: 0700
+
+# clone the dotfiles repository
+- name: Clone the dotfiles repository  # noqa: latest
+  ansible.builtin.git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ dotfiles_dir }}"
+    recursive: true
+    update: true
+
+# set the git config option filemode to false in the .git/config file
+- name: Set the git config option filemode to false in the .git/config file
+  ansible.builtin.lineinfile:
+    path: "{{ dotfiles_dir }}/.git/config"
+    regexp: "^\\s*filemode\\s*=\\s*true"
+    line: "filemode = false"
+    state: present
+
+# set the executable bit on the install scripts
+- name: Make the install scripts executable
+  ansible.builtin.file:
+    path: "{{ dotfiles_dir }}/{{ item }}"
+    mode: 0700
+  loop:
+    - install-profile
+    - install-standalone
+
+# run the install script with no overrides if
+# dotbot_skip_ssh_authorized_file is false
+- name: Run the install script with no overrides
+  ansible.builtin.command: "{{ dotfiles_dir }}/install-profile workstation"
+  args:
+    chdir: "{{ dotfiles_dir }}"
+  register: dotfiles_install_result
+  changed_when: "'Creating link' in dotfiles_install_result.stdout"
+  failed_when: dotfiles_install_result.rc != 0
+  when:
+    dotbot_skip_ssh_authorized_file is false
+
+# run the install script with override if
+# dotbot_skip_ssh_authorized_file is true
+- name: Run the install script with override
+  ansible.builtin.shell: >
+    DOTBOT_SKIP_SSH_AUTHORIZED_FILE=1
+    {{ dotfiles_dir }}/install-profile workstation
+  args:
+    chdir: "{{ dotfiles_dir }}"
+  register: dotfiles_install_result
+  changed_when: "'Creating link' in dotfiles_install_result.stdout"
+  failed_when: dotfiles_install_result.rc != 0
+  when:
+    dotbot_skip_ssh_authorized_file is true
+
+# set the shell to ZSH
+- name: Set the shell to ZSH
+  ansible.builtin.user:
+    name: "{{ default_user }}"
+    shell: /usr/bin/zsh
+  become: true
+
+# source the .zshrc file the first time to perform the initial setup
+- name: Source the .zshrc file the first time to perform the initial setup
+  ansible.builtin.shell: "source ~/.zshrc"
+  args:
+    chdir: "~"
+    executable: /usr/bin/zsh
+  changed_when: zsh_result.stdout != ""
+  failed_when: zsh_result.rc != 0
