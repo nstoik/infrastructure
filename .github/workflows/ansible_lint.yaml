@@ -21,11 +21,7 @@ jobs:
       - name: Create vault_password.txt
         run: |
           pwd
-          echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > ./vault_password.txt
-          ls
-
-      - name: Debugging the vault_password.txt file
-        run: |
+          echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > ./vault_pass.txt
           ls
 
       - name: Run ansible syntax check
