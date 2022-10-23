@@ -37,7 +37,21 @@
       include_role:
         name: digitalocean
         tasks_from: create_user
+      vars:
+        - ansible_ssh_host_key_checking: false
+      when: create_user_flag
 
+- name: Additional Setup of Netmaker Droplet
+  hosts: do_netmaker
+  gather_facts: true
+  vars_files:
+    - vars/vault.yaml
+    - vars/main.yaml
+  roles:
+    - name: geerlingguy.security
+      become: true
+
+  tasks:
     - name: Import main role from base
       include_role:
         name: base
