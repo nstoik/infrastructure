@@ -17,7 +17,7 @@ jobs:
     - name: Run ansible-lint
       uses: ansible/ansible-lint-action@v6
 
-    - name: Check ansible syntax
-      uses: actions/ansible-cli-action@latest
-      with:
-        command: ansible-playbook --syntax-check
+    # - name: Check ansible syntax
+    #   uses: actions/ansible-cli-action@latest
+    #   with:
+    #     command: ansible-playbook --syntax-check
