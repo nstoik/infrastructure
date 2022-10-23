@@ -10,7 +10,6 @@
     - name: Configure DigitalOcean Droplet
       include_role:
         name: digitalocean
-      loop: "{{ netmaker_droplet }}"
 
 
 # The plays below will only run when the hosts group do_netmaker

@@ -16,6 +16,7 @@
     project_name: "nelsonstoik"
     unique_name: true
   register: droplet_result
+  loop: "{{ netmaker_droplet }}"
 
 - name: Refresh inventory
   ansible.builtin.meta: refresh_inventory
