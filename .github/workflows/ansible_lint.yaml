@@ -16,6 +16,4 @@ jobs:
           file_or_dir: .
 
       - name: Run ansible-lint
-        uses: ansible/ansible-lint-action@v6
-        with:
-          targets: "./"
+        uses: ansible-community/ansible-lint-action@main
