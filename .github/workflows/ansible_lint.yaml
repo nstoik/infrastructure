@@ -18,6 +18,9 @@ jobs:
       - name: Run ansible-lint
         uses: ansible-community/ansible-lint-action@main
 
+      - name: Create vault_password.txt
+        run: echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > vault_password.txt
+
       - name: Run ansible syntax check
         uses: dawidd6/action-ansible-playbook@v2
         with:
