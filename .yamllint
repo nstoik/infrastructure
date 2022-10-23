@@ -4,3 +4,4 @@ extends: default
 ignore: |
     collections/
     **/meta/main.yml
+    vars/vault.yaml
