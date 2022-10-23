@@ -79,7 +79,8 @@
 - name: Source the .zshrc file the first time to perform the initial setup
   ansible.builtin.shell: "source ~/.zshrc"
   args:
-    chdir: "~"
+    chdir: "/home/{{ default_user }}"
     executable: /usr/bin/zsh
+  register: zsh_result
   changed_when: zsh_result.stdout != ""
   failed_when: zsh_result.rc != 0
