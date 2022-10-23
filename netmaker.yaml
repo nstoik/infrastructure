@@ -12,18 +12,28 @@
         name: digitalocean
       loop: "{{ netmaker_droplet }}"
 
-# This play will always run when the hosts group do_netmaker is defined and
-# there is at least one host in the group
-- name: Setup Netmaker Droplet
+
+# The plays below will only run when the hosts group do_netmaker
+# is defined and there is at least one host in the group
+- name: Initial Setup of Netmaker Droplet
   hosts: do_netmaker
   gather_facts: false
   vars_files:
     - vars/vault.yaml
     - vars/main.yaml
-  vars:
-    - ansible_ssh_host_key_checking: false
 
   tasks:
+    # Get the changed status from the droplet creation play
+    # The create_user_flag will either be 'true' or 'false'.
+    # This is used to determine if the user needs to be created the first time.
+    # If the status is not changed, the create_user play will not run.
+    - name: Get the changed status from the droplet_result variable
+      ansible.builtin.set_fact:
+        create_user_flag: "{{ item['changed'] }}"
+      loop: "{{ hostvars['localhost']['droplet_result']['results'] }}"
+      when: item['item']['name'] == inventory_hostname
+      no_log: true
+
     - name: Import create_user role from digitalocean
       include_role:
         name: digitalocean
