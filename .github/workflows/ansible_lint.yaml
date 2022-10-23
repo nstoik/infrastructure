@@ -26,7 +26,7 @@ jobs:
 
       - name: Debugging the vault_password.txt file
         run: |
-          cat ./vault_password.txt
+          ls
 
       - name: Run ansible syntax check
         uses: dawidd6/action-ansible-playbook@v2
