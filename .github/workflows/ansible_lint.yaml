@@ -1,23 +1,19 @@
+---
 name: Ansible Lint
 
-on: [push, pull_request]
+on: [push, pull_request]  # yamllint disable-line rule:truthy
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses : actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Run yammlint
-      uses: ibiqlik/action-yamllint@v3
-      with:
-        config_file: .yamllint
-        file_or_dir: .
+      - name: Run yammlint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint
+          file_or_dir: .
 
-    - name: Run ansible-lint
-      uses: ansible/ansible-lint-action@v6
-
-    # - name: Check ansible syntax
-    #   uses: actions/ansible-cli-action@latest
-    #   with:
-    #     command: ansible-playbook --syntax-check
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint-action@v6
