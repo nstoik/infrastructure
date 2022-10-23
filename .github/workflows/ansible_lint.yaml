@@ -9,24 +9,24 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run yamllint
-        uses: ibiqlik/action-yamllint@v3
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          config_file: .yamllint
-          file_or_dir: .
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip3 install ansible-core ansible-lint yamllint
+          ansible-galaxy install -r requirements.yaml
+
+      - name: Create vault_pass.txt
+        run: echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > ./vault_pass.txt
+
+      - name: Run yammlint
+        run: yamllint .
 
       - name: Run ansible-lint
-        uses: ansible-community/ansible-lint-action@main
+        run: ansible-lint
 
-      - name: Create vault_password.txt
-        run: |
-          pwd
-          echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > ./vault_pass.txt
-          ls
-
-      - name: Run ansible syntax check
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          playbook: site.yaml
-          options: |
-            --syntax-check
+      - name: Run ansible-playbook --syntax-check
+        run: ansible-playbook --syntax-check site.yaml
