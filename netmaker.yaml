@@ -85,6 +85,10 @@
     - name: Import main role from base
       include_role:
         name: base
+      vars:
+        - additional_packages:
+            - docker.io
+            - docker-compose
 
     - name: Import setup dotfiles role from base
       include_role:

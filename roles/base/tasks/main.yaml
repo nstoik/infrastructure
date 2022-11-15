@@ -12,6 +12,7 @@
 # install base packages on the host
 - name: Install base packages
   ansible.builtin.apt:
-    name: "{{ base_packages }}"
+    # append the list of packages to install with optional additional packages
+    name: "{{ base_packages + (additional_packages | default([])) }}"
     state: present
   become: true
