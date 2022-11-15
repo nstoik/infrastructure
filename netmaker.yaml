@@ -22,6 +22,11 @@
       include_role:
         name: digitalocean
 
+    - name: Configure DigitalOcean Firewall
+      include_role:
+        name: digitalocean
+        tasks_from: firewall
+
     - name: Get the Netmaker Droplet public IP address
       set_fact:
         do_ip_address: "{{ item.ip_address }}"

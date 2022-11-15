@@ -1,0 +1,12 @@
+---
+# tasks for digitalocean firewall configuration
+
+- name: Set DigitalOcean firewall
+  community.digitalocean.digital_ocean_firewall:
+    oauth_token: "{{ secret_do_token }}"
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+    tags: "{{ item.tags | default([]) }}"
+    inbound_rules: "{{ item.inbound_rules | default([]) }}"
+    outbound_rules: "{{ item.outbound_rules | default([]) }}"
+  loop: "{{ digitalocean_firewall }}"

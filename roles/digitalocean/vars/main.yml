@@ -13,3 +13,47 @@ droplet_tags:
   - "StechSolutions"
   - "SSH"
   - "Ansible"
+
+digitalocean_firewall:
+  - name: "StechSolutions-Base"
+    state: "present"
+    tags: ["StechSolutions"]
+    outbound_rules:
+      - ports: "1-65535"
+        protocol: "icmp"
+        destinations:
+          addresses: ["0.0.0.0/0", "::/0"]
+      - ports: "1-65535"
+        protocol: "tcp"
+        destinations:
+          addresses: ["0.0.0.0/0", "::/0"]
+      - ports: "1-65535"
+        protocol: "udp"
+        destinations:
+          addresses: ["0.0.0.0/0", "::/0"]
+  - name: "StechSolutions-SSH"
+    state: "present"
+    tags: ["SSH"]
+    inbound_rules:
+      - ports: "22"
+        protocol: "tcp"
+        sources:
+          addresses: ["0.0.0.0/0", "::/0"]
+    outbound_rules:
+      - ports: "22"
+        protocol: "tcp"
+        destinations:
+          addresses: ["0.0.0.0/0", "::/0"]
+  - name: "StechSolutions-VPN"
+    state: "present"
+    tags: ["VPN"]
+    inbound_rules:
+      - ports: "51820-51830"
+        protocol: "udp"
+        sources:
+          addresses: ["0.0.0.0/0", "::/0"]
+    outbound_rules:
+      - ports: "51820-51830"
+        protocol: "udp"
+        destinations:
+          addresses: ["0.0.0.0/0", "::/0"]
