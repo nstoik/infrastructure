@@ -15,7 +15,7 @@
     monitoring: true
     project_name: "nelsonstoik"
     unique_name: true
-  register: droplet_result
+  register: dp_result
   loop: "{{ netmaker_droplet }}"
 
 - name: Refresh inventory

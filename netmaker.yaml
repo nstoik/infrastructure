@@ -26,10 +26,14 @@
     # The create_user_flag will either be 'true' or 'false'.
     # This is used to determine if the user needs to be created the first time.
     # If the status is not changed, the create_user play will not run.
-    - name: Get the changed status from the droplet_result variable
+    #
+    # The hostvars['localhost']['dp_result']['results'] list contains
+    # a dictionary for each droplet created. The dictionary has the keys
+    # 'ansible_loop_var', 'changed', 'data', 'failed', 'invocation', and 'item'.
+    - name: Get the changed status from the dp_result variable
       ansible.builtin.set_fact:
         create_user_flag: "{{ item['changed'] }}"
-      loop: "{{ hostvars['localhost']['droplet_result']['results'] }}"
+      loop: "{{ hostvars['localhost']['dp_result']['results'] }}"
       when: item['item']['name'] == inventory_hostname
       no_log: true
 
