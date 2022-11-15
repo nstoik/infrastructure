@@ -1,4 +1,14 @@
 ---
+# Set up a VPS on DigitalOcean and configure the Netmaker application.
+# This sets up a single node Netmaker server.and applies the default
+# settings. It also configures the DNS records on Cloudflare.
+# Additional work would be needed to account for load balancing if
+# a multiple node setup is desired.
+
+
+# The first group of tasks either creates or destroys the DigitalOcean
+# Droplet and Cloudflare DNS record. The second group of tasks only
+# runs if the DigitalOcean Droplet is created.
 - name: Create Netmaker Droplet
   hosts: localhost
   gather_facts: false
@@ -10,6 +20,19 @@
     - name: Configure DigitalOcean Droplet
       include_role:
         name: digitalocean
+
+    - name: Get the Netmaker Droplet public IP address
+      set_fact:
+        do_ip_address: "{{ item.ip_address }}"
+      loop: "{{ dp_result['results'][0]['data']['droplet']['networks']['v4'] }}"
+      when: netmaker_droplet[0].state == "present" and item.type == "public"
+      no_log: true
+
+    - name: Configure Cloudflare DNS Record
+      include_role:
+        name: cloudflare
+      vars:
+        ip_address: "{{ do_ip_address | default('') }}"
 
 
 # The plays below will only run when the hosts group do_netmaker
