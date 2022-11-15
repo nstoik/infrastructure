@@ -15,6 +15,7 @@
   vars_files:
     - vars/vault.yaml
     - vars/main.yaml
+    - vars/netmaker.yaml
 
   tasks:
     - name: Configure DigitalOcean Droplet
@@ -43,6 +44,7 @@
   vars_files:
     - vars/vault.yaml
     - vars/main.yaml
+    - vars/netmaker.yaml
 
   tasks:
     # Get the changed status from the droplet creation play
@@ -74,6 +76,7 @@
   vars_files:
     - vars/vault.yaml
     - vars/main.yaml
+    - vars/netmaker.yaml
   roles:
     - name: geerlingguy.security
       become: true

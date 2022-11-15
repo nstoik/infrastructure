@@ -1,0 +1,31 @@
+---
+# Netmaker variables
+
+# Netmaker Droplet
+# state: present | absent
+netmaker_droplet:
+  - {name: 'netmaker01', state: 'absent', tags: ['Netmaker', "VPN"]}
+
+# Netmaker Cloudflare DNS Record for dashboard, api, and broker subdomains.
+netmaker_cf_record:
+  - {
+    name: 'netmaker01',
+    zone: 'stechsolutions.ca',
+    record: 'dashboard.netmaker',
+    proxied: false,
+    state: '{{ netmaker_droplet[0].state }}'
+  }
+  - {
+    name: 'netmaker01',
+    zone: 'stechsolutions.ca',
+    record: 'api.netmaker',
+    proxied: false,
+    state: '{{ netmaker_droplet[0].state }}'
+  }
+  - {
+    name: 'netmaker01',
+    zone: 'stechsolutions.ca',
+    record: 'broker.netmaker',
+    proxied: false,
+    state: '{{ netmaker_droplet[0].state }}'
+  }

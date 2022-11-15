@@ -4,21 +4,6 @@ default_user: "nelson"
 default_user_email: "nstoik@stechsolutions.ca"
 # secret_user_password is set in vars\vault.yaml
 
-# Netmaker Droplet
-# state: present | absent
-netmaker_droplet:
-  - {name: 'netmaker01', state: 'absent', tags: ['Netmaker', "VPN"]}
-
-# Netmaker Cloudflare DNS Record
-netmaker_cf_record:
-  - {
-    name: 'netmaker01',
-    zone: 'stechsolutions.ca',
-    record: 'netmaker',
-    proxied: false,
-    state: '{{ netmaker_droplet[0].state }}'
-  }
-
 # geerlingguy.security role variables
 # https://galaxy.ansible.com/geerlingguy/security
 security_ssh_port: 22
