@@ -1,7 +1,7 @@
 ---
 # tasks for digitalocean firewall configuration
 
-- name: Set DigitalOcean firewall
+- name: Set DigitalOcean firewalls
   community.digitalocean.digital_ocean_firewall:
     oauth_token: "{{ secret_do_token }}"
     name: "{{ item.name }}"

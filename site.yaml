@@ -1,2 +1,12 @@
 ---
+# complete site configuration.
+
+
+# configure the DigitalOcean configuration
+  - name: Configure tags on digitalocean
+    include_role:
+      name: digitalocean
+      tasks_from: tag
+
+  - name: Configure firewalls on digitalocean
 - import_playbook: netmaker.yaml
