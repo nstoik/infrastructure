@@ -1,4 +1,6 @@
 ---
+# create a user on a digitalocean droplet
+
 # Wait for the host to become reachable.
 - name: Wait for host to become reachable
   remote_user: root

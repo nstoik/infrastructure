@@ -1,5 +1,14 @@
 # infrastructure
- Infrasctructure for my home lab and StechSolutions
+Infrasctructure for my home lab and StechSolutions
+
+The main file is site.yaml which is the main playbook for the whole infrastructure. It includes all the other playbooks and performs the following tasks:
+
+- Configure the DigitalOcean cloud provider
+    - Set the Tags
+    - Set the firewall rules
+- Configure a Netmaker server on a DigitalOcean droplet
+    - Setup application
+    - Configure CloudFlare DNS records
 
 # Pipx installation
 [Install Pipx](https://github.com/pypa/pipx#on-linux-install-via-pip-requires-pip-190-or-later)
