@@ -74,3 +74,11 @@ digitalocean_firewall:
         protocol: "udp"
         destinations:
           addresses: ["0.0.0.0/0", "::/0"]
+  - name: "StechSolutions-HTTPS"
+    state: "present"
+    tags: ["HTTPS", "Netmaker"]
+    inbound_rules:
+      - ports: "443"
+        protocol: "tcp"
+        sources:
+          addresses: ["0.0.0.0/0", "::/0"]
