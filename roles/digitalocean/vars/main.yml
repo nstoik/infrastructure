@@ -8,8 +8,25 @@ droplet_ssh_key_ids:
   - '31285795'  # Nelsons Desktop Computer (DESKTOP-SJ8NAUC)
   - '26464123'  # Termius iOS App
 
-# Tags that are already added to the DigitalOcean account.
-droplet_tags:
+# Tags that added to the DigitalOcean account.
+digitalocean_tags:
+  - name: "StechSolutions"
+    state: "present"
+  - name: "SSH"
+    state: "present"
+  - name: "Ansible"
+    state: "present"
+  # lowercase as it was orignally created as a lowercase and DigitalOcean
+  # does not allow it to be recreated as uppercase.
+  - name: "netmaker"
+    state: "present"
+  - name: "VPN"
+    state: "present"
+  - name: "HTTPS"
+    state: "present"
+
+# Tags that are added to all DigitalOcean Droplets managed by Ansible.
+digitalocean_default_tags:
   - "StechSolutions"
   - "SSH"
   - "Ansible"

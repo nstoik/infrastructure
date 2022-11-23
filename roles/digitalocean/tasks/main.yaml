@@ -11,7 +11,7 @@
     region: "{{ droplet_region }}"
     image: "{{ droplet_image }}"
     ssh_keys: "{{ droplet_ssh_key_ids }}"
-    tags: "{{ droplet_tags + item.tags | default([]) }}"
+    tags: "{{ digitalocean_default_tags + item.tags | default([]) }}"
     monitoring: true
     project_name: "nelsonstoik"
     unique_name: true
