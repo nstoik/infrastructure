@@ -52,7 +52,7 @@
   changed_when: "'Creating link' in dotfiles_install_result.stdout"
   failed_when: dotfiles_install_result.rc != 0
   when:
-    dotbot_skip_ssh_authorized_file is false
+    dotfiles['dotbot_skip_ssh_authorized_file'] is false
 
 # run the install script with override if
 # dotbot_skip_ssh_authorized_file is true
@@ -66,7 +66,7 @@
   changed_when: "'Creating link' in dotfiles_install_result.stdout"
   failed_when: dotfiles_install_result.rc != 0
   when:
-    dotbot_skip_ssh_authorized_file is true
+    dotfiles['dotbot_skip_ssh_authorized_file'] is true
 
 # set the shell to ZSH
 - name: Set the shell to ZSH

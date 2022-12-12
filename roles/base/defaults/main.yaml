@@ -10,4 +10,4 @@ base_packages:
 # variables for the dotfiles
 dotfiles_dir: /home/{{ default_user }}/dotfiles
 dotfiles_repo: https://github.com/nstoik/dotfiles
-dotbot_skip_ssh_authorized_file: false
+

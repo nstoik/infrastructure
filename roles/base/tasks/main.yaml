@@ -16,3 +16,8 @@
     name: "{{ base_packages + (additional_packages | default([])) }}"
     state: present
   become: true
+
+# setup dotfiles when the flag is set
+- name: Setup dotfiles
+  include_tasks: setup_dotfiles.yaml
+  when: dotfiles['install'] == true
