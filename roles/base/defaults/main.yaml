@@ -11,3 +11,10 @@ base_packages:
 dotfiles_dir: /home/{{ default_user }}/dotfiles
 dotfiles_repo: https://github.com/nstoik/dotfiles
 
+# variables for docker
+docker_data_dir: /home/{{ default_user }}/docker
+
+docker_daemon_options:
+  data-root: '{{ docker_data_dir }}'
+  log-opt:
+    max-size: 10m

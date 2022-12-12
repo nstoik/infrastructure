@@ -17,6 +17,11 @@
     state: present
   become: true
 
+# install docker when the flag is set
+- name: Install docker
+  include_tasks: setup_docker.yaml
+  when: install_docker == true
+
 # setup dotfiles when the flag is set
 - name: Setup dotfiles
   include_tasks: setup_dotfiles.yaml

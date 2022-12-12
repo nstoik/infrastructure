@@ -90,13 +90,8 @@
       ansible.builtin.include_role:
         name: base
       vars:
-        - additional_packages:
-            - docker.io
-            - docker-compose
+        install_docker: true
+        dotfiles:
+          install: true
+          dotbot_skip_ssh_authorized_file: true
 
-    - name: Import setup dotfiles role from base
-      include_role:
-        name: base
-        tasks_from: setup_dotfiles
-      vars:
-        dotbot_skip_ssh_authorized_file: true
