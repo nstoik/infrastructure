@@ -1,0 +1,6 @@
+---
+# .ansible-lint configuration
+
+exclude_paths:
+  - roles/galaxy/
+  - collections/

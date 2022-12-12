@@ -1,2 +1,4 @@
 collections/*
+roles/galaxy/*
+
 vault_pass.txt

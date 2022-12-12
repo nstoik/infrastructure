@@ -3,5 +3,6 @@ extends: default
 
 ignore: |
     collections/
+    roles/galaxy/
     **/meta/main.yml
     vars/vault.yaml
