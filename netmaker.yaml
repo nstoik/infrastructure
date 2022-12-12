@@ -21,12 +21,18 @@
     - name: Configure DigitalOcean Droplet
       ansible.builtin.include_role:
         name: digitalocean
+      vars:
+        droplet: "{{ netmaker_droplet }}"
 
     - name: Get the Netmaker Droplet public IP address
-        do_ip_address: "{{ item.ip_address }}"
-      loop: "{{ dp_result['results'][0]['data']['droplet']['networks']['v4'] }}"
-      when: netmaker_droplet[0].state == "present" and item.type == "public"
       ansible.builtin.set_fact:
+        do_ip_address: >-
+          {{ droplet_result.data.droplet.networks.v4 |
+              selectattr('type','eq','public') |
+              map(attribute='ip_address') |
+              first
+          }}
+      when: netmaker_droplet.state == "present"
       no_log: true
 
     - name: Configure Cloudflare DNS Record
@@ -52,14 +58,12 @@
     # This is used to determine if the user needs to be created the first time
     # If the status is not changed, the create_user play will not run.
     #
-    # The hostvars['localhost']['dp_result']['results'] list contains
-    # a dictionary for each droplet created. The dictionary has the keys
-    # 'ansible_loop_var', 'changed', 'data', 'failed', 'invocation', and 'item'.
-    - name: Get the changed status from the dp_result variable
+    # The hostvars['localhost']['droplet_result'] list contains
+    # a dictionary with the keys 'changed', 'data', 'failed'.
+    - name: Get the changed status from the droplet_result variable
       ansible.builtin.set_fact:
-        create_user_flag: "{{ item['changed'] }}"
-      loop: "{{ hostvars['localhost']['dp_result']['results'] }}"
-      when: item['item']['name'] == inventory_hostname
+        create_user_flag: >-
+          {{ hostvars['localhost']['droplet_result']['changed'] }}
       no_log: true
 
     - name: Import create_user role from digitalocean

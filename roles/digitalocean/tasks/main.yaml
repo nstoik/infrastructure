@@ -5,18 +5,18 @@
 - name: Set Droplet State
   community.digitalocean.digital_ocean_droplet:
     oauth_token: "{{ secret_do_token }}"
-    state: "{{ item.state | default('present') }}"
-    name: "{{ item.name }}"
-    size: "{{ item.size | default(droplet_size) }}"
+    state: "{{ droplet.state | default('present') }}"
+    name: "{{ droplet.name }}"
+    size: "{{ droplet.size | default(droplet_size) }}"
     region: "{{ droplet_region }}"
     image: "{{ droplet_image }}"
     ssh_keys: "{{ droplet_ssh_key_ids }}"
-    tags: "{{ digitalocean_default_tags + item.tags | default([]) }}"
+    tags: "{{ digitalocean_default_tags + droplet.tags | default([]) }}"
     monitoring: true
     project_name: "nelsonstoik"
     unique_name: true
-  register: dp_result
-  loop: "{{ netmaker_droplet }}"
+  register: droplet_result
+
 
 - name: Refresh inventory
   ansible.builtin.meta: refresh_inventory
