@@ -8,15 +8,16 @@
   gather_facts: false
 
   tasks:
-  - name: Configure tags on digitalocean
-    include_role:
-      name: digitalocean
-      tasks_from: tag
+    - name: Configure tags on digitalocean
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: tag
 
-  - name: Configure firewalls on digitalocean
-    include_role:
-      name: digitalocean
-      tasks_from: firewall
+    - name: Configure firewalls on digitalocean
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: firewall
 
 # run the netmaker playbook to configure a netmaker VPS
-- import_playbook: netmaker.yaml
+- name: Run the netmaker playbook
+  ansible.builtin.import_playbook: netmaker.yaml
