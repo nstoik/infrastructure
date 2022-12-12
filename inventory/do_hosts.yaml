@@ -11,12 +11,12 @@ attributes:
   - memory
   - vcpus
   - disk
-  - size
-  - image
+  # - size
+  # - image
   - networks
   - volume_ids
   - tags
-  - region
+  # - region
 # filter only droplets with the tag "Ansible"
 filters:
   - '"Ansible" in do_tags'
@@ -33,6 +33,6 @@ compose:
     map(attribute='ip_address') |
     first
   # add the droplet size to the inventory
-  class: do_size.description | lower
+  # class: do_size.description | lower
   # add the droplet distribution to the inventory
-  distro: do_image.distribution | lower
+  # distro: do_image.distribution | lower
