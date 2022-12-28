@@ -15,7 +15,7 @@ netmaker_droplet:
    volume: {volume_name: '{{ netmaker_volume.volume_name }}',
             state: 'present',
             mount_point: '/home/{{ default_user }}/docker',
-          }
+   }
   }
 
 # Netmaker Cloudflare DNS Record for root, dashboard, api, and broker
