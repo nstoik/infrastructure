@@ -1,13 +1,21 @@
 ---
 # Netmaker variables
 
+# Netmaker Volume on DigitalOcean
+# state: present | absent
+netmaker_volume:
+  {volume_name: 'netmaker-data', state: 'absent', block_size: 5}
+
 # Netmaker Droplet
 # state: present | absent
 netmaker_droplet:
   {name: 'netmaker01',
    state: 'absent',
    tags: ['Netmaker', "VPN"],
-   volume: {volume_name: 'netmaker_data', state: 'present'}
+   volume: {volume_name: '{{ netmaker_volume.volume_name }}',
+            state: 'present',
+            mount_point: '/home/{{ default_user }}/docker',
+          }
   }
 
 # Netmaker Cloudflare DNS Record for dashboard, api, and broker subdomains.

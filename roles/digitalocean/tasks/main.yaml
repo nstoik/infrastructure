@@ -17,6 +17,16 @@
     unique_name: true
   register: droplet_result
 
+# attach a block storage volume to a droplet if the volume is defined
+- name: Attach DigitalOcean block storage
+  community.digitalocean.digital_ocean_block_storage:
+    oauth_token: "{{ secret_do_token }}"
+    state: "{{ droplet['volume']['state'] }}"
+    command: "attach"
+    region: "{{ droplet_region }}"
+    volume_name: "{{ droplet['volume']['volume_name'] }}"
+    droplet_id: "{{ droplet_result.data.droplet.id }}"
+  when: droplet['volume'] is defined and droplet.state == 'present'
 
 - name: Refresh inventory
   ansible.builtin.meta: refresh_inventory
