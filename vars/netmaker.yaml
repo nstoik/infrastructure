@@ -18,8 +18,16 @@ netmaker_droplet:
           }
   }
 
-# Netmaker Cloudflare DNS Record for dashboard, api, and broker subdomains.
+# Netmaker Cloudflare DNS Record for root, dashboard, api, and broker
+# subdomains.
 netmaker_cf_record:
+  - {
+    name: 'netmaker01',
+    zone: 'stechsolutions.ca',
+    record: 'netmaker',
+    proxied: false,
+    state: '{{ netmaker_droplet.state }}',
+  }
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
