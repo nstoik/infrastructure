@@ -70,7 +70,7 @@
       ansible.builtin.include_role:
         name: digitalocean
         tasks_from: create_user
-      when: create_user_flag == "true"
+      when: create_user_flag
       vars:
         ansible_ssh_host_key_checking: false
 
