@@ -19,15 +19,24 @@
   become: true
   notify: Restart docker
 
-# create the docker data and config directories
+# create the docker config directory with root as owner
 - name: Create docker data and config directories
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "/etc/docker"
     state: directory
-    mode: 0755
-  loop:
-    - "{{ docker_data_dir }}"
-    - /etc/docker
+    mode: 0766
+    group: root
+    owner: root
+  become: true
+
+# create the docker data directory with the default_user as owner
+- name: Create docker data directory
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}"
+    state: directory
+    mode: 0766
+    group: "{{ default_user }}"
+    owner: "{{ default_user }}"
   become: true
 
 # create the docker daemon config file
