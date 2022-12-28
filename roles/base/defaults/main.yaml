@@ -16,5 +16,5 @@ docker_data_dir: /home/{{ default_user }}/docker
 
 docker_daemon_options:
   data-root: '{{ docker_data_dir }}'
-  log-opt:
-    max-size: 10m
+  log-opts:
+    max-size: "10m"
