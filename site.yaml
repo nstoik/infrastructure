@@ -20,4 +20,4 @@
 
 # run the netmaker playbook to configure a netmaker VPS
 - name: Run the netmaker playbook
-  ansible.builtin.import_playbook: netmaker.yaml
+  ansible.builtin.import_playbook: services/netmaker/netmaker.yaml

@@ -112,3 +112,39 @@
           install: true
           dotbot_skip_ssh_authorized_file: true
 
+    - name: Set iptables policy to FORWARD ACCEPT
+      ansible.builtin.iptables:
+        chain: FORWARD
+        policy: ACCEPT
+      become: true
+
+    - name: Create the Netmaker directory
+      ansible.builtin.file:
+        path: "{{ netmaker_directory }}"
+        state: directory
+        mode: 0755
+
+    - name: Get docker compose file for netmaker
+      ansible.builtin.get_url:
+        url: "{{ netmaker_docker_compose_url }}"
+        dest: "{{ netmaker_docker_compose_path }}"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: 0644
+
+    - name: Replace the default values in the docker-compose file
+      ansible.builtin.replace:
+        path: "{{ netmaker_docker_compose_path }}"
+        regexp: "{{ item.regexp }}"
+        replace: "{{ item.replace }}"
+      loop:
+        - regexp: "NETMAKER_BASE_DOMAIN"
+          replace: "{{ netmaker_base_domain }}"
+        - regexp: "SERVER_PUBLIC_IP"
+          replace: "{{ ansible_default_ipv4.address }}"
+        - regexp: "YOUR_EMAIL"
+          replace: "{{ default_user_email }}"
+        - regexp: "REPLACE_MASTER_KEY"
+          replace: "tetst_key"
+        - regexp: "REPLACE_MQ_ADMIN_PASSWORD"
+          replace: "replace_password"
