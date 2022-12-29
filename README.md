@@ -18,7 +18,10 @@ Go through the steps to add it to the path and enable autocomplete.
 # Ansible installation
 Install Ansible via Pipx
 ```bash
-pipx install ansible-core ansible-lint yamllint
+pipx install ansible-core
+pipx inject ansible-core ansible-lint
+pipx install yamllint
+
 ```
 
 # Ansible configuration and setup
