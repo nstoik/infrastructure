@@ -1,0 +1,47 @@
+---
+# tasks for digitalocean block storage formatting.
+
+# Gather facts about the block storage volume
+- name: Gather facts about the block storage attached to the droplet
+  community.digitalocean.digital_ocean_volume_info:
+    oauth_token: "{{ secret_do_token }}"
+    region_name: "{{ droplet_region }}"
+  register: volume_info
+
+# Format the block storage volume if it has not been formatted.
+- name: Format the block storage volume if it has not been formatted
+  ansible.builtin.command: >
+    mkfs.ext4
+    "/dev/disk/by-id/scsi-0DO_Volume_{{ netmaker_volume.volume_name }}"
+  when: volume_info.data[0].filesystem_type == ""
+  become: true
+
+# Set the filesystem label of the block storage volume
+- name: Set the filesystem label of the block storage volume
+  ansible.builtin.command: >
+    e2label
+    "/dev/disk/by-id/scsi-0DO_Volume_{{ netmaker_volume.volume_name }}"
+    "{{ netmaker_volume.volume_name }}"
+  when: volume_info.data[0].filesystem_type == ""
+  become: true
+
+# Create the mount point for the block storage volume
+- name: Create the mount point for the block storage volume
+  ansible.builtin.file:
+    path: "{{ netmaker_droplet.volume.mount_point }}"
+    state: directory
+    mode: 0766
+    group: "{{ default_user }}"
+    owner: "{{ default_user }}"
+  become: true
+
+# Mount the block storage volume
+- name: Mount the block storage volume
+  ansible.posix.mount:
+    boot: true
+    path: "{{ netmaker_droplet.volume.mount_point }}"
+    src: "/dev/disk/by-id/scsi-0DO_Volume_{{ netmaker_volume.volume_name }}"
+    fstype: ext4
+    opts: defaults
+    state: mounted
+  become: true

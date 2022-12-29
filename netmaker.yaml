@@ -18,6 +18,14 @@
     - vars/netmaker.yaml
 
   tasks:
+    - name: Configure block storage on digitalocean
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: create_block_storage
+      vars:
+        digitalocean_volume:
+          - "{{ netmaker_volume }}"
+
     - name: Configure DigitalOcean Droplet
       ansible.builtin.include_role:
         name: digitalocean
@@ -73,6 +81,15 @@
       when: create_user_flag
       vars:
         ansible_ssh_host_key_checking: false
+
+    # Format the block storage if required. Set it to be automatically mounted
+    - name: Format the block storage
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: format_block_storage
+      vars:
+        digitalocean_volume:
+          - "{{ netmaker_volume }}"
 
 - name: Additional Setup of Netmaker Droplet
   hosts: do_netmaker

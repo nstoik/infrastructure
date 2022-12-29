@@ -1,0 +1,13 @@
+---
+# tasks for digitalocean block storage configuration and attachment.
+
+- name: Create DigitalOcean block storage
+  community.digitalocean.digital_ocean_block_storage:
+    oauth_token: "{{ secret_do_token }}"
+    state: "{{ item.state | default('present') }}"
+    command: "create"
+    region: "{{ droplet_region }}"
+    block_size: "{{ item.block_size | default(10) }}"
+    volume_name: "{{ item.volume_name }}"
+    project_name: "nelsonstoik"
+  loop: "{{ digitalocean_volume }}"
