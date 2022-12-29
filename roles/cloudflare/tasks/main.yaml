@@ -14,4 +14,4 @@
     state: "{{ item.state | default('present') }}"
     solo: "{{ (item.state == 'present') | ternary('yes', omit) }}"
     api_token: "{{ secret_cf_token }}"
-  loop: "{{ netmaker_cf_record }}"
+  loop: "{{ cf_record }}"

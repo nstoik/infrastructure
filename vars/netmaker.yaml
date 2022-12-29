@@ -1,13 +1,12 @@
 ---
 # Netmaker variables
 
-# Netmaker Docker Compose variables
+# Netmaker base variables
 netmaker_base_domain: "netmaker.stechsolutions.ca"
 netmaker_version: "v0.17.1"
-netmaker_docker_compose_url:
-  "https://raw.githubusercontent.com/gravitl/netmaker/\
-  {{ netmaker_version }}\
-  /compose/docker-compose.yml"
+netmaker_ee: false
+
+# Netmaker Docker Compose variables
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 netmaker_docker_compose_path: "/{{ netmaker_directory }}docker-compose.yml"
 
@@ -56,6 +55,29 @@ netmaker_cf_record:
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
     record: 'broker.netmaker',
+    proxied: false,
+    state: '{{ netmaker_droplet.state }}'
+  }
+
+netmaker_cf_ee_record:
+  - {
+    name: 'netmaker01',
+    zone: 'stechsolutions.ca',
+    record: 'grafana.netmaker',
+    proxied: false,
+    state: '{{ netmaker_droplet.state }}',
+  }
+  - {
+    name: 'netmaker01',
+    zone: 'stechsolutions.ca',
+    record: 'prometheus.netmaker',
+    proxied: false,
+    state: '{{ netmaker_droplet.state }}'
+  }
+  - {
+    name: 'netmaker01',
+    zone: 'stechsolutions.ca',
+    record: 'netmaker-exporter.netmaker',
     proxied: false,
     state: '{{ netmaker_droplet.state }}'
   }

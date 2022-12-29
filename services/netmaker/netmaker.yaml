@@ -48,6 +48,15 @@
         name: cloudflare
       vars:
         ip_address: "{{ do_ip_address | default('') }}"
+        cf_record: "{{ netmaker_cf_record }}"
+
+    - name: Configure Cloudflare DNS Record for EE
+      ansible.builtin.include_role:
+        name: cloudflare
+      vars:
+        ip_address: "{{ do_ip_address | default('') }}"
+        cf_record: "{{ netmaker_cf_ee_record }}"
+      when: netmaker_ee
 
 
 # The plays below will only run when the hosts group do_netmaker
