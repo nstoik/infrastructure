@@ -2,4 +2,4 @@
 # defaults file for digitalocean
 droplet_size: s-1vcpu-1gb
 droplet_region: tor1
-droplet_image: ubuntu-20-04-x64
+droplet_image: ubuntu-22-04-x64
