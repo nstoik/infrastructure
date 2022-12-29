@@ -1,6 +1,16 @@
 ---
 # Netmaker variables
 
+# Netmaker Docker Compose variables
+netmaker_base_domain: "netmaker.stechsolutions.ca"
+netmaker_version: "v0.17.1"
+netmaker_docker_compose_url:
+  "https://raw.githubusercontent.com/gravitl/netmaker/\
+  {{ netmaker_version }}\
+  /compose/docker-compose.yml"
+netmaker_directory: "/home/{{ default_user }}/netmaker"
+netmaker_docker_compose_path: "/{{ netmaker_directory }}docker-compose.yml"
+
 # Netmaker Volume on DigitalOcean
 # state: present | absent
 netmaker_volume:
