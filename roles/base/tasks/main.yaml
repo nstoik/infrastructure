@@ -26,3 +26,19 @@
 - name: Setup dotfiles
   include_tasks: setup_dotfiles.yaml
   when: dotfiles['install'] == true
+
+# flush all handlers
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+# Check if a reboot is required
+- name: Check if a reboot is required
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: reboot_required_file
+
+# Reboot the host if a reboot is required
+- name: Reboot the host if a reboot is required
+  ansible.builtin.reboot:
+  when: reboot_required_file.stat.exists
+  become: true
