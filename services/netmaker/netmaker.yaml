@@ -5,17 +5,16 @@
 # Additional work would be needed to account for load balancing if
 # a multiple node setup is desired.
 
-
 # The first group of tasks either creates or destroys the DigitalOcean
-# Droplet and Cloudflare DNS record. The second group of tasks only
+# Droplet and Cloudflare DNS record. The remaining group of tasks only
 # runs if the DigitalOcean Droplet is created.
 - name: Create Netmaker Droplet
   hosts: localhost
   gather_facts: false
   vars_files:
-    - vars/vault.yaml
-    - vars/main.yaml
-    - vars/netmaker.yaml
+    - ../../vars/vault.yaml
+    - ../../vars/main.yaml
+    - ../../vars/netmaker.yaml
 
   tasks:
     - name: Configure block storage on digitalocean
@@ -65,9 +64,9 @@
   hosts: do_netmaker
   gather_facts: false
   vars_files:
-    - vars/vault.yaml
-    - vars/main.yaml
-    - vars/netmaker.yaml
+    - ../../vars/vault.yaml
+    - ../../vars/main.yaml
+    - ../../vars/netmaker.yaml
 
   tasks:
     # Get the changed status from the droplet creation play
@@ -77,6 +76,7 @@
     #
     # The hostvars['localhost']['droplet_result'] list contains
     # a dictionary with the keys 'changed', 'data', 'failed'.
+
     - name: Get the changed status from the droplet_result variable
       ansible.builtin.set_fact:
         create_user_flag: >-
@@ -92,6 +92,7 @@
         ansible_ssh_host_key_checking: false
 
     # Format the block storage if required. Set it to be automatically mounted
+    # The user has to be created before the block storage can be formatted.
     - name: Format the block storage
       ansible.builtin.include_role:
         name: digitalocean
@@ -104,9 +105,9 @@
   hosts: do_netmaker
   gather_facts: true
   vars_files:
-    - vars/vault.yaml
-    - vars/main.yaml
-    - vars/netmaker.yaml
+    - ../../vars/vault.yaml
+    - ../../vars/main.yaml
+    - ../../vars/netmaker.yaml
   roles:
     - role: geerlingguy.security
       become: true
