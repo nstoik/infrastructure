@@ -2,6 +2,6 @@
 # Restart the Netmaker service using docker-compose
 - name: Restart Netmaker
   community.docker.docker_compose:
-    project_src: '{{ netmaker_directory }}'
+    project_src: "{{ netmaker_directory }}"
     state: present
     restarted: true
