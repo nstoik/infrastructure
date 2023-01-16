@@ -22,6 +22,9 @@ jobs:
       - name: Create vault_pass.txt
         run: echo ${{ secrets.ANSIBLE_VAULT_PASSWORD }} > ./vault_pass.txt
 
+      - name: Set DO_API_TOKEN env variable
+        run: export DO_API_TOKEN=${{ secrets.DO_API_TOKEN }}
+
       - name: Run yammlint
         run: yamllint .
 
