@@ -1,14 +1,23 @@
 ---
 # Netmaker variables
 
-# Netmaker base variables
+# Base variables
 netmaker_base_domain: "netmaker.stechsolutions.ca"
 netmaker_version: "v0.17.1"
 netmaker_ee: false
-
-# Netmaker Docker Compose variables
 netmaker_directory: "/home/{{ default_user }}/netmaker"
-netmaker_docker_compose_path: "/{{ netmaker_directory }}docker-compose.yml"
+
+# Mosquitto variables
+netmaker_mq_config_url:
+  "https://raw.githubusercontent.com/gravitl/netmaker/\
+  {{ netmaker_version }}\
+  /docker/mosquitto.conf"
+
+# Wait script
+netmaker_wait_script_url:
+  "https://raw.githubusercontent.com/gravitl/netmaker/\
+  {{ netmaker_version }}\
+  /docker/wait.sh"
 
 # Netmaker Volume on DigitalOcean
 # state: present | absent
@@ -20,7 +29,7 @@ netmaker_volume:
 netmaker_droplet:
   {name: 'netmaker01',
    state: 'absent',
-   tags: ['Netmaker', "VPN"],
+   tags: ['Netmaker', "VPN", "HTTPS"],
    volume: {volume_name: '{{ netmaker_volume.volume_name }}',
             state: 'present',
             mount_point: '/home/{{ default_user }}/docker',
@@ -59,6 +68,8 @@ netmaker_cf_record:
     state: '{{ netmaker_droplet.state }}'
   }
 
+# Netmaker Cloudflare DNS Record for grafana, prometheus, and netmaker-exporter
+# subdomains for the EE setup.
 netmaker_cf_ee_record:
   - {
     name: 'netmaker01',
