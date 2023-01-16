@@ -37,6 +37,18 @@ To decrypt a file, run `ansible-vault decrypt <file>`
 
 `ansible.cfg` has an entry for `vault_password_file` to point to this file.
 
+## Environment variables
+There is an example environment file in the root directory called `.env.example`. Copy this file to `.env` and fill in the required values. The required values are stored in the ansible vault file `vars/vault.yaml` and can be copied from there.
+
+The environment variables should be set in the shell before running any of the playbooks. The easiest way to do this is to use the helper script `setenv.sh` which will read the values from the `.env` file and set them in the shell. 
+
+The script needs to be execuatable.
+
+```bash
+chmod +x setenv.sh
+source setenv.sh
+```
+
 # Usage
 ## Primary Usage
 The main file is [site.yaml](site.yaml) which is the main playbook for the whole infrastructure. It includes the other playbooks and performs the following tasks:
@@ -57,7 +69,9 @@ The services are:
 - [Netmaker](services/netmaker/README.md)
 
 # Inventory
-Inventory from DigtalOcean is dynamic using a plugin. The plugin configration is in the file `inventory/do_hosts.yaml`. When using this inventory, the `DO_API_TOKEN` environment variable must be set. The value is in the vault file.
+Inventory from DigtalOcean is dynamic using a plugin. The plugin configration is in the file `inventory/do_hosts.yaml`.
+
+When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
 
 # Testing and linting
 Linting can be done with the following commands
