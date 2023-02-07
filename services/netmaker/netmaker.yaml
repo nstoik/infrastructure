@@ -148,7 +148,10 @@
       ansible.builtin.file:
         path: "{{ netmaker_directory }}"
         state: directory
-        mode: 0755
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: 0766
+      become: true
 
     - name: Retrieve the MQ configuration file
       ansible.builtin.get_url:
