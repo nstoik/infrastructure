@@ -33,6 +33,7 @@ netmaker_droplet:
    volume: {volume_name: '{{ netmaker_volume.volume_name }}',
             state: 'present',
             mount_point: '/home/{{ default_user }}/docker',
+            become_to_mount: true
    }
   }
 

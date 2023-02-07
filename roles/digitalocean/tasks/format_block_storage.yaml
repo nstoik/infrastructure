@@ -33,7 +33,7 @@
     mode: 0766
     group: "{{ default_user }}"
     owner: "{{ default_user }}"
-  become: true
+  become: "{{ netmaker_droplet.volume.become_to_mount }}"
 
 # Mount the block storage volume
 - name: Mount the block storage volume
