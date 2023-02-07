@@ -1,2 +1,8 @@
 ---
 # handlers file for digitalocean
+
+# Install the digitalocean agent onto the droplet
+# https://docs.digitalocean.com/products/monitoring/how-to/install-agent/
+- name: Install digitalocean agent
+  ansible.builtin.command: "/home/{{ default_user }}/install_do_agent.sh"
+  become: true
