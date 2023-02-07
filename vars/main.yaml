@@ -4,6 +4,8 @@ default_user: "nelson"
 default_user_email: "nstoik@stechsolutions.ca"
 # secret_user_password is set in vars\vault.yaml
 
+known_hosts_ansible_file: "/home/{{ default_user }}/.ssh/known_hosts_ansible"
+
 # geerlingguy.security role variables
 # https://galaxy.ansible.com/geerlingguy/security
 security_ssh_port: 22
