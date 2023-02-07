@@ -82,5 +82,5 @@
     chdir: "/home/{{ default_user }}"
     executable: /usr/bin/zsh
   register: zsh_result
-  changed_when: zsh_result.stdout != ""
+  changed_when: zsh_result.stdout != "\u001b]0;~\u0007"
   failed_when: zsh_result.rc != 0
