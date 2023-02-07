@@ -31,8 +31,8 @@
     path: "{{ netmaker_droplet.volume.mount_point }}"
     state: directory
     mode: 0766
-    group: "{{ default_user }}"
-    owner: "{{ default_user }}"
+    owner: "{{ netmaker_droplet.volume.owner }}"
+    group: "{{ netmaker_droplet.volume.group }}"
   become: "{{ netmaker_droplet.volume.become_to_mount }}"
 
 # Mount the block storage volume
