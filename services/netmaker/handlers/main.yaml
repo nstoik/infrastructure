@@ -1,4 +1,6 @@
 ---
+# Handlers for Netmaker
+
 # Restart the Netmaker service using docker-compose
 - name: Restart Netmaker
   community.docker.docker_compose:
