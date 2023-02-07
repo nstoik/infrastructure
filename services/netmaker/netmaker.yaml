@@ -91,6 +91,11 @@
       vars:
         ansible_ssh_host_key_checking: false
 
+    - name: Import install_agent role from digitalocean
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: install_agent
+
     # Format the block storage if required. Set it to be automatically mounted
     # The user has to be created before the block storage can be formatted.
     - name: Format the block storage

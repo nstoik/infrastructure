@@ -1,0 +1,15 @@
+---
+# Install the Digitalocean agent onto the droplet
+# https://docs.digitalocean.com/products/monitoring/how-to/install-agent/
+
+- name: Download the digitalocean agent install script
+  ansible.builtin.get_url:
+    url: https://repos.insights.digitalocean.com/install.sh
+    dest: "/home/{{ default_user }}/install_do_agent.sh"
+    mode: 0755
+  register: install_script_download_result
+
+- name: Install the digitalocean agent
+  ansible.builtin.shell: "/home/{{ default_user }}/install_do_agent.sh"
+  become: true
+  when: install_script_download_result.changed
