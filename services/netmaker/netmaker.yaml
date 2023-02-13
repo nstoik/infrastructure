@@ -219,4 +219,5 @@
         mode: 0644
 
   handlers:
-    - ansible.builtin.import_tasks: handlers/main.yaml
+    - name: Import netmaker handler
+      ansible.builtin.import_tasks: handlers/main.yaml
