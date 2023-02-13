@@ -7,3 +7,4 @@
     project_src: "{{ netmaker_directory }}"
     state: present
     restarted: true
+  become: true
