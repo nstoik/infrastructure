@@ -17,20 +17,6 @@
     state: present
   become: true
 
-# install docker when the flag is set
-- name: Install docker
-  ansible.builtin.include_tasks: setup_docker.yaml
-  when: install_docker is true
-
-# setup dotfiles when the flag is set
-- name: Setup dotfiles
-  ansible.builtin.include_tasks: setup_dotfiles.yaml
-  when: dotfiles['install'] is true
-
-# flush all handlers
-- name: Flush handlers
-  ansible.builtin.meta: flush_handlers
-
 # Check if a reboot is required
 - name: Check if a reboot is required
   ansible.builtin.stat:
@@ -42,3 +28,17 @@
   ansible.builtin.reboot:
   when: reboot_required_file.stat.exists
   become: true
+
+# install docker when the flag is set
+- name: Install docker
+  ansible.builtin.include_tasks: setup_docker.yaml
+  when: install_docker is true
+
+# setup dotfiles when the flag is set
+- name: Setup dotfiles
+  ansible.builtin.include_tasks: setup_dotfiles.yaml
+  when: dotfiles['install'] is true
+
+# # flush all handlers
+# - name: Flush handlers
+#   ansible.builtin.meta: flush_handlers
