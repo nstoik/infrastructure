@@ -151,7 +151,6 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: 0766
-      become: true
 
     - name: Retrieve the MQ configuration file
       ansible.builtin.get_url:
