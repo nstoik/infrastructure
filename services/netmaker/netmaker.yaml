@@ -219,4 +219,4 @@
         mode: 0644
 
   handlers:
-    - import_tasks: handlers/main.yaml
+    - ansible.builtin.import_tasks: handlers/main.yaml
