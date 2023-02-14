@@ -1,5 +1,7 @@
 ---
-# .ansible-lint configuration
+# ansible-lint configuration
+
+profile: production
 
 exclude_paths:
   - roles/galaxy/
