@@ -5,4 +5,4 @@ profile: production
 
 exclude_paths:
   - roles/galaxy/
-#  - collections/
+  # - collections/
