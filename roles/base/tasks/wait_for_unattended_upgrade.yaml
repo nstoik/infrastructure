@@ -1,0 +1,9 @@
+---
+# Wait for any unattended upgrades to finish.
+- name: Wait for any possibly running unattended upgrade to finish.
+  ansible.builtin.shell:
+    cmd: >
+      systemd-run --property="After=apt-daily.service apt-daily-upgrade.service"
+      --wait /bin/true
+  become: true
+  changed_when: false

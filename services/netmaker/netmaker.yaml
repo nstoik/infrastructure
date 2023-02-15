@@ -117,6 +117,12 @@
         digitalocean_volume:
           - "{{ netmaker_volume }}"
 
+    # Wait for any unattended upgrades to finish
+    - name: Wait for unattended upgrades to finish
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: wait_for_unattended_upgrade
+
 - name: Additional Setup of Netmaker Droplet
   hosts: do_netmaker
   gather_facts: true
