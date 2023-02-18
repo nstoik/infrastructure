@@ -15,6 +15,8 @@
     "/dev/disk/by-id/scsi-0DO_Volume_{{ netmaker_volume.volume_name }}"
   when: volume_info.data[0].filesystem_type == ""
   become: true
+  register: format_volume_result
+  changed_when: format_volume_result.stdout != ""
 
 # Set the filesystem label of the block storage volume
 - name: Set the filesystem label of the block storage volume
@@ -24,6 +26,8 @@
     "{{ netmaker_volume.volume_name }}"
   when: volume_info.data[0].filesystem_type == ""
   become: true
+  register: filesystem_label_result
+  changed_when: filesystem_label_result.stdout != ""
 
 # Create the mount point for the block storage volume
 - name: Create the mount point for the block storage volume

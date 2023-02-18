@@ -16,7 +16,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip3 install ansible-core ansible-lint==6.11 yamllint
+          pip3 install ansible-core ansible-lint yamllint
           ansible-galaxy install -r requirements.yaml
 
       - name: Create vault_pass.txt

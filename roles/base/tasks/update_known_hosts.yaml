@@ -33,6 +33,7 @@
   register: host_key_results
   when: state == 'present' and hostname_check_result.found == 0
   delegate_to: localhost
+  changed_when: host_key_results.stdout_lines | length > 0
 
 # add to the known_hosts_ansible file with the hostname and comment
 - name: Add comment and hostname to the known_hosts_ansible file
