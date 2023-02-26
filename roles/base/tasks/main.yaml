@@ -39,6 +39,6 @@
   ansible.builtin.include_tasks: setup_dotfiles.yaml
   when: dotfiles['install'] is true
 
-# # flush all handlers
-# - name: Flush handlers
-#   ansible.builtin.meta: flush_handlers
+# flush all handlers
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
