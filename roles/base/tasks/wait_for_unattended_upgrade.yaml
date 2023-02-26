@@ -7,3 +7,9 @@
       --wait /bin/true
   become: true
   changed_when: false
+
+# Sleep for 2 seconds to allow the unattended upgrade to finish.
+- name: Sleep for 2 seconds to allow the unattended upgrade to finish.
+  ansible.builtin.wait_for:
+    timeout: 2
+  changed_when: false
