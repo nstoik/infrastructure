@@ -28,7 +28,7 @@ netmaker_volume:
 # state: present | absent
 netmaker_droplet:
   {name: 'netmaker01',
-   state: 'absent',
+   state: 'present',
    tags: ['Netmaker', "VPN", "HTTPS"],
    volume: {volume_name: '{{ netmaker_volume.volume_name }}',
             state: 'present',
