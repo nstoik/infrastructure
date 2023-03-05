@@ -1,0 +1,24 @@
+---
+# Install the NMCTL CLI tool for interacting with the Netmaker API
+# https://netmaker.readthedocs.io/en/master/nmctl.html#external-clients
+
+# create the '~/.local/bin' directory
+- name: Make sure the ~/.local/bin directory exists
+  ansible.builtin.file:
+    path: "/home/{{ default_user }}/.local/bin"
+    state: directory
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: 0755
+
+# Get the nmctl binary and make it executable
+- name: Get the nmctl binary
+  ansible.builtin.get_url:
+    url: "https://github.com/gravitl/netmaker/releases/download/\
+          {{ netmaker_version }}\
+          /nmctl"
+    dest: "/home/{{ default_user }}/.local/bin/nmctl"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: 0755
+    # notify: Generate nmctl completion commands
