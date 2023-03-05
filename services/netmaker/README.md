@@ -4,7 +4,28 @@ Ansible playbook for setting up a [Netmaker](https://www.netmaker.io/) server on
 ## Configuration
 The configuration is in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
 
-The [community_install.yaml](tasks/community_install.yaml) playbook installs the community version of Netmaker. The [ee_install.yaml](tasks/ee_install.yaml) playbook installs the enterprise version of Netmaker.
+The [community_install.yaml](tasks/community_install.yaml) playbook installs the community version of Netmaker. The [ee_install.yaml](tasks/ee_install.yaml) playbook installs the enterprise version of Netmaker. Which vervion is installed is controlled by the `netmaker_ee` boolean variable in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
+
+The setup runs through the steps as outlined in the [Netmaker documentation](https://netmaker.readthedocs.io/en/master/quick-start.html) but makes the following changes.
+
+ * The configuration files (including the docker compose file) are stored in the `~/netmaker` directory on the host.
 
 ## Usage
-From a web browser, go to the [netmaker dashboard](https://dashboard.netmaker.stechsolutions.ca) and login with the credentials stored in Bitwarden.
+1. The [netmaker.yaml](netmaker.yaml) playbook installs the Netmaker server and makes all the necessary configuration changes.
+
+2. After the playbook has run, the Netmaker server is ready to use. From a web browser, go to the [netmaker dashboard](https://dashboard.netmaker.stechsolutions.ca)
+    * If this is the first time you are using the dashboard, you will need to create an account using the credentials stored in Bitwarden.
+
+3. After logging in create networks and access keys, add nodes and assign them to networks, then create external clients (eg. phones).
+
+4. The following networks should be created:
+    * monitoring - for monitoring devices and nodes using prometheus and grafana
+    * personal - for my personal devices. To connect back to my home network, or to route traffic through my home network.
+    * farm network - for network connectivity to devices for the farm monitoring system
+
+If the EE version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
+
+The login for the grafana dashboard is `admin` and the password is stored in Bitwarden. The login for the prometheus instance is `Netmaker-Prometheus` and the password is the `secret_nm_license_key` (see the Ansbile vault).
+
+## NMCTL
+The [nmctl.yaml](tasks/nmctl.yaml) playbook installs the [nmctl command line tool](https://netmaker.readthedocs.io/en/master/nmctl.html). This tool can be used to interact with the Netmaker server from the command line.
