@@ -23,7 +23,10 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
     * personal - for my personal devices. To connect back to my home network, or to route traffic through my home network.
     * farm network - for network connectivity to devices for the farm monitoring system
 
+### EE Usage
 If the EE version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
+
+TODO: Modify the docker compose files to point to the external prometheus and grafana instances. Then remove the prometheus and grafana containers from the Netmaker server.
 
 The login for the grafana dashboard is `admin` and the password is stored in Bitwarden. The login for the prometheus instance is `Netmaker-Prometheus` and the password is the `secret_nm_license_key` (see the Ansbile vault).
 
