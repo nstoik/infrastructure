@@ -3,7 +3,7 @@
 
 # Base variables
 netmaker_base_domain: "netmaker.stechsolutions.ca"
-netmaker_version: "v0.17.1"
+netmaker_version: "v0.18.4"
 netmaker_ee: true
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 
