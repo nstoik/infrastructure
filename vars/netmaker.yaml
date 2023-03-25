@@ -12,6 +12,7 @@ netmaker_mq_config_url:
   "https://raw.githubusercontent.com/gravitl/netmaker/\
   {{ netmaker_version }}\
   /docker/mosquitto.conf"
+netmaker_mq_username: "netmaker"
 
 # Wait script
 netmaker_wait_script_url:
@@ -67,6 +68,13 @@ netmaker_cf_record:
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
     record: 'broker.netmaker',
+    proxied: false,
+    state: '{{ netmaker_droplet.state }}'
+  }
+  - {
+    name: 'netmaker01',
+    zone: 'stechsolutions.ca',
+    record: 'stun.netmaker',
     proxied: false,
     state: '{{ netmaker_droplet.state }}'
   }
