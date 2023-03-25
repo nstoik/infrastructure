@@ -9,7 +9,21 @@
   register: nmctl_network_list
   changed_when: false
 
-# Debug the current list of networks
-- name: Debug the current list of networks
-  ansible.builtin.debug:
-    msg: "{{ nmctl_network_list.stdout_lines }}"
+# Create the network if it doesn't exist
+- name: Create the network if it doesn't exist
+  ansible.builtin.include_tasks: nmctl_network_create.yaml
+  vars:
+    network_options: "{{ item }}"
+    network_command: "create"
+  loop: "{{ netmaker_networks }}"
+  when: item.name not in nmctl_network_list.stdout
+
+# Update the network if it exists
+- name: Update the network if it exists
+  ansible.builtin.include_tasks: nmctl_network_create.yaml
+  vars:
+    network_options: "{{ item }}"
+    network_command: "update"
+    network_name: "{{ item.name }}"
+  loop: "{{ netmaker_networks }}"
+  when: item.name in nmctl_network_list.stdout
