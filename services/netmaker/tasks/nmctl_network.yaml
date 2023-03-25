@@ -1,0 +1,15 @@
+---
+# Use the NMCTL CLI tool to create or update network definitions
+# on the Netmaker server.
+
+# Get the current list of networks
+- name: Get the current list of networks
+  ansible.builtin.command:
+    cmd: "nmctl network list"
+  register: nmctl_network_list
+  changed_when: false
+
+# Debug the current list of networks
+- name: Debug the current list of networks
+  ansible.builtin.debug:
+    msg: "{{ nmctl_network_list.stdout_lines }}"
