@@ -101,3 +101,7 @@ netmaker_cf_record:
     proxied: false,
     state: '{{ netmaker_droplet.state if netmaker_ee else "absent" }}'
   }
+
+# nmctl variables
+netmaker_nmctl_context_name: "production"
+netmaker_nmctl_endpoint: "https://api.{{ netmaker_base_domain }}"
