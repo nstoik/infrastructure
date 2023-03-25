@@ -16,7 +16,7 @@
   ansible.builtin.get_url:
     url: "https://github.com/gravitl/netmaker/releases/download/\
           {{ netmaker_version }}\
-          /nmctl-linux-amd64"
+          /nmctl_linux_amd64"
     dest: "/home/{{ default_user }}/.local/bin/nmctl"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
@@ -28,7 +28,8 @@
   ansible.builtin.command:
     cmd: "nmctl context set {{ netmaker_nmctl_context_name }} \
           --endpoint={{ netmaker_nmctl_endpoint }} \
-          --master_key={{ secret_nm_master_key }}"
+          --username={{ secret_nm_admin_account }} \
+          --password={{ secret_nm_admin_password }}"
   changed_when: false
 
 # Set the nmctl context to interact with the Netmaker API
