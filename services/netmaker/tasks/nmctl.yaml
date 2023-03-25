@@ -22,3 +22,17 @@
     group: "{{ default_user }}"
     mode: 0755
     # notify: Generate nmctl completion commands
+
+# Create a nmctl context to interact with the Netmaker API
+- name: Create nmctl context
+  ansible.builtin.command:
+    cmd: "nmctl context set {{ netmaker_nmctl_context_name }} \
+          --endpoint={{ netmaker_nmctl_endpoint }} \
+          --master_key={{ secret_nm_master_key }}"
+  changed_when: false
+
+# Set the nmctl context to interact with the Netmaker API
+- name: Set nmctl context
+  ansible.builtin.command:
+    cmd: "nmctl context use {{ netmaker_nmctl_context_name }}"
+  changed_when: false
