@@ -6,3 +6,4 @@
 - name: Install digitalocean agent
   ansible.builtin.command: "/home/{{ default_user }}/install_do_agent.sh"
   become: true
+  changed_when: false
