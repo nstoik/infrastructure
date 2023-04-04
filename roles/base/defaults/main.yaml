@@ -6,6 +6,7 @@ base_packages:
   - git
   - vnstat
   - wireguard
+  - wireguard-tools
 
 # variables for the dotfiles
 dotfiles_dir: /home/{{ default_user }}/dotfiles
