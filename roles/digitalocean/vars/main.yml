@@ -90,3 +90,16 @@ digitalocean_firewall:
         protocol: "tcp"
         sources:
           addresses: ["0.0.0.0/0", "::/0"]
+  - name: "StechSolutions-STUN"
+    state: "present"
+    tags: ["Netmaker"]
+    inbound_rules:
+      - ports: "3478"
+        protocol: "udp"
+        sources:
+          addresses: ["0.0.0.0/0", "::/0"]
+    outbound_rules:
+      - ports: "3478"
+        protocol: "udp"
+        destinations:
+          addresses: ["0.0.0.0/0", "::/0"]
