@@ -82,10 +82,6 @@ digitalocean_firewall:
         protocol: "tcp"
         sources:
           addresses: ["0.0.0.0/0", "::/0"]
-  - name: "StechSolutions-HTTP"
-    state: "present"
-    tags: ["HTTPS", "Netmaker"]
-    inbound_rules:
       - ports: "80"
         protocol: "tcp"
         sources:
