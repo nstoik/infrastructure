@@ -139,6 +139,9 @@
       ansible.builtin.include_role:
         name: base
       vars:
+        additional_packages:
+          - jq
+          - dnsutils
         install_docker: true
         dotfiles:
           install: true
