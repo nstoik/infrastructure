@@ -161,71 +161,57 @@
         group: "{{ default_user }}"
         mode: 0766
 
-    - name: Retrieve the MQ configuration file
-      ansible.builtin.get_url:
-        url: "{{ netmaker_mq_config_url }}"
+    # Copy the Netmaker MQ configuration file
+    - name: Copy the Netmaker MQ configuration file
+      ansible.builtin.copy:
+        src: "mosquitto.conf"
         dest: "{{ netmaker_directory }}/mosquitto.conf"
         mode: 0666
       notify: Restart Netmaker
 
-    - name: Retrieve the wait script
-      ansible.builtin.get_url:
-        url: "{{ netmaker_wait_script_url }}"
+    # Copy the Netmaker wait script
+    - name: Copy the Netmaker wait script
+      ansible.builtin.copy:
+        src: "wait.sh"
         dest: "{{ netmaker_directory }}/wait.sh"
         mode: 0777
       notify: Restart Netmaker
 
-    # make sure the netmaker_version file exists
-    - name: Make sure the netmaker_version file exists
-      ansible.builtin.file:
-        path: "{{ netmaker_directory }}/netmaker_version"
-        state: touch
-        mode: 0644
-        modification_time: preserve
-        access_time: preserve
-
-    # get the installed netmaker_version
-    - name: Get the installed version from the netmaker_version file using slurp
-      ansible.builtin.slurp:
-        src: "{{ netmaker_directory }}/netmaker_version"
-      register: netmaker_version_encoded
-
-    # decode the netmaker version
-    - name: Decode the installed netmaker_version
-      ansible.builtin.set_fact:
-        netmaker_version_installed:
-          "{{ netmaker_version_encoded['content'] | b64decode | trim }}"
-
-    # import the comunity install tasks if we are not using EE
-    - name: Import community install tasks
-      ansible.builtin.import_tasks: tasks/community_install.yaml
+    # Write the community Caddyfile
+    - name: Write the community Caddyfile
+      ansible.builtin.template:
+        src: Caddyfile_community.j2
+        dest: "{{ netmaker_directory }}/Caddyfile"
+        mode: 0666
       when: not netmaker_ee
-
-    # run the EE install playbook if we are using EE
-    - name: Run the EE install playbook
-      ansible.builtin.import_tasks: tasks/ee_install.yaml
-      when: netmaker_ee
-
-    - name: Replace the default values in the Caddyfile
-      ansible.builtin.replace:
-        path: "{{ netmaker_directory }}/Caddyfile"
-        regexp: "{{ item.regexp }}"
-        replace: "{{ item.replace }}"
-      loop:
-        - regexp: "NETMAKER_BASE_DOMAIN"
-          replace: "{{ netmaker_base_domain }}"
-        - regexp: "YOUR_EMAIL"
-          replace: "{{ default_user_email }}"
       notify: Restart Netmaker
 
-    # Set the netmaker_version in a file in the netmaker directory
-    - name: Set the version in the netmaker_version file
-      ansible.builtin.copy:
-        content: "{{ netmaker_version }}"
-        dest: "{{ netmaker_directory }}/netmaker_version"
-        owner: "{{ default_user }}"
-        group: "{{ default_user }}"
-        mode: 0644
+    # Write the enterprise Caddyfile
+    - name: Write the enterprise Caddyfile
+      ansible.builtin.template:
+        src: Caddyfile_ee.j2
+        dest: "{{ netmaker_directory }}/Caddyfile"
+        mode: 0666
+      when: netmaker_ee
+      notify: Restart Netmaker
+
+    # Write the community docker-compose file
+    - name: Write the community docker-compose file
+      ansible.builtin.template:
+        src: docker-compose-community.j2
+        dest: "{{ netmaker_directory }}/docker-compose.yml"
+        mode: 0666
+      when: not netmaker_ee
+      notify: Restart Netmaker
+
+    # Write the enterprise docker-compose file
+    - name: Write the enterprise docker-compose file
+      ansible.builtin.template:
+        src: docker-compose-ee.j2
+        dest: "{{ netmaker_directory }}/docker-compose.yml"
+        mode: 0666
+      when: netmaker_ee
+      notify: Restart Netmaker
 
   handlers:
     - name: Import netmaker handler
