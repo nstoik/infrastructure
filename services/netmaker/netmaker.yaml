@@ -49,14 +49,6 @@
         ip_address: "{{ do_ip_address | default('') }}"
         cf_record: "{{ netmaker_cf_record }}"
 
-    - name: Configure Cloudflare DNS Record for EE
-      ansible.builtin.include_role:
-        name: cloudflare
-      vars:
-        ip_address: "{{ do_ip_address | default('') }}"
-        cf_record: "{{ netmaker_cf_ee_record }}"
-      when: netmaker_ee
-
     - name: Update the known_hosts file
       ansible.builtin.include_role:
         name: base
