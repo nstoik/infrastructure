@@ -87,19 +87,16 @@ netmaker_cf_ee_record:
     zone: 'stechsolutions.ca',
     record: 'grafana.netmaker',
     proxied: false,
-    state: '{{ netmaker_droplet.state }}',
   }
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
     record: 'prometheus.netmaker',
     proxied: false,
-    state: '{{ netmaker_droplet.state }}'
   }
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
     record: 'netmaker-exporter.netmaker',
     proxied: false,
-    state: '{{ netmaker_droplet.state }}'
   }
