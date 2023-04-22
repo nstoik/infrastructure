@@ -35,7 +35,6 @@ https://stun.{{ netmaker_base_domain }} {
 	reverse_proxy netmaker:3478
 }
 
-
 # MQ
 wss://broker.{{ netmaker_base_domain }} {
         reverse_proxy ws://mq:8883 # For EMQX websockets use `reverse_proxy ws://mq:8083`
