@@ -78,8 +78,8 @@ netmaker_cf_record:
     proxied: false,
     state: '{{ netmaker_droplet.state }}'
   }
-# Netmaker Cloudflare DNS Record for grafana, prometheus, and netmaker-exporter
-# subdomains for the EE setup.
+  # Netmaker Cloudflare DNS Record for grafana, prometheus,
+  # and netmaker-exporter subdomains for the EE setup.
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
