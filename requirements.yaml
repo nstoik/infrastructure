@@ -1,8 +1,9 @@
 ---
 collections:
-  - community.docker
-  - community.digitalocean
-  - ansible.posix
+  - name: community.general
+  - name: community.docker
+  - name: community.digitalocean
+  - name: ansible.posix
 
 roles:
   - name: geerlingguy.security
