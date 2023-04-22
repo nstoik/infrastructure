@@ -3,8 +3,8 @@
 
 # Base variables
 netmaker_base_domain: "netmaker.stechsolutions.ca"
-netmaker_version: "v0.18.5"
 netmaker_ee: false
+netmaker_version: "v0.18.6"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 
 # Mosquitto variables
