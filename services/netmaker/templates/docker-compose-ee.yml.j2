@@ -24,14 +24,14 @@ services:
       DATABASE: "sqlite"
       NODE_ID: "netmaker-server-1"
       SERVER_BROKER_ENDPOINT: "ws://mq:1883"
+      VERBOSITY: "1"
       MQ_PASSWORD: "{{ secret_nm_mq_password }}"
       MQ_USERNAME: "{{ netmaker_mq_username }}"
       STUN_PORT: "3478"
-      VERBOSITY: "1"
+      DEFAULT_PROXY_MODE: "off"
       METRICS_EXPORTER: "on"
       LICENSE_KEY: "{{ secret_nm_license_key }}"
       NETMAKER_ACCOUNT_ID: "{{ secret_nm_account_id }}"
-      DEFAULT_PROXY_MODE: "off"
     ports:
       - "3478:3478/udp"
   netmaker-ui:
