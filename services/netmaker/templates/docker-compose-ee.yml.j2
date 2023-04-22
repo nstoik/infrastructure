@@ -83,7 +83,7 @@ services:
     image: gravitl/netmaker-prometheus:latest
     environment:
       NETMAKER_METRICS_TARGET: "netmaker-exporter.{{ netmaker_base_domain }}"
-      LICENSE_KEY: "YOUR_LICENSE_KEY"
+      LICENSE_KEY: "{{ secret_nm_license_key }}"
     restart: always
     volumes:
       - prometheus_data:/prometheus
