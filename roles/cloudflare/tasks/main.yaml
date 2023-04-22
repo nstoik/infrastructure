@@ -4,7 +4,7 @@
 # Set a Cloudflare A record
 # The 'solo' parameter is 'yes' if the state is 'present'. Othwerwise omitted.
 - name: Set Cloudflare A record
-  community.general.cloudflare_dns:
+  community.general.net_tools.cloudflare_dns:
     zone: "{{ item.zone }}"
     record: "{{ item.record }}"
     type: A
