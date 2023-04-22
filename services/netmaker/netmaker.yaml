@@ -190,7 +190,7 @@
     # Write the community docker-compose file
     - name: Write the community docker-compose file
       ansible.builtin.template:
-        src: docker-compose-community.j2
+        src: docker-compose-community.yml.j2
         dest: "{{ netmaker_directory }}/docker-compose.yml"
         mode: 0666
       when: not netmaker_ee
@@ -199,7 +199,7 @@
     # Write the enterprise docker-compose file
     - name: Write the enterprise docker-compose file
       ansible.builtin.template:
-        src: docker-compose-ee.j2
+        src: docker-compose-ee.yml.j2
         dest: "{{ netmaker_directory }}/docker-compose.yml"
         mode: 0666
       when: netmaker_ee

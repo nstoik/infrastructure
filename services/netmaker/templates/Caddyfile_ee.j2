@@ -1,15 +1,15 @@
 {
         # ZeroSSL account
         acme_ca https://acme.zerossl.com/v2/DV90
-        email "{{ default_user_email }}"
+        email {{ default_user_email }}
 }
 
 # Dashboard
-https://dashboard."{{ netmaker_base_domain }}" {
+https://dashboard.{{ netmaker_base_domain }} {
         # Apply basic security headers
         header {
-                # Enable cross origin access to *."{{ netmaker_base_domain }}"
-                Access-Control-Allow-Origin *."{{ netmaker_base_domain }}"
+                # Enable cross origin access to *.{{ netmaker_base_domain }}
+                Access-Control-Allow-Origin *.{{ netmaker_base_domain }}
                 # Enable HTTP Strict Transport Security (HSTS)
                 Strict-Transport-Security "max-age=31536000;"
                 # Enable cross-site filter (XSS) and tell browser to block detected attacks
@@ -26,31 +26,31 @@ https://dashboard."{{ netmaker_base_domain }}" {
 }
 
 # Netmaker Exporter
-https://netmaker-exporter."{{ netmaker_base_domain }}" {
+https://netmaker-exporter.{{ netmaker_base_domain }} {
         reverse_proxy http://netmaker-exporter:8085
 }
 
 # Prometheus
-https://prometheus."{{ netmaker_base_domain }}" {
+https://prometheus.{{ netmaker_base_domain }} {
         reverse_proxy http://prometheus:9090
 }
 
 # Grafana
-https://grafana."{{ netmaker_base_domain }}" {
+https://grafana.{{ netmaker_base_domain }} {
         reverse_proxy http://grafana:3000
 }
 
 # API
-https://api."{{ netmaker_base_domain }}" {
+https://api.{{ netmaker_base_domain }} {
         reverse_proxy http://netmaker:8081
 }
 
 # STUN
-https://stun."{{ netmaker_base_domain }}" {
+https://stun.{{ netmaker_base_domain }} {
 	reverse_proxy netmaker:3478
 }
 
 # MQ
-wss://broker.NETMAKER_BASE_DOMAIN {
+wss://broker.{{ netmaker_base_domain }} {
         reverse_proxy ws://mq:8883
 }
