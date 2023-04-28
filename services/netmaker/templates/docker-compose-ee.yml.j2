@@ -4,7 +4,7 @@ services:
   netmaker:
     container_name: netmaker
     image: gravitl/netmaker:{{ netmaker_version }}
-    restart: always
+    restart: on-failure
     volumes:
       - dnsconfig:/root/config/dnsconfig
       - sqldata:/root/data
@@ -17,6 +17,7 @@ services:
       COREDNS_ADDR: "{{ ansible_default_ipv4.address }}"
       DNS_MODE: "on"
       SERVER_HTTP_HOST: "api.{{ netmaker_base_domain }}"
+      NETCLIENT_AUTO_UPDATE: "enabled"
       API_PORT: "8081"
       MASTER_KEY: "{{ secret_nm_master_key }}"
       CORS_ALLOWED_ORIGIN: "*"
