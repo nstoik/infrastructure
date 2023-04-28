@@ -132,3 +132,16 @@ netmaker_networks:
     isipv6: "no",
     defaulttextclientdns: "",
   }
+
+# netmaker enrollment keys
+netmaker_enrollment_keys:
+  - {
+    name: 'primary',
+    networks: 'monitoring, personal, farm-network',
+    unlimited_usage: true,
+  }
+  - {
+    name: 'farm-network',
+    networks: 'farm-network',
+    unlimited_usage: true,
+  }
