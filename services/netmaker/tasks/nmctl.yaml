@@ -16,7 +16,7 @@
   ansible.builtin.get_url:
     url: "https://github.com/gravitl/netmaker/releases/download/\
           {{ netmaker_version }}\
-          /nmctl_linux_amd64"
+          /nmctl-linux-amd64"
     dest: "/home/{{ default_user }}/.local/bin/nmctl"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
@@ -24,6 +24,8 @@
     # notify: Generate nmctl completion commands
 
 # Create a nmctl context to interact with the Netmaker API
+# 
+# The context file is stored in the '~/.netmaker' directory
 - name: Create nmctl context
   ansible.builtin.command:
     cmd: "nmctl context set {{ netmaker_nmctl_context_name }} \
