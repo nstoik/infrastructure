@@ -24,7 +24,7 @@
     # notify: Generate nmctl completion commands
 
 # Create a nmctl context to interact with the Netmaker API
-# 
+#
 # The context file is stored in the '~/.netmaker' directory
 - name: Create nmctl context
   ansible.builtin.command:
