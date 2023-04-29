@@ -5,7 +5,7 @@
 # Get the current list of enrollment keys
 - name: Get the current list of enrollment keys
   ansible.builtin.command:
-    cmd: "nmctl enrollment_key list"
+    cmd: "nmctl enrollment_key list -o json"
   register: nmctl_enrollment_key_list
   changed_when: false
 
@@ -14,7 +14,9 @@
   ansible.builtin.command:
     cmd: >
       nmctl enrollment_key create
-      --networks={{ item.networks }}
-      --expiration={{ item.expiration }}
+      --tags="{{ item.tags }}"
+      --networks="{{ item.networks }}"
+      --unlimited={{ item.unlimited }}
   loop: "{{ netmaker_enrollment_keys }}"
   when: item.name not in nmctl_enrollment_key_list.stdout
+  changed_when: false
