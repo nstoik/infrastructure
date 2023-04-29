@@ -1,9 +1,5 @@
 ---
 # Create a network on the Netmaker server using the NMCTL CLI tool
-#
-# If the network already exists, update the network definition, by
-# specifying the network name and using the 'update' command instead
-# of the 'create' command.
 
 # Create a temporary file to store the network definition
 - name: Create a temporary file to store the network definition
@@ -20,13 +16,12 @@
     dest: "{{ nmctl_network_definition_file.path }}"
     mode: 0600
   vars:
-    networkoptions: "{{ network_options }}"
+    networkoptions: "{{ item }}"
 
-# Create or update the network on the Netmaker server
-- name: Create or update the network on the Netmaker server
+# Create the network on the Netmaker server
+- name: Create the network on the Netmaker server
   ansible.builtin.command:
     cmd: >
-      nmctl network {{ network_command }}
-      {{ network_name | default("") }}
+      nmctl network create
       --file={{ nmctl_network_definition_file.path }}
   changed_when: false
