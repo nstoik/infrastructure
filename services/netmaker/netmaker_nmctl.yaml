@@ -16,6 +16,9 @@
     - name: Configure networks on Netmaker
       ansible.builtin.import_tasks: ./tasks/nmctl_network.yaml
 
+    - name: Configure enrollment keys on Netmaker
+      ansible.builtin.import_tasks: ./tasks/nmctl_enrollment.yaml
+
   handlers:
     - name: Import netmaker handlers
       ansible.builtin.import_tasks: handlers/main.yaml

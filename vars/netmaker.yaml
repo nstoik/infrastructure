@@ -155,10 +155,12 @@ netmaker_enrollment_keys:
   - {
     name: 'primary',
     networks: 'monitoring, personal, farm-network',
-    unlimited_usage: true,
+    tags: 'all-networks',
+    unlimited: true,
   }
   - {
     name: 'farm-network',
     networks: 'farm-network',
-    unlimited_usage: true,
+    tags: 'farm-network',
+    unlimited: true,
   }
