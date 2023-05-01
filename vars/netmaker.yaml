@@ -137,7 +137,7 @@ netmaker_networks:
 netmaker_enrollment_keys:
   - {
     name: 'primary',
-    networks: 'monitoring, personal, farm-network',
+    networks: 'monitoring,personal,farm-network',
     tags: 'all-networks',
     unlimited: true,
   }
