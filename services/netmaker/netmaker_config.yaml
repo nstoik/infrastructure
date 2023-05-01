@@ -19,6 +19,9 @@
     - name: Configure enrollment keys on Netmaker
       ansible.builtin.import_tasks: ./tasks/nmctl_enrollment.yaml
 
+    - name: Install the netclient tool on the Netmaker server
+      ansible.builtin.import_tasks: ./tasks/netclient.yaml
+
   handlers:
     - name: Import netmaker handlers
       ansible.builtin.import_tasks: handlers/main.yaml
