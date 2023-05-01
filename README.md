@@ -15,6 +15,7 @@ Install Ansible via Pipx
 pipx install ansible-core
 pipx install ansible-lint
 pipx install yamllint
+pipx inject ansible-core jmespath
 ```
 
 ## Ansible configuration and setup
