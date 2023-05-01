@@ -11,17 +11,34 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
  * The configuration files (including the docker compose file) are stored in the `~/netmaker` directory on the host.
 
 ## Usage
-1. The [netmaker.yaml](netmaker.yaml) playbook installs the Netmaker server and makes all the necessary configuration changes.
+1. The [netmaker.yaml](netmaker.yaml) playbook sets up a digitalocean droplet with all the prequesite software and then installs the Netmaker server. To run the playbook, run the following command:
 
-2. After the playbook has run, the Netmaker server is ready to use. From a web browser, go to the [netmaker dashboard](https://dashboard.netmaker.stechsolutions.ca)
-    * If this is the first time you are using the dashboard, you will need to create an account using the credentials stored in Bitwarden.
+    ```bash
+    ansible-playbook services/netmaker/netmaker.yaml
+    ```
 
-3. After logging in create networks and access keys, add nodes and assign them to networks, then create external clients (eg. phones).
+2. The [netmaker_config.yaml](netmaker_config.yaml) playbook configures the Netmaker server. To run the playbook, run the following command:
+
+    ```bash
+    ansible-playbook services/netmaker/netmaker_config.yaml
+    ```
+
+    The following items are configured:
+    * Creates an admin user
+    * Sets up and configures the nmctl cli app (see the [nmctl.yaml](tasks/nmctl.yaml) playbook) on the local machine
+    * Creates the following networks:
+        * monitoring - for monitoring devices and nodes using prometheus and grafana
+        * personal - for my personal devices. To connect back to my home network, or to route traffic through my home network.
+        * farm network - for network connectivity to devices for the farm monitoring system
+    * Creates enrollment keys for the networks
+
+3. After the playbook has run, the Netmaker server is ready to use. From a web browser, go to the [netmaker dashboard](https://dashboard.netmaker.stechsolutions.ca)
+    * Login credentials are stored in Bitwarden.
+
+4. After logging in create networks and access keys, add nodes and assign them to networks, then create external clients (eg. phones).
 
 4. The following networks should be created:
-    * monitoring - for monitoring devices and nodes using prometheus and grafana
-    * personal - for my personal devices. To connect back to my home network, or to route traffic through my home network.
-    * farm network - for network connectivity to devices for the farm monitoring system
+
 
 ### EE Usage
 If the EE version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
