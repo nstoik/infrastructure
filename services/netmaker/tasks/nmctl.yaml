@@ -30,8 +30,7 @@
   ansible.builtin.command:
     cmd: "nmctl context set {{ netmaker_nmctl_context_name }} \
           --endpoint={{ netmaker_nmctl_endpoint }} \
-          --username={{ secret_nm_admin_account }} \
-          --password={{ secret_nm_admin_password }}"
+          --master_key={{ secret_nm_master_key }}"
   changed_when: false
 
 # Set the nmctl context to interact with the Netmaker API
