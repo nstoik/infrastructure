@@ -1,0 +1,24 @@
+---
+# Install the nmctl cli tool on the localhost.
+
+- name: Configure Netmaker
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../../vars/vault.yaml
+    - ../../vars/main.yaml
+    - ../../vars/netmaker.yaml
+
+  tasks:
+    - name: Install the nmctl tool
+      ansible.builtin.import_tasks: ./tasks/nmctl.yaml
+
+    - name: Configure networks on Netmaker
+      ansible.builtin.import_tasks: ./tasks/nmctl_network.yaml
+
+    - name: Configure enrollment keys on Netmaker
+      ansible.builtin.import_tasks: ./tasks/nmctl_enrollment.yaml
+
+  handlers:
+    - name: Import netmaker handlers
+      ansible.builtin.import_tasks: handlers/main.yaml

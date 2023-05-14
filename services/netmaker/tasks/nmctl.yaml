@@ -16,9 +16,42 @@
   ansible.builtin.get_url:
     url: "https://github.com/gravitl/netmaker/releases/download/\
           {{ netmaker_version }}\
-          /nmctl"
+          /nmctl-linux-amd64"
     dest: "/home/{{ default_user }}/.local/bin/nmctl"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
     mode: 0755
     # notify: Generate nmctl completion commands
+
+# Create a nmctl context to interact with the Netmaker API
+#
+# The context file is stored in the '~/.netmaker' directory
+- name: Create nmctl context
+  ansible.builtin.command:
+    cmd: "nmctl context set {{ netmaker_nmctl_context_name }} \
+          --endpoint={{ netmaker_nmctl_endpoint }} \
+          --master_key={{ secret_nm_master_key }}"
+  changed_when: false
+
+# Set the nmctl context to interact with the Netmaker API
+- name: Set nmctl context
+  ansible.builtin.command:
+    cmd: "nmctl context use {{ netmaker_nmctl_context_name }}"
+  changed_when: false
+
+# Test if the admin user exists
+- name: Test if the admin user exists
+  ansible.builtin.command:
+    cmd: "nmctl server has_admin"
+  register: nmctl_has_admin_response
+  changed_when: false
+
+# Create the Netmaker admin user if it doesn't exist
+- name: Create the admin user
+  ansible.builtin.command:
+    cmd: "nmctl user create \
+          --name={{ secret_nm_admin_account }} \
+          --password={{ secret_nm_admin_password }} \
+          --admin=true"
+  when: "'false' in nmctl_has_admin_response.stdout"
+  changed_when: false

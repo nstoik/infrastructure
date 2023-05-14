@@ -101,3 +101,49 @@ netmaker_cf_record:
     proxied: false,
     state: '{{ netmaker_droplet.state if netmaker_ee else "absent" }}'
   }
+
+# nmctl variables
+netmaker_nmctl_context_name: "production"
+netmaker_nmctl_endpoint: "https://api.{{ netmaker_base_domain }}"
+
+# netmaker networks
+netmaker_networks:
+  - {
+    name: 'monitoring',
+    addressrange: "10.50.50.0/24",
+    addressrange6: "",
+    isipv4: "yes",
+    isipv6: "no",
+    defaulttextclientdns: "",
+  }
+  - {
+    name: 'personal',
+    addressrange: "10.50.60.0/24",
+    addressrange6: "",
+    isipv4: "yes",
+    isipv6: "no",
+    defaulttextclientdns: "",
+  }
+  - {
+    name: 'farm-network',
+    addressrange: "10.50.70.0/24",
+    addressrange6: "",
+    isipv4: "yes",
+    isipv6: "no",
+    defaulttextclientdns: "",
+  }
+
+# netmaker enrollment keys
+netmaker_enrollment_keys:
+  - {
+    name: 'all-networks',
+    networks: 'monitoring,personal,farm-network',
+    tags: 'all-networks',
+    unlimited: true,
+  }
+  - {
+    name: 'farm-network',
+    networks: 'farm-network',
+    tags: 'farm-network',
+    unlimited: true,
+  }
