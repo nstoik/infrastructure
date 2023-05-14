@@ -1,0 +1,17 @@
+version: "3.4"
+
+services:
+  netclient:
+    container_name: netclient
+    image: 'gravitl/netclient:{{ netmaker_version }}}'
+    hostname: {{ netmaker_droplet.name }}
+    network_mode: host
+    restart: on-failure
+    environment:
+      TOKEN: "{{ netmaker_token }}"
+    volumes:
+      - /etc/netclient:/etc/netclient
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_MODULE

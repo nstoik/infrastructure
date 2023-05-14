@@ -6,6 +6,7 @@ netmaker_base_domain: "netmaker.stechsolutions.ca"
 netmaker_ee: false
 netmaker_version: "v0.20.0"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
+netclient_directory: "/home/{{ default_user }}/netclient"
 
 # TURN variables
 netmaker_turn_username: "netmaker"
