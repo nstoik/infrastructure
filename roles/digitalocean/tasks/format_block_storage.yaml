@@ -6,17 +6,17 @@
   community.digitalocean.digital_ocean_volume_info:
     oauth_token: "{{ secret_do_token }}"
     region_name: "{{ droplet_region }}"
-  register: volume_info
+  register: digitalocean_volume_info
 
 # Format the block storage volume if it has not been formatted.
 - name: Format the block storage volume if it has not been formatted
   ansible.builtin.command: >
     mkfs.ext4
     "/dev/disk/by-id/scsi-0DO_Volume_{{ netmaker_volume.volume_name }}"
-  when: volume_info.data[0].filesystem_type == ""
+  when: digitalocean_volume_info.data[0].filesystem_type == ""
   become: true
-  register: format_volume_result
-  changed_when: format_volume_result.stdout != ""
+  register: digitalocean_format_volume_result
+  changed_when: digitalocean_format_volume_result.stdout != ""
 
 # Set the filesystem label of the block storage volume
 - name: Set the filesystem label of the block storage volume
@@ -24,10 +24,10 @@
     e2label
     "/dev/disk/by-id/scsi-0DO_Volume_{{ netmaker_volume.volume_name }}"
     "{{ netmaker_volume.volume_name }}"
-  when: volume_info.data[0].filesystem_type == ""
+  when: digitalocean_volume_info.data[0].filesystem_type == ""
   become: true
-  register: filesystem_label_result
-  changed_when: filesystem_label_result.stdout != ""
+  register: digitalocean_filesystem_label_result
+  changed_when: digitalocean_filesystem_label_result.stdout != ""
 
 # Create the mount point for the block storage volume
 - name: Create the mount point for the block storage volume

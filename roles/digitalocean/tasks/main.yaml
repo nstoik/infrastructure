@@ -15,7 +15,7 @@
     monitoring: true
     project_name: "nelsonstoik"
     unique_name: true
-  register: droplet_result
+  register: digitalocean_droplet_result
 
 # attach a block storage volume to a droplet if the volume is defined
 - name: Attach DigitalOcean block storage
@@ -25,7 +25,7 @@
     command: "attach"
     region: "{{ droplet_region }}"
     volume_name: "{{ droplet['volume']['volume_name'] }}"
-    droplet_id: "{{ droplet_result.data.droplet.id }}"
+    droplet_id: "{{ digitalocean_droplet_result.data.droplet.id }}"
   when: droplet['volume'] is defined and droplet.state == 'present'
 
 - name: Refresh inventory
