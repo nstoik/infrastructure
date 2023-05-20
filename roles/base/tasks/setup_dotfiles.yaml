@@ -24,6 +24,7 @@
     dest: "{{ dotfiles_dir }}"
     recursive: true
     update: true
+    force: true
 
 # set the git config option filemode to false in the .git/config file
 - name: Set the git config option filemode to false in the .git/config file
