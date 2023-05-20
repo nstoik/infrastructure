@@ -35,12 +35,7 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
 3. After the playbook has run, the Netmaker server is ready to use. From a web browser, go to the [netmaker dashboard](https://dashboard.netmaker.stechsolutions.ca)
     * Login credentials are stored in Bitwarden.
 
-4. After logging in create networks and access keys, add nodes and assign them to networks, then create external clients (eg. phones).
-
-4. The following networks should be created:
-
-
-### EE Usage
+## EE Usage
 If the EE version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
 
 TODO: Modify the docker compose files to point to the external prometheus and grafana instances. Then remove the prometheus and grafana containers from the Netmaker server.
