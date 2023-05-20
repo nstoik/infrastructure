@@ -169,10 +169,10 @@
         mode: 0777
       notify: Restart Netmaker
 
-    # Write the community Caddyfile
-    - name: Write the community Caddyfile
+    # Write the Caddyfile
+    - name: Write the Caddyfile
       ansible.builtin.template:
-        src: Caddyfile_community.j2
+        src: Caddyfile.j2
         dest: "{{ netmaker_directory }}/Caddyfile"
         mode: 0666
       when: not netmaker_ee
@@ -187,22 +187,38 @@
       when: netmaker_ee
       notify: Restart Netmaker
 
-    # Write the community docker-compose file
-    - name: Write the community docker-compose file
+    # Write the netmaker environment file
+    - name: Write the netmaker environment file
       ansible.builtin.template:
-        src: docker-compose-community.yml.j2
+        src: netmaker.env.j2
+        dest: "{{ netmaker_directory }}/netmaker.env"
+        mode: 0666
+      notify: Restart Netmaker
+
+    # Write the  docker-compose file
+    - name: Write the docker-compose file
+      ansible.builtin.template:
+        src: docker-compose.yml.j2
         dest: "{{ netmaker_directory }}/docker-compose.yml"
         mode: 0666
       when: not netmaker_ee
       notify: Restart Netmaker
 
     # Write the enterprise docker-compose file
-    - name: Write the enterprise docker-compose file
+    - name: Write the docker-compose.override file (enterprise)
       ansible.builtin.template:
         src: docker-compose-ee.yml.j2
-        dest: "{{ netmaker_directory }}/docker-compose.yml"
+        dest: "{{ netmaker_directory }}/docker-compose.override.yml"
         mode: 0666
       when: netmaker_ee
+      notify: Restart Netmaker
+
+    # Remove the enterprise docker-compose file if not ee edition
+    - name: Remove the docker-compose.override file (enterprise)
+      ansible.builtin.file:
+        path: "{{ netmaker_directory }}/docker-compose.override.yml"
+        state: absent
+      when: not netmaker_ee
       notify: Restart Netmaker
 
   handlers:
