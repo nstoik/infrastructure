@@ -16,7 +16,7 @@
     state: absent
   check_mode: true
   changed_when: false
-  register: hostname_check_result
+  register: base_hostname_check_result
 
 # Wait for the host to be reachable
 - name: Wait for the host to be reachable
@@ -25,15 +25,15 @@
     port: 22
     state: started
     timeout: 60
-  when: state == 'present' and hostname_check_result.found == 0
+  when: state == 'present' and base_hostname_check_result.found == 0
 
 # Get the host key from the host
 - name: Get the host key from the host
   ansible.builtin.command: ssh-keyscan -t rsa {{ hostname }}
-  register: host_key_results
-  when: state == 'present' and hostname_check_result.found == 0
+  register: base_host_key_results
+  when: state == 'present' and base_hostname_check_result.found == 0
   delegate_to: localhost
-  changed_when: host_key_results.stdout_lines | length > 0
+  changed_when: base_host_key_results.stdout_lines | length > 0
 
 # add to the known_hosts_ansible file with the hostname and comment
 - name: Add comment and hostname to the known_hosts_ansible file
@@ -43,11 +43,11 @@
     state: "{{ state }}"
   with_items:
     - "# {{ comment }}"
-    - "{{ host_key_results.stdout | default('') }}"
+    - "{{ base_host_key_results.stdout | default('') }}"
     - ""
   loop_control:
     loop_var: item_line
-  when: state == 'present' and hostname_check_result.found == 0
+  when: state == 'present' and base_hostname_check_result.found == 0
   delegate_to: localhost
   no_log: true
 

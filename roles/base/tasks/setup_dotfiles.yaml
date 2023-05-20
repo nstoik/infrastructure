@@ -49,9 +49,9 @@
   ansible.builtin.command: "{{ dotfiles_dir }}/install-profile workstation"
   args:
     chdir: "{{ dotfiles_dir }}"
-  register: dotfiles_install_result
-  changed_when: "'Creating link' in dotfiles_install_result.stdout"
-  failed_when: dotfiles_install_result.rc != 0
+  register: base_dotfiles_install_result
+  changed_when: "'Creating link' in base_dotfiles_install_result.stdout"
+  failed_when: base_dotfiles_install_result.rc != 0
   when:
     dotfiles['dotbot_skip_ssh_authorized_file'] is false
 
@@ -63,9 +63,9 @@
     {{ dotfiles_dir }}/install-profile workstation
   args:
     chdir: "{{ dotfiles_dir }}"
-  register: dotfiles_install_result
-  changed_when: "'Creating link' in dotfiles_install_result.stdout"
-  failed_when: dotfiles_install_result.rc != 0
+  register: base_dotfiles_install_result
+  changed_when: "'Creating link' in base_dotfiles_install_result.stdout"
+  failed_when: base_dotfiles_install_result.rc != 0
   when:
     dotfiles['dotbot_skip_ssh_authorized_file'] is true
 
@@ -82,6 +82,6 @@
   args:
     chdir: "/home/{{ default_user }}"
     executable: /usr/bin/zsh
-  register: zsh_result
-  changed_when: zsh_result.stdout != "\u001b]0;~\u0007"
-  failed_when: zsh_result.rc != 0
+  register: base_zsh_result
+  changed_when: base_zsh_result.stdout != "\u001b]0;~\u0007"
+  failed_when: base_zsh_result.rc != 0

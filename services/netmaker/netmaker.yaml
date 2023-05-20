@@ -34,7 +34,7 @@
     - name: Get the Netmaker Droplet public IP address
       ansible.builtin.set_fact:
         do_ip_address: >-
-          {{ droplet_result.data.droplet.networks.v4 |
+          {{ digitalocean_droplet_result.data.droplet.networks.v4 |
               selectattr('type','eq','public') |
               map(attribute='ip_address') |
               first
@@ -79,13 +79,13 @@
     # This is used to determine if the user needs to be created the first time
     # If the status is not changed, the create_user play will not run.
     #
-    # The hostvars['localhost']['droplet_result'] list contains
+    # The hostvars['localhost']['digitalocean_droplet_result'] list contains
     # a dictionary with the keys 'changed', 'data', 'failed'.
 
-    - name: Get the changed status from the droplet_result variable
+    - name: Get the changed status from the digitalocean_droplet_result variable
       ansible.builtin.set_fact:
         create_user_flag: >-
-          {{ hostvars['localhost']['droplet_result']['changed'] }}
+          {{ hostvars['localhost']['digitalocean_droplet_result']['changed'] }}
       no_log: true
 
     - name: Import create_user role from digitalocean
