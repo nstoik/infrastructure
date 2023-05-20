@@ -1,102 +1,31 @@
 version: "3.4"
 
 services:
-  netmaker:
-    container_name: netmaker
-    image: gravitl/netmaker:{{ netmaker_version }}
-    restart: on-failure
-    volumes:
-      - dnsconfig:/root/config/dnsconfig
-      - sqldata:/root/data
-    environment:
-      BROKER_ENDPOINT: "wss://broker.{{ netmaker_base_domain }}"
-      SERVER_NAME: "{{ netmaker_base_domain }}"
-      STUN_LIST: "stun.{{ netmaker_base_domain }}:3478,stun1.netmaker.io:3478,stun2.netmaker.io:3478,stun1.l.google.com:19302,stun2.l.google.com:19302"
-      SERVER_HOST: "{{ ansible_default_ipv4.address }}"
-      SERVER_API_CONN_STRING: "api.{{ netmaker_base_domain }}:443"
-      COREDNS_ADDR: "{{ ansible_default_ipv4.address }}"
-      DNS_MODE: "on"
-      SERVER_HTTP_HOST: "api.{{ netmaker_base_domain }}"
-      NETCLIENT_AUTO_UPDATE: "enabled"
-      API_PORT: "8081"
-      MASTER_KEY: "{{ secret_nm_master_key }}"
-      CORS_ALLOWED_ORIGIN: "*"
-      DISPLAY_KEYS: "on"
-      DATABASE: "sqlite"
-      NODE_ID: "netmaker-server-1"
-      SERVER_BROKER_ENDPOINT: "ws://mq:1883"
-      VERBOSITY: "1"
-      MQ_PASSWORD: "{{ secret_nm_mq_password }}"
-      MQ_USERNAME: "{{ netmaker_mq_username }}"
-      STUN_PORT: "3478"
-      DEFAULT_PROXY_MODE: "off"
-      METRICS_EXPORTER: "on"
-      LICENSE_KEY: "{{ secret_nm_license_key }}"
-      NETMAKER_ACCOUNT_ID: "{{ secret_nm_account_id }}"
-    ports:
-      - "3478:3478/udp"
-  netmaker-ui:
-    container_name: netmaker-ui
-    image: gravitl/netmaker-ui:{{ netmaker_version }}
-    depends_on:
-      - netmaker
-    links:
-      - "netmaker:api"
-    restart: always
-    environment:
-      BACKEND_URL: "https://api.{{ netmaker_base_domain }}"
-  caddy:
-    image: caddy:2.6.2
-    container_name: caddy
-    restart: unless-stopped
-    volumes:
-      - {{ netmaker_directory }}/Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_conf:/config
-    ports:
-      - "80:80"
-      - "443:443"
-  coredns:
-    container_name: coredns
-    image: coredns/coredns
-    command: -conf /root/dnsconfig/Corefile
-    depends_on:
-      - netmaker
-    restart: always
-    volumes:
-      - dnsconfig:/root/dnsconfig
-  mq:
-    container_name: mq
-    image: eclipse-mosquitto:2.0.15-openssl
-    depends_on:
-      - netmaker
-    restart: unless-stopped
-    command: ["/mosquitto/config/wait.sh"]
-    environment:
-      MQ_PASSWORD: "{{ secret_nm_mq_password }}"
-      MQ_USERNAME: "{{ netmaker_mq_username }}"
-    volumes:
-      - {{ netmaker_directory }}/mosquitto.conf:/mosquitto/config/mosquitto.conf
-      - {{ netmaker_directory }}/wait.sh:/mosquitto/config/wait.sh
-      - mosquitto_logs:/mosquitto/log
+
   prometheus:
     container_name: prometheus
     image: gravitl/netmaker-prometheus:latest
+    env_file:
+      - {{ netmaker_directory }}/netmaker.env
     environment:
-      NETMAKER_METRICS_TARGET: "netmaker-exporter.{{ netmaker_base_domain }}"
-      LICENSE_KEY: "{{ secret_nm_license_key }}"
+      # config-dependant vars
+      - NETMAKER_METRICS_TARGET=netmaker-exporter.{{ netmaker_base_domain }}
     restart: always
     volumes:
       - prometheus_data:/prometheus
     depends_on:
       - netmaker
+
   grafana:
     container_name: grafana
     image: gravitl/netmaker-grafana:latest
+    env_file:
+      - {{ netmaker_directory }}/netmaker.env
     environment:
-      PROMETHEUS_HOST: "prometheus.{{ netmaker_base_domain }}"
-      NETMAKER_METRICS_TARGET: "netmaker-exporter.{{ netmaker_base_domain }}"
-      LICENSE_KEY: "{{ secret_nm_license_key }}"
+      # config-dependant vars
+      # TODO unify with netmaker-exporter
+      - PROMETHEUS_HOST=prometheus.{{ netmaker_base_domain }}
+      - NETMAKER_METRICS_TARGET=netmaker-exporter.{{ netmaker_base_domain }}
     volumes:
       - grafana_data:/var/lib/grafana
     restart: always
@@ -105,25 +34,23 @@ services:
     depends_on:
       - prometheus
       - netmaker
+
   netmaker-exporter:
     container_name: netmaker-exporter
     image: gravitl/netmaker-exporter:latest
+    env_file:
+      - {{ netmaker_directory }}/netmaker.env
+    environment:
+      # config-dependant vars
+      # TODO unify with grafana
+      - PROMETHEUS_HOST=https://prometheus.{{ netmaker_base_domain }}
+      # The domain/host IP indicating the mq broker address
+      - BROKER_ENDPOINT=wss://broker.{{ netmaker_base_domain }}
+      - API_PORT=8085
     restart: always
     depends_on:
       - netmaker
-    environment:
-      SERVER_BROKER_ENDPOINT: "ws://mq:1883"
-      BROKER_ENDPOINT: "wss://broker.{{ netmaker_base_domain }}"
-      PROMETHEUS: "on"
-      VERBOSITY: "1"
-      API_PORT: "8085"
-      LICENSE_KEY: "{{ secret_nm_license_key }}"
-      PROMETHEUS_HOST: https://prometheus.{{ netmaker_base_domain }}
+
 volumes:
-  caddy_data: {}
-  caddy_conf: {}
-  sqldata: {}
-  dnsconfig: {}
-  mosquitto_logs: {}
   prometheus_data: {}
   grafana_data: {}
