@@ -1,9 +1,3 @@
-{
-        # ZeroSSL account
-        # acme_ca https://acme.zerossl.com/v2/DV90
-        email {{ default_user_email }}
-}
-
 # Dashboard
 https://dashboard.{{ netmaker_base_domain }} {
         # Apply basic security headers
@@ -33,6 +27,16 @@ https://api.{{ netmaker_base_domain }} {
 # STUN
 https://stun.{{ netmaker_base_domain }} {
 	reverse_proxy netmaker:3478
+}
+
+# TURN
+https://turn.{{ netmaker_base_domain }} {
+	reverse_proxy host.docker.internal:3479
+}
+
+#TURN API
+https://turnapi.{{ netmaker_base_domain }} {
+        reverse_proxy http://host.docker.internal:8089
 }
 
 # MQ
