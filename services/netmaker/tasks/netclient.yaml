@@ -1,5 +1,8 @@
 ---
-# Install the netclient
+# Install the netclient via docker-compose
+#
+# Required input vars:
+#   nm_token: The netmaker token used to register the netclient.
 
 # Create the netclient directory
 - name: Create the netclient directory
@@ -16,18 +19,7 @@
     src: docker-compose-netclient.yml.j2
     dest: "{{ netclient_directory }}/docker-compose.yml"
     mode: 0666
-
-# Get the enrollment key for the netclient
-# Get the latest enrollment keys
-- name: Get the latest enrollment keys
-  ansible.builtin.command:
-    cmd: "nmctl enrollment_key list -o json"
-  register: nm_enrollment_key_list
-  changed_when: false
-
-# Debug the nm_enrollment_key_list variable
-- name: Debug the nm_enrollment_key_list variable
-  ansible.builtin.debug:
-    msg: "{{ item.token }}"
-  loop: "{{ nm_enrollment_key_list.stdout | from_json }}"
-  when: "'all-networks' in item.tags"
+  vars:
+    netmaker_token: "{{ nm_token }}"
+  notify:
+    - Restart Netclient docker-compose
