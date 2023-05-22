@@ -25,15 +25,18 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
 
     The following items are configured:
     * Creates an admin user
-    * Sets up and configures the nmctl cli app (see the [nmctl.yaml](tasks/nmctl.yaml) playbook) on the local machine
+    * Sets up and configures the nmctl cli (see the [nmctl.yaml](tasks/nmctl.yaml) playbook) on the local machine and on the Netmaker server
     * Creates the following networks:
         * monitoring - for monitoring devices and nodes using prometheus and grafana
         * personal - for my personal devices. To connect back to my home network, or to route traffic through my home network.
         * farm network - for network connectivity to devices for the farm monitoring system
     * Creates enrollment keys for the networks
+    * Installs and configures Netclient on the Netmaker server
 
 3. After the playbook has run, the Netmaker server is ready to use. From a web browser, go to the [netmaker dashboard](https://dashboard.netmaker.stechsolutions.ca)
     * Login credentials are stored in Bitwarden.
+
+4. ***NOTE:*** **As tested in version v0.20, when setting up the initial networks using the 'all-networks' enrollment key, the hosts were not joining all the networks. For some networks, they had to be manually added via the dashboard. Test in future versions to see if this is stil lthe case.**
 
 ## EE Usage
 If the EE version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
@@ -44,3 +47,5 @@ The login for the grafana dashboard is `admin` and the password is stored in Bit
 
 ## NMCTL
 The [nmctl.yaml](tasks/nmctl.yaml) playbook installs the [nmctl command line tool](https://netmaker.readthedocs.io/en/master/nmctl.html). This tool can be used to interact with the Netmaker server from the command line.
+
+The nmctl context file is stored in the `~/.nmctl` directory on the machine it is installed in.
