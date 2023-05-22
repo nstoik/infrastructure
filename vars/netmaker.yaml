@@ -155,7 +155,7 @@ netmaker_networks:
 netmaker_enrollment_keys:
   - {
     name: 'all-networks',
-    networks: 'monitoring,personal,farm-network',
+    networks: 'farm-network, monitoring, personal',
     tags: 'all-networks',
     unlimited: true,
   }
@@ -163,5 +163,11 @@ netmaker_enrollment_keys:
     name: 'farm-network',
     networks: 'farm-network',
     tags: 'farm-network',
+    unlimited: true,
+  }
+  - {
+    name: 'monitoring-network',
+    networks: 'monitoring',
+    tags: 'monitoring',
     unlimited: true,
   }
