@@ -36,6 +36,8 @@
   changed_when: base_host_key_results.stdout_lines | length > 0
 
 # add to the known_hosts_ansible file with the hostname and comment
+# note that duplicate entries are not added so if there is multiple
+# host keys for the same host, only the first comment will be added
 - name: Add comment and hostname to the known_hosts_ansible file
   ansible.builtin.lineinfile:
     path: "{{ known_hosts_ansible_file }}"
@@ -43,8 +45,7 @@
     state: "{{ state }}"
   with_items:
     - "# {{ comment }}"
-    - "{{ base_host_key_results.stdout | default('') }}"
-    - ""
+    - "{{ base_host_key_results.stdout | default('') }} \n"
   loop_control:
     loop_var: item_line
   when: state == 'present' and base_hostname_check_result.found == 0
