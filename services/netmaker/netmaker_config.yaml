@@ -16,6 +16,8 @@
   tasks:
     - name: Install the nmctl tool
       ansible.builtin.import_tasks: ./tasks/nmctl.yaml
+      vars:
+        check_for_admin: false
 
 
 - name: Configure Netmaker on the server
@@ -29,6 +31,8 @@
   tasks:
     - name: Install the nmctl tool
       ansible.builtin.import_tasks: ./tasks/nmctl.yaml
+      vars:
+        check_for_admin: true
 
     - name: Configure networks on Netmaker
       ansible.builtin.import_tasks: ./tasks/nmctl_network.yaml
