@@ -151,23 +151,24 @@ netmaker_networks:
     defaulttextclientdns: "",
   }
 
-# netmaker enrollment keys
+# netmaker enrollment keys (one for every network)
+# tags needs to be unique
 netmaker_enrollment_keys:
   - {
-    name: 'all-networks',
-    networks: 'farm-network, monitoring, personal',
-    tags: 'all-networks',
-    unlimited: true,
-  }
-  - {
-    name: 'farm-network',
+    name: 'farm-network-key',
     networks: 'farm-network',
-    tags: 'farm-network',
+    tags: 'farm-network-tag',
     unlimited: true,
   }
   - {
-    name: 'monitoring-network',
+    name: 'monitoring-network-key',
     networks: 'monitoring',
-    tags: 'monitoring',
+    tags: 'monitoring-tag',
+    unlimited: true,
+  }
+  - {
+    name: 'personal-network-key',
+    networks: 'personal',
+    tags: 'personal-tag',
     unlimited: true,
   }
