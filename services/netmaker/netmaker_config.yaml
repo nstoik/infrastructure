@@ -5,7 +5,7 @@
 # Then configure the networks on the Netmaker server.
 # Install and configure netclient on the Netmaker server.
 
-- name: Configure Netmaker on the localhost
+- name: Configure NMCTL on the localhost
   hosts: localhost
   gather_facts: false
   vars_files:
@@ -45,7 +45,7 @@
       vars:
         nm_token: "{{ nm_enrollment_key_list.stdout
                       | from_json
-                      | selectattr('tags', 'contains', 'all-networks')
+                      | selectattr('tags', 'contains', 'monitoring-tag')
                       | map(attribute='token')
                       | first }}"
 
