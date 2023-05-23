@@ -1,5 +1,9 @@
 ---
 # Create a network on the Netmaker server using the NMCTL CLI tool
+#
+# input vars:
+#   item: a single network definition from netmaker_networks
+#         variable (see vars/netmaker.yaml)
 
 # Create a temporary file to store the network definition
 - name: Create a temporary file to store the network definition
