@@ -136,7 +136,7 @@ netmaker_networks:
     isipv4: "yes",
     isipv6: "no",
     defaulttextclientdns: "",
-    enrollment_tags: "monitoring-tag",
+    tags: "monitoring-tag",
     enrollment_unlimited: true,
   }
   - {
@@ -146,7 +146,7 @@ netmaker_networks:
     isipv4: "yes",
     isipv6: "no",
     defaulttextclientdns: "",
-    enrollment_tags: "personal-tag",
+    tags: "personal-tag",
     enrollment_unlimited: true,
   }
   - {
@@ -156,7 +156,7 @@ netmaker_networks:
     isipv4: "yes",
     isipv6: "no",
     defaulttextclientdns: "",
-    enrollment_tags: "farm-network-tag",
+    tags: "farm-network-tag",
     enrollment_unlimited: true,
   }
 
