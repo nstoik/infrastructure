@@ -43,7 +43,7 @@
     - name: Install the netclient tool on the Netmaker server
       ansible.builtin.import_tasks: ./tasks/netclient.yaml
       vars:
-        - network_tag: "{{ netmaker_enrollment_keys[0].tags }}"
+        - network_tag: "{{ netmaker_networks[0].enrollment_tags }}"
         - nc_hostname: "{{ netmaker_droplet.name }}"
 
   handlers:
