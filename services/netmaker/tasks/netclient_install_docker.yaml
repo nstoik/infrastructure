@@ -34,7 +34,7 @@
     dest: "{{ netclient_directory }}/docker-compose.yml"
     mode: 0666
   vars:
-    - netmaker_token: "{{ nc_enrollment_key }}"
-    - netmaker_hostname: "{{ nc_hostname }}"
+    netmaker_token: "{{ nc_enrollment_key }}"
+    netmaker_hostname: "{{ nc_hostname }}"
   notify:
     - Restart Netclient docker-compose
