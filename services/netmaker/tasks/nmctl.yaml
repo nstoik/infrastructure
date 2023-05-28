@@ -14,6 +14,13 @@
     mode: 0755
   become: true
 
+# Create the autocomplete file for zsh for the nmctl binary
+- name: Create the autocomplete file for zsh for the nmctl binary
+  ansible.builtin.shell:
+    cmd: 'nmctl completion zsh > /usr/share/zsh/vendor-completions/_nmctl'
+    creates: '/usr/share/zsh/vendor-completions/_nmctl'
+  become: true
+
 # Create a nmctl context to interact with the Netmaker API
 #
 # The context file is stored in the '~/.netmaker' directory
