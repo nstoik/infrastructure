@@ -19,7 +19,6 @@
       vars:
         check_for_admin: false
 
-
 - name: Configure Netmaker on the server
   hosts: do_netmaker
   gather_facts: false
@@ -40,11 +39,21 @@
     - name: Configure enrollment keys on Netmaker
       ansible.builtin.import_tasks: ./tasks/nmctl_enrollment.yaml
 
+    # This adds the first network in the list to the Netclient
     - name: Install the netclient tool on the Netmaker server
-      ansible.builtin.import_tasks: ./tasks/netclient.yaml
+      ansible.builtin.import_tasks: ./tasks/netclient_install_docker.yaml
       vars:
-        - network: "{{ netmaker_networks[0] }}"
-        - nc_hostname: "{{ netmaker_droplet.name }}"
+        network: "{{ netmaker_networks[0] }}"
+        nc_hostname: "{{ netmaker_droplet.name }}"
+
+    # This adds the rest of the networks in the list to the Netclient
+    # And sets all the options for the host and each node/network
+    - name: Configure netclient on the Netmaker server
+      ansible.builtin.import_tasks: ./tasks/netclient_join_network.yaml
+      vars:
+        host_name: "{{ netmaker_droplet.name }}"
+        networks: "{{ netmaker_networks[1:] }}"
+        host_definition: "{{ netmaker_host_definition }}"
 
   handlers:
     - name: Import netmaker handlers
