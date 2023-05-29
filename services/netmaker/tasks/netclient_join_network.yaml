@@ -78,3 +78,14 @@
       --file {{ netclient_join_network_tempfile.path }}
   when: host is defined
   changed_when: false
+
+# Update the node definitions for each node of the host
+- name: Update the node definitions for each node of the host
+  ansible.builtin.include_tasks: nmctl_node_update.yaml
+  vars:
+    nodes: "{{ host_nodes }}"
+    node_definition: "{{ item }}"
+  loop: "{{ netmaker_host_definition.node_settings }}"
+  loop_control:
+    label: "{{ item.network }}"
+  when: host is defined

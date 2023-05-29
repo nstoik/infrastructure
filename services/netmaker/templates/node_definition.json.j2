@@ -1,0 +1,36 @@
+{
+  "id": "{{ nodeoptions.id }}",
+  "hostid": "{{ nodeoptions.hostid }}",
+{% if nodeoptions.address is defined %}
+  "address": "{{ nodeoptions.address }}",
+{% endif %}
+{% if nodeoptions.address6 is defined %}
+  "address6": "{{ nodeoptions.address6 }}",
+{% endif %}
+  "localaddress": "",
+  "allowedips": null,
+  "persistentkeepalive": {{ nodeoptions.persistentkeepalive | default(20) }},
+{% if nodeoptions.network is defined %}
+  "network": "{{ nodeoptions.network }}",
+{% endif %}
+{% if nodeoptions.networkrange is defined %}
+  "networkrange": "{{ nodeoptions.networkrange }}",
+{% endif %}
+{% if nodeoptions.networkrange6 is defined %}
+  "networkrange6": "{{ nodeoptions.networkrange6 }}",
+{% endif %}
+  "isrelayed": {{ nodeoptions.isrelayed | default(false) | bool | lower }},
+  "isrelay": {{ nodeoptions.isrelay | default(false) | bool | lower }},
+  "isegressgateway": {{ nodeoptions.isegressgateway | default(false) | bool | lower }},
+  "isingressgateway": {{ nodeoptions.isingressgateway | default(false) | bool | lower }},
+  "egressgatewayranges": {{ nodeoptions.egressgatewayranges | default([]) }},
+  "egressgatewaynatenabled": {{ nodeoptions.egressgatewaynatenabled | default(false) | bool | lower }},
+  "relayaddrs": {{ nodeoptions.relayaddrs | default([]) }},
+  "failovernode": "00000000-0000-0000-0000-000000000000",
+  "dnson": true,
+  "ingressdns": "{{ nodeoptions.ingressdns | default("") | string }}",
+  "server": "{{ netmaker_base_domain }}",
+  "internetgateway": "{{ nodeoptions.internetgateway | default("") | string }}",
+  "defaultacl": "yes",
+  "failover": false
+}
