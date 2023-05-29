@@ -3,9 +3,9 @@
   "verbosity": 0,
 {% if hostoptions.nodes is defined %}
   "nodes": [
-    {% for node in hostoptions.nodes %}
+{% for node in hostoptions.nodes %}
     "{{ node }}"{% if not loop.last %},{% endif %}
-    {% endfor %}
+{% endfor %}
   ],
 {% endif %}
   "proxy_enabled": {{ hostoptions.proxy_enabled | default(false) | bool | lower }},
