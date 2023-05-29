@@ -203,3 +203,27 @@ netmaker_host_definition: {
     }
   ]
 }
+
+# netmaker external client definitions
+netmaker_ext_clients:
+  - {
+    name: 'nelsons iPhone - monitoring',
+    # monitoring network
+    network: '{{ netmaker_networks[0].name }}',
+    allowedips: "",
+    dns: "",
+  }
+  - {
+    name: 'nelsons iPhone - personal',
+    # personal network
+    network: '{{ netmaker_networks[1].name }}',
+    allowedips: "",
+    dns: "",
+  }
+  - {
+    name: 'nelsons iPhone - farm-network',
+    # farm-network network
+    network: '{{ netmaker_networks[2].name }}',
+    allowedips: "",
+    dns: "",
+  }
