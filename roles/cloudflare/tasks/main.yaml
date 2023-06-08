@@ -1,5 +1,8 @@
 ---
 # tasks file for cloudflare
+#
+# inputs:
+#   - cloudflare_ip_address: the ip address of the dns record
 
 # Set a Cloudflare A record
 # The 'solo' parameter is 'yes' if the state is 'present'. Othwerwise omitted.
@@ -8,7 +11,7 @@
     zone: "{{ item.zone }}"
     record: "{{ item.record }}"
     type: A
-    value: "{{ ip_address }}"
+    value: "{{ cloudflare_ip_address }}"
     proxied: "{{ item.proxied | default(false) }}"
     ttl: "{{ item.ttl | default(1) }}"
     state: "{{ item.state | default('present') }}"
