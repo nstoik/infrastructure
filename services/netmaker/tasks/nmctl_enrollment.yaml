@@ -20,6 +20,8 @@
       --networks="{{ item.name }}"
       --unlimited={{ item.enrollment_unlimited }}
   loop: "{{ netmaker_networks }}"
+  loop_control:
+    label: "{{ item.name }}"
   when: item.tags not in nm_enrollment_key_list.stdout
   changed_when: item.tags not in nm_enrollment_key_list.stdout
 
