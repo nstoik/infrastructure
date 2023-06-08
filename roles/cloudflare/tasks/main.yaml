@@ -3,6 +3,7 @@
 #
 # inputs:
 #   - cloudflare_ip_address: the ip address of the dns record
+#   - cloudflare_record: the dns record to update
 
 # Set a Cloudflare A record
 # The 'solo' parameter is 'yes' if the state is 'present'. Othwerwise omitted.
@@ -17,4 +18,4 @@
     state: "{{ item.state | default('present') }}"
     solo: "{{ (item.state == 'present') | ternary('yes', omit) }}"
     api_token: "{{ secret_cf_token }}"
-  loop: "{{ cf_record }}"
+  loop: "{{ cloudflare_record }}"

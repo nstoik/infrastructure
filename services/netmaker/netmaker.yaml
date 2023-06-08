@@ -46,8 +46,8 @@
       ansible.builtin.include_role:
         name: cloudflare
       vars:
-        cf_record: "{{ netmaker_cf_record }}"
         cloudflare_ip_address: "{{ do_ip_address | default('') }}"
+        cloudflare_record: "{{ netmaker_cf_record }}"
 
     - name: Update the known_hosts file
       ansible.builtin.include_role:
