@@ -55,6 +55,12 @@
         networks: "{{ netmaker_networks[1:] }}"
         host_definition: "{{ netmaker_host_definition }}"
 
+    # Add the external clients to the Netmaker server
+    - name: Add external clients to the Netmaker server
+      ansible.builtin.import_tasks: ./tasks/nmctl_ext_client.yaml
+      vars:
+        external_clients: "{{ netmaker_ext_clients }}"
+
   handlers:
     - name: Import netmaker handlers
       ansible.builtin.import_tasks: handlers/main.yaml
