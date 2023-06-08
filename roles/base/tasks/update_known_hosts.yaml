@@ -4,7 +4,7 @@
 # Adds or removes a host from the known_hosts_ansible file
 #
 # Inputs: The following key and value pairs are required
-#     hostname: the hostname or ip_address of the host
+#     base_hostname: the hostname or ip_address of the host
 #     state: present or absent
 #     comment: added to the known_hosts_ansible file the line above.
 
@@ -12,7 +12,7 @@
 - name: Check if the hostname is already in the known_hosts_ansible file
   ansible.builtin.lineinfile:
     path: "{{ known_hosts_ansible_file }}"
-    regex: "^{{ hostname }}.*"
+    regex: "^{{ base_hostname }}.*"
     state: absent
   check_mode: true
   changed_when: false
@@ -21,7 +21,7 @@
 # Wait for the host to be reachable
 - name: Wait for the host to be reachable
   ansible.builtin.wait_for:
-    host: "{{ hostname }}"
+    host: "{{ base_hostname }}"
     port: 22
     state: started
     timeout: 60
@@ -29,7 +29,7 @@
 
 # Get the host key from the host
 - name: Get the host key from the host
-  ansible.builtin.command: ssh-keyscan -t rsa {{ hostname }}
+  ansible.builtin.command: ssh-keyscan -t rsa {{ base_hostname }}
   register: base_host_key_results
   when: state == 'present' and base_hostname_check_result.found == 0
   delegate_to: localhost

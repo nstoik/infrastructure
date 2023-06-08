@@ -54,7 +54,7 @@
         name: base
         tasks_from: update_known_hosts
       vars:
-        hostname: "{{ item }}"
+        base_hostname: "{{ item }}"
         state: "{{ netmaker_droplet.state }}"
         comment: "DigitalOcean Netmaker Droplet: {{ netmaker_droplet.name }}"
       loop:
