@@ -205,23 +205,30 @@ netmaker_host_definition: {
 }
 
 # netmaker external client definitions
+# The name must be alphanumeric or hyphens and less than 15 chars
+#
+# When the external client configuration is exported, the name of the
+# configuration file is {{ item.name }}-{{ item.network }}-netmaker-client.conf
 netmaker_ext_clients:
   - {
-    name: 'nelsons iPhone - monitoring',
+    name: 'iPhone',
+    host: '{{ netmaker_host_definition.name }}',
     # monitoring network
     network: '{{ netmaker_networks[0].name }}',
     allowedips: "",
     dns: "",
   }
   - {
-    name: 'nelsons iPhone - personal',
+    name: 'iPhone',
+    host: '{{ netmaker_host_definition.name }}',
     # personal network
     network: '{{ netmaker_networks[1].name }}',
     allowedips: "",
     dns: "",
   }
   - {
-    name: 'nelsons iPhone - farm-network',
+    name: 'iPhone',
+    host: '{{ netmaker_host_definition.name }}',
     # farm-network network
     network: '{{ netmaker_networks[2].name }}',
     allowedips: "",
