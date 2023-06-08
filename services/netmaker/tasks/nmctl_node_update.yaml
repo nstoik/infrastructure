@@ -8,16 +8,15 @@
 # Create the combined node_defintion_options
 #
 # The order of the combine is important as the node_definition should override
-# the inner_item.
+# the node item.
 - name: Create the combined node_defintion_options
   ansible.builtin.set_fact:
-    node_defintion_options: "{{ inner_item
-                               | combine(node_definition, recursive=True) }}"
-  loop: "{{ nodes }}"
-  loop_control:
-    loop_var: inner_item
-    label: "{{ inner_item.network }}-{{ inner_item.id }}"
-  when: inner_item.network == node_definition.network
+    node_defintion_options: "{{ nodes
+                                | json_query(query_nodes)
+                                | first
+                                | combine(node_definition, recursive=True) }}"
+  vars:
+    query_nodes: "[?network == '{{ node_definition.network }}']"
 
 # TODO: Revisit this method of updating the node definition
 # later on with a later version of Netmaker.
