@@ -29,7 +29,7 @@
       ansible.builtin.include_role:
         name: digitalocean
       vars:
-        droplet: "{{ netmaker_droplet }}"
+        digitalocean_droplet: "{{ netmaker_droplet }}"
 
     - name: Get the Netmaker Droplet public IP address
       ansible.builtin.set_fact:
