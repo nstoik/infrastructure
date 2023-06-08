@@ -13,4 +13,6 @@
 - name: Create the network if it doesn't exist
   ansible.builtin.include_tasks: nmctl_network_create.yaml
   loop: "{{ netmaker_networks }}"
+  loop_control:
+    label: "{{ item.name }}"
   when: item.name not in nmctl_network_list.stdout

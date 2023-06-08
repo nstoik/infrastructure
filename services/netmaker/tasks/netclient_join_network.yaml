@@ -41,6 +41,8 @@
   ansible.builtin.command:
     cmd: nmctl host add_network {{ host.id }} {{ item.name }}
   loop: "{{ networks }}"
+  loop_control:
+    label: "{{ host.name }} to network {{ item.name }}"
   when: host is defined and
         item.name not in host_nodes | map(attribute='network') | list
   changed_when: false
@@ -87,5 +89,5 @@
     node_definition: "{{ item }}"
   loop: "{{ netmaker_host_definition.node_settings }}"
   loop_control:
-    label: "{{ item.network }}"
+    label: "network name: {{ item.network }}"
   when: host is defined
