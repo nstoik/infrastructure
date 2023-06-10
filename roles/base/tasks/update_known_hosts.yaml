@@ -5,7 +5,7 @@
 #
 # Inputs: The following key and value pairs are required
 #     base_hostname: the hostname or ip_address of the host
-#     state: present or absent
+#     base_state: present or absent
 #     comment: added to the known_hosts_ansible file the line above.
 
 # Check if the host_key is already in the known_hosts_ansible file
@@ -25,13 +25,13 @@
     port: 22
     state: started
     timeout: 60
-  when: state == 'present' and base_hostname_check_result.found == 0
+  when: base_state == 'present' and base_hostname_check_result.found == 0
 
 # Get the host key from the host
 - name: Get the host key from the host
   ansible.builtin.command: ssh-keyscan -t rsa {{ base_hostname }}
   register: base_host_key_results
-  when: state == 'present' and base_hostname_check_result.found == 0
+  when: base_state == 'present' and base_hostname_check_result.found == 0
   delegate_to: localhost
   changed_when: base_host_key_results.stdout_lines | length > 0
 
@@ -42,13 +42,13 @@
   ansible.builtin.lineinfile:
     path: "{{ known_hosts_ansible_file }}"
     line: "{{ item_line }}"
-    state: "{{ state }}"
+    state: "{{ base_state }}"
   with_items:
     - "# {{ comment }}"
     - "{{ base_host_key_results.stdout | default('') }} \n"
   loop_control:
     loop_var: item_line
-  when: state == 'present' and base_hostname_check_result.found == 0
+  when: base_state == 'present' and base_hostname_check_result.found == 0
   delegate_to: localhost
   no_log: true
 
@@ -58,5 +58,5 @@
     path: "{{ known_hosts_ansible_file }}"
     regexp: "^# {{ comment }}\n.*\n\n"
     replace: ""
-  when: state == 'absent'
+  when: base_state == 'absent'
   delegate_to: localhost

@@ -55,7 +55,7 @@
         tasks_from: update_known_hosts
       vars:
         base_hostname: "{{ item }}"
-        state: "{{ netmaker_droplet.state }}"
+        base_state: "{{ netmaker_droplet.state }}"
         comment: "DigitalOcean Netmaker Droplet: {{ netmaker_droplet.name }}"
       loop:
         - "{{ do_ip_address | default('') }}"
