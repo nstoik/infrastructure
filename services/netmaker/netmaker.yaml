@@ -29,7 +29,7 @@
       ansible.builtin.include_role:
         name: digitalocean
       vars:
-        droplet: "{{ netmaker_droplet }}"
+        digitalocean_droplet: "{{ netmaker_droplet }}"
 
     - name: Get the Netmaker Droplet public IP address
       ansible.builtin.set_fact:
@@ -46,17 +46,17 @@
       ansible.builtin.include_role:
         name: cloudflare
       vars:
-        ip_address: "{{ do_ip_address | default('') }}"
-        cf_record: "{{ netmaker_cf_record }}"
+        cloudflare_ip_address: "{{ do_ip_address | default('') }}"
+        cloudflare_record: "{{ netmaker_cf_record }}"
 
     - name: Update the known_hosts file
       ansible.builtin.include_role:
         name: base
         tasks_from: update_known_hosts
       vars:
-        hostname: "{{ item }}"
-        state: "{{ netmaker_droplet.state }}"
-        comment: "DigitalOcean Netmaker Droplet: {{ netmaker_droplet.name }}"
+        base_hostname: "{{ item }}"
+        base_state: "{{ netmaker_droplet.state }}"
+        base_comment: "DO Netmaker Droplet: {{ netmaker_droplet.name }}"
       loop:
         - "{{ do_ip_address | default('') }}"
         - "{{ netmaker_base_domain }}"
@@ -130,11 +130,11 @@
       ansible.builtin.include_role:
         name: base
       vars:
-        additional_packages:
+        base_additional_packages:
           - jq
           - dnsutils
-        install_docker: true
-        dotfiles:
+        base_install_docker: true
+        base_dotfiles:
           install: true
           dotbot_skip_ssh_authorized_file: true
 

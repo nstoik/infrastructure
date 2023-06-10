@@ -6,6 +6,3 @@ profile: production
 exclude_paths:
   - roles/galaxy/
   - collections/
-
-skip_list:
-  - var-naming[no-role-prefix]
