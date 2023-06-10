@@ -4,6 +4,6 @@
 # whether to install docker or not
 base_install_docker: false
 # variables for dotfiles
-dotfiles:
+base_dotfiles:
   install: false
   dotbot_skip_ssh_authorized_file: true
