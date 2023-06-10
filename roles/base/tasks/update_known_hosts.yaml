@@ -6,7 +6,7 @@
 # Inputs: The following key and value pairs are required
 #     base_hostname: the hostname or ip_address of the host
 #     base_state: present or absent
-#     comment: added to the known_hosts_ansible file the line above.
+#     base_comment: added to the known_hosts_ansible file the line above.
 
 # Check if the host_key is already in the known_hosts_ansible file
 - name: Check if the hostname is already in the known_hosts_ansible file
@@ -44,7 +44,7 @@
     line: "{{ item_line }}"
     state: "{{ base_state }}"
   with_items:
-    - "# {{ comment }}"
+    - "# {{ base_comment }}"
     - "{{ base_host_key_results.stdout | default('') }} \n"
   loop_control:
     loop_var: item_line
@@ -56,7 +56,7 @@
 - name: Remove comment and hostname from the known_hosts_ansible file
   ansible.builtin.replace:
     path: "{{ known_hosts_ansible_file }}"
-    regexp: "^# {{ comment }}\n.*\n\n"
+    regexp: "^# {{ base_comment }}\n.*\n\n"
     replace: ""
   when: base_state == 'absent'
   delegate_to: localhost

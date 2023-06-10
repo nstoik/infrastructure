@@ -56,7 +56,7 @@
       vars:
         base_hostname: "{{ item }}"
         base_state: "{{ netmaker_droplet.state }}"
-        comment: "DigitalOcean Netmaker Droplet: {{ netmaker_droplet.name }}"
+        base_comment: "DO Netmaker Droplet: {{ netmaker_droplet.name }}"
       loop:
         - "{{ do_ip_address | default('') }}"
         - "{{ netmaker_base_domain }}"
