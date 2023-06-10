@@ -133,7 +133,7 @@
         base_additional_packages:
           - jq
           - dnsutils
-        install_docker: true
+        base_install_docker: true
         base_dotfiles:
           install: true
           dotbot_skip_ssh_authorized_file: true

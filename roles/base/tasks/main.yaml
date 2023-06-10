@@ -3,6 +3,7 @@
 #
 # inputs:
 #   - base_additonal_packages: list of additional packages to install
+#   - base_install_docker: boolean to install docker
 #   - base_dotfiles: dictionary of dotfiles configuration
 
 # Update and upgrade apt packages
@@ -36,7 +37,7 @@
 # install docker when the flag is set
 - name: Install docker
   ansible.builtin.include_tasks: setup_docker.yaml
-  when: install_docker is true
+  when: base_install_docker is true
 
 # setup dotfiles when the flag is set
 - name: Setup dotfiles

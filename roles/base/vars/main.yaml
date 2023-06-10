@@ -2,7 +2,7 @@
 # vars file for base
 
 # whether to install docker or not
-install_docker: false
+base_install_docker: false
 # variables for dotfiles
 dotfiles:
   install: false
