@@ -1,5 +1,8 @@
 ---
 # tasks file for base
+#
+# inputs:
+#   - base_additonal_packages: list of additional packages to install
 
 # Update and upgrade apt packages
 - name: Update and upgrade apt packages
@@ -13,7 +16,7 @@
 - name: Install base packages
   ansible.builtin.apt:
     # append the list of packages to install with optional additional packages
-    name: "{{ base_packages + (additional_packages | default([])) }}"
+    name: "{{ base_packages + (base_additional_packages | default([])) }}"
     state: present
   become: true
 
