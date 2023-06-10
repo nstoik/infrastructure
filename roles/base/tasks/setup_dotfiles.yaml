@@ -1,5 +1,10 @@
 ---
 # tasks to setup dotfiles onto a host.
+#
+# inputs:
+#  - base_dotfiles: dictionary of dotfiles configuration
+#    - install: boolean to install dotfiles
+#    - dotbot_skip_ssh_authorized_file: boolean to skip ssh authorized file
 
 # install ZSH
 - name: Install ZSH
@@ -53,7 +58,7 @@
   changed_when: "'Creating link' in base_dotfiles_install_result.stdout"
   failed_when: base_dotfiles_install_result.rc != 0
   when:
-    dotfiles['dotbot_skip_ssh_authorized_file'] is false
+    base_dotfiles['dotbot_skip_ssh_authorized_file'] is false
 
 # run the install script with override if
 # dotbot_skip_ssh_authorized_file is true
@@ -67,7 +72,7 @@
   changed_when: "'Creating link' in base_dotfiles_install_result.stdout"
   failed_when: base_dotfiles_install_result.rc != 0
   when:
-    dotfiles['dotbot_skip_ssh_authorized_file'] is true
+    base_dotfiles['dotbot_skip_ssh_authorized_file'] is true
 
 # set the shell to ZSH
 - name: Set the shell to ZSH

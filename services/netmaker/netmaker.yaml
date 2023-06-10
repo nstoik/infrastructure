@@ -134,7 +134,7 @@
           - jq
           - dnsutils
         install_docker: true
-        dotfiles:
+        base_dotfiles:
           install: true
           dotbot_skip_ssh_authorized_file: true
 
