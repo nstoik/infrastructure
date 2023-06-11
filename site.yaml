@@ -14,12 +14,20 @@
       ansible.builtin.include_role:
         name: digitalocean
         tasks_from: tag
+      tags: 
+      - digitalocean
+      - digitalocean.tags
 
     - name: Configure firewalls on digitalocean
       ansible.builtin.include_role:
         name: digitalocean
         tasks_from: firewall
+      tags: 
+      - digitalocean
+      - digitalocean.firewall
 
 # run the netmaker playbook to configure a netmaker VPS
 - name: Run the netmaker playbook
   ansible.builtin.import_playbook: services/netmaker/netmaker.yaml
+  tags: 
+  - netmaker

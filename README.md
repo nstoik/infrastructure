@@ -70,6 +70,14 @@ The services directory contains the subfolders and playbooks for the various ser
 The services are:
 - [Netmaker](services/netmaker/README.md)
 
+## Ansible Tags
+The following ansible tags are available to specify specific tasks to run.
+
+- digitalocean - Configure the DigitalOcean cloud provider
+    - digitalocean.tags - Configure the DigitalOcean tags
+    - digitalocean.firewall - Configure the DigitalOcean firewall
+- netmaker - Configure a Netmaker server
+
 # Inventory
 Inventory from DigtalOcean is dynamic using a plugin. The plugin configration is in the file `inventory/do_hosts.yaml`.
 
