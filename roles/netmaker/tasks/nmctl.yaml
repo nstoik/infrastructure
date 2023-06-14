@@ -1,6 +1,9 @@
 ---
 # Install the NMCTL CLI tool for interacting with the Netmaker API
 # https://netmaker.readthedocs.io/en/master/nmctl.html#external-clients
+#
+# input variables:
+#  netmaker_check_for_admin: boolean
 
 # Get the nmctl binary and make it executable
 - name: Get the nmctl binary
@@ -42,7 +45,7 @@
   ansible.builtin.command:
     cmd: "nmctl server has_admin"
   register: nmctl_has_admin_response
-  when: "check_for_admin"
+  when: "netmaker_check_for_admin"
   changed_when: false
 
 # Create the Netmaker admin user if it doesn't exist
@@ -52,5 +55,6 @@
           --name={{ secret_nm_admin_account }} \
           --password={{ secret_nm_admin_password }} \
           --admin=true"
-  when: "check_for_admin and 'false' in nmctl_has_admin_response.stdout"
+  when: "netmaker_check_for_admin and
+        'false' in nmctl_has_admin_response.stdout"
   changed_when: false

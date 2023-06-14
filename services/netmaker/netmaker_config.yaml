@@ -19,7 +19,7 @@
         name: netmaker
         tasks_from: nmctl
       vars:
-        check_for_admin: false
+        netmaker_check_for_admin: false
 
 - name: Configure Netmaker on the server
   hosts: do_netmaker
@@ -35,7 +35,7 @@
         name: netmaker
         tasks_from: nmctl
       vars:
-        check_for_admin: true
+        netmaker_check_for_admin: true
 
     - name: Configure networks on Netmaker
       ansible.builtin.include_role:
