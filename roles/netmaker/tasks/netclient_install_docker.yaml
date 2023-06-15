@@ -20,7 +20,7 @@
 # Get the enrollment key for the suplied network
 - name: Get the enrollment key for the network '{{ netmaker_network.name }}'
   ansible.builtin.set_fact:
-    netmaker_nc_token: "{{ nm_enrollment_key_list.stdout
+    netmaker_nc_token: "{{ netmaker_enrollment_key_list.stdout
                            | from_json
                            | selectattr('tags',
                                         'contains',
