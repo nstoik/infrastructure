@@ -57,10 +57,10 @@
   register: netmaker_join_network_tempfile
   changed_when: false
 
-# Build the host_definition_options
-- name: Build the host_definition_options
+# Build the netmaker_host_options
+- name: Build the netmaker_host_options
   ansible.builtin.set_fact:
-    host_definition_options: "{{ (netmaker_host_definition | default({}))
+    netmaker_host_options: "{{ (netmaker_host_definition | default({}))
                                | combine({'id': netmaker_host.id}) }}"
   when: netmaker_host is defined
 
@@ -71,7 +71,7 @@
     dest: "{{ netmaker_join_network_tempfile.path }}"
     mode: 0640
   vars:
-    hostoptions: "{{ host_definition_options }}"
+    hostoptions: "{{ netmaker_host_options }}"
   changed_when: false
 
 # Update the host using the host_definition file.
