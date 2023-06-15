@@ -54,7 +54,7 @@
         tasks_from: netclient_install_docker
       vars:
         netmaker_network: "{{ netmaker_networks[0] }}"
-        nc_hostname: "{{ netmaker_droplet.name }}"
+        netmaker_nc_hostname: "{{ netmaker_droplet.name }}"
 
     # This adds the rest of the networks in the list to the Netclient
     # And sets all the options for the host and each node/network

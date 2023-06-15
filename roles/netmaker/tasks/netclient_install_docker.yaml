@@ -5,8 +5,8 @@
 #   netmaker_network: The network to connect to on the Netmaker server. The
 #                     netclient needs to connect to a network during the
 #                     initial setup.
-#   nc_hostname: The hostname of the netclient. This is the name that is
-#                displayed on the Netmaker dashboard.
+#   netmaker_nc_hostname: The hostname of the netclient. This is the name that
+#                         is displayed on the Netmaker dashboard.
 
 # Create the netclient directory
 - name: Create the netclient directory
@@ -37,6 +37,6 @@
     mode: 0666
   vars:
     netmaker_token: "{{ nc_enrollment_key }}"
-    netmaker_hostname: "{{ nc_hostname }}"
+    netmaker_hostname: "{{ netmaker_nc_hostname }}"
   notify:
     - Restart Netclient docker-compose
