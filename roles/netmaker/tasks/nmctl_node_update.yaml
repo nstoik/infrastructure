@@ -2,7 +2,7 @@
 # Update a node on the netmaker server using the NMCTL CLI tool
 #
 # input vars:
-#  nodes: the list of nodes for a given host already configured on the server
+#  netmaker_nodes: the list of nodes for a given host already configured on the server
 #  node_definition: a single node_definition to be udpated.
 
 # Create the combined node_defintion_options
@@ -11,7 +11,7 @@
 # the node item.
 - name: Create the combined node_defintion_options
   ansible.builtin.set_fact:
-    node_defintion_options: "{{ nodes
+    node_defintion_options: "{{ netmaker_nodes
                                 | json_query(query_nodes)
                                 | first
                                 | combine(node_definition, recursive=True) }}"

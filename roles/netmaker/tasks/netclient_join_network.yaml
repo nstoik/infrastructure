@@ -87,7 +87,7 @@
 - name: Update the node definitions for each node of the host
   ansible.builtin.include_tasks: nmctl_node_update.yaml
   vars:
-    nodes: "{{ netmaker_host_nodes }}"
+    netmaker_nodes: "{{ netmaker_host_nodes }}"
     node_definition: "{{ item }}"
   loop: "{{ netmaker_host_definition.node_settings }}"
   loop_control:
