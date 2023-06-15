@@ -65,7 +65,7 @@
       vars:
         netmaker_host_name: "{{ netmaker_droplet.name }}"
         netmaker_join_networks: "{{ netmaker_networks[1:] }}"
-        host_definition: "{{ netmaker_host_definition }}"
+        netmaker_host_definition: "{{ netmaker_host }}"
 
     # Add the external clients to the Netmaker server
     - name: Add external clients to the Netmaker server

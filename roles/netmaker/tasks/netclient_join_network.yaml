@@ -4,7 +4,7 @@
 # Required vars:
 #   netmaker_host_name: The name of the host to join to the network
 #   netmaker_join_networks: A list of network to join the host to
-#   host_definition: A dictionary of host definition options
+#   netmaker_host_definition: A dictionary of host definition options
 
 # Get all the hosts from the server
 - name: Get all the hosts from the server
@@ -58,7 +58,7 @@
 # Build the host_definition_options
 - name: Build the host_definition_options
   ansible.builtin.set_fact:
-    host_definition_options: "{{ (host_definition | default({}))
+    host_definition_options: "{{ (netmaker_host_definition | default({}))
                                | combine({'id': host.id}) }}"
   when: host is defined
 
