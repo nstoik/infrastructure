@@ -31,10 +31,12 @@
 # Filter the nodes to only the ones from the netmaker_host_name
 - name: Filter the nodes to only the ones from {{ netmaker_host_name }}
   ansible.builtin.set_fact:
-    host_nodes: "{{ netmaker_join_network_nodes_list.stdout
-                    | from_json
-                    | selectattr('hostid', 'equalto', netmaker_host.id)
-                    | list }}"
+    netmaker_host_nodes: "{{ netmaker_join_network_nodes_list.stdout
+                             | from_json
+                             | selectattr('hostid',
+                                          'equalto',
+                                          netmaker_host.id)
+                             | list }}"
 
 # Join the host to the required networks
 - name: Join the host to the required networks
@@ -44,7 +46,7 @@
   loop_control:
     label: "{{ netmaker_host.name }} to network {{ item.name }}"
   when: netmaker_host is defined and
-        item.name not in host_nodes | map(attribute='network') | list
+        item.name not in netmaker_host_nodes | map(attribute='network') | list
   changed_when: false
 
 # Create a temporary file to store definition files
@@ -85,7 +87,7 @@
 - name: Update the node definitions for each node of the host
   ansible.builtin.include_tasks: nmctl_node_update.yaml
   vars:
-    nodes: "{{ host_nodes }}"
+    nodes: "{{ netmaker_host_nodes }}"
     node_definition: "{{ item }}"
   loop: "{{ netmaker_host_definition.node_settings }}"
   loop_control:
