@@ -2,7 +2,7 @@
 # Update a node on the netmaker server using the NMCTL CLI tool
 #
 # input vars:
-#  netmaker_nodes: the list of nodes for a given host already configured on the server
+#  netmaker_nodes: the list of nodes for a given host already configured
 #  netmaker_node_definition: a single node_definition to be udpated.
 
 # Create the combined node_defintion_options
@@ -14,7 +14,8 @@
     node_defintion_options: "{{ netmaker_nodes
                                 | json_query(query_nodes)
                                 | first
-                                | combine(netmaker_node_definition, recursive=True) }}"
+                                | combine(netmaker_node_definition,
+                                          recursive=True) }}"
   vars:
     query_nodes: "[?network == '{{ netmaker_node_definition.network }}']"
 
