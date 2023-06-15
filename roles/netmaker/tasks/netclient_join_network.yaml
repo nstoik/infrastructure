@@ -54,7 +54,7 @@
   ansible.builtin.tempfile:
     state: file
     suffix: .json
-  register: netclient_join_network_tempfile
+  register: netmaker_join_network_tempfile
   changed_when: false
 
 # Build the host_definition_options
@@ -68,7 +68,7 @@
 - name: Write the host definition to the temporary file
   ansible.builtin.template:
     src: host_definition.json.j2
-    dest: "{{ netclient_join_network_tempfile.path }}"
+    dest: "{{ netmaker_join_network_tempfile.path }}"
     mode: 0640
   vars:
     hostoptions: "{{ host_definition_options }}"
@@ -79,7 +79,7 @@
   ansible.builtin.command:
     cmd: >
       nmctl host update {{ netmaker_host.id }}
-      --file {{ netclient_join_network_tempfile.path }}
+      --file {{ netmaker_join_network_tempfile.path }}
   when: netmaker_host is defined
   changed_when: false
 
