@@ -88,7 +88,7 @@
   ansible.builtin.include_tasks: nmctl_node_update.yaml
   vars:
     netmaker_nodes: "{{ netmaker_host_nodes }}"
-    node_definition: "{{ item }}"
+    netmaker_node_definition: "{{ item }}"
   loop: "{{ netmaker_host_definition.node_settings }}"
   loop_control:
     label: "network name: {{ item.network }}"

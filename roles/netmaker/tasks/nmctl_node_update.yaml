@@ -3,7 +3,7 @@
 #
 # input vars:
 #  netmaker_nodes: the list of nodes for a given host already configured on the server
-#  node_definition: a single node_definition to be udpated.
+#  netmaker_node_definition: a single node_definition to be udpated.
 
 # Create the combined node_defintion_options
 #
@@ -14,9 +14,9 @@
     node_defintion_options: "{{ netmaker_nodes
                                 | json_query(query_nodes)
                                 | first
-                                | combine(node_definition, recursive=True) }}"
+                                | combine(netmaker_node_definition, recursive=True) }}"
   vars:
-    query_nodes: "[?network == '{{ node_definition.network }}']"
+    query_nodes: "[?network == '{{ netmaker_node_definition.network }}']"
 
 # TODO: Revisit this method of updating the node definition
 # later on with a later version of Netmaker.
