@@ -44,7 +44,7 @@
 - name: Test if the admin user exists
   ansible.builtin.command:
     cmd: "nmctl server has_admin"
-  register: nmctl_has_admin_response
+  register: netmaker_nmctl_has_admin_response
   when: "netmaker_check_for_admin"
   changed_when: false
 
@@ -56,5 +56,5 @@
           --password={{ secret_nm_admin_password }} \
           --admin=true"
   when: "netmaker_check_for_admin and
-        'false' in nmctl_has_admin_response.stdout"
+        'false' in netmaker_nmctl_has_admin_response.stdout"
   changed_when: false
