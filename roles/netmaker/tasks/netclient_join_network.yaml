@@ -23,27 +23,27 @@
 # Filter the hosts to only netmaker_host_name
 - name: Filter the hosts to only {{ netmaker_host_name }}
   ansible.builtin.set_fact:
-    host: "{{ netclient_join_network_hosts_list.stdout
-              | from_json
-              | selectattr('name', 'equalto', netmaker_host_name)
-              | first }}"
+    netmaker_host: "{{ netmaker_join_network_hosts_list.stdout
+                       | from_json
+                       | selectattr('name', 'equalto', netmaker_host_name)
+                       | first }}"
 
 # Filter the nodes to only the ones from the netmaker_host_name
 - name: Filter the nodes to only the ones from {{ netmaker_host_name }}
   ansible.builtin.set_fact:
     host_nodes: "{{ netmaker_join_network_nodes_list.stdout
                     | from_json
-                    | selectattr('hostid', 'equalto', host.id)
+                    | selectattr('hostid', 'equalto', netmaker_host.id)
                     | list }}"
 
 # Join the host to the required networks
 - name: Join the host to the required networks
   ansible.builtin.command:
-    cmd: nmctl host add_network {{ host.id }} {{ item.name }}
+    cmd: nmctl host add_network {{ netmaker_host.id }} {{ item.name }}
   loop: "{{ netmaker_join_networks }}"
   loop_control:
-    label: "{{ host.name }} to network {{ item.name }}"
-  when: host is defined and
+    label: "{{ netmaker_host.name }} to network {{ item.name }}"
+  when: netmaker_host is defined and
         item.name not in host_nodes | map(attribute='network') | list
   changed_when: false
 
@@ -59,8 +59,8 @@
 - name: Build the host_definition_options
   ansible.builtin.set_fact:
     host_definition_options: "{{ (netmaker_host_definition | default({}))
-                               | combine({'id': host.id}) }}"
-  when: host is defined
+                               | combine({'id': netmaker_host.id}) }}"
+  when: netmaker_host is defined
 
 # Write the host definition to the temporary file
 - name: Write the host definition to the temporary file
@@ -76,9 +76,9 @@
 - name: Update the host using the host_definition file
   ansible.builtin.command:
     cmd: >
-      nmctl host update {{ host.id }}
+      nmctl host update {{ netmaker_host.id }}
       --file {{ netclient_join_network_tempfile.path }}
-  when: host is defined
+  when: netmaker_host is defined
   changed_when: false
 
 # Update the node definitions for each node of the host
@@ -90,4 +90,4 @@
   loop: "{{ netmaker_host_definition.node_settings }}"
   loop_control:
     label: "network name: {{ item.network }}"
-  when: host is defined
+  when: netmaker_host is defined
