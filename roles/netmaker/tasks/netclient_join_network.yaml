@@ -71,7 +71,7 @@
     dest: "{{ netmaker_join_network_tempfile.path }}"
     mode: 0640
   vars:
-    hostoptions: "{{ netmaker_host_options }}"
+    netmaker_template_host_options: "{{ netmaker_host_options }}"
   changed_when: false
 
 # Update the host using the host_definition file.
