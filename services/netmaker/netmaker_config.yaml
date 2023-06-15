@@ -63,7 +63,7 @@
         name: netmaker
         tasks_from: netclient_join_network
       vars:
-        host_name: "{{ netmaker_droplet.name }}"
+        netmaker_host_name: "{{ netmaker_droplet.name }}"
         networks: "{{ netmaker_networks[1:] }}"
         host_definition: "{{ netmaker_host_definition }}"
 

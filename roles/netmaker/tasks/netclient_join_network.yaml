@@ -2,7 +2,7 @@
 # Join a netclient to a network
 #
 # Required vars:
-#   host_name: The name of the host to join to the network
+#   netmaker_host_name: The name of the host to join to the network
 #   networks: A list of network to join the host to
 #   host_definition: A dictionary of host definition options
 
@@ -20,16 +20,16 @@
   register: netclient_join_network_nodes_list
   changed_when: false
 
-# Filter the hosts to only host_name
-- name: Filter the hosts to only {{ host_name }}
+# Filter the hosts to only netmaker_host_name
+- name: Filter the hosts to only {{ netmaker_host_name }}
   ansible.builtin.set_fact:
     host: "{{ netclient_join_network_hosts_list.stdout
               | from_json
-              | selectattr('name', 'equalto', host_name)
+              | selectattr('name', 'equalto', netmaker_host_name)
               | first }}"
 
-# Filter the nodes to only the ones from the host_name
-- name: Filter the nodes to only the ones from {{ host_name }}
+# Filter the nodes to only the ones from the netmaker_host_name
+- name: Filter the nodes to only the ones from {{ netmaker_host_name }}
   ansible.builtin.set_fact:
     host_nodes: "{{ netclient_join_network_nodes_list.stdout
                     | from_json
