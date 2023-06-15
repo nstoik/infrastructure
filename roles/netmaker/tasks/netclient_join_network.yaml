@@ -3,7 +3,7 @@
 #
 # Required vars:
 #   netmaker_host_name: The name of the host to join to the network
-#   networks: A list of network to join the host to
+#   netmaker_join_networks: A list of network to join the host to
 #   host_definition: A dictionary of host definition options
 
 # Get all the hosts from the server
@@ -40,7 +40,7 @@
 - name: Join the host to the required networks
   ansible.builtin.command:
     cmd: nmctl host add_network {{ host.id }} {{ item.name }}
-  loop: "{{ networks }}"
+  loop: "{{ netmaker_join_networks }}"
   loop_control:
     label: "{{ host.name }} to network {{ item.name }}"
   when: host is defined and
