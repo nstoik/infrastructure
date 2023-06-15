@@ -10,14 +10,14 @@
 - name: Get all the hosts from the server
   ansible.builtin.command:
     cmd: nmctl host list -o json
-  register: netclient_join_network_hosts_list
+  register: netmaker_join_network_hosts_list
   changed_when: false
 
 # Get all the nodes from the server
 - name: Get all the nodes from the server
   ansible.builtin.command:
     cmd: nmctl node list -o json
-  register: netclient_join_network_nodes_list
+  register: netmaker_join_network_nodes_list
   changed_when: false
 
 # Filter the hosts to only netmaker_host_name
@@ -31,7 +31,7 @@
 # Filter the nodes to only the ones from the netmaker_host_name
 - name: Filter the nodes to only the ones from {{ netmaker_host_name }}
   ansible.builtin.set_fact:
-    host_nodes: "{{ netclient_join_network_nodes_list.stdout
+    host_nodes: "{{ netmaker_join_network_nodes_list.stdout
                     | from_json
                     | selectattr('hostid', 'equalto', host.id)
                     | list }}"
