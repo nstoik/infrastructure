@@ -3,7 +3,7 @@
 # on the Netmaker server as required.
 #
 # input vars:
-#  external_clients: a list of external client definitions
+#  netmaker_ext_clients_list: a list of external client definitions
 
 # Get the current list of external clients
 - name: Get the current list of external clients
@@ -67,12 +67,12 @@
                     'hostname': 'null' }]"
   when: client_list is not defined
 
-# Add the host id to the external_clients list
-- name: Add host id to the external_clients list
+# Add the host id to the netmaker_ext_clients_list list
+- name: Add host id to the netmaker_ext_clients_list list
   ansible.builtin.set_fact:
     ext_clients_new: "{{ ext_clients_new | default([]) +
                          [item_ext | combine({'hostid': item_host.id})] }}"
-  loop: "{{ external_clients }}"
+  loop: "{{ netmaker_ext_clients_list }}"
   loop_control:
     loop_var: item_ext
     label: "{{ item_ext.name }} with host ID {{ item_host.id }}"

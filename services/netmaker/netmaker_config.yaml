@@ -73,4 +73,4 @@
         name: netmaker
         tasks_from: nmctl_ext_client
       vars:
-        external_clients: "{{ netmaker_ext_clients }}"
+        netmaker_ext_clients_list: "{{ netmaker_ext_clients }}"
