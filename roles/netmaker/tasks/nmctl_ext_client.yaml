@@ -9,7 +9,7 @@
 - name: Get the current list of external clients
   ansible.builtin.command:
     cmd: "nmctl ext_client list -o json"
-  register: nmctl_ext_client_list
+  register: netmaker_current_ext_client_list
   changed_when: false
 
 # Get all the hosts from the server
@@ -26,15 +26,15 @@
   register: nmctl_external_client_nodes_list
   changed_when: false
 
-# If nmctl_ext_client_list.stdout is null, set it to an empty list
+# If netmaker_current_ext_client_list.stdout is null, set it to an empty list
 #
 # This is to handle the edge case where there are no external clients
 # currently defined on the server.
-- name: If nmctl_ext_client_list.stdout is null, set it to an empty list
+- name: If netmaker_current_ext_client_list is null, set it to an empty list
   ansible.builtin.set_fact:
-    nmctl_ext_client_list:
+    netmaker_current_ext_client_list:
       stdout: "[]"
-  when: nmctl_ext_client_list.stdout == "null"
+  when: netmaker_current_ext_client_list.stdout == "null"
 
 # Build the list of external clients
 - name: Build the list of current external clients
@@ -45,7 +45,7 @@
                       'nodeid': item_node.id,
                       'hostid': item_node.hostid,
                       'hostname': item_host.name}] }}"
-  loop: "{{ nmctl_ext_client_list.stdout }}"
+  loop: "{{ netmaker_current_ext_client_list.stdout }}"
   loop_control:
     loop_var: item_ext
     label: "{{ item_ext.clientid }} {{ item_ext.network }}"
