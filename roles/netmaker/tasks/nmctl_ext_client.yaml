@@ -51,11 +51,11 @@
     label: "{{ item_ext.clientid }} {{ item_ext.network }}"
   vars:
     item_node: "{{ netmaker_external_client_nodes_list.stdout | from_json
-                    | json_query(query_node) | first }}"
+                    | json_query(query_node) | first }}"  # noqa: var-naming[no-role-prefix] yaml[line-length]
     item_host: "{{ netmaker_external_client_hosts_list.stdout | from_json
-                    | json_query(query_host) | first }}"
-    query_node: "[?id == '{{ item_ext.ingressgatewayid }}']"
-    query_host: "[?id == '{{ item_node.hostid }}']"
+                    | json_query(query_host) | first }}"  # noqa: var-naming[no-role-prefix] yaml[line-length]
+    query_node: "[?id == '{{ item_ext.ingressgatewayid }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
+    query_host: "[?id == '{{ item_node.hostid }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
 
 # Define netmaker_client_list as a default list if it doesn't exist
 - name: Define netmaker_client_list as a default list if it doesn't exist
@@ -79,8 +79,8 @@
     label: "{{ item_ext.name }} with host ID {{ item_host.id }}"
   vars:
     item_host: "{{ netmaker_external_client_hosts_list.stdout | from_json
-                  | json_query(query_host) | first }}"
-    query_host: "[?name == '{{ item_ext.host }}']"
+                  | json_query(query_host) | first }}"  # noqa: var-naming[no-role-prefix] yaml[line-length]
+    query_host: "[?name == '{{ item_ext.host }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
 
 # Create the external client if it doesn't exist
 - name: Create the external client if it doesn't exist
@@ -96,6 +96,6 @@
     | length == 0
   vars:
     node: "{{ netmaker_external_client_nodes_list.stdout | from_json
-              | json_query(query_node) | first }}"
+              | json_query(query_node) | first }}"  # noqa: var-naming[no-role-prefix] yaml[line-length]
     query_node: "[?network == '{{ item.network }}' &&
-                  hostid == '{{ item.hostid }}']"
+                  hostid == '{{ item.hostid }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
