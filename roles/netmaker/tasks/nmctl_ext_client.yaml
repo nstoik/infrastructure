@@ -36,7 +36,7 @@
       stdout: "[]"
   when: netmaker_current_ext_client_list.stdout == "null"
 
-# Build the list of external clients
+# Build the list of current external clients
 - name: Build the list of current external clients
   ansible.builtin.set_fact:
     client_list: "{{ client_list | default([]) +
@@ -60,11 +60,12 @@
 # Define client_list as a default list if it doesn't exist
 - name: Define client_list as a default list if it doesn't exist
   ansible.builtin.set_fact:
-    client_list: "[{'clientid': 'null',
-                    'network': 'null',
-                    'nodeid': 'null',
-                    'hostid': 'null',
-                    'hostname': 'null' }]"
+    client_list:
+      - clientid: "null"
+        network: "null"
+        nodeid: "null"
+        hostid: "null"
+        hostname: "null"
   when: client_list is not defined
 
 # Add the host id to the netmaker_ext_clients_list list
@@ -86,7 +87,7 @@
   ansible.builtin.include_tasks: nmctl_ext_client_create.yaml
   loop: "{{ ext_clients_new }}"
   loop_control:
-    label: "{{ item.name }} andn network {{ item.network }}"
+    label: "{{ item.name }} and network {{ item.network }}"
   when: >
     client_list
     | selectattr('clientid', 'equalto', item.name)
