@@ -16,14 +16,14 @@
 - name: Get all the hosts from the server
   ansible.builtin.command:
     cmd: nmctl host list -o json
-  register: nmctl_external_client_hosts_list
+  register: netmaker_external_client_hosts_list
   changed_when: false
 
 # Get all the nodes from the server
 - name: Get all the nodes from the server
   ansible.builtin.command:
     cmd: nmctl node list -o json
-  register: nmctl_external_client_nodes_list
+  register: netmaker_external_client_nodes_list
   changed_when: false
 
 # If netmaker_current_ext_client_list.stdout is null, set it to an empty list
@@ -50,9 +50,9 @@
     loop_var: item_ext
     label: "{{ item_ext.clientid }} {{ item_ext.network }}"
   vars:
-    item_node: "{{ nmctl_external_client_nodes_list.stdout | from_json
+    item_node: "{{ netmaker_external_client_nodes_list.stdout | from_json
                     | json_query(query_node) | first }}"
-    item_host: "{{ nmctl_external_client_hosts_list.stdout | from_json
+    item_host: "{{ netmaker_external_client_hosts_list.stdout | from_json
                     | json_query(query_host) | first }}"
     query_node: "[?id == '{{ item_ext.ingressgatewayid }}']"
     query_host: "[?id == '{{ item_node.hostid }}']"
@@ -78,7 +78,7 @@
     loop_var: item_ext
     label: "{{ item_ext.name }} with host ID {{ item_host.id }}"
   vars:
-    item_host: "{{ nmctl_external_client_hosts_list.stdout | from_json
+    item_host: "{{ netmaker_external_client_hosts_list.stdout | from_json
                   | json_query(query_host) | first }}"
     query_host: "[?name == '{{ item_ext.host }}']"
 
@@ -95,7 +95,7 @@
     | list
     | length == 0
   vars:
-    node: "{{ nmctl_external_client_nodes_list.stdout | from_json
+    node: "{{ netmaker_external_client_nodes_list.stdout | from_json
               | json_query(query_node) | first }}"
     query_node: "[?network == '{{ item.network }}' &&
                   hostid == '{{ item.hostid }}']"
