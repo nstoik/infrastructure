@@ -39,12 +39,12 @@
 # Build the list of current external clients
 - name: Build the list of current external clients
   ansible.builtin.set_fact:
-    client_list: "{{ client_list | default([]) +
-                    [{'clientid': item_ext.clientid,
-                      'network': item_node.network,
-                      'nodeid': item_node.id,
-                      'hostid': item_node.hostid,
-                      'hostname': item_host.name}] }}"
+    netmaker_client_list: "{{ netmaker_client_list | default([]) +
+                            [{'clientid': item_ext.clientid,
+                              'network': item_node.network,
+                              'nodeid': item_node.id,
+                              'hostid': item_node.hostid,
+                              'hostname': item_host.name}] }}"
   loop: "{{ netmaker_current_ext_client_list.stdout }}"
   loop_control:
     loop_var: item_ext
@@ -57,16 +57,16 @@
     query_node: "[?id == '{{ item_ext.ingressgatewayid }}']"
     query_host: "[?id == '{{ item_node.hostid }}']"
 
-# Define client_list as a default list if it doesn't exist
-- name: Define client_list as a default list if it doesn't exist
+# Define netmaker_client_list as a default list if it doesn't exist
+- name: Define netmaker_client_list as a default list if it doesn't exist
   ansible.builtin.set_fact:
-    client_list:
+    netmaker_client_list:
       - clientid: "null"
         network: "null"
         nodeid: "null"
         hostid: "null"
         hostname: "null"
-  when: client_list is not defined
+  when: netmaker_client_list is not defined
 
 # Add the host id to the netmaker_ext_clients_list list
 - name: Add host id to the netmaker_ext_clients_list list
@@ -89,7 +89,7 @@
   loop_control:
     label: "{{ item.name }} and network {{ item.network }}"
   when: >
-    client_list
+    netmaker_client_list
     | selectattr('clientid', 'equalto', item.name)
     | selectattr('network', 'equalto', item.network)
     | list
