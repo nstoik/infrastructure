@@ -56,6 +56,10 @@
         netmaker_network: "{{ netmaker_networks[0] }}"
         netmaker_nc_hostname: "{{ netmaker_droplet.name }}"
 
+    # Flush the handler to ensure the netclient is running
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
     # This adds the rest of the networks in the list to the Netclient
     # And sets all the options for the host and each node/network
     - name: Configure netclient on the Netmaker server
