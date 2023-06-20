@@ -5,13 +5,13 @@
 #  netmaker_nodes: the list of nodes for a given host already configured
 #  netmaker_node_definition: a single node_definition to be udpated.
 
-# Create the combined node_defintion_options
+# Create the combined netmaker_node_defintion_options
 #
 # The order of the combine is important as the node_definition should override
 # the node item.
-- name: Create the combined node_defintion_options
+- name: Create the combined netmaker_node_defintion_options
   ansible.builtin.set_fact:
-    node_defintion_options: "{{ netmaker_nodes
+    netmaker_node_defintion_options: "{{ netmaker_nodes
                                 | json_query(query_nodes)
                                 | first
                                 | combine(netmaker_node_definition,
@@ -60,9 +60,9 @@
   ansible.builtin.command:
     cmd: >
       nmctl node
-      {{ 'create_ingress' if node_defintion_options.isingressgateway
+      {{ 'create_ingress' if netmaker_node_defintion_options.isingressgateway
          else 'delete_ingress' }}
-      {{ node_defintion_options.network }}
-      {{ node_defintion_options.id }}
-  when: node_defintion_options.isingressgateway
+      {{ netmaker_node_defintion_options.network }}
+      {{ netmaker_node_defintion_options.id }}
+  when: netmaker_node_defintion_options.isingressgateway
   changed_when: false
