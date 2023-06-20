@@ -21,6 +21,7 @@
     unique_name: true
   register: digitalocean_droplet_result
   tags:
+    - cloudflare
     - digitalocean
     - digitalocean.droplet
 

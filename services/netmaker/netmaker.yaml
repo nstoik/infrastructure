@@ -34,6 +34,7 @@
       vars:
         digitalocean_droplet: "{{ netmaker_droplet }}"
       tags:
+        - cloudflare
         - digitalocean
         - digitalocean.droplet
 
@@ -49,6 +50,7 @@
       no_log: true
       tags:
         - digitalocean
+        - cloudflare
 
     - name: Configure Cloudflare DNS Record
       ansible.builtin.include_role:
