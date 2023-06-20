@@ -19,3 +19,6 @@
     solo: "{{ (item.state == 'present') | ternary('yes', omit) }}"
     api_token: "{{ secret_cf_token }}"
   loop: "{{ cloudflare_record }}"
+  tags:
+    - cloudflare
+    - cloudflare.dns

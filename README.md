@@ -79,6 +79,8 @@ The following ansible tags are available to specify specific tasks to run.
     - digitalocean.droplet - Configure a DigitalOcean droplet
     - digitalocean.storage - Work with DigitalOcean block storage and volumes
     - digitalocean.user - Configure a user on a DigitalOcean droplet
+- cloudflare - Configure Cloudflare
+    - cloudflare.dns - Configure Cloudflare DNS
 - netmaker - Configure a Netmaker server
 
 # Inventory
