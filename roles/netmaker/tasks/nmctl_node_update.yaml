@@ -17,6 +17,7 @@
                                 | combine(netmaker_node_definition,
                                           recursive=True) }}"
   vars:
+    # yamllint disable-line rule:line-length
     query_nodes: "[?network == '{{ netmaker_node_definition.network }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
 
 # TODO: Revisit this method of updating the node definition

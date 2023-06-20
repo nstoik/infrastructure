@@ -37,6 +37,7 @@
   when: netmaker_current_ext_client_list.stdout == "null"
 
 # Build the list of current external clients
+# yamllint disable rule:line-length
 - name: Build the list of current external clients
   ansible.builtin.set_fact:
     netmaker_client_list: "{{ netmaker_client_list | default([]) +
@@ -99,3 +100,4 @@
               | json_query(query_node) | first }}"  # noqa: var-naming[no-role-prefix] yaml[line-length]
     query_node: "[?network == '{{ item.network }}' &&
                   hostid == '{{ item.hostid }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
+# yamllint enable rule:line-length
