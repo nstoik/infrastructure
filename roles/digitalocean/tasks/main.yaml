@@ -32,6 +32,8 @@
     droplet_id: "{{ digitalocean_droplet_result.data.droplet.id }}"
   when: digitalocean_droplet['volume'] is defined and
         digitalocean_droplet.state == 'present'
+  tags:
+    - digitalocean.storage
 
 - name: Refresh inventory
   ansible.builtin.meta: refresh_inventory
