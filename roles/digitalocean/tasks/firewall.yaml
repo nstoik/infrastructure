@@ -11,4 +11,5 @@
     outbound_rules: "{{ item.outbound_rules | default([]) }}"
   loop: "{{ digitalocean_firewall }}"
   tags:
+    - digitalocean
     - digitalocean.firewall

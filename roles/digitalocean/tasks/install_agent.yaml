@@ -8,3 +8,6 @@
     dest: "/home/{{ default_user }}/install_do_agent.sh"
     mode: 0755
   notify: Install digitalocean agent
+  tags:
+    - digitalocean
+    - digitalocean.droplet

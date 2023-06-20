@@ -76,6 +76,7 @@ The following ansible tags are available to specify specific tasks to run.
 - digitalocean - Configure the DigitalOcean cloud provider
     - digitalocean.tags - Configure the DigitalOcean tags
     - digitalocean.firewall - Configure the DigitalOcean firewall
+    - digitalocean.droplet - Configure a DigitalOcean droplet
     - digitalocean.storage - Work with DigitalOcean block storage and volumes
     - digitalocean.user - Configure a user on a DigitalOcean droplet
 - netmaker - Configure a Netmaker server

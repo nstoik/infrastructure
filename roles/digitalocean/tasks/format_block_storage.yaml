@@ -4,6 +4,7 @@
 # Block for digitalocean block storage formatting
 - name: Format block storage block
   tags:
+    - digitalocean
     - digitalocean.storage
   block:
     # Gather facts about the block storage volume

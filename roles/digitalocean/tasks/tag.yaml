@@ -8,4 +8,5 @@
     state: "{{ item.state | default('present') }}"
   loop: "{{ digitalocean_tags }}"
   tags:
+    - digitalocean
     - digitalocean.tags

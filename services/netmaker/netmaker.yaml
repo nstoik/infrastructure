@@ -24,12 +24,18 @@
       vars:
         digitalocean_volume:
           - "{{ netmaker_volume }}"
+      tags:
+        - digitalocean
+        - digitalocean.storage
 
     - name: Configure DigitalOcean Droplet
       ansible.builtin.include_role:
         name: digitalocean
       vars:
         digitalocean_droplet: "{{ netmaker_droplet }}"
+      tags:
+        - digitalocean
+        - digitalocean.droplet
 
     - name: Get the Netmaker Droplet public IP address
       ansible.builtin.set_fact:
@@ -41,6 +47,8 @@
           }}
       when: netmaker_droplet.state == "present"
       no_log: true
+      tags:
+        - digitalocean
 
     - name: Configure Cloudflare DNS Record
       ansible.builtin.include_role:
@@ -86,17 +94,24 @@
         create_user_flag: >-
           {{ hostvars['localhost']['digitalocean_droplet_result']['changed'] }}
       no_log: true
+      tags:
+        - digitalocean
 
     - name: Import create_user role from digitalocean
       ansible.builtin.include_role:
         name: digitalocean
         tasks_from: create_user
       when: create_user_flag
+      tags:
+        - digitalocean
+        - digitalocean.user
 
     - name: Import install_agent role from digitalocean
       ansible.builtin.include_role:
         name: digitalocean
         tasks_from: install_agent
+      tags:
+        - digitalocean
 
     # Format the block storage if required. Set it to be automatically mounted
     # The user has to be created before the block storage can be formatted.
@@ -107,6 +122,9 @@
       vars:
         digitalocean_volume:
           - "{{ netmaker_volume }}"
+      tags:
+        - digitalocean
+        - digitalocean.storage
 
     # Wait for any unattended upgrades to finish
     - name: Wait for unattended upgrades to finish

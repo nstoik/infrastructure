@@ -4,6 +4,7 @@
 # specify a block to add tags to all tasks in this file
 - name: Create a user on the Droplet block
   tags:
+    - digitalocean
     - digitalocean.droplet
     - digitalocean.user
   block:
