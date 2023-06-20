@@ -15,9 +15,11 @@
 
   tasks:
     - name: Install the nmctl tool
-      ansible.builtin.import_tasks: ./tasks/nmctl.yaml
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: nmctl
       vars:
-        check_for_admin: false
+        netmaker_check_for_admin: false
 
 - name: Configure Netmaker on the server
   hosts: do_netmaker
@@ -29,38 +31,50 @@
 
   tasks:
     - name: Install the nmctl tool
-      ansible.builtin.import_tasks: ./tasks/nmctl.yaml
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: nmctl
       vars:
-        check_for_admin: true
+        netmaker_check_for_admin: true
 
     - name: Configure networks on Netmaker
-      ansible.builtin.import_tasks: ./tasks/nmctl_network.yaml
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: nmctl_network
 
     - name: Configure enrollment keys on Netmaker
-      ansible.builtin.import_tasks: ./tasks/nmctl_enrollment.yaml
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: nmctl_enrollment
 
     # This adds the first network in the list to the Netclient
     - name: Install the netclient tool on the Netmaker server
-      ansible.builtin.import_tasks: ./tasks/netclient_install_docker.yaml
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: netclient_install_docker
       vars:
-        network: "{{ netmaker_networks[0] }}"
-        nc_hostname: "{{ netmaker_droplet.name }}"
+        netmaker_network: "{{ netmaker_networks[0] }}"
+        netmaker_nc_hostname: "{{ netmaker_droplet.name }}"
+
+    # Flush the handler to ensure the netclient is running
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
 
     # This adds the rest of the networks in the list to the Netclient
     # And sets all the options for the host and each node/network
     - name: Configure netclient on the Netmaker server
-      ansible.builtin.import_tasks: ./tasks/netclient_join_network.yaml
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: netclient_join_network
       vars:
-        host_name: "{{ netmaker_droplet.name }}"
-        networks: "{{ netmaker_networks[1:] }}"
-        host_definition: "{{ netmaker_host_definition }}"
+        netmaker_host_name: "{{ netmaker_droplet.name }}"
+        netmaker_join_networks: "{{ netmaker_networks[1:] }}"
+        netmaker_host_definition: "{{ netmaker_host_settings }}"
 
     # Add the external clients to the Netmaker server
     - name: Add external clients to the Netmaker server
-      ansible.builtin.import_tasks: ./tasks/nmctl_ext_client.yaml
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: nmctl_ext_client
       vars:
-        external_clients: "{{ netmaker_ext_clients }}"
-
-  handlers:
-    - name: Import netmaker handlers
-      ansible.builtin.import_tasks: handlers/main.yaml
+        netmaker_ext_clients_list: "{{ netmaker_ext_clients }}"

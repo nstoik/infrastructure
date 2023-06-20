@@ -1,0 +1,17 @@
+{
+  "id": "{{ netmaker_template_host_options.id }}",
+  "verbosity": 0,
+{% if netmaker_template_host_options.nodes is defined %}
+  "nodes": [
+{% for node in netmaker_template_host_options.nodes %}
+    "{{ node }}"{% if not loop.last %},{% endif %}
+{% endfor %}
+  ],
+{% endif %}
+  "proxy_enabled": {{ netmaker_template_host_options.proxy_enabled | default(false) | bool | lower }},
+  "isdefault": {{ netmaker_template_host_options.isdefault | default(false) | bool | lower }}, 
+  "isrelayed": {{ netmaker_template_host_options.isrelayed | default(false) | bool | lower }},
+  "relayed_by": "{{ netmaker_template_host_options.relayed_by | default("") | string }}",
+  "isrelay": {{ netmaker_template_host_options.isrelay | default(false) | bool | lower }},
+  "relay_hosts": {{ netmaker_template_host_options.relay_hosts | default([]) }}
+}

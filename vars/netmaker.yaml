@@ -158,7 +158,7 @@ netmaker_networks:
   }
 
 # netmaker host and node definitions
-netmaker_host_definition: {
+netmaker_host_settings: {
   name: '{{ netmaker_droplet.name }}',
   isdefault: true,
   node_settings: [
@@ -212,7 +212,7 @@ netmaker_host_definition: {
 netmaker_ext_clients:
   - {
     name: 'iPhone',
-    host: '{{ netmaker_host_definition.name }}',
+    host: '{{ netmaker_host_settings.name }}',
     # monitoring network
     network: '{{ netmaker_networks[0].name }}',
     allowedips: "",
@@ -220,7 +220,7 @@ netmaker_ext_clients:
   }
   - {
     name: 'iPhone',
-    host: '{{ netmaker_host_definition.name }}',
+    host: '{{ netmaker_host_settings.name }}',
     # personal network
     network: '{{ netmaker_networks[1].name }}',
     allowedips: "",
@@ -228,7 +228,7 @@ netmaker_ext_clients:
   }
   - {
     name: 'iPhone',
-    host: '{{ netmaker_host_definition.name }}',
+    host: '{{ netmaker_host_settings.name }}',
     # farm-network network
     network: '{{ netmaker_networks[2].name }}',
     allowedips: "",
