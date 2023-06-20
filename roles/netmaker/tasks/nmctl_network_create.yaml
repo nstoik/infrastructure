@@ -20,7 +20,7 @@
     dest: "{{ netmaker_network_definition_file.path }}"
     mode: 0600
   vars:
-    networkoptions: "{{ item }}"
+    netmaker_network_options: "{{ item }}"
 
 # Create the network on the Netmaker server
 - name: Create the network on the Netmaker server
