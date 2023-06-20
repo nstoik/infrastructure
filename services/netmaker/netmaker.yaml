@@ -70,6 +70,9 @@
       loop:
         - "{{ do_ip_address | default('') }}"
         - "{{ netmaker_base_domain }}"
+      tags:
+        - base
+        - base.known_hosts
 
 
 # The plays below will only run when the hosts group do_netmaker
@@ -133,6 +136,9 @@
       ansible.builtin.include_role:
         name: base
         tasks_from: wait_for_unattended_upgrade
+      tags:
+        - base
+        - base.apt
 
 - name: Additional Setup of Netmaker Droplet
   hosts: do_netmaker
@@ -144,6 +150,9 @@
   roles:
     - role: geerlingguy.security
       become: true
+      tags:
+        - base
+        - base.geerlingguy.security
 
   tasks:
     - name: Import main role from base
@@ -157,7 +166,15 @@
         base_dotfiles:
           install: true
           dotbot_skip_ssh_authorized_file: true
+      tags:
+        - base
+        - base.apt
+        - base.docker
+        - base.dotfiles
+        - base.known_hosts
 
     - name: Import main role from netmaker
       ansible.builtin.include_role:
         name: netmaker
+      tags:
+        - netmaker

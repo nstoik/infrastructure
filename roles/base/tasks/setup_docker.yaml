@@ -1,50 +1,56 @@
 ---
 # tasks to setup docker on a host.
 
-# install docker
-- name: Install docker
-  ansible.builtin.apt:
-    pkg:
-      - docker.io
-      - docker-compose
-    state: present
-  become: true
+# block for base docker tasks
+- name: Block for base docker tasks
+  tags:
+    - base
+    - base.docker
+  block:
+    # install docker
+    - name: Install docker
+      ansible.builtin.apt:
+        pkg:
+          - docker.io
+          - docker-compose
+        state: present
+      become: true
 
-# add the user to the docker group
-- name: Add user to docker group
-  ansible.builtin.user:
-    name: "{{ default_user }}"
-    groups: docker
-    append: true
-  become: true
-  notify: Restart docker
+    # add the user to the docker group
+    - name: Add user to docker group
+      ansible.builtin.user:
+        name: "{{ default_user }}"
+        groups: docker
+        append: true
+      become: true
+      notify: Restart docker
 
-# create the docker config directory with root as owner
-- name: Create docker data and config directories
-  ansible.builtin.file:
-    path: "/etc/docker"
-    state: directory
-    mode: 0766
-    group: root
-    owner: root
-  become: true
+    # create the docker config directory with root as owner
+    - name: Create docker data and config directories
+      ansible.builtin.file:
+        path: "/etc/docker"
+        state: directory
+        mode: 0766
+        group: root
+        owner: root
+      become: true
 
-# create the docker data directory.
-# This is where docker will store images and containers.
-# This directory is owned by root as docker is run as root.
-- name: Create docker data directory
-  ansible.builtin.file:
-    path: "{{ docker_data_dir }}"
-    state: directory
-    mode: 0766
-  become: true
+    # create the docker data directory.
+    # This is where docker will store images and containers.
+    # This directory is owned by root as docker is run as root.
+    - name: Create docker data directory
+      ansible.builtin.file:
+        path: "{{ docker_data_dir }}"
+        state: directory
+        mode: 0766
+      become: true
 
-# create the docker daemon config file
-- name: Create docker daemon config file
-  ansible.builtin.copy:
-    content: "{{ docker_daemon_options | to_nice_json }}"
-    dest: /etc/docker/daemon.json
-    mode: 0644
-  when: docker_daemon_options.keys() | length > 0
-  become: true
-  notify: Restart docker
+    # create the docker daemon config file
+    - name: Create docker daemon config file
+      ansible.builtin.copy:
+        content: "{{ docker_daemon_options | to_nice_json }}"
+        dest: /etc/docker/daemon.json
+        mode: 0644
+      when: docker_daemon_options.keys() | length > 0
+      become: true
+      notify: Restart docker

@@ -73,6 +73,12 @@ The services are:
 ## Ansible Tags
 The following ansible tags are available to specify specific tasks to run.
 
+- base - Base role and tasks for all hosts
+    - base.apt - Configure apt and install packages
+    - base.docker - Configure docker
+    - base.dotfiles - Configure dotfiles
+    - base.known_hosts - Configure known hosts file on the local machine
+    - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
 - digitalocean - Configure the DigitalOcean cloud provider
     - digitalocean.tags - Configure the DigitalOcean tags
     - digitalocean.firewall - Configure the DigitalOcean firewall
