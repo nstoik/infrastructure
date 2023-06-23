@@ -15,6 +15,8 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - ../../vars/netmaker.yaml
+  tags:
+    - netmaker.full_setup
 
   tasks:
     - name: Configure block storage on digitalocean
@@ -86,6 +88,8 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - ../../vars/netmaker.yaml
+  tags:
+    - netmaker.full_setup
 
   tasks:
     # Get the changed status from the droplet creation play
@@ -155,6 +159,8 @@
       tags:
         - base
         - base.geerlingguy.security
+  tags:
+    - netmaker.full_setup2
 
   tasks:
     - name: Import main role from base
