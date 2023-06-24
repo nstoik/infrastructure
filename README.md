@@ -29,7 +29,12 @@ ansible-galaxy install -r requirements.yaml
 ## Ansible vault
 There is a pre-commit hook to make sure an unencrypted vault is not committed.
 
-On new development environments, run `./git-init.sh` to set up the pre-commit hook.
+On new development environments set up the pre-commit hook.
+
+```bash
+chmod +x git-init.sh
+./git-init.sh
+```
 
 To encrypt a file, run `ansible-vault encrypt <file>`
 
