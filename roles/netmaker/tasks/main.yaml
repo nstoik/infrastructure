@@ -3,7 +3,7 @@
 
 # Block for main netmaker role
 - name: Block for main netmaker role
-  tags: 
+  tags:
     - netmaker
   block:
     - name: Set iptables policy to FORWARD ACCEPT
