@@ -153,17 +153,27 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - ../../vars/netmaker.yaml
-  roles:
-    - role: geerlingguy.security
+  tags:
+    - netmaker.full_setup
+
+  tasks:
+    # This is required to explicitly get the ansible facts for the
+    # play. This is needed for the import_role task below.
+    - name: Do ansible setup
+      ansible.builtin.setup:
+      tags:
+        - base
+        - base.geerlingguy.security
+
+    - name: Import geerlingguy.security role
+      ansible.builtin.import_role:
+        name: geerlingguy.security
       become: true
       tags:
         - base
         - base.geerlingguy.security
-  tags:
-    - netmaker.full_setup2
 
-  tasks:
-    - name: Import main role from base
+    - name: Include main role from base
       ansible.builtin.include_role:
         name: base
       vars:
@@ -181,7 +191,7 @@
         - base.dotfiles
         - base.known_hosts
 
-    - name: Import main role from netmaker
+    - name: Include main role from netmaker
       ansible.builtin.include_role:
         name: netmaker
       tags:
