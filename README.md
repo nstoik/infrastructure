@@ -89,6 +89,13 @@ The following ansible tags are available to specify specific tasks to run.
     - cloudflare.dns - Configure Cloudflare DNS
 - netmaker - Configure a Netmaker server
     - netmaker.full_setup - Complete the full setup of a Netmaker server
+    - netmaker.nmctl - Install the nmctl command line tool
+    - netmaker.networks - Configure the Netmaker networks
+    - netmaker.enrollment - Configure the Netmaker enrollment keys
+    - netmaker.netclient - Configure the Netmaker netclient
+        - netmaker.netclient.docker - Configure the Netmaker netclient using docker
+        - netmaker.netclient.join - Join the Netmaker netclient to the network
+    - netmaker.ext_client - Configure external clients
 
 # Inventory
 Inventory from DigtalOcean is dynamic using a plugin. The plugin configration is in the file `inventory/do_hosts.yaml`.
