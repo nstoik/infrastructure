@@ -162,6 +162,7 @@
     - name: Do ansible setup
       ansible.builtin.setup:
       tags:
+        - never
         - base
         - base.geerlingguy.security
 
