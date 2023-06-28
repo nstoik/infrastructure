@@ -5,7 +5,7 @@
 # fact netmaker_enrollment_key_list.stdout
 
 - name: Block for creating and fetching enrollment keys
-  tags: 
+  tags:
     - netmaker
     - netmaker.enrollment
     - netmaker.netclient

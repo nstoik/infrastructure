@@ -7,7 +7,7 @@
 #   netmaker_host_definition: A dictionary of host definition options
 
 - name: Block for netclient joining a network
-  tags: 
+  tags:
     - netmaker
     - netmaker.netclient
     - netmaker.netclient.join
@@ -52,7 +52,9 @@
       loop_control:
         label: "{{ netmaker_host.name }} to network {{ item.name }}"
       when: netmaker_host is defined and
-            item.name not in netmaker_host_nodes | map(attribute='network') | list
+            item.name not in netmaker_host_nodes |
+            map(attribute='network') |
+            list
       changed_when: false
 
     # Create a temporary file to store definition files
