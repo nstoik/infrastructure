@@ -61,6 +61,8 @@
       tags:
         - netmaker
         - netmaker.enrollment
+        - netmaker.netclient
+        - netmaker.netclient.join
 
     # This adds the first network in the list to the Netclient
     - name: Install the netclient tool on the Netmaker server
