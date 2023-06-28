@@ -52,7 +52,7 @@
         tasks_from: nmctl_network
       tags:
         - netmaker
-        - netmaker.networks
+        - netmaker.network
 
     - name: Configure enrollment keys on Netmaker
       ansible.builtin.include_role:
