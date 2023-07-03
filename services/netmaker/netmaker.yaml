@@ -165,6 +165,7 @@
         - never
         - base
         - base.geerlingguy.security
+        - netmaker
 
     - name: Import geerlingguy.security role
       ansible.builtin.import_role:
