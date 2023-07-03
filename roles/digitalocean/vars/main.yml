@@ -70,6 +70,7 @@ digitalocean_firewall:
         protocol: "udp"
         sources:
           addresses: ["0.0.0.0/0", "::/0"]
+      # yamllint disable rule:comments-indentation
       # STUN
       # - ports: "3478"
       #   protocol: "udp"
@@ -86,6 +87,7 @@ digitalocean_firewall:
       #   protocol: "udp"
       #   destinations:
       #     addresses: ["0.0.0.0/0", "::/0"]
+      # yamllint enable rule:comments-indentation
   - name: "StechSolutions-HTTPS"
     state: "present"
     tags: ["HTTPS", "Netmaker"]
