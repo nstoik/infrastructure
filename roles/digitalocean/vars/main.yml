@@ -71,10 +71,10 @@ digitalocean_firewall:
         sources:
           addresses: ["0.0.0.0/0", "::/0"]
       # STUN
-      - ports: "3478"
-        protocol: "udp"
-        sources:
-          addresses: ["0.0.0.0/0", "::/0"]
+      # - ports: "3478"
+      #   protocol: "udp"
+      #   sources:
+      #     addresses: ["0.0.0.0/0", "::/0"]
     outbound_rules:
       # Wireguard
       - ports: "51820-51830"
@@ -82,10 +82,10 @@ digitalocean_firewall:
         destinations:
           addresses: ["0.0.0.0/0", "::/0"]
       # STUN
-      - ports: "3478"
-        protocol: "udp"
-        destinations:
-          addresses: ["0.0.0.0/0", "::/0"]
+      # - ports: "3478"
+      #   protocol: "udp"
+      #   destinations:
+      #     addresses: ["0.0.0.0/0", "::/0"]
   - name: "StechSolutions-HTTPS"
     state: "present"
     tags: ["HTTPS", "Netmaker"]

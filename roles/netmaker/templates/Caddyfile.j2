@@ -24,11 +24,6 @@ https://api.{{ netmaker_base_domain }} {
         reverse_proxy http://netmaker:8081
 }
 
-# STUN
-https://stun.{{ netmaker_base_domain }} {
-	reverse_proxy netmaker:3478
-}
-
 # TURN
 https://turn.{{ netmaker_base_domain }} {
 	reverse_proxy host.docker.internal:3479
