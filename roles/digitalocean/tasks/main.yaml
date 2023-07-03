@@ -20,6 +20,10 @@
     project_name: "nelsonstoik"
     unique_name: true
   register: digitalocean_droplet_result
+  tags:
+    - cloudflare
+    - digitalocean
+    - digitalocean.droplet
 
 # attach a block storage volume to a droplet if the volume is defined
 - name: Attach DigitalOcean block storage
@@ -32,6 +36,13 @@
     droplet_id: "{{ digitalocean_droplet_result.data.droplet.id }}"
   when: digitalocean_droplet['volume'] is defined and
         digitalocean_droplet.state == 'present'
+  tags:
+    - digitalocean
+    - digitalocean.droplet
+    - digitalocean.storage
 
 - name: Refresh inventory
   ansible.builtin.meta: refresh_inventory
+  tags:
+    - digitalocean
+    - digitalocean.droplet

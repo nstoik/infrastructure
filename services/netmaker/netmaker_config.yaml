@@ -20,6 +20,10 @@
         tasks_from: nmctl
       vars:
         netmaker_check_for_admin: false
+      tags:
+        - netmaker
+        - netmaker.full_setup
+        - netmaker.nmctl
 
 - name: Configure Netmaker on the server
   hosts: do_netmaker
@@ -28,6 +32,8 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - ../../vars/netmaker.yaml
+  tags:
+    - netmaker.full_setup
 
   tasks:
     - name: Install the nmctl tool
@@ -36,16 +42,27 @@
         tasks_from: nmctl
       vars:
         netmaker_check_for_admin: true
+      tags:
+        - netmaker
+        - netmaker.nmctl
 
     - name: Configure networks on Netmaker
       ansible.builtin.include_role:
         name: netmaker
         tasks_from: nmctl_network
+      tags:
+        - netmaker
+        - netmaker.network
 
     - name: Configure enrollment keys on Netmaker
       ansible.builtin.include_role:
         name: netmaker
         tasks_from: nmctl_enrollment
+      tags:
+        - netmaker
+        - netmaker.enrollment
+        - netmaker.netclient
+        - netmaker.netclient.join
 
     # This adds the first network in the list to the Netclient
     - name: Install the netclient tool on the Netmaker server
@@ -55,10 +72,18 @@
       vars:
         netmaker_network: "{{ netmaker_networks[0] }}"
         netmaker_nc_hostname: "{{ netmaker_droplet.name }}"
+      tags:
+        - netmaker
+        - netmaker.netclient
+        - netmaker.netclient.docker
 
     # Flush the handler to ensure the netclient is running
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers
+      tags:
+        - netmaker
+        - netmaker.netclient
+        - netmaker.netclient.docker
 
     # This adds the rest of the networks in the list to the Netclient
     # And sets all the options for the host and each node/network
@@ -70,6 +95,10 @@
         netmaker_host_name: "{{ netmaker_droplet.name }}"
         netmaker_join_networks: "{{ netmaker_networks[1:] }}"
         netmaker_host_definition: "{{ netmaker_host_settings }}"
+      tags:
+        - netmaker
+        - netmaker.netclient
+        - netmaker.netclient.join
 
     # Add the external clients to the Netmaker server
     - name: Add external clients to the Netmaker server
@@ -78,3 +107,6 @@
         tasks_from: nmctl_ext_client
       vars:
         netmaker_ext_clients_list: "{{ netmaker_ext_clients }}"
+      tags:
+        - netmaker
+        - netmaker.ext_client

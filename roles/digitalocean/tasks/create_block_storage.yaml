@@ -11,3 +11,6 @@
     volume_name: "{{ item.volume_name }}"
     project_name: "nelsonstoik"
   loop: "{{ digitalocean_volume }}"
+  tags:
+    - digitalocean
+    - digitalocean.storage

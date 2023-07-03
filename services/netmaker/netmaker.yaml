@@ -15,6 +15,8 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - ../../vars/netmaker.yaml
+  tags:
+    - netmaker.full_setup
 
   tasks:
     - name: Configure block storage on digitalocean
@@ -24,12 +26,19 @@
       vars:
         digitalocean_volume:
           - "{{ netmaker_volume }}"
+      tags:
+        - digitalocean
+        - digitalocean.storage
 
     - name: Configure DigitalOcean Droplet
       ansible.builtin.include_role:
         name: digitalocean
       vars:
         digitalocean_droplet: "{{ netmaker_droplet }}"
+      tags:
+        - cloudflare
+        - digitalocean
+        - digitalocean.droplet
 
     - name: Get the Netmaker Droplet public IP address
       ansible.builtin.set_fact:
@@ -41,6 +50,9 @@
           }}
       when: netmaker_droplet.state == "present"
       no_log: true
+      tags:
+        - digitalocean
+        - cloudflare
 
     - name: Configure Cloudflare DNS Record
       ansible.builtin.include_role:
@@ -48,6 +60,8 @@
       vars:
         cloudflare_ip_address: "{{ do_ip_address | default('') }}"
         cloudflare_record: "{{ netmaker_cf_record }}"
+      tags:
+        - cloudflare
 
     - name: Update the known_hosts file
       ansible.builtin.include_role:
@@ -60,6 +74,9 @@
       loop:
         - "{{ do_ip_address | default('') }}"
         - "{{ netmaker_base_domain }}"
+      tags:
+        - base
+        - base.known_hosts
 
 
 # The plays below will only run when the hosts group do_netmaker
@@ -71,6 +88,8 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - ../../vars/netmaker.yaml
+  tags:
+    - netmaker.full_setup
 
   tasks:
     # Get the changed status from the droplet creation play
@@ -86,17 +105,24 @@
         create_user_flag: >-
           {{ hostvars['localhost']['digitalocean_droplet_result']['changed'] }}
       no_log: true
+      tags:
+        - digitalocean
 
     - name: Import create_user role from digitalocean
       ansible.builtin.include_role:
         name: digitalocean
         tasks_from: create_user
       when: create_user_flag
+      tags:
+        - digitalocean
+        - digitalocean.user
 
     - name: Import install_agent role from digitalocean
       ansible.builtin.include_role:
         name: digitalocean
         tasks_from: install_agent
+      tags:
+        - digitalocean
 
     # Format the block storage if required. Set it to be automatically mounted
     # The user has to be created before the block storage can be formatted.
@@ -107,12 +133,18 @@
       vars:
         digitalocean_volume:
           - "{{ netmaker_volume }}"
+      tags:
+        - digitalocean
+        - digitalocean.storage
 
     # Wait for any unattended upgrades to finish
     - name: Wait for unattended upgrades to finish
       ansible.builtin.include_role:
         name: base
         tasks_from: wait_for_unattended_upgrade
+      tags:
+        - base
+        - base.apt
 
 - name: Additional Setup of Netmaker Droplet
   hosts: do_netmaker
@@ -121,12 +153,28 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - ../../vars/netmaker.yaml
-  roles:
-    - role: geerlingguy.security
-      become: true
+  tags:
+    - netmaker.full_setup
 
   tasks:
-    - name: Import main role from base
+    # This is required to explicitly get the ansible facts for the
+    # play. This is needed for the import_role task below.
+    - name: Do ansible setup
+      ansible.builtin.setup:
+      tags:
+        - never
+        - base
+        - base.geerlingguy.security
+
+    - name: Import geerlingguy.security role
+      ansible.builtin.import_role:
+        name: geerlingguy.security
+      become: true
+      tags:
+        - base
+        - base.geerlingguy.security
+
+    - name: Include main role from base
       ansible.builtin.include_role:
         name: base
       vars:
@@ -137,7 +185,15 @@
         base_dotfiles:
           install: true
           dotbot_skip_ssh_authorized_file: true
+      tags:
+        - base
+        - base.apt
+        - base.docker
+        - base.dotfiles
+        - base.known_hosts
 
-    - name: Import main role from netmaker
+    - name: Include main role from netmaker
       ansible.builtin.include_role:
         name: netmaker
+      tags:
+        - netmaker

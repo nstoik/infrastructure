@@ -8,55 +8,61 @@
 #     base_state: present or absent
 #     base_comment: added to the known_hosts_ansible file the line above.
 
-# Check if the host_key is already in the known_hosts_ansible file
-- name: Check if the hostname is already in the known_hosts_ansible file
-  ansible.builtin.lineinfile:
-    path: "{{ known_hosts_ansible_file }}"
-    regex: "^{{ base_hostname }}.*"
-    state: absent
-  check_mode: true
-  changed_when: false
-  register: base_hostname_check_result
+# block for base known_hosts tasks
+- name: Block for base known_hosts tasks
+  tags:
+    - base
+    - base.known_hosts
+  block:
+    # Check if the host_key is already in the known_hosts_ansible file
+    - name: Check if the hostname is already in the known_hosts_ansible file
+      ansible.builtin.lineinfile:
+        path: "{{ known_hosts_ansible_file }}"
+        regex: "^{{ base_hostname }}.*"
+        state: absent
+      check_mode: true
+      changed_when: false
+      register: base_hostname_check_result
 
-# Wait for the host to be reachable
-- name: Wait for the host to be reachable
-  ansible.builtin.wait_for:
-    host: "{{ base_hostname }}"
-    port: 22
-    state: started
-    timeout: 60
-  when: base_state == 'present' and base_hostname_check_result.found == 0
+    # Wait for the host to be reachable
+    - name: Wait for the host to be reachable
+      ansible.builtin.wait_for:
+        host: "{{ base_hostname }}"
+        port: 22
+        state: started
+        timeout: 60
+      when: base_state == 'present' and base_hostname_check_result.found == 0
 
-# Get the host key from the host
-- name: Get the host key from the host
-  ansible.builtin.command: ssh-keyscan -t rsa {{ base_hostname }}
-  register: base_host_key_results
-  when: base_state == 'present' and base_hostname_check_result.found == 0
-  delegate_to: localhost
-  changed_when: base_host_key_results.stdout_lines | length > 0
+    # Get the host key from the host
+    - name: Get the host key from the host
+      ansible.builtin.command: ssh-keyscan -t rsa {{ base_hostname }}
+      register: base_host_key_results
+      when: base_state == 'present' and base_hostname_check_result.found == 0
+      delegate_to: localhost
+      changed_when: base_host_key_results.stdout_lines | length > 0
 
-# add to the known_hosts_ansible file with the hostname and comment
-# note that duplicate entries are not added so if there is multiple
-# host keys for the same host, only the first comment will be added
-- name: Add comment and hostname to the known_hosts_ansible file
-  ansible.builtin.lineinfile:
-    path: "{{ known_hosts_ansible_file }}"
-    line: "{{ item_line }}"
-    state: "{{ base_state }}"
-  with_items:
-    - "# {{ base_comment }}"
-    - "{{ base_host_key_results.stdout | default('') }} \n"
-  loop_control:
-    loop_var: item_line
-  when: base_state == 'present' and base_hostname_check_result.found == 0
-  delegate_to: localhost
-  no_log: true
+    # add to the known_hosts_ansible file with the hostname and comment
+    # note that duplicate entries are not added so if there is multiple
+    # host keys for the same host, only the first comment will be added
+    - name: Add comment and hostname to the known_hosts_ansible file
+      ansible.builtin.lineinfile:
+        path: "{{ known_hosts_ansible_file }}"
+        line: "{{ item_line }}"
+        state: "{{ base_state }}"
+      with_items:
+        - "# {{ base_comment }}"
+        - "{{ base_host_key_results.stdout | default('') }} \n"
+      loop_control:
+        loop_var: item_line
+      when: base_state == 'present' and base_hostname_check_result.found == 0
+      delegate_to: localhost
+      no_log: true
 
-# remove the comment and hostname from the known_hosts_ansible file
-- name: Remove comment and hostname from the known_hosts_ansible file
-  ansible.builtin.replace:
-    path: "{{ known_hosts_ansible_file }}"
-    regexp: "^# {{ base_comment }}\n.*\n\n"
-    replace: ""
-  when: base_state == 'absent'
-  delegate_to: localhost
+    # remove the comment and hostname from the known_hosts_ansible file
+    - name: Remove comment and hostname from the known_hosts_ansible file
+      ansible.builtin.replace:
+        path: "{{ known_hosts_ansible_file }}"
+        regexp: "^# {{ base_comment }}\n.*\n\n"
+        replace: ""
+      when: base_state == 'absent'
+      delegate_to: localhost

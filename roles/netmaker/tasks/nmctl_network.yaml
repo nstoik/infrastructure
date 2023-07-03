@@ -2,17 +2,23 @@
 # Use the NMCTL CLI tool to create network definitions
 # on the Netmaker server.
 
-# Get the current list of networks
-- name: Get the current list of networks
-  ansible.builtin.command:
-    cmd: "nmctl network list -o json"
-  register: netmaker_network_list
-  changed_when: false
+- name: Block for Netmaker network
+  tags:
+    - netmaker
+    - netmaker.network
+  block:
 
-# Create the network if it doesn't exist
-- name: Create the network if it doesn't exist
-  ansible.builtin.include_tasks: nmctl_network_create.yaml
-  loop: "{{ netmaker_networks }}"
-  loop_control:
-    label: "{{ item.name }}"
-  when: item.name not in netmaker_network_list.stdout
+    # Get the current list of networks
+    - name: Get the current list of networks
+      ansible.builtin.command:
+        cmd: "nmctl network list -o json"
+      register: netmaker_network_list
+      changed_when: false
+
+    # Create the network if it doesn't exist
+    - name: Create the network if it doesn't exist
+      ansible.builtin.include_tasks: nmctl_network_create.yaml
+      loop: "{{ netmaker_networks }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: item.name not in netmaker_network_list.stdout

@@ -13,6 +13,9 @@
     upgrade: true
     cache_valid_time: 3600
   become: true
+  tags:
+    - base
+    - base.apt
 
 # install base packages on the host
 - name: Install base packages
@@ -21,29 +24,44 @@
     name: "{{ base_packages + (base_additional_packages | default([])) }}"
     state: present
   become: true
+  tags:
+    - base
+    - base.apt
 
 # Check if a reboot is required
 - name: Check if a reboot is required
   ansible.builtin.stat:
     path: /var/run/reboot-required
   register: base_reboot_required_file
+  tags:
+    - base
 
 # Reboot the host if a reboot is required
 - name: Reboot the host if a reboot is required
   ansible.builtin.reboot:
   when: base_reboot_required_file.stat.exists
   become: true
+  tags:
+    - base
 
 # install docker when the flag is set
 - name: Install docker
   ansible.builtin.include_tasks: setup_docker.yaml
   when: base_install_docker is true
+  tags:
+    - base
+    - base.docker
 
 # setup dotfiles when the flag is set
 - name: Setup dotfiles
   ansible.builtin.include_tasks: setup_dotfiles.yaml
   when: base_dotfiles['install'] is true
+  tags:
+    - base
+    - base.dotfiles
 
 # flush all handlers
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
+  tags:
+    - base

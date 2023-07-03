@@ -16,3 +16,6 @@
        --allowedips="{{ item.allowedips }}"
        --dns="{{ item.dns }}"
   changed_when: false
+  tags:
+    - netmaker
+    - netmaker.ext_client
