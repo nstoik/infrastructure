@@ -17,6 +17,8 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
     ansible-playbook services/netmaker/netmaker.yaml
     ```
 
+    This also configures the Cloudflare DNS entries and the firewall reules on DigitalOcean.
+
 2. The [netmaker_config.yaml](netmaker_config.yaml) playbook configures the Netmaker server. To run the playbook, run the following command:
 
     ```bash
@@ -43,6 +45,21 @@ If the EE version is installed, there is a [grafana dashboard](https://grafana.n
 TODO: Modify the docker compose files to point to the external prometheus and grafana instances. Then remove the prometheus and grafana containers from the Netmaker server.
 
 The login for the grafana dashboard is `admin` and the password is stored in Bitwarden. The login for the prometheus instance is `Netmaker-Prometheus` and the password is the `secret_nm_license_key` (see the Ansbile vault).
+
+## Removal
+To remove the Netmaker server completely set the following two varaiables in the [vars/netmaker.yaml](vars/netmaker.yaml) file to `absent`:
+
+* netmaker_volume.state = absent
+* netmaker_droplet.state = absent
+
+Then run the [netmaker.yaml](netmaker.yaml) playbook again.
+
+That will remove the droplet and the volume from DigitalOcean. It will remove the Cloudflare DNS entries. It will update the local known_hosts_ansible file to remove the entry for the Netmaker server.
+
+The following things are not removed automatically
+* DigitalOcean firewall rules
+* nmctl installations on localhosts
+* any netclient installations
 
 ## NMCTL
 The [nmctl.yaml](tasks/nmctl.yaml) playbook installs the [nmctl command line tool](https://netmaker.readthedocs.io/en/master/nmctl.html). This tool can be used to interact with the Netmaker server from the command line.
