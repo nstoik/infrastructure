@@ -11,7 +11,7 @@
   vars_files:
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
-    - ../../vars/netmaker.yaml
+    - vars/netmaker.yaml
 
   tasks:
     - name: Install the nmctl tool
@@ -31,7 +31,7 @@
   vars_files:
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
-    - ../../vars/netmaker.yaml
+    - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
 
