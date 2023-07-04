@@ -14,7 +14,7 @@
   vars_files:
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
-    - ../../vars/netmaker.yaml
+    - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
 
@@ -87,7 +87,7 @@
   vars_files:
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
-    - ../../vars/netmaker.yaml
+    - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
 
@@ -152,7 +152,7 @@
   vars_files:
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
-    - ../../vars/netmaker.yaml
+    - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
 

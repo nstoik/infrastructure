@@ -3,7 +3,7 @@
 #
 # input vars:
 #   item: a single network definition from netmaker_networks
-#         variable (see vars/netmaker.yaml)
+#         variable (see services/netmaker/vars/netmaker.yaml)
 
 - name: Block for creating networks
   tags:
