@@ -4,7 +4,7 @@
 #
 # input vars:
 #   item: a single external client definition from netmaker_ext_clients
-#         variable (see vars/netmaker.yaml)
+#         variable (see services/netmaker/vars/netmaker.yaml)
 #   node: the node that is the ingress gateway for the network
 
 # Create or update the external client on the Netmaker server
