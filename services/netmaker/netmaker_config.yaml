@@ -58,6 +58,8 @@
       ansible.builtin.include_role:
         name: netmaker
         tasks_from: nmctl_enrollment
+      vars:
+        netmaker_create_enrollment_keys: true
       tags:
         - netmaker
         - netmaker.enrollment
