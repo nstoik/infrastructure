@@ -22,6 +22,7 @@
         state: absent
       check_mode: true
       changed_when: false
+      delegate_to: localhost
       register: base_hostname_check_result
 
     # Wait for the host to be reachable
