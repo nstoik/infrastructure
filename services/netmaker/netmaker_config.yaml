@@ -72,7 +72,7 @@
         name: netmaker
         tasks_from: netclient_install_docker
       vars:
-        netmaker_network: "{{ netmaker_networks[0] }}"
+        netmaker_netclient_networks: "{{ netmaker_networks }}"
         netmaker_nc_hostname: "{{ netmaker_droplet.name }}"
       tags:
         - netmaker
