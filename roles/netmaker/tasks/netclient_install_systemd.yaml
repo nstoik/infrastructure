@@ -73,4 +73,4 @@
       become: true
       changed_when: "item.name not in netclient_list_response.stdout"
       when: "item.name not in netclient_list_response.stdout"
-      notify: Restart Netclient systemd
+      # notify: Restart Netclient systemd
