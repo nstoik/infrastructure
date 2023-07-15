@@ -7,6 +7,8 @@
 # Required input vars:
 #   netmaker_enrollment_key_list: The list of enrollment keys from the Netmaker
 #                                 server.
+#   netmaker_netclient_networks: A list of networks to connect to on the
+#                                Netmaker server.
 
 - name: Block for netclient install via systemd
   tags:
@@ -44,7 +46,7 @@
                                [{'name': item_hostvar.name,
                                  'tags': item_hostvar.tags,
                                  'token': item_key.token}] }}"
-      loop: "{{ hostvars[inventory_hostname]['netmaker_networks'] }}"
+      loop: "{{ netmaker_netclient_networks }}"
       loop_control:
         loop_var: item_hostvar
       vars:
