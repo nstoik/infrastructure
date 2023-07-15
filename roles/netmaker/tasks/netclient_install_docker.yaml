@@ -12,7 +12,7 @@
   tags:
     - netmaker
     - netmaker.netclient
-    - netmkaer.netclient.docker
+    - netmaker.netclient.docker
   block:
 
     # Create the netclient directory
