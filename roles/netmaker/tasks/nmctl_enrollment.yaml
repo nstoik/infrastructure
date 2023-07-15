@@ -14,7 +14,7 @@
     - netmaker
     - netmaker.enrollment
     - netmaker.netclient
-    - netmaker.netclient.join
+    - netmaker.netclient.docker
   block:
 
     # Get the current list of enrollment keys
