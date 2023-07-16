@@ -3,7 +3,6 @@
 #
 # Required vars:
 #   netmaker_host_name: The name of the host to join to the network
-#   netmaker_join_networks: A list of network to join the host to
 #   netmaker_host_definition: A dictionary of host definition options
 
 - name: Block for netclient joining a network
@@ -43,19 +42,6 @@
                                               'equalto',
                                               netmaker_host.id)
                                 | list }}"
-
-    # Join the host to the required networks
-    - name: Join the host to the required networks
-      ansible.builtin.command:
-        cmd: nmctl host add_network {{ netmaker_host.id }} {{ item.name }}
-      loop: "{{ netmaker_join_networks }}"
-      loop_control:
-        label: "{{ netmaker_host.name }} to network {{ item.name }}"
-      when: netmaker_host is defined and
-            item.name not in netmaker_host_nodes |
-            map(attribute='network') |
-            list
-      changed_when: false
 
     # Create a temporary file to store definition files
     - name: Create a temporary file to store definition files

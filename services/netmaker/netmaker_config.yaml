@@ -87,15 +87,13 @@
         - netmaker.netclient
         - netmaker.netclient.docker
 
-    # This adds the rest of the networks in the list to the Netclient
-    # And sets all the options for the host and each node/network
+    # This sets all the options for the host and each node/network
     - name: Configure netclient on the Netmaker server
       ansible.builtin.include_role:
         name: netmaker
         tasks_from: netclient_join_network
       vars:
         netmaker_host_name: "{{ netmaker_droplet.name }}"
-        netmaker_join_networks: "{{ netmaker_networks[1:] }}"
         netmaker_host_definition: "{{ netmaker_host_settings }}"
       tags:
         - netmaker
