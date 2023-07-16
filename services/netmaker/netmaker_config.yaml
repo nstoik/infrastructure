@@ -91,7 +91,7 @@
     - name: Configure netclient on the Netmaker server
       ansible.builtin.include_role:
         name: netmaker
-        tasks_from: netclient_join_network
+        tasks_from: nmctl_host_update
       vars:
         netmaker_host_name: "{{ netmaker_droplet.name }}"
         netmaker_host_definition: "{{ netmaker_host_settings }}"
