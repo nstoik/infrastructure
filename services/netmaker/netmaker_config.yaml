@@ -79,14 +79,6 @@
         - netmaker.netclient
         - netmaker.netclient.docker
 
-    # Flush the handler to ensure the netclient is running
-    - name: Flush handlers
-      ansible.builtin.meta: flush_handlers
-      tags:
-        - netmaker
-        - netmaker.netclient
-        - netmaker.netclient.docker
-
     # This sets all the options for the host and each node/network
     - name: Configure netclient on the Netmaker server
       ansible.builtin.include_role:

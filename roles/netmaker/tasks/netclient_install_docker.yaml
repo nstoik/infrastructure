@@ -35,6 +35,14 @@
       notify:
         - Restart Netclient docker-compose
 
+    # Flush the handler to ensure the netclient is running
+    - name: Flush handlers to ensure the netclient is running
+      ansible.builtin.meta: flush_handlers
+      tags:
+        - netmaker
+        - netmaker.netclient
+        - netmaker.netclient.docker
+
     # Build a list of networks and tokens to connect to.
     - name: Build a list of networks and tokens to connect to
       ansible.builtin.set_fact:
