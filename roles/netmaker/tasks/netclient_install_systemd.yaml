@@ -39,6 +39,15 @@
       become: true
       notify: Restart Netclient systemd
 
+    # Enable the netclient systemd service
+    - name: Enable the netclient systemd service
+      ansible.builtin.service:
+        name: netclient
+        enabled: true
+        state: started
+      become: true
+      notify: Restart Netclient systemd
+
     # Build a list of networks and tokens to connect to.
     - name: Build a list of networks and tokens to connect to
       ansible.builtin.set_fact:
