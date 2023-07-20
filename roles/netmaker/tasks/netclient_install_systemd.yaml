@@ -6,7 +6,10 @@
 #
 # Required input vars:
 #   netmaker_enrollment_key_list: The list of enrollment keys from the Netmaker
-#                                 server.
+#                                 server. This will either be passed in as a
+#                                 variable or will be present in the hostvars
+#                                 (if the nmctl_create_enrollment_keys role was
+#                                 run in the same playbook).
 #   netmaker_netclient_networks: A list of networks to connect to on the
 #                                Netmaker server.
 
@@ -46,7 +49,6 @@
         enabled: true
         state: started
       become: true
-      notify: Restart Netclient systemd
 
     # Build a list of networks and tokens to connect to.
     - name: Build a list of networks and tokens to connect to
