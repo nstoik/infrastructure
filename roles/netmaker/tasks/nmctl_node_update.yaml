@@ -31,5 +31,5 @@
           {{ netmaker_node_definition.network }}
           {{ netmaker_node_definition.id }}
           {{ netmaker_node_definition.egressgatewayranges | join(',') }}
-      when: netmaker_node_definition.isegressgateway == true
+      when: netmaker_node_definition.isegressgateway
       changed_when: false
