@@ -165,41 +165,29 @@ netmaker_host_settings: {
     {
       # monitoring network
       network: '{{ netmaker_networks[0].name }}',
-      isrelayed: false,
-      isrelay: false,
       isegressgateway: false,
       isingressgateway: true,
       egressgatewayranges: [],
       egressgatewaynatenabled: false,
-      relayaddrs: [],
       ingressdns: "",
-      internetgateway: ""
     },
     {
       # personal network
       network: '{{ netmaker_networks[1].name }}',
-      isrelayed: false,
-      isrelay: false,
       isegressgateway: false,
       isingressgateway: true,
       egressgatewayranges: [],
       egressgatewaynatenabled: false,
-      relayaddrs: [],
       ingressdns: "",
-      internetgateway: ""
     },
     {
       # farm-network network
       network: '{{ netmaker_networks[2].name }}',
-      isrelayed: false,
-      isrelay: false,
       isegressgateway: false,
       isingressgateway: true,
       egressgatewayranges: [],
       egressgatewaynatenabled: false,
-      relayaddrs: [],
       ingressdns: "",
-      internetgateway: ""
     }
   ]
 }
