@@ -36,7 +36,7 @@
     # Create the autocomplete file for zsh for the netclient binary
     - name: Create the autocomplete file for zsh for the netclient binary
       ansible.builtin.shell:
-        cmd: 'netclient completion zsh > /usr/share/zsh/vendor-completions/_netclient'
+        cmd: 'netclient completion zsh > /usr/share/zsh/vendor-completions/_netclient'  # noqa: var-naming[no-role-prefix] yaml[line-length]
         creates: '/usr/share/zsh/vendor-completions/_netclient'
       become: true
 
