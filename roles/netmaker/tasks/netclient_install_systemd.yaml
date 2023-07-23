@@ -1,0 +1,96 @@
+---
+# Install the netclient via systemd.
+#
+# The hostvars for each host will have a list of networks that the host
+# should connect to.
+#
+# Required input vars:
+#   netmaker_enrollment_key_list: The list of enrollment keys from the Netmaker
+#                                 server. This will either be passed in as a
+#                                 variable or will be present in the hostvars
+#                                 (if the nmctl_create_enrollment_keys role was
+#                                 run in the same playbook).
+#   netmaker_netclient_networks: A list of networks to connect to on the
+#                                Netmaker server.
+
+- name: Block for netclient install via systemd
+  tags:
+    - netmaker
+    - netmaker.netclient
+    - netmkaer.netclient.systemd
+  block:
+
+    # Get the netclient binary and make it executable
+    - name: Get the netclient binary
+      ansible.builtin.get_url:
+        url: "https://github.com/gravitl/netclient/releases/download/\
+              {{ netmaker_version }}\
+              /netclient-linux-amd64"
+        dest: "/sbin/netclient"
+        owner: "root"
+        group: "root"
+        mode: 0755
+      become: true
+      notify: Restart Netclient systemd
+
+    # Create the autocomplete file for zsh for the netclient binary
+    # yamllint disable rule:line-length
+    - name: Create the autocomplete file for zsh for the netclient binary
+      ansible.builtin.shell:
+        cmd: 'netclient completion zsh > /usr/share/zsh/vendor-completions/_netclient'  # noqa: var-naming[no-role-prefix]
+        creates: '/usr/share/zsh/vendor-completions/_netclient'
+      become: true
+    # yamlint enable rule:line-length
+
+    # Copy the netclient systemd service file
+    - name: Copy the netclient systemd service file
+      ansible.builtin.copy:
+        src: "netclient.service"
+        dest: "/etc/systemd/system/netclient.service"
+        mode: 0666
+      become: true
+      notify: Restart Netclient systemd
+
+    # Enable the netclient systemd service
+    - name: Enable the netclient systemd service
+      ansible.builtin.service:
+        name: netclient
+        enabled: true
+        state: started
+      become: true
+
+    # Build a list of networks and tokens to connect to.
+    - name: Build a list of networks and tokens to connect to
+      ansible.builtin.set_fact:
+        netclient_networks: "{{ netclient_networks | default([]) +
+                               [{'name': item_hostvar.name,
+                                 'tags': item_hostvar.tags,
+                                 'token': item_key.token}] }}"
+      loop: "{{ netmaker_netclient_networks }}"
+      loop_control:
+        loop_var: item_hostvar
+      vars:
+        item_key: "{{ netmaker_enrollment_key_list.stdout | from_json
+                      | json_query(query_key) | first }}"
+        query_key: "[?contains(tags, `{{ item_hostvar.tags }}`)]"
+
+    # List all connected networks
+    - name: List all connected networks
+      ansible.builtin.command:
+        cmd: "netclient list"
+      register: netclient_list_response
+      changed_when: false
+      become: true
+
+    # Join all the networks
+    - name: Join all the networks
+      ansible.builtin.command:
+        cmd: "netclient join --token={{ item.token }}"
+      loop: "{{ netclient_networks }}"
+      loop_control:
+        loop_var: item
+        label: "{{ item.name }}"
+      become: true
+      changed_when: "item.name not in netclient_list_response.stdout"
+      when: "item.name not in netclient_list_response.stdout"
+      # notify: Restart Netclient systemd

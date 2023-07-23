@@ -1,9 +1,10 @@
 ---
-# Join a netclient to a network
+# Update the host definition on the Netmaker server
+#
+# Also updates each node definition for the host.
 #
 # Required vars:
 #   netmaker_host_name: The name of the host to join to the network
-#   netmaker_join_networks: A list of network to join the host to
 #   netmaker_host_definition: A dictionary of host definition options
 
 - name: Block for netclient joining a network
@@ -44,60 +45,33 @@
                                               netmaker_host.id)
                                 | list }}"
 
-    # Join the host to the required networks
-    - name: Join the host to the required networks
-      ansible.builtin.command:
-        cmd: nmctl host add_network {{ netmaker_host.id }} {{ item.name }}
-      loop: "{{ netmaker_join_networks }}"
-      loop_control:
-        label: "{{ netmaker_host.name }} to network {{ item.name }}"
-      when: netmaker_host is defined and
-            item.name not in netmaker_host_nodes |
-            map(attribute='network') |
-            list
-      changed_when: false
-
-    # Create a temporary file to store definition files
-    - name: Create a temporary file to store definition files
-      ansible.builtin.tempfile:
-        state: file
-        suffix: .json
-      register: netmaker_join_network_tempfile
-      changed_when: false
-
-    # Build the netmaker_host_options
-    - name: Build the netmaker_host_options
+    # Add node IDs to the list of nodes
+    - name: Add node IDs to the list of nodes
       ansible.builtin.set_fact:
-        netmaker_host_options: "{{ (netmaker_host_definition | default({}))
-                                  | combine({'id': netmaker_host.id}) }}"
-      when: netmaker_host is defined
-
-    # Write the host definition to the temporary file
-    - name: Write the host definition to the temporary file
-      ansible.builtin.template:
-        src: host_definition.json.j2
-        dest: "{{ netmaker_join_network_tempfile.path }}"
-        mode: 0640
+        node_settings: "{{ node_settings | default([]) +
+                          [item | combine({'id': item_node.id})] }}"
+      loop: "{{ netmaker_host_definition.node_settings }}"
+      loop_control:
+        loop_var: item
       vars:
-        netmaker_template_host_options: "{{ netmaker_host_options }}"
-      changed_when: false
-
-    # Update the host using the host_definition file.
-    - name: Update the host using the host_definition file
-      ansible.builtin.command:
-        cmd: >
-          nmctl host update {{ netmaker_host.id }}
-          --file {{ netmaker_join_network_tempfile.path }}
+        item_node: "{{ netmaker_host_nodes | json_query(query_node) | first }}"
+        query_node: "[?network=='{{ item.network }}']"
       when: netmaker_host is defined
+
+    # Set the host as a default host if it is defined as such
+    - name: Set the host as a default host if it is defined as such
+      ansible.builtin.command:
+        cmd: nmctl host update {{ netmaker_host.id }} --default
+      when: netmaker_host_definition.isdefault is true
       changed_when: false
 
     # Update the node definitions for each node of the host
     - name: Update the node definitions for each node of the host
       ansible.builtin.include_tasks: nmctl_node_update.yaml
       vars:
-        netmaker_nodes: "{{ netmaker_host_nodes }}"
-        netmaker_node_definition: "{{ item }}"
-      loop: "{{ netmaker_host_definition.node_settings }}"
+        netmaker_node_definition: "{{ item_node }}"
+      loop: "{{ node_settings }}"
       loop_control:
-        label: "network name: {{ item.network }}"
+        label: "network name: {{ item_node.network }}"
+        loop_var: item_node
       when: netmaker_host is defined

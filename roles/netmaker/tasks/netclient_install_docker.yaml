@@ -2,17 +2,19 @@
 # Install the netclient via docker-compose
 #
 # Required input vars:
-#   netmaker_network: The network to connect to on the Netmaker server. The
-#                     netclient needs to connect to a network during the
-#                     initial setup.
-#   netmaker_nc_hostname: The hostname of the netclient. This is the name that
-#                         is displayed on the Netmaker dashboard.
+#   netmaker_enrollment_key_list: The list of enrollment keys from the Netmaker
+#                                 server. This will either be passed in as a
+#                                 variable or will be present in the hostvars
+#                                 (if the nmctl_create_enrollment_keys role was
+#                                 run in the same playbook).
+#   netmaker_netclient_networks: A list of networks to connect to on the
+#                                Netmaker server.
 
 - name: Block for netclient install via docker
   tags:
     - netmaker
     - netmaker.netclient
-    - netmkaer.netclient.docker
+    - netmaker.netclient.docker
   block:
 
     # Create the netclient directory
@@ -24,18 +26,6 @@
         group: "{{ default_user }}"
         mode: '0766'
 
-    # Get the enrollment key for the suplied network
-    - name: Get the enrollment key for the network '{{ netmaker_network.name }}'
-      ansible.builtin.set_fact:
-        netmaker_nc_token: "{{ netmaker_enrollment_key_list.stdout
-                              | from_json
-                              | selectattr('tags',
-                                            'contains',
-                                            netmaker_network.tags)
-                              | map(attribute='token')
-                              | first }}"
-      changed_when: false
-
     # Write the netclient docker-compose file
     - name: Write the netclient docker-compose file
       ansible.builtin.template:
@@ -43,7 +33,50 @@
         dest: "{{ netclient_directory }}/docker-compose.yml"
         mode: 0666
       vars:
-        netmaker_token: "{{ netmaker_nc_token }}"
         netmaker_hostname: "{{ netmaker_nc_hostname }}"
       notify:
         - Restart Netclient docker-compose
+
+    # Flush the handler to ensure the netclient is running
+    - name: Flush handlers to ensure the netclient is running
+      ansible.builtin.meta: flush_handlers
+      tags:
+        - netmaker
+        - netmaker.netclient
+        - netmaker.netclient.docker
+
+    # Build a list of networks and tokens to connect to.
+    - name: Build a list of networks and tokens to connect to
+      ansible.builtin.set_fact:
+        netclient_networks: "{{ netclient_networks | default([]) +
+                               [{'name': item_hostvar.name,
+                                 'tags': item_hostvar.tags,
+                                 'token': item_key.token}] }}"
+      loop: "{{ netmaker_netclient_networks }}"
+      loop_control:
+        loop_var: item_hostvar
+      vars:
+        item_key: "{{ netmaker_enrollment_key_list.stdout | from_json
+                      | json_query(query_key) | first }}"
+        query_key: "[?contains(tags, `{{ item_hostvar.tags }}`)]"
+
+    # List all connected networks
+    - name: List all connected networks
+      community.docker.docker_container_exec:
+        container: netclient
+        command: ./netclient list
+      register: netclient_list_response
+      changed_when: false
+
+    # Join all the networks
+    - name: Join all the networks
+      community.docker.docker_container_exec:
+        container: netclient
+        command: ./netclient join --token={{ item.token }}
+      loop: "{{ netclient_networks }}"
+      loop_control:
+        loop_var: item
+        label: "{{ item.name }}"
+      when: item.name not in netclient_list_response.stdout
+      changed_when: "item.name not in netclient_list_response.stdout"
+      # notify: Restart Netclient docker-compose

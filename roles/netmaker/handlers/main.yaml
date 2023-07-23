@@ -17,3 +17,11 @@
     state: present
     restarted: true
   become: true
+
+# Restart the Netclient service using systemd
+- name: Restart Netclient systemd
+  ansible.builtin.service:
+    name: netclient
+    state: restarted
+    daemon_reload: true
+  become: true

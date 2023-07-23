@@ -1,0 +1,66 @@
+---
+# Playbook to install Netmaker client on nodes
+
+- name: Get the enrollment keys from the Netmaker server
+  hosts: localhost
+  vars_files:
+    - vars/netmaker.yaml
+  tags:
+    - netmaker.netclient
+
+  tasks:
+    - name: Get the enrollment keys from Netmaker
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: nmctl_enrollment
+      vars:
+        netmaker_create_enrollment_keys: false
+      tags:
+        - netmaker.netclient
+
+- name: Install Netclient on nodes
+  hosts: netclients
+  vars_files:
+    - ../../vars/vault.yaml
+    - ../../vars/main.yaml
+    - vars/netmaker.yaml
+  tags:
+    - netmaker.netclient
+
+  tasks:
+
+    - name: Install netclient systemd on nodes
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: netclient_install_systemd
+      vars:
+        # yamllint disable-line rule:line-length
+        netmaker_enrollment_key_list: "{{ hostvars['localhost']['netmaker_enrollment_key_list'] }}"  # noqa: yaml[line-length]
+        # yamllint disable-line rule:line-length
+        netmaker_netclient_networks: "{{ hostvars[inventory_hostname]['netmaker_networks'] }}"  # noqa: yaml[line-length]
+      tags:
+        - netmaker.netclient
+        - netmaker.netclient.systemd
+
+- name: Get the enrollment keys from the Netmaker server
+  hosts: localhost
+  vars_files:
+    - vars/netmaker.yaml
+  tags:
+    - netmaker.netclient
+
+  tasks:
+    # This sets all the options for the netclients on the Netmaker server
+    - name: Configure netclient on the Netmaker server
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: nmctl_host_update
+      vars:
+        netmaker_host_name: "{{ hostvars[item]['netmaker_shorthost'] }}"
+        # yamllint disable-line rule:line-length
+        netmaker_host_definition: "{{ hostvars[item]['netmaker_host_settings'] }}"  # noqa: yaml[line-length]
+      loop: "{{ groups['netclients'] }}"
+      tags:
+        - netmaker
+        - netmaker.netclient
+        - netmaker.netclient.join

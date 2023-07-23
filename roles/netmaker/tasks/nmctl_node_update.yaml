@@ -2,7 +2,6 @@
 # Update a node on the netmaker server using the NMCTL CLI tool
 #
 # input vars:
-#  netmaker_nodes: the list of nodes for a given host already configured
 #  netmaker_node_definition: a single node_definition to be udpated.
 
 - name: Block for node update
@@ -11,67 +10,26 @@
     - netmaker.netclient
     - netmaker.netclient.join
   block:
-
-    # Create the combined netmaker_node_defintion_options
-    #
-    # The order of the combine is important as the node_definition should
-    # override the node item.
-    - name: Create the combined netmaker_node_defintion_options
-      ansible.builtin.set_fact:
-        netmaker_node_defintion_options: "{{ netmaker_nodes
-                                    | json_query(query_nodes)
-                                    | first
-                                    | combine(netmaker_node_definition,
-                                              recursive=True) }}"
-      vars:
-        # yamllint disable-line rule:line-length
-        query_nodes: "[?network == '{{ netmaker_node_definition.network }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
-
-    # TODO: Revisit this method of updating the node definition
-    # later on with a later version of Netmaker.
-    #
-    # This was tried in v.0.20 on May 28, 2023 but I was having problems with
-    # the node defintion not accepting the update. So saving this method as
-    # comments for now and will revisit later. Will do it via the individual
-    # nmctl commands instead for now (see below).
-
-    # # Create a temporary file to store the node definition
-    # - name: Create a temporary file to store the node definition
-    #   ansible.builtin.tempfile:
-    #     state: file
-    #     suffix: .json
-    #   register: nmctl_node_definition_file
-    #   changed_when: false
-
-    # # Write the node definition to the temporary file
-    # - name: Write the node_definition to the temporary file
-    #   ansible.builtin.template:
-    #     src: node_definition.json.j2
-    #     dest: "{{ nmctl_node_definition_file.path }}"
-    #     mode: 0600
-    #   vars:
-    #     nodeoptions: "{{ node_defintion_options }}"
-    #   changed_when: false
-
-    # # Update the node on the Netmaker server
-    # - name: Update the node on the Netmaker server
-    #   ansible.builtin.command:
-    #     cmd: >
-    #       nmctl node update
-    #       {{ node_defintion_options.network }}
-    #       {{ node_defintion_options.id }}
-    #       --file={{ nmctl_node_definition_file.path }}
-    #   changed_when: false
-
     # Set ingress state for the node
     - name: Set ingress state for the node
       ansible.builtin.command:
         cmd: >
           nmctl node
           {{ 'create_ingress'
-             if netmaker_node_defintion_options.isingressgateway
+             if netmaker_node_definition.isingressgateway
              else 'delete_ingress' }}
-          {{ netmaker_node_defintion_options.network }}
-          {{ netmaker_node_defintion_options.id }}
-      when: netmaker_node_defintion_options.isingressgateway
+          {{ netmaker_node_definition.network }}
+          {{ netmaker_node_definition.id }}
+      when: netmaker_node_definition.isingressgateway is defined
+      changed_when: false
+
+    # Set egress state for the node
+    - name: Set egress state for the node
+      ansible.builtin.command:
+        cmd: >
+          nmctl node create_egress
+          {{ netmaker_node_definition.network }}
+          {{ netmaker_node_definition.id }}
+          {{ netmaker_node_definition.egressgatewayranges | join(',') }}
+      when: netmaker_node_definition.isegressgateway
       changed_when: false

@@ -12,6 +12,8 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - vars/netmaker.yaml
+  vars:
+    ansible_become_password: "{{ secret_become_pass }}"
 
   tasks:
     - name: Install the nmctl tool
@@ -58,42 +60,35 @@
       ansible.builtin.include_role:
         name: netmaker
         tasks_from: nmctl_enrollment
+      vars:
+        netmaker_create_enrollment_keys: true
       tags:
         - netmaker
         - netmaker.enrollment
         - netmaker.netclient
-        - netmaker.netclient.join
+        - netmaker.netclient.docker
 
-    # This adds the first network in the list to the Netclient
-    - name: Install the netclient tool on the Netmaker server
+    # This play usually needs the netmaker_enrollment_key_list variable
+    # to be set.  It is set in the nmctl_enrollment role above.
+    - name: Install netclient systemd on Netmaker server
       ansible.builtin.include_role:
         name: netmaker
-        tasks_from: netclient_install_docker
+        tasks_from: netclient_install_systemd
       vars:
-        netmaker_network: "{{ netmaker_networks[0] }}"
-        netmaker_nc_hostname: "{{ netmaker_droplet.name }}"
+        # yamllint disable-line rule:line-length
+        netmaker_netclient_networks: "{{ netmaker_networks }}"  # noqa: yaml[line-length]
       tags:
         - netmaker
         - netmaker.netclient
-        - netmaker.netclient.docker
+        - netmaker.netclient.systemd
 
-    # Flush the handler to ensure the netclient is running
-    - name: Flush handlers
-      ansible.builtin.meta: flush_handlers
-      tags:
-        - netmaker
-        - netmaker.netclient
-        - netmaker.netclient.docker
-
-    # This adds the rest of the networks in the list to the Netclient
-    # And sets all the options for the host and each node/network
+    # This sets all the options for the host and each node/network
     - name: Configure netclient on the Netmaker server
       ansible.builtin.include_role:
         name: netmaker
-        tasks_from: netclient_join_network
+        tasks_from: nmctl_host_update
       vars:
         netmaker_host_name: "{{ netmaker_droplet.name }}"
-        netmaker_join_networks: "{{ netmaker_networks[1:] }}"
         netmaker_host_definition: "{{ netmaker_host_settings }}"
       tags:
         - netmaker

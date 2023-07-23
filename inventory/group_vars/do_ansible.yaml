@@ -1,0 +1,11 @@
+---
+# variables for the do_ansible group
+
+# The do_hosts dynamic invenrtory plugin builds a list of hosts from
+# DigitalOcean droplets. The hosts are grouped by the tags assigned to
+# the droplets with the do_ prefix added to the tag name.
+
+# This file is variables for the hosts with the ansible tag which is all
+# droplets that are managed by ansible.
+
+ansible_become_password: "{{ secret_become_pass }}"
