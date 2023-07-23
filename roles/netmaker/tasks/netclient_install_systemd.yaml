@@ -33,6 +33,13 @@
       become: true
       notify: Restart Netclient systemd
 
+    # Create the autocomplete file for zsh for the netclient binary
+    - name: Create the autocomplete file for zsh for the netclient binary
+      ansible.builtin.shell:
+        cmd: 'netclient completion zsh > /usr/share/zsh/vendor-completions/_netclient'
+        creates: '/usr/share/zsh/vendor-completions/_netclient'
+      become: true
+
     # Copy the netclient systemd service file
     - name: Copy the netclient systemd service file
       ansible.builtin.copy:
