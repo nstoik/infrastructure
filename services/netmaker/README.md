@@ -39,6 +39,14 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
 3. After the playbook has run, the Netmaker server is ready to use. From a web browser, go to the [netmaker dashboard](https://dashboard.netmaker.stechsolutions.ca)
     * Login credentials are stored in Bitwarden.
 
+4. The [netclients.yaml](netclients.yaml) playbook configures all the netclients. To run the playbook, run the following command:
+
+    ```bash
+    ansible-playbook services/netmaker/netclients.yaml
+    ```
+
+    The inventory file for the playbook is [inventory/netclients.yaml](inventory/netclients.yaml) along with the accompanying [inventory/group_vars/netclients.yaml](inventory/group_vars/netclients.yaml) file.
+
 ## EE Usage
 If the EE version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
 
