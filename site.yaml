@@ -31,3 +31,16 @@
   ansible.builtin.import_playbook: services/netmaker/netmaker.yaml
   tags:
     - netmaker
+
+# run the netmaker_config playbook to configure netmaker
+- name: Run the netmaker_config playbook
+  ansible.builtin.import_playbook: services/netmaker/netmaker_config.yaml
+  tags:
+    - netmaker
+
+# run the netclients playbook to configure netclients
+- name: Run the netclients playbook
+  ansible.builtin.import_playbook: services/netmaker/netclients.yaml
+  tags:
+    - netmaker
+    - netmaker.netclient
