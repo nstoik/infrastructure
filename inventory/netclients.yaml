@@ -1,0 +1,56 @@
+---
+all:
+  hosts:
+    vpn.home.stechsolutions.ca:
+      ansible_host: vpn.home.stechsolutions.ca
+      netmaker_shorthost: vpn
+      netmaker_networks:
+        - {
+          name: 'personal',
+          tags: "personal-tag"
+        }
+        - {
+          name: 'monitoring',
+          tags: "monitoring-tag"
+        }
+      netmaker_host_settings: {
+        name: '{{ ansible_host }}',
+        isdefault: false,
+        node_settings: [
+          {
+            # personal network
+            network: '{{ netmaker_networks[0].name }}',
+            isegressgateway: true,
+            isingressgateway: false,
+            egressgatewayranges: [
+              "0.0.0.0/0",
+              "10.10.1.0/24",
+              "10.10.3.0/24",
+              "10.10.4.0/24",
+              "10.10.5.0/24"
+            ],
+            egressgatewaynatenabled: true,
+            relayaddrs: [],
+            ingressdns: "",
+            internetgateway: ""
+          },
+          {
+            # monitoring network
+            network: '{{ netmaker_networks[1].name }}',
+            isegressgateway: true,
+            isingressgateway: false,
+            egressgatewayranges: [
+              "10.10.5.1/24"
+            ],
+            egressgatewaynatenabled: true,
+            relayaddrs: [],
+            ingressdns: "",
+            internetgateway: ""
+          }
+        ]
+      }
+
+  children:
+    netclients:
+      hosts:
+        vpn.home.stechsolutions.ca:
