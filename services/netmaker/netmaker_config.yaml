@@ -12,6 +12,8 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - vars/netmaker.yaml
+  vars:
+    ansible_become_password: "{{ secret_become_pass }}"
 
   tasks:
     - name: Install the nmctl tool
