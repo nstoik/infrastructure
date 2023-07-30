@@ -22,6 +22,8 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: 0755
+        force: true # Force the download even if the file already exists
+                    # so it can be updated if needed.
       become: true
 
     # Create the autocomplete file for zsh for the nmctl binary
