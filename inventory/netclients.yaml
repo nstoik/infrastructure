@@ -38,11 +38,9 @@ all:
           {
             # monitoring network
             network: '{{ netmaker_networks[1].name }}',
-            isegressgateway: true,
+            isegressgateway: false,
             isingressgateway: false,
-            egressgatewayranges: [
-              "10.10.5.1/24"
-            ],
+            egressgatewayranges: [],
             egressgatewaynatenabled: true,
             relayaddrs: [],
             ingressdns: "",
