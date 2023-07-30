@@ -13,6 +13,10 @@ all:
           name: 'monitoring',
           tags: "monitoring-tag"
         }
+        - {
+          name: 'farm-network',
+          tags: "farm-network-tag"
+        }
       netmaker_host_settings: {
         name: '{{ ansible_host }}',
         isdefault: false,
@@ -38,6 +42,17 @@ all:
           {
             # monitoring network
             network: '{{ netmaker_networks[1].name }}',
+            isegressgateway: false,
+            isingressgateway: false,
+            egressgatewayranges: [],
+            egressgatewaynatenabled: true,
+            relayaddrs: [],
+            ingressdns: "",
+            internetgateway: ""
+          },
+          {
+            # farm-network network
+            network: '{{ netmaker_networks[2].name }}',
             isegressgateway: false,
             isingressgateway: false,
             egressgatewayranges: [],
