@@ -23,7 +23,8 @@ all:
             isegressgateway: true,
             isingressgateway: false,
             egressgatewayranges: [
-              "0.0.0.0/0",
+              # Not working for secondary egress nodes on netmaker v0.20.4
+              # "0.0.0.0/0",
               "10.10.1.0/24",
               "10.10.3.0/24",
               "10.10.4.0/24",
