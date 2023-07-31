@@ -49,13 +49,13 @@
     - name: Add node IDs to the list of nodes
       ansible.builtin.set_fact:
         node_settings: "{{ node_settings | default([]) +
-                          [item_node_settings | combine({'id': item_node.id})] }}"
+                          [item_settings | combine({'id': item_node.id})] }}"
       loop: "{{ netmaker_host_definition.node_settings }}"
       loop_control:
-        loop_var: item_node_settings
+        loop_var: item_settings
       vars:
         item_node: "{{ netmaker_host_nodes | json_query(query_node) | first }}"
-        query_node: "[?network=='{{ item_node_settings.network }}']"
+        query_node: "[?network=='{{ item_settings.network }}']"
       when: netmaker_host is defined
 
     # Set the host as a default host if it is defined as such

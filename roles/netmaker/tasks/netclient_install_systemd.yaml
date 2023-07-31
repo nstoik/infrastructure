@@ -30,8 +30,9 @@
         owner: "root"
         group: "root"
         mode: 0755
-        force: true # Force the download even if the file already exists
-                    # so it can be updated if needed.
+        # Force the download even if the file already exists so it can be
+        # updated if needed.
+        force: true
       become: true
       notify: Restart Netclient systemd
 
