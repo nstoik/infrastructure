@@ -6,7 +6,7 @@ services:
     image: gravitl/netmaker:{{ netmaker_version }}
     env_file:
       - {{ netmaker_directory }}/netmaker.env
-    restart: on-failure
+    restart: unless-stopped
     volumes:
       - dnsconfig:/root/config/dnsconfig
       - sqldata:/root/data
@@ -86,6 +86,7 @@ services:
   turn:
     container_name: turn
     image: gravitl/turnserver:v1.0.0
+    restart: unless-stopped
     env_file:
       - {{ netmaker_directory }}/netmaker.env
     environment:
