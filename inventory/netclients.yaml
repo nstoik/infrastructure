@@ -13,6 +13,10 @@ all:
           name: 'monitoring',
           tags: "monitoring-tag"
         }
+        - {
+          name: 'farm-network',
+          tags: "farm-network-tag"
+        }
       netmaker_host_settings: {
         name: '{{ ansible_host }}',
         isdefault: false,
@@ -23,7 +27,8 @@ all:
             isegressgateway: true,
             isingressgateway: false,
             egressgatewayranges: [
-              "0.0.0.0/0",
+              # Not working for secondary egress nodes on netmaker v0.20.4
+              # "0.0.0.0/0",
               "10.10.1.0/24",
               "10.10.3.0/24",
               "10.10.4.0/24",
@@ -37,11 +42,20 @@ all:
           {
             # monitoring network
             network: '{{ netmaker_networks[1].name }}',
-            isegressgateway: true,
+            isegressgateway: false,
             isingressgateway: false,
-            egressgatewayranges: [
-              "10.10.5.1/24"
-            ],
+            egressgatewayranges: [],
+            egressgatewaynatenabled: true,
+            relayaddrs: [],
+            ingressdns: "",
+            internetgateway: ""
+          },
+          {
+            # farm-network network
+            network: '{{ netmaker_networks[2].name }}',
+            isegressgateway: false,
+            isingressgateway: false,
+            egressgatewayranges: [],
             egressgatewaynatenabled: true,
             relayaddrs: [],
             ingressdns: "",

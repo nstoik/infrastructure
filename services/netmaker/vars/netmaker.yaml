@@ -4,7 +4,7 @@
 # Base variables
 netmaker_base_domain: "netmaker.stechsolutions.ca"
 netmaker_ee: false
-netmaker_version: "v0.20.3"
+netmaker_version: "v0.20.4"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 netclient_directory: "/home/{{ default_user }}/netclient"
 
@@ -169,7 +169,7 @@ netmaker_host_settings: {
       isingressgateway: true,
       egressgatewayranges: [],
       egressgatewaynatenabled: false,
-      ingressdns: "",
+      ingressdns: "1.1.1.1",
     },
     {
       # personal network
@@ -178,7 +178,7 @@ netmaker_host_settings: {
       isingressgateway: true,
       egressgatewayranges: [],
       egressgatewaynatenabled: false,
-      ingressdns: "",
+      ingressdns: "1.1.1.1",
     },
     {
       # farm-network network
@@ -187,7 +187,7 @@ netmaker_host_settings: {
       isingressgateway: true,
       egressgatewayranges: [],
       egressgatewaynatenabled: false,
-      ingressdns: "",
+      ingressdns: "1.1.1.1",
     }
   ]
 }
@@ -212,7 +212,7 @@ netmaker_ext_clients:
     # personal network
     network: '{{ netmaker_networks[1].name }}',
     allowedips: "",
-    dns: "",
+    dns: "10.10.1.11",
   }
   - {
     name: 'iPhone',
