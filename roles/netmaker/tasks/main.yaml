@@ -68,7 +68,6 @@
         src: docker-compose.yml.j2
         dest: "{{ netmaker_directory }}/docker-compose.yml"
         mode: 0666
-      when: not netmaker_ee
       notify: Restart Netmaker
 
     # Write the enterprise docker-compose file
