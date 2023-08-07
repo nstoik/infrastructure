@@ -3,8 +3,11 @@
 
 # Base variables
 netmaker_base_domain: "netmaker.stechsolutions.ca"
-netmaker_ee: false
-netmaker_version: "v0.20.4"
+netmaker_ee: true
+# Separate flag for the ee_image. So I can run the prometheus, grafana,
+# and netmaker-exporter containers without actually using the EE image / license.
+netmaker_ee_use_ee_image: false
+netmaker_version: "v0.20.5"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 netclient_directory: "/home/{{ default_user }}/netclient"
 
