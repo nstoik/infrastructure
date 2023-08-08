@@ -52,7 +52,11 @@ If the EE version is installed, there is a [grafana dashboard](https://grafana.n
 
 TODO: Modify the docker compose files to point to the external prometheus and grafana instances. Then remove the prometheus and grafana containers from the Netmaker server.
 
+On first access, the Grafana user needs to be set up. The default login is `admin` and `admin` for the password. Then you need to set up a new password. Use the password stored in Bitwarden (the same as the Netmaker dashboard password).
+
 The login for the grafana dashboard is `admin` and the password is stored in Bitwarden. The login for the prometheus instance is `Netmaker-Prometheus` and the password is the `secret_nm_license_key` (see the Ansbile vault).
+
+You can see what the netmaker-exporter is sending by posting to the `prometheus\metrics` path using something like Postman. This uses basic auth with the username `Netmaker-Exporter` and the password is the `secret_nm_license_key` (see the Ansbile vault).
 
 ## Removal
 To remove the Netmaker server completely set the following two varaiables in the [vars/netmaker.yaml](vars/netmaker.yaml) file to `absent`:
