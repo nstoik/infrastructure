@@ -18,3 +18,4 @@
           nmctl network create
            --name="{{ item.name }}"
            --ipv4_addr="{{ item.addressrange }}"
+      changed_when: false
