@@ -11,27 +11,11 @@
     - netmaker.network
   block:
 
-    # Create a temporary file to store the network definition
-    - name: Create a temporary file to store the network definition
-      ansible.builtin.tempfile:
-        state: file
-        suffix: .json
-      register: netmaker_network_definition_file
-      changed_when: false
-
-    # Write the network definition to the temporary file
-    - name: Write the network definition to the temporary file
-      ansible.builtin.template:
-        src: network.json.j2
-        dest: "{{ netmaker_network_definition_file.path }}"
-        mode: 0600
-      vars:
-        netmaker_network_options: "{{ item }}"
-
     # Create the network on the Netmaker server
     - name: Create the network on the Netmaker server
       ansible.builtin.command:
-        cmd: >
+        cmd: >-
           nmctl network create
-          --file={{ netmaker_network_definition_file.path }}
+           --name="{{ item.name }}"
+           --ipv4_addr="{{ item.addressrange }}"
       changed_when: false
