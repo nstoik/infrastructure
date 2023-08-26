@@ -7,8 +7,8 @@ netmaker_ee: true
 # Separate flag for the ee_image. So I can run the prometheus, grafana,
 # and netmaker-exporter containers without actually using the EE image or
 # license.
-netmaker_ee_use_ee_image: false
-netmaker_version: "v0.20.5"
+netmaker_ee_use_ee_image: true
+netmaker_version: "v0.20.6"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 netclient_directory: "/home/{{ default_user }}/netclient"
 
@@ -203,7 +203,7 @@ netmaker_host_settings: {
 # configuration file is {{ item.name }}-{{ item.network }}-netmaker-client.conf
 netmaker_ext_clients:
   - {
-    name: 'iPhone',
+    name: 'iPhone-monitoring',
     host: '{{ netmaker_host_settings.name }}',
     # monitoring network
     network: '{{ netmaker_networks[0].name }}',
@@ -211,7 +211,7 @@ netmaker_ext_clients:
     dns: "",
   }
   - {
-    name: 'iPhone',
+    name: 'iPhone-personal',
     host: '{{ netmaker_host_settings.name }}',
     # personal network
     network: '{{ netmaker_networks[1].name }}',
@@ -219,7 +219,7 @@ netmaker_ext_clients:
     dns: "10.10.1.11",
   }
   - {
-    name: 'iPhone',
+    name: 'iPhone-farm-network',
     host: '{{ netmaker_host_settings.name }}',
     # farm-network network
     network: '{{ netmaker_networks[2].name }}',
