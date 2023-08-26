@@ -8,7 +8,7 @@ netmaker_ee: true
 # and netmaker-exporter containers without actually using the EE image or
 # license.
 netmaker_ee_use_ee_image: false
-netmaker_version: "v0.20.5"
+netmaker_version: "v0.20.6"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 netclient_directory: "/home/{{ default_user }}/netclient"
 
