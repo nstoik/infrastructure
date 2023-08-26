@@ -203,7 +203,7 @@ netmaker_host_settings: {
 # configuration file is {{ item.name }}-{{ item.network }}-netmaker-client.conf
 netmaker_ext_clients:
   - {
-    name: 'iPhone',
+    name: 'iPhone-monitoring',
     host: '{{ netmaker_host_settings.name }}',
     # monitoring network
     network: '{{ netmaker_networks[0].name }}',
@@ -211,7 +211,7 @@ netmaker_ext_clients:
     dns: "",
   }
   - {
-    name: 'iPhone',
+    name: 'iPhone-personal',
     host: '{{ netmaker_host_settings.name }}',
     # personal network
     network: '{{ netmaker_networks[1].name }}',
@@ -219,7 +219,7 @@ netmaker_ext_clients:
     dns: "10.10.1.11",
   }
   - {
-    name: 'iPhone',
+    name: 'iPhone-farm-network',
     host: '{{ netmaker_host_settings.name }}',
     # farm-network network
     network: '{{ netmaker_networks[2].name }}',
