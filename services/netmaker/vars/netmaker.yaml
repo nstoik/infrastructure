@@ -7,7 +7,7 @@ netmaker_ee: true
 # Separate flag for the ee_image. So I can run the prometheus, grafana,
 # and netmaker-exporter containers without actually using the EE image or
 # license.
-netmaker_ee_use_ee_image: false
+netmaker_ee_use_ee_image: true
 netmaker_version: "v0.20.6"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 netclient_directory: "/home/{{ default_user }}/netclient"
