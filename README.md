@@ -104,9 +104,15 @@ The following ansible tags are available to specify specific tasks to run.
     - netmaker.ext_client - Configure external clients
 
 # Inventory
-Inventory from DigtalOcean is dynamic using a plugin. The plugin configration is in the file `inventory/do_hosts.yaml`.
+Inventory files are as follows in the [inventory](inventory) directory:
 
-When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
+- [do_hosts.yaml](inventory/do_hosts.yaml) - Dynamic inventory for DigitalOcean
+    - Inventory from DigtalOcean is dynamic using a plugin.
+    - When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
+- [netclients.yaml](inventory/netclients.yaml) - Inventory for the netclients
+- [netclients_manual.yaml](inventory/netclients_manual.yaml) - Inventory for the netclients
+    - This inventory is used for hosts that have to first have netclient installed manually so they can be reached by Ansible.
+
 
 # Testing and linting
 Linting can be done with the following commands
