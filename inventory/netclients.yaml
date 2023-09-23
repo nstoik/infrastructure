@@ -1,4 +1,8 @@
 ---
+# Inventory for netclients. This is a manually maintained inventory file.
+#
+# This inventory file is used to define the hosts that will be configured with
+# netclient.
 all:
   hosts:
     vpn.home.stechsolutions.ca:
@@ -13,10 +17,6 @@ all:
           name: 'monitoring',
           tags: "monitoring-tag"
         }
-        - {
-          name: 'farm-network',
-          tags: "farm-network-tag"
-        }
       netmaker_host_settings: {
         name: '{{ ansible_host }}',
         isdefault: false,
@@ -27,7 +27,7 @@ all:
             isegressgateway: true,
             isingressgateway: false,
             egressgatewayranges: [
-              # Not working for secondary egress nodes on netmaker v0.20.4
+              # Not working for secondary egress nodes on netmaker v0.20.6
               # "0.0.0.0/0",
               "10.10.1.0/24",
               "10.10.3.0/24",
@@ -42,17 +42,6 @@ all:
           {
             # monitoring network
             network: '{{ netmaker_networks[1].name }}',
-            isegressgateway: false,
-            isingressgateway: false,
-            egressgatewayranges: [],
-            egressgatewaynatenabled: true,
-            relayaddrs: [],
-            ingressdns: "",
-            internetgateway: ""
-          },
-          {
-            # farm-network network
-            network: '{{ netmaker_networks[2].name }}',
             isegressgateway: false,
             isingressgateway: false,
             egressgatewayranges: [],
