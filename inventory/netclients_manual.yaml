@@ -1,0 +1,40 @@
+---
+# Inventory file for netclients that are manually installed. This is a manually
+# maintained inventory file.
+#
+# These hosts have a netclient that needs to be manually installed with at least
+# one network first so that they are on the network and accessible by ansible.
+# Then the hosts can be configured with ansible the rest of the way.
+all:
+  hosts:
+    mike-laptop:
+      ansible_host: 10.50.50.3
+      ansible_user: mike
+      netmaker_shorthost: mike-ThinkPad-Edge-E530c
+      netmaker_networks:
+        - {
+          name: 'monitoring',
+          tags: "monitoring-tag"
+        }
+      netmaker_host_settings: {
+        name: '{{ ansible_host }}',
+        isdefault: false,
+        node_settings: [
+          {
+            # monitoring network
+            network: '{{ netmaker_networks[0].name }}',
+            isegressgateway: false,
+            isingressgateway: false,
+            egressgatewayranges: [],
+            egressgatewaynatenabled: true,
+            relayaddrs: [],
+            ingressdns: "",
+            internetgateway: ""
+          }
+        ]
+      }
+
+  children:
+    netclients_manual:
+      hosts:
+        mike-laptop:
