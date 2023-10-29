@@ -48,7 +48,7 @@
     # Write the enterprise Caddyfile
     - name: Write the enterprise Caddyfile
       ansible.builtin.template:
-        src: Caddyfile_ee.j2
+        src: Caddyfile_pro.j2
         dest: "{{ netmaker_directory }}/Caddyfile"
         mode: 0666
       when: netmaker_pro
