@@ -10,10 +10,10 @@
     oauth_token: "{{ secret_do_token }}"
     state: "{{ digitalocean_droplet.state | default('present') }}"
     name: "{{ digitalocean_droplet.name }}"
-    size: "{{ digitalocean_droplet.size | default(droplet_size) }}"
-    region: "{{ droplet_region }}"
-    image: "{{ droplet_image }}"
-    ssh_keys: "{{ droplet_ssh_key_ids }}"
+    size: "{{ digitalocean_droplet.size | default(digitalocean_droplet_size) }}"
+    region: "{{ digitalocean_droplet_region }}"
+    image: "{{ digitalocean_droplet_image }}"
+    ssh_keys: "{{ digitalocean_droplet_ssh_key_ids }}"
     tags: "{{ digitalocean_default_tags +
               digitalocean_droplet.tags | default([]) }}"
     monitoring: true
@@ -31,7 +31,7 @@
     oauth_token: "{{ secret_do_token }}"
     state: "{{ digitalocean_droplet['volume']['state'] }}"
     command: "attach"
-    region: "{{ droplet_region }}"
+    region: "{{ digitalocean_droplet_region }}"
     volume_name: "{{ digitalocean_droplet['volume']['volume_name'] }}"
     droplet_id: "{{ digitalocean_droplet_result.data.droplet.id }}"
   when: digitalocean_droplet['volume'] is defined and

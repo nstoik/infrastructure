@@ -40,7 +40,7 @@
     # This directory is owned by root as docker is run as root.
     - name: Create docker data directory
       ansible.builtin.file:
-        path: "{{ docker_data_dir }}"
+        path: "{{ base_docker_data_dir }}"
         state: directory
         mode: 0766
       become: true
@@ -48,9 +48,9 @@
     # create the docker daemon config file
     - name: Create docker daemon config file
       ansible.builtin.copy:
-        content: "{{ docker_daemon_options | to_nice_json }}"
+        content: "{{ base_docker_daemon_options | to_nice_json }}"
         dest: /etc/docker/daemon.json
         mode: 0644
-      when: docker_daemon_options.keys() | length > 0
+      when: base_docker_daemon_options.keys() | length > 0
       become: true
       notify: Restart docker

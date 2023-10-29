@@ -11,7 +11,7 @@
     - name: Gather facts about the block storage attached to the droplet
       community.digitalocean.digital_ocean_volume_info:
         oauth_token: "{{ secret_do_token }}"
-        region_name: "{{ droplet_region }}"
+        region_name: "{{ digitalocean_droplet_region }}"
       register: digitalocean_volume_info
 
     # Format the block storage volume if it has not been formatted.
