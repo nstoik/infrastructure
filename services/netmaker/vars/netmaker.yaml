@@ -5,7 +5,7 @@
 netmaker_base_domain: "netmaker.stechsolutions.ca"
 netmaker_pro: false
 # Separate flag for the ee_image. So I can run the prometheus, grafana,
-# and netmaker-exporter containers without actually using the EE image or
+# and netmaker-exporter containers without actually using the Pro image or
 # license.
 netmaker_pro_use_pro_image: false
 netmaker_version: "v0.21.1"
@@ -101,7 +101,7 @@ netmaker_cf_record:
     state: '{{ netmaker_droplet.state }}'
   }
   # Netmaker Cloudflare DNS Record for grafana, prometheus,
-  # and netmaker-exporter subdomains for the EE setup.
+  # and netmaker-exporter subdomains for the Pro setup.
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
