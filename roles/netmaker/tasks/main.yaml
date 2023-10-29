@@ -42,7 +42,7 @@
         src: Caddyfile.j2
         dest: "{{ netmaker_directory }}/Caddyfile"
         mode: 0666
-      when: not netmaker_ee
+      when: not netmaker_pro
       notify: Restart Netmaker
 
     # Write the enterprise Caddyfile
@@ -51,7 +51,7 @@
         src: Caddyfile_ee.j2
         dest: "{{ netmaker_directory }}/Caddyfile"
         mode: 0666
-      when: netmaker_ee
+      when: netmaker_pro
       notify: Restart Netmaker
 
     # Write the netmaker environment file
@@ -73,10 +73,10 @@
     # Write the enterprise docker-compose file
     - name: Write the docker-compose.override file (enterprise)
       ansible.builtin.template:
-        src: docker-compose-ee.yml.j2
+        src: docker-compose-pro.yml.j2
         dest: "{{ netmaker_directory }}/docker-compose.override.yml"
         mode: 0666
-      when: netmaker_ee
+      when: netmaker_pro
       notify: Restart Netmaker
 
     # Remove the enterprise docker-compose file if not ee edition
@@ -84,5 +84,5 @@
       ansible.builtin.file:
         path: "{{ netmaker_directory }}/docker-compose.override.yml"
         state: absent
-      when: not netmaker_ee
+      when: not netmaker_pro
       notify: Restart Netmaker

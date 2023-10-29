@@ -3,7 +3,7 @@ version: "3.4"
 services:
   netmaker:
     container_name: netmaker
-{% if netmaker_ee_use_ee_image %}
+{% if netmaker_pro_use_pro_image %}
     image: gravitl/netmaker:{{ netmaker_version }}-ee
 {% else %}
     image: gravitl/netmaker:{{ netmaker_version }}

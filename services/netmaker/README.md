@@ -4,7 +4,7 @@ Ansible playbook for setting up a [Netmaker](https://www.netmaker.io/) server on
 ## Configuration
 The configuration is in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
 
-There are two different configurations that can be installed. The community version and the enterprise version. Which vervion is installed is controlled by the `netmaker_ee` boolean variable in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
+There are two different configurations that can be installed. The community version and the enterprise version. Which vervion is installed is controlled by the `netmaker_pro` boolean variable in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
 
 The setup runs through the steps as outlined in the [Netmaker documentation](https://netmaker.readthedocs.io/en/master/quick-start.html) but makes the following changes.
 
