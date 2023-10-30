@@ -50,13 +50,22 @@
         cmd: "nmctl context use {{ netmaker_nmctl_context_name }}"
       changed_when: false
 
-    # Test if the admin user exists
-    - name: Test if the admin user exists
+    # Get the list of all users
+    - name: Get the list of all users
       ansible.builtin.command:
-        cmd: "nmctl server has_admin"
-      register: netmaker_nmctl_has_admin_response
+        cmd: "nmctl user list --output json"
+      register: netmaker_nmctl_all_users
       when: "netmaker_check_for_admin"
       changed_when: false
+
+    # Check for Netmaker superadmin users
+    - name: Check for Netmaker superadmin users
+      ansible.builtin.set_fact:
+        netmaker_has_superadmin: "{{ netmaker_nmctl_all_users.stdout |
+                                     from_json |
+                                     json_query('[?issuperadmin == `true`]') |
+                                     length > 0 }}"
+      when: "netmaker_check_for_admin"
 
     # Create the Netmaker admin user if it doesn't exist
     - name: Create the admin user
@@ -66,5 +75,5 @@
               --password={{ secret_nm_admin_password }} \
               --admin=true"
       when: "netmaker_check_for_admin and
-            'false' in netmaker_nmctl_has_admin_response.stdout"
+            not netmaker_has_superadmin"
       changed_when: false
