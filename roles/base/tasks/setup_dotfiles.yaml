@@ -22,7 +22,7 @@
     # make the directory for the dotfiles
     - name: Make the directory for the dotfiles
       ansible.builtin.file:
-        path: "{{ dotfiles_dir }}"
+        path: "{{ base_dotfiles_dir }}"
         state: directory
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
@@ -31,8 +31,8 @@
     # clone the dotfiles repository
     - name: Clone the dotfiles repository  # noqa: latest
       ansible.builtin.git:
-        repo: "{{ dotfiles_repo }}"
-        dest: "{{ dotfiles_dir }}"
+        repo: "{{ base_dotfiles_repo }}"
+        dest: "{{ base_dotfiles_dir }}"
         recursive: true
         update: true
         force: true
@@ -40,7 +40,7 @@
     # set the git config option filemode to false in the .git/config file
     - name: Set the git config option filemode to false in the .git/config file
       ansible.builtin.lineinfile:
-        path: "{{ dotfiles_dir }}/.git/config"
+        path: "{{ base_dotfiles_dir }}/.git/config"
         regexp: "^\\s*filemode\\s*=\\s*true"
         line: "filemode = false"
         state: present
@@ -48,7 +48,7 @@
     # set the executable bit on the install scripts
     - name: Make the install scripts executable
       ansible.builtin.file:
-        path: "{{ dotfiles_dir }}/{{ item }}"
+        path: "{{ base_dotfiles_dir }}/{{ item }}"
         mode: 0700
       loop:
         - install-profile
@@ -57,9 +57,9 @@
     # run the install script with no overrides if
     # dotbot_skip_ssh_authorized_file is false
     - name: Run the install script with no overrides
-      ansible.builtin.command: "{{ dotfiles_dir }}/install-profile workstation"
+      ansible.builtin.command: "{{ base_dotfiles_dir }}/install-profile workstation"  # yamllint disable-line rule:line-length
       args:
-        chdir: "{{ dotfiles_dir }}"
+        chdir: "{{ base_dotfiles_dir }}"
       register: base_dotfiles_install_result
       changed_when: "'Creating link' in base_dotfiles_install_result.stdout"
       failed_when: base_dotfiles_install_result.rc != 0
@@ -71,9 +71,9 @@
     - name: Run the install script with override
       ansible.builtin.shell: >
         DOTBOT_SKIP_SSH_AUTHORIZED_FILE=1
-        {{ dotfiles_dir }}/install-profile workstation
+        {{ base_dotfiles_dir }}/install-profile workstation
       args:
-        chdir: "{{ dotfiles_dir }}"
+        chdir: "{{ base_dotfiles_dir }}"
       register: base_dotfiles_install_result
       changed_when: "'Creating link' in base_dotfiles_install_result.stdout"
       failed_when: base_dotfiles_install_result.rc != 0

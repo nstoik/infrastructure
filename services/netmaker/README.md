@@ -4,7 +4,7 @@ Ansible playbook for setting up a [Netmaker](https://www.netmaker.io/) server on
 ## Configuration
 The configuration is in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
 
-There are two different configurations that can be installed. The community version and the enterprise version. Which vervion is installed is controlled by the `netmaker_ee` boolean variable in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
+There are two different configurations that can be installed. The community version and the enterprise version. Which vervion is installed is controlled by the `netmaker_pro` boolean variable in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
 
 The setup runs through the steps as outlined in the [Netmaker documentation](https://netmaker.readthedocs.io/en/master/quick-start.html) but makes the following changes.
 
@@ -47,8 +47,8 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
 
     The inventory file for the playbook is [inventory/netclients.yaml](inventory/netclients.yaml) along with the accompanying [inventory/group_vars/netclients.yaml](inventory/group_vars/netclients.yaml) file.
 
-## EE Usage
-If the EE version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
+## Pro Usage
+If the Pro version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
 
 TODO: Modify the docker compose files to point to the external prometheus and grafana instances. Then remove the prometheus and grafana containers from the Netmaker server.
 

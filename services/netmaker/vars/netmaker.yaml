@@ -3,12 +3,12 @@
 
 # Base variables
 netmaker_base_domain: "netmaker.stechsolutions.ca"
-netmaker_ee: true
+netmaker_pro: false
 # Separate flag for the ee_image. So I can run the prometheus, grafana,
-# and netmaker-exporter containers without actually using the EE image or
+# and netmaker-exporter containers without actually using the Pro image or
 # license.
-netmaker_ee_use_ee_image: true
-netmaker_version: "v0.20.6"
+netmaker_pro_use_pro_image: false
+netmaker_version: "v0.21.1"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 netclient_directory: "/home/{{ default_user }}/netclient"
 
@@ -101,27 +101,27 @@ netmaker_cf_record:
     state: '{{ netmaker_droplet.state }}'
   }
   # Netmaker Cloudflare DNS Record for grafana, prometheus,
-  # and netmaker-exporter subdomains for the EE setup.
+  # and netmaker-exporter subdomains for the Pro setup.
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
     record: 'grafana.netmaker',
     proxied: false,
-    state: '{{ netmaker_droplet.state if netmaker_ee else "absent" }}',
+    state: '{{ netmaker_droplet.state if netmaker_pro else "absent" }}',
   }
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
     record: 'prometheus.netmaker',
     proxied: false,
-    state: '{{ netmaker_droplet.state if netmaker_ee else "absent" }}'
+    state: '{{ netmaker_droplet.state if netmaker_pro else "absent" }}'
   }
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
     record: 'netmaker-exporter.netmaker',
     proxied: false,
-    state: '{{ netmaker_droplet.state if netmaker_ee else "absent" }}'
+    state: '{{ netmaker_droplet.state if netmaker_pro else "absent" }}'
   }
 
 # nmctl variables

@@ -9,13 +9,13 @@ base_packages:
   - wireguard-tools
 
 # variables for the dotfiles
-dotfiles_dir: /home/{{ default_user }}/dotfiles
-dotfiles_repo: https://github.com/nstoik/dotfiles
+base_dotfiles_dir: /home/{{ default_user }}/dotfiles
+base_dotfiles_repo: https://github.com/nstoik/dotfiles
 
 # variables for docker
-docker_data_dir: /home/{{ default_user }}/docker
+base_docker_data_dir: /home/{{ default_user }}/docker
 
-docker_daemon_options:
-  data-root: '{{ docker_data_dir }}'
+base_docker_daemon_options:
+  data-root: '{{ base_docker_data_dir }}'
   log-opts:
     max-size: "10m"

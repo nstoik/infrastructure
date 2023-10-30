@@ -6,7 +6,7 @@
     oauth_token: "{{ secret_do_token }}"
     state: "{{ item.state | default('present') }}"
     command: "create"
-    region: "{{ droplet_region }}"
+    region: "{{ digitalocean_droplet_region }}"
     block_size: "{{ item.block_size | default(10) }}"
     volume_name: "{{ item.volume_name }}"
     project_name: "nelsonstoik"
