@@ -4,6 +4,6 @@
 
 # These hosts need to use a ssh jump host to proxy their connections
 ansible_ssh_common_args: >
-  -o ProxyCommand='ssh
   -o StrictHostKeyChecking=no
-  -W %h:%p nelson@netmaker.stechsolutions.ca'
+  -o ProxyCommand='ssh
+  -W %h:%p nelson@vpn.home.stechsolutions.ca'
