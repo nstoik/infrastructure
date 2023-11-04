@@ -6,11 +6,11 @@ Sets up and configures hosts to have the netclient program installed and connect
 ## Inventory
 Hosts to have the netclient program are listed in the [netclients.yaml](inventory/netclients.yaml) inventory file along with the accompanying [group_vars/netclients.yaml](inventory/group_vars/netclients.yaml) file.
 
-There is also a [netclients_manual.yaml](inventory/netclients_manual.yaml) inventory file. These hosts need to have the netclient setup manually so that they are reachable by Ansible. The accompanying [group_vars/netclients_manual.yaml](inventory/group_vars/netclients_manual.yaml) file specifies the ssh options so that Ansible can connect to the hosts using a jump host.
+There is also a [netclients_manual.yaml](inventory/netclients_manual.yaml) inventory file. These hosts need to have the netclient setup manually so that they can be reached by Ansible over a Netmaker network. The accompanying [group_vars/netclients_manual.yaml](inventory/group_vars/netclients_manual.yaml) file specifies the ssh options so that Ansible can connect to the hosts using a jump host.
 
-The host needs to be able to be ssh'd into using the `ansible_user`.The keys of the jump host need to be added to the `known_hosts` file of the host. From the jump host, run the following command:
+The host needs to be able to be ssh'd into using the `ansible_user`.The keys of the ansible runner need to be added to the `known_hosts` file of the host. From the ansible runner host, run the following command:
 ```bash
-ssh-copy-id user@remote_host
+ssh-copy-id -o ProxyJump=jumphost user@remote_host
 ```
 
 ## Configuration
