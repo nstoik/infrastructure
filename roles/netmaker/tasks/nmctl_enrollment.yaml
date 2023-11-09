@@ -15,6 +15,7 @@
     - netmaker.enrollment
     - netmaker.netclient
     - netmaker.netclient.docker
+    - netmaker.netclient.systemd
   block:
 
     # Get the current list of enrollment keys

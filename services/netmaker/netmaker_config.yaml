@@ -35,6 +35,7 @@
     - ../../vars/main.yaml
     - vars/netmaker.yaml
     - vars/ext_clients.yaml
+    - vars/networks.yaml
   tags:
     - netmaker.full_setup
 
