@@ -34,6 +34,7 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - vars/netmaker.yaml
+    - vars/ext_clients.yaml
   tags:
     - netmaker.full_setup
 
@@ -101,7 +102,7 @@
         name: netmaker
         tasks_from: nmctl_ext_client
       vars:
-        netmaker_ext_clients_list: "{{ netmaker_ext_clients }}"
+        netmaker_ext_clients_list: "{{ ext_clients }}"
       tags:
         - netmaker
         - netmaker.ext_client
