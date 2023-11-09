@@ -17,7 +17,7 @@
   tags:
     - netmaker
     - netmaker.netclient
-    - netmkaer.netclient.systemd
+    - netmaker.netclient.systemd
   block:
 
     # Get the netclient binary and make it executable

@@ -5,6 +5,7 @@
   hosts: localhost
   vars_files:
     - vars/netmaker.yaml
+    - vars/networks.yaml
   tags:
     - netmaker.netclient
 
@@ -17,6 +18,7 @@
         netmaker_create_enrollment_keys: false
       tags:
         - netmaker.netclient
+        - netmaker.netclient.systemd
 
 - name: Install Netclient on nodes
   hosts: netclients
@@ -34,6 +36,8 @@
         name: netmaker
         tasks_from: netclient_install_systemd
       vars:
+        # this is the list of enrollment keys from the Netmaker server
+        # that is collected in the previous play
         # yamllint disable-line rule:line-length
         netmaker_enrollment_key_list: "{{ hostvars['localhost']['netmaker_enrollment_key_list'] }}"  # noqa: yaml[line-length]
         # yamllint disable-line rule:line-length
