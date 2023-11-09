@@ -77,8 +77,7 @@
         name: netmaker
         tasks_from: netclient_install_systemd
       vars:
-        # yamllint disable-line rule:line-length
-        netmaker_netclient_networks: "{{ netmaker_networks }}"  # noqa: yaml[line-length]
+        netmaker_netclient_networks: "{{ netmaker_networks }}"
       tags:
         - netmaker
         - netmaker.netclient
