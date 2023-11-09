@@ -3,7 +3,7 @@
 # using the NMCTL CLI tool.
 #
 # input vars:
-#   item: a single external client definition from netmaker_ext_clients
+#   item: a single external client definition from ext_clients
 #         variable (see services/netmaker/vars/netmaker.yaml)
 #   node: the node that is the ingress gateway for the network
 
