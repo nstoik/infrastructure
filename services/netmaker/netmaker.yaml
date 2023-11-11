@@ -15,6 +15,7 @@
     - ../../vars/vault.yaml
     - ../../vars/main.yaml
     - vars/netmaker.yaml
+    - vars/cloudflare.yaml
   tags:
     - netmaker.full_setup
 
