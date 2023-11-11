@@ -90,7 +90,7 @@
         tasks_from: nmctl_host_update
       vars:
         netmaker_host_name: "{{ netmaker_droplet.name }}"
-        netmaker_host_definition: "{{ netmaker_host_settings }}"
+        netmaker_host_definition: "{{ netmaker_server_host_settings }}"
       tags:
         - netmaker
         - netmaker.netclient

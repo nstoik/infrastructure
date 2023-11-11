@@ -31,3 +31,38 @@ netmaker_networks:
     tags: "farm-network-tag",
     enrollment_unlimited: true,
   }
+
+# netmaker host and node definitions for the netmaker server
+netmaker_server_host_settings: {
+  name: '{{ netmaker_droplet.name }}',
+  isdefault: true,
+  node_settings: [
+    {
+      # monitoring network
+      network: '{{ netmaker_networks[0].name }}',
+      isegressgateway: false,
+      isingressgateway: true,
+      egressgatewayranges: [],
+      egressgatewaynatenabled: false,
+      ingressdns: "1.1.1.1",
+    },
+    {
+      # personal network
+      network: '{{ netmaker_networks[1].name }}',
+      isegressgateway: false,
+      isingressgateway: true,
+      egressgatewayranges: [],
+      egressgatewaynatenabled: false,
+      ingressdns: "1.1.1.1",
+    },
+    {
+      # farm-network network
+      network: '{{ netmaker_networks[2].name }}',
+      isegressgateway: false,
+      isingressgateway: true,
+      egressgatewayranges: [],
+      egressgatewaynatenabled: false,
+      ingressdns: "1.1.1.1",
+    }
+  ]
+}
