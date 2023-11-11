@@ -6,8 +6,4 @@ collections:
   - name: ansible.posix
 
 roles:
-  # manually specifiy the version and source as a workaround.
-  # see https://github.com/geerlingguy/ansible-role-security/issues/118
   - name: geerlingguy.security
-    src: https://github.com/geerlingguy/ansible-role-security.git
-    version: 2.2.1
