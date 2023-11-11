@@ -34,7 +34,6 @@ netmaker_networks:
 
 # netmaker host and node definitions for the netmaker server
 netmaker_server_host_settings: {
-  name: '{{ netmaker_droplet.name }}',
   isdefault: true,
   node_settings: [
     {
