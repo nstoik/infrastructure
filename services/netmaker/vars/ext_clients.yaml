@@ -7,7 +7,7 @@
 ext_clients:
   - {
     name: 'iPhone-monitoring',
-    host: '{{ netmaker_server_host_settings.name }}',
+    host: '{{ netmaker_droplet.name }}',
     # monitoring network
     network: '{{ netmaker_networks[0].name }}',
     allowedips: "",
@@ -15,7 +15,7 @@ ext_clients:
   }
   - {
     name: 'iPhone-personal',
-    host: '{{ netmaker_server_host_settings.name }}',
+    host: '{{ netmaker_droplet.name }}',
     # personal network
     network: '{{ netmaker_networks[1].name }}',
     allowedips: "",
@@ -23,7 +23,7 @@ ext_clients:
   }
   - {
     name: 'iPhone-farm-network',
-    host: '{{ netmaker_server_host_settings.name }}',
+    host: '{{ netmaker_droplet.name }}',
     # farm-network network
     network: '{{ netmaker_networks[2].name }}',
     allowedips: "",
