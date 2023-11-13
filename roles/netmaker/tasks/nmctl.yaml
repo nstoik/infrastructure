@@ -53,6 +53,7 @@
     # Call the api to see if a super admin user exists
     - name: Check for Netmaker superadmin users
       ansible.builtin.uri:
+        # yamllint disable-line rule:line-length
         url: "https://api.{{ netmaker_base_domain }}/api/users/adm/hassuperadmin"
         method: GET
         status_code: 200
@@ -82,6 +83,7 @@
     # Create the Netmaker superadmin using the API if it doesn't exist
     - name: Create the superadmin user
       ansible.builtin.uri:
+        # yamllint disable-line rule:line-length
         url: "https://api.{{ netmaker_base_domain }}/api/users/adm/createsuperadmin"
         method: POST
         status_code: 200

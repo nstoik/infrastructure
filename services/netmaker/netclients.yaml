@@ -39,9 +39,9 @@
         # this is the list of enrollment keys from the Netmaker server
         # that is collected in the previous play
         # yamllint disable-line rule:line-length
-        netmaker_enrollment_key_list: "{{ hostvars['localhost']['netmaker_enrollment_key_list'] }}"  # noqa: yaml[line-length]
+        netmaker_enrollment_key_list: "{{ hostvars['localhost']['netmaker_enrollment_key_list'] }}"
         # yamllint disable-line rule:line-length
-        netmaker_netclient_networks: "{{ hostvars[inventory_hostname]['netmaker_networks'] }}"  # noqa: yaml[line-length]
+        netmaker_netclient_networks: "{{ hostvars[inventory_hostname]['netmaker_networks'] }}"
         # yamllint disable-line rule:line-length
         netmaker_host_name: "{{ hostvars[inventory_hostname]['netmaker_shorthost'] }}"
       tags:

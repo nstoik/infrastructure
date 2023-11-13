@@ -39,9 +39,9 @@ all:
               # In testing, that caused trouble with the DNS and APT settings
               # on the DigitalOcean droplet acting as the first egress node.
               #
-              # A alternative solution is to configure the netwroks such that
+              # A alternative solution is to configure the networks such that
               # a secondary egress node is not needed. i.e have the external
-              # clients connect directly to the egress node that will be used 
+              # clients connect directly to the egress node that will be used
               # for the '0.0.0.0/0' range
               #
               # "0.0.0.0/0",
