@@ -12,6 +12,7 @@
 #                                 run in the same playbook).
 #   netmaker_netclient_networks: A list of networks to connect to on the
 #                                Netmaker server.
+#   netmaker_host_name: The name of the host to join to the network
 
 - name: Block for netclient install via systemd
   tags:
@@ -88,7 +89,10 @@
     # Join all the networks
     - name: Join all the networks
       ansible.builtin.command:
-        cmd: "netclient join --token={{ item.token }}"
+        cmd: >-
+          netclient join
+           --token="{{ item.token }}"
+           --name="{{ netmaker_host_name }}"
       loop: "{{ netclient_networks }}"
       loop_control:
         loop_var: item

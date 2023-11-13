@@ -13,6 +13,14 @@ The host needs to be able to be ssh'd into using the `ansible_user`.The keys of 
 ssh-copy-id -o ProxyJump=jumphost user@remote_host
 ```
 
+To manually install the netclient on a host, log into the Netmaker dashboard, go to the Hosts page and click the `Connect a Host` button. Follow the instructions to install the netclient on the host.
+
+Then to join the new host to a network run the following command on the host. The `<token>` is from the Netmaker Dashboard and the `<host name>` is set in the [netclients_manual.yaml](inventory/netclients_manual.yaml) inventory file.
+```bash
+```bash
+sudo netclient join --token <token> --name <host name>
+```
+
 ## Configuration
 The configuration of the Netmaker server is in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
 
