@@ -27,7 +27,23 @@ all:
             isegressgateway: true,
             isingressgateway: false,
             egressgatewayranges: [
-              # Not working for secondary egress nodes on netmaker v0.20.6
+              # Not working for secondary egress nodes on netmaker v0.21.1
+              # The problem is when an external client connects to the first
+              # egress node, then all the traffic of the first egress node
+              # needs to be forwared to the second egress node in order for
+              # the traffic of the external client to be forwarded to the
+              # second egress node.
+              #
+              # This can be done by deleting the default route on the first
+              # egress node and adding a route to the second egress node.
+              # In testing, that caused trouble with the DNS and APT settings
+              # on the DigitalOcean droplet acting as the first egress node.
+              #
+              # A alternative solution is to configure the netwroks such that
+              # a secondary egress node is not needed. i.e have the external
+              # clients connect directly to the egress node that will be used 
+              # for the '0.0.0.0/0' range
+              #
               # "0.0.0.0/0",
               "10.10.1.0/24",
               "10.10.3.0/24",
