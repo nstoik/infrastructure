@@ -1,6 +1,6 @@
-# This file is used to override the default variables for the netclients_manual
-# group.
 ---
+# This file is used to specify the default variables for the netclients_manual
+# group.
 
 # These hosts need to use a ssh jump host to proxy their connections
 ansible_ssh_common_args: >

@@ -6,8 +6,7 @@
 all:
   hosts:
     vpn.home.stechsolutions.ca:
-      ansible_host: vpn.home.stechsolutions.ca
-      netmaker_shorthost: vpn
+      netmaker_shorthost: vpn.home
       netmaker_networks:
         - {
           name: 'personal',
@@ -18,7 +17,6 @@ all:
           tags: "monitoring-tag"
         }
       netmaker_host_settings: {
-        name: '{{ ansible_host }}',
         isdefault: false,
         node_settings: [
           {
@@ -51,9 +49,7 @@ all:
               "10.10.5.0/24"
             ],
             egressgatewaynatenabled: true,
-            relayaddrs: [],
             ingressdns: "",
-            internetgateway: ""
           },
           {
             # monitoring network
@@ -62,14 +58,7 @@ all:
             isingressgateway: false,
             egressgatewayranges: [],
             egressgatewaynatenabled: true,
-            relayaddrs: [],
             ingressdns: "",
-            internetgateway: ""
           }
         ]
       }
-
-  children:
-    netclients:
-      hosts:
-        vpn.home.stechsolutions.ca:
