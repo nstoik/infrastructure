@@ -1,0 +1,20 @@
+---
+all:
+  hosts:
+    laptop.mike:
+      ansible_host: 10.50.50.3
+      ansible_user: mike
+    vpn.arnie-karen:
+      ansible_host: 10.50.50.4
+      ansible_user: arnie
+    vpn.home.stechsolutions.ca:
+      ansible_host: vpn.home.stechsolutions.ca
+
+  children:
+    netclients:
+      hosts:
+        vpn.home.stechsolutions.ca:
+    netclients_manual:
+      hosts:
+        laptop.mike:
+        vpn.arnie-karen:
