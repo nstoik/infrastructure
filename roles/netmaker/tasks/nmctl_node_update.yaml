@@ -27,9 +27,13 @@
     - name: Set egress state for the node
       ansible.builtin.command:
         cmd: >
-          nmctl node create_egress
+          nmctl node
+          {{ 'create_egress'
+             if netmaker_node_definition.isegressgateway
+             else 'delete_egress' }}
           {{ netmaker_node_definition.network }}
           {{ netmaker_node_definition.id }}
-          {{ netmaker_node_definition.egressgatewayranges | join(',') }}
-      when: netmaker_node_definition.isegressgateway
+          {{ netmaker_node_definition.egressgatewayranges | join(',')
+             if netmaker_node_definition.isegressgateway }}
+      when: netmaker_node_definition.isegressgateway is defined
       changed_when: false
