@@ -55,6 +55,7 @@
       loop: "{{ netmaker_netclient_networks }}"
       loop_control:
         loop_var: item_hostvar
+      when: item_hostvar.auto_connect | default(true)
       vars:
         item_key: "{{ netmaker_enrollment_key_list.stdout | from_json
                       | json_query(query_key) | first }}"
