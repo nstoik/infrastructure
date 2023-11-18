@@ -78,6 +78,7 @@
         tasks_from: netclient_install_systemd
       vars:
         netmaker_netclient_networks: "{{ netmaker_networks }}"
+        netmaker_host_name: "{{ netmaker_droplet.name }}"
       tags:
         - netmaker
         - netmaker.netclient
