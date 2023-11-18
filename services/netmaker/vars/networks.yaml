@@ -43,7 +43,7 @@ netmaker_server_host_settings: {
       isingressgateway: true,
       egressgatewayranges: [],
       egressgatewaynatenabled: false,
-      ingressdns: "1.1.1.1",
+      # ingressdns: "1.1.1.1",
     },
     {
       # personal network
@@ -52,7 +52,7 @@ netmaker_server_host_settings: {
       isingressgateway: true,
       egressgatewayranges: [],
       egressgatewaynatenabled: false,
-      ingressdns: "1.1.1.1",
+      # ingressdns: "1.1.1.1",
     },
     {
       # farm-network network
@@ -61,7 +61,7 @@ netmaker_server_host_settings: {
       isingressgateway: true,
       egressgatewayranges: [],
       egressgatewaynatenabled: false,
-      ingressdns: "1.1.1.1",
+      # ingressdns: "1.1.1.1",
     }
   ]
 }
