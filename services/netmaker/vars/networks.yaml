@@ -10,6 +10,7 @@ netmaker_networks:
     addressrange6: "",
     isipv4: "yes",
     isipv6: "no",
+    auto_connect: true,  # connect this network automatically
     tags: "monitoring-tag",
     enrollment_unlimited: true,
   }
@@ -19,6 +20,7 @@ netmaker_networks:
     addressrange6: "",
     isipv4: "yes",
     isipv6: "no",
+    auto_connect: true,  # connect this network automatically
     tags: "personal-tag",
     enrollment_unlimited: true,
   }
@@ -28,6 +30,7 @@ netmaker_networks:
     addressrange6: "",
     isipv4: "yes",
     isipv6: "no",
+    auto_connect: true,  # connect this network automatically
     tags: "farm-network-tag",
     enrollment_unlimited: true,
   }
