@@ -27,8 +27,6 @@ all:
           isegressgateway: false,
           isingressgateway: false,
           egressgatewayranges: [],
-          egressgatewaynatenabled: true,
-          ingressdns: "",
         }
       ]
     }
