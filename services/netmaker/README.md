@@ -22,9 +22,9 @@ sudo netclient join --token <token> --name <host name>
 ```
 
 ## Configuration
-The configuration of the Netmaker server is in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
+The configuration of the Netmaker server is in the [/services/netmaker/vars/](/services/netmaker/vars/) folder.
 
-There are two different configurations that can be installed. The community version and the enterprise version. Which vervion is installed is controlled by the `netmaker_pro` boolean variable in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
+There are two different configurations that can be installed. The community version and the enterprise version. Which version is installed is controlled by the `netmaker_pro` boolean variable in the [vars/netmaker.yaml](vars/netmaker.yaml) file.
 
 The setup runs through the steps as outlined in the [Netmaker documentation](https://netmaker.readthedocs.io/en/master/quick-start.html) but makes the following changes.
 
@@ -52,6 +52,7 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
         * monitoring - for monitoring devices and nodes using prometheus and grafana
         * personal - for my personal devices. To connect back to my home network, or to route traffic through my home network.
         * farm network - for network connectivity to devices for the farm monitoring system
+        * home - to connect directly back to my home network
     * Creates enrollment keys for the networks
     * Installs and configures Netclient on the Netmaker server
     * Configures ingress gateway for all networks and creates the external clients
@@ -61,12 +62,38 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
 
 4. Manually install and connect the netclient on the hosts that need to be connected to the Netmaker server. The list of hosts is in the [netclients_manual.yaml](inventory/netclients_manual.yaml) inventory file.
 
-5. The [netclients.yaml](netclients.yaml) playbook configures all the netclients. To run the playbook, run the following command:
+5. The [netclients.yaml](netclients.yaml) playbook configures all automatically connected netclients. To run the playbook, run the following command:
 
     ```bash
     ansible-playbook services/netmaker/netclients.yaml
     ```
 
+6. The [netclients_manual.yaml](netclients_manual.yaml) playbook configures all manually connected netclients. To run the playbook, run the following command:
+
+    ```bash
+    ansible-playbook services/netmaker/netclients_manual.yaml
+    ```
+
+### External Clients manual setup
+There is some manual setup required for the external clients.
+
+As of version 0.21.1, there can only be one DNS server specified in the [ext_clients.yaml](/services/netmaker/vars/ext_clients.yaml) configuration. This is a limiation of the NMCTL and the Netmaker server. After adding the configuration to the WireGuard app on a phone or laptop, simply edit the DNS settings and add the second DNS server (eg. 10.10.1.11 and 10.10.5.11)
+
+For the home network, change the Endpoint address to the dynamic DNS address (eg. home.stechsolutions.ca). Also add the same configuration to the WireGuard app on a phone or laptop again and change the allowed IPs to remove the `0.0.0.0/0` entry This would enable only the home network traffic to go through the VPN.
+
+### Adding a new network
+To add a new network, add the network to the [vars/netmaker.yaml](vars/netmaker.yaml) file. Then run the [netmaker_config.yaml](netmaker_config.yaml) playbook with the required tags. This will create the network and the enrollment key for the network.
+
+Then add the network settings to the [netclients.yaml](inventory/netclients.yaml) inventory file (or any other inventory file or the [vars/networks.yaml](vars/networks.yaml) `netmaker_server_host_settings` section). 
+
+Then run the [netclients.yaml](netclients.yaml) playbook with the requird tags. This will add the network to the netclients and configure it as required.
+
+
+```bash
+ansible-playbook services/netmaker/netmaker_config.yaml --tags="netmaker.network, netmaker.enrollment"
+
+ansible-playbook services/netmaker/netclients.yaml --tags="netmaker.netclient"
+```
 
 ## Pro Usage
 If the Pro version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
