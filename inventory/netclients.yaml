@@ -48,8 +48,6 @@ all:
               "10.10.4.0/24",
               "10.10.5.0/24"
             ],
-            egressgatewaynatenabled: true,
-            ingressdns: "",
           },
           {
             # monitoring network
@@ -57,8 +55,6 @@ all:
             isegressgateway: false,
             isingressgateway: false,
             egressgatewayranges: [],
-            egressgatewaynatenabled: true,
-            ingressdns: "",
           }
         ]
       }
