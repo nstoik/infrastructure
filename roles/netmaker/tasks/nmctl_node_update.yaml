@@ -15,9 +15,11 @@
       ansible.builtin.command:
         cmd: >
           nmctl node
-          {{ 'create_ingress'
-             if netmaker_node_definition.isingressgateway
-             else 'delete_ingress' }}
+          {% if netmaker_node_definition.isingressgateway %}
+            create_ingress
+          {% else %}
+            delete_ingress
+          {% endif %}
           {{ netmaker_node_definition.network }}
           {{ netmaker_node_definition.id }}
       when: netmaker_node_definition.isingressgateway is defined
@@ -28,12 +30,15 @@
       ansible.builtin.command:
         cmd: >
           nmctl node
-          {{ 'create_egress'
-             if netmaker_node_definition.isegressgateway
-             else 'delete_egress' }}
-          {{ netmaker_node_definition.network }}
-          {{ netmaker_node_definition.id }}
-          {{ netmaker_node_definition.egressgatewayranges | join(',')
-             if netmaker_node_definition.isegressgateway }}
+          {% if netmaker_node_definition.isegressgateway %}
+            create_egress
+            {{ netmaker_node_definition.network }}
+            {{ netmaker_node_definition.id }}
+            {{ netmaker_node_definition.egressgatewayranges | join(',') }}
+          {% else %}
+            delete_egress
+            {{ netmaker_node_definition.network }}
+            {{ netmaker_node_definition.id }}
+          {% endif %}
       when: netmaker_node_definition.isegressgateway is defined
       changed_when: false
