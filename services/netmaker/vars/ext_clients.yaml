@@ -19,7 +19,15 @@ ext_clients:
     # personal network
     network: '{{ netmaker_networks[1].name }}',
     allowedips: "",
-    dns: "10.10.1.11",
+    dns: "10.10.5.11",
+  }
+  - {
+    name: 'iPhone-personal-home',
+    host: 'vpn.home',
+    # personal network
+    network: '{{ netmaker_networks[1].name }}',
+    allowedips: "",
+    dns: "10.10.5.11",
   }
   - {
     name: 'iPhone-farm-network',
