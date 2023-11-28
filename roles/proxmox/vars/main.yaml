@@ -1,0 +1,27 @@
+---
+# vars file
+proxmox_iso_path: /var/lib/vz/template/iso
+
+proxmox_template_memory: 2048
+
+proxmox_template_cores: 2
+
+proxmox_template_disk_size: 32G
+
+proxmox_template_starting_id: 9000
+
+proxmox_import_storage: local-lvm  # iscsi-lvm
+
+proxmox_cloud_imgs:
+  # yamllint disable-line rule:line-length
+  - url: https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img
+    templateName: ubuntu-22.04-server-cloudimg
+    additionalDescription: ""
+
+proxmox_ci_user:  # cloud-init user
+
+proxmox_ipconfig0: ip=dhcp  # ip6=auto,ip=dhcp
+
+proxmox_ssh_key: ""
+
+proxmox_install_agent: true
