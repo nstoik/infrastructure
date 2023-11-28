@@ -36,7 +36,7 @@
 - name: Get the next largest VM ID from the VM list file
   ansible.builtin.set_fact:
     proxmox_next_vm_id: "{{ proxmox_vm_list | json_query('ids')
-                           | dict2items 
+                           | dict2items
                            | json_query('[].key')
                            | map('int')
                            | list
