@@ -1,0 +1,21 @@
+---
+# Download cloud images
+
+# Create the ISO directory if it does not exist
+- name: Create the ISO directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ proxmox_iso_path }}"
+    state: directory
+    mode: '0755'
+  become: true
+
+# Download the cloud images
+- name: Download the cloud images
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: "{{ proxmox_iso_path }}/{{ item.templateName }}.iso"
+    mode: '0644'
+    timeout: 60
+  loop: "{{ proxmox_cloud_imgs }}"
+  become: true
+  when: proxmox_cloud_imgs is defined

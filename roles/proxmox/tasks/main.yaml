@@ -1,0 +1,8 @@
+---
+# The main task file for the proxmox role
+
+# Download cloud images to Proxmox server
+- name: Download cloud images to Proxmox server
+  ansible.builtin.include_tasks: download_cloud_images.yaml
+  when: proxmox_cloud_imgs is defined
+
