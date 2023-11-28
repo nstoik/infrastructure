@@ -1,0 +1,55 @@
+---
+# Get the next largest VM ID from the VM list file
+# or use the starting ID if the VM list file is empty
+# or all existing VM IDs are less than the starting ID
+
+# Read the VM list from the proxmox server
+# To handle the edgecase later on where this is no existing VMs.
+- name: Read the VM list using qm
+  ansible.builtin.command:
+    cmd: "qm list --full"
+  register: proxmox_vms
+  become: true
+  changed_when: false
+
+# Set the default next VM ID
+- name: Set the default next VM ID
+  ansible.builtin.set_fact:
+    proxmox_next_vm_id: "{{ proxmox_template_starting_id }}"
+
+# Read the VM list file from the proxmox server
+- name: Read the VM list file
+  ansible.builtin.slurp:
+    src: "/etc/pve/.vmlist"
+  register: proxmox_vm_list
+  become: true
+  changed_when: false
+  when: proxmox_vms.stdout != ""
+
+# Decode the output from base64
+- name: Decode the output from base64
+  ansible.builtin.set_fact:
+    proxmox_vm_list: "{{ proxmox_vm_list['content'] | b64decode }}"
+  when: proxmox_vms.stdout != ""
+
+# Get the next largest VM ID from the VM list file
+- name: Get the next largest VM ID from the VM list file
+  ansible.builtin.set_fact:
+    proxmox_next_vm_id: "{{ proxmox_vm_list | json_query('ids')
+                           | dict2items 
+                           | json_query('[].key')
+                           | map('int')
+                           | list
+                           | max + 1 }}"
+  when: proxmox_vms.stdout != ""
+
+# Increase the VM ID if it is less than the starting ID
+- name: Increase the VM ID if it is less than the starting ID
+  ansible.builtin.set_fact:
+    proxmox_next_vm_id: "{{ proxmox_template_starting_id }}"
+  when: proxmox_next_vm_id | int < proxmox_template_starting_id
+
+# Debug the VM ID
+- name: Debug the VM ID
+  ansible.builtin.debug:
+    var: proxmox_next_vm_id
