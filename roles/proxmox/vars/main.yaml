@@ -8,8 +8,6 @@ proxmox_template_cores: 2
 
 proxmox_template_disk_size: 32G
 
-proxmox_template_starting_id: 9000
-
 proxmox_import_storage: local-lvm  # iscsi-lvm
 
 proxmox_cloud_imgs:

@@ -6,6 +6,3 @@
   ansible.builtin.include_tasks: download_cloud_images.yaml
   when: proxmox_cloud_imgs is defined
 
-# Get the next largest VM ID
-- name: Get the next largest VM ID
-  ansible.builtin.include_tasks: get_vm_id.yaml
