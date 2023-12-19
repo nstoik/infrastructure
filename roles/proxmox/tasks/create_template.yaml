@@ -15,12 +15,6 @@
   register: proxmox_vm_config
   become: true
 
-# Debug the proxmox_vm_config variable
-- name: Debug the proxmox_vm_config variable
-  ansible.builtin.debug:
-    msg: "{{ proxmox_vm_config.stat.exists }}"
-
-
 # Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
 - name: Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
   when:
