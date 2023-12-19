@@ -13,7 +13,7 @@
 - name: Download the cloud images
   ansible.builtin.get_url:
     url: "{{ item.url }}"
-    dest: "{{ proxmox_iso_path }}/{{ item.templateName }}.iso"
+    dest: "{{ proxmox_iso_path }}/{{ item.template_name }}.iso"
     mode: '0644'
     timeout: 60
   loop: "{{ proxmox_cloud_imgs }}"
