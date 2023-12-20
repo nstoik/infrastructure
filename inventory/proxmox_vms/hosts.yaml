@@ -1,0 +1,25 @@
+---
+# Hosts that are proxmox VMs and their configuration
+
+all:
+  children:
+    proxmox_vms:
+      hosts:
+        test-vm-1:
+          state: absent
+          id: 352
+          name: test-vm-1
+          disk_size: 10G
+          net0: virtio,bridge=vmbr0
+          ipconfig0: 'ip=dhcp'
+          cores: 2
+          memory: 2048
+        test-vm-2:
+          state: absent
+          id: 353
+          name: test-vm-2
+          disk_size: 10G
+          net0: virtio,bridge=vmbr0
+          ipconfig0: 'ip=dhcp'
+          cores: 2
+          memory: 2048
