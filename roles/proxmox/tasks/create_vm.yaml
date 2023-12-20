@@ -1,0 +1,104 @@
+---
+# Clone a template VM to create a new VM
+# Will clone a VM if it does not exist.
+# Will delete a VM if it exists and state is absent.
+
+# Required inputs:
+#  proxmox_template_id: The ID of the template VM
+#  proxmox_vm: The VM to create from the template
+
+# Check if the VM config file exists (does the VM exist)
+- name: Check if the VM exists
+  ansible.builtin.stat:
+    path: /etc/pve/qemu-server/{{ proxmox_vm.id }}.conf
+  register: proxmox_vm_config
+  become: true
+
+# Clone the VM block
+- name: Clone the VM
+  when:
+    not proxmox_vm_config.stat.exists
+    and proxmox_vm.state == "present"
+  block:
+
+    # Clone the VM
+    - name: Clone the VM
+      ansible.builtin.command:
+        cmd: >
+          qm clone {{ proxmox_template_id }}
+          {{ proxmox_vm.id }}
+          --name {{ proxmox_vm.name }}
+          --full
+      become: true
+      changed_when: false
+
+    # Resize the disk
+    - name: Resize the disk
+      ansible.builtin.command:
+        cmd: >
+          qm resize {{ proxmox_vm.id }}
+          scsi0
+          {{ proxmox_vm.disk_size }}
+      become: true
+      changed_when: false
+
+    # Set CPU configuration
+    - name: Set CPU configuration
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm.id }}
+          --cores {{ proxmox_vm.cores }}
+      when: proxmox_vm.cores is defined
+      become: true
+      changed_when: false
+
+    # Set memory configuration
+    - name: Set memory configuration
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm.id }}
+          --memory {{ proxmox_vm.memory }}
+      when: proxmox_vm.memory is defined
+      become: true
+      changed_when: false
+
+    # Set network configuration
+    - name: Set network configuration
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm.id }}
+          --net0 {{ proxmox_vm.net0 }}
+      when: proxmox_vm.net0 is defined
+      become: true
+      changed_when: false
+
+    # Set IP configuration
+    - name: Set IP configuration
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm.id }}
+          --ipconfig0 {{ proxmox_vm.ipconfig0 }}
+      when: proxmox_vm.ipconfig0 is defined
+      become: true
+      changed_when: false
+
+# Delete the VM if it exists and the state is absent
+- name: Delete the VM
+  when:
+    proxmox_vm_config.stat.exists
+    and proxmox_vm.state == "absent"
+  block:
+
+    # Stop the VM
+    - name: Stop the VM
+      ansible.builtin.command:
+        cmd: qm stop {{ proxmox_vm.id }}
+      become: true
+      changed_when: false
+
+    # Delete the VM
+    - name: Delete the VM
+      ansible.builtin.command:
+        cmd: qm destroy {{ proxmox_vm.id }} --purge --destroy-unreferenced-disks
+      become: true
+      changed_when: false
