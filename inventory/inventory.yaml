@@ -20,6 +20,6 @@ all:
       hosts:
         laptop.mike:
         vpn.arnie-karen:
-    proxmox:
+    proxmox_nodes:
       hosts:
         proxmox-2.home.stechsolutions.ca:
