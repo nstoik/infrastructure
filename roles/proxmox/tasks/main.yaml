@@ -5,6 +5,9 @@
 - name: Download cloud images to Proxmox server
   ansible.builtin.include_tasks: download_cloud_images.yaml
   when: proxmox_cloud_imgs is defined
+  tags:
+    - proxmox
+    - proxmox.cloud_images
 
 # Create the VM template
 - name: Create the VM template
@@ -13,3 +16,6 @@
     proxmox_vm_id: "{{ item.id }}"
     proxmox_cloud_img: "{{ item }}"
   loop: "{{ proxmox_cloud_imgs }}"
+  tags:
+    - proxmox
+    - proxmox.template

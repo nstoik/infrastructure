@@ -14,12 +14,18 @@
     path: /etc/pve/qemu-server/{{ proxmox_vm_id }}.conf
   register: proxmox_vm_config
   become: true
+  tags:
+    - proxmox
+    - proxmox.template
 
 # Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
 - name: Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
   when:
     not proxmox_vm_config.stat.exists and
     proxmox_cloud_img.state == "present"
+  tags:
+    - proxmox
+    - proxmox.template
   block:
 
     # Create the VM template
@@ -98,3 +104,6 @@
   when:
     proxmox_vm_config.stat.exists and
     proxmox_cloud_img.state == "absent"
+  tags:
+    - proxmox
+    - proxmox.template

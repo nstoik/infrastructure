@@ -84,14 +84,14 @@ The following ansible tags are available to specify specific tasks to run.
     - base.dotfiles - Configure dotfiles
     - base.known_hosts - Configure known hosts file on the local machine
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
+- cloudflare - Configure Cloudflare
+    - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider
     - digitalocean.tags - Configure the DigitalOcean tags
     - digitalocean.firewall - Configure the DigitalOcean firewall
     - digitalocean.droplet - Configure a DigitalOcean droplet
     - digitalocean.storage - Work with DigitalOcean block storage and volumes
     - digitalocean.user - Configure a user on a DigitalOcean droplet
-- cloudflare - Configure Cloudflare
-    - cloudflare.dns - Configure Cloudflare DNS
 - netmaker - Configure a Netmaker server
     - netmaker.full_setup - Complete the full setup of a Netmaker server
     - netmaker.nmctl - Install the nmctl command line tool
@@ -102,6 +102,10 @@ The following ansible tags are available to specify specific tasks to run.
         - netmaker.netclient.systemd - Configure the Netmaker netclient using systemd
         - netmaker.netclient.join - Join the Netmaker netclient to the network
     - netmaker.ext_client - Configure external clients
+- proxmox - Configure the proxmox nodes and vms
+    - proxmox.cloud_images - Download cloud images
+    - proxmox.template - Configure the proxmox template
+    - proxmox.vm - Clone and configure VMs on the proxmox nodes
 
 # Inventory
 Inventory files are as follows in the [inventory](inventory) directory:

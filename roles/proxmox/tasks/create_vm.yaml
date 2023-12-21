@@ -13,12 +13,18 @@
     path: /etc/pve/qemu-server/{{ proxmox_vm.id }}.conf
   register: proxmox_vm_config
   become: true
+  tags:
+    - proxmox
+    - proxmox.vm
 
 # Clone the VM block
 - name: Clone the VM
   when:
     not proxmox_vm_config.stat.exists
     and proxmox_vm.state == "present"
+  tags:
+    - proxmox
+    - proxmox.vm
   block:
 
     # Clone the VM
@@ -87,6 +93,9 @@
   when:
     proxmox_vm_config.stat.exists
     and proxmox_vm.state == "absent"
+  tags:
+    - proxmox
+    - proxmox.vm
   block:
 
     # Stop the VM
