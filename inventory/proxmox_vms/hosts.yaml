@@ -5,21 +5,16 @@ all:
   children:
     proxmox_vms:
       hosts:
-        test-vm-1:
-          state: absent
-          id: 352
-          name: test-vm-1
-          disk_size: 10G
-          net0: virtio,bridge=vmbr0
-          ipconfig0: 'ip=dhcp'
-          cores: 2
-          memory: 2048
-        test-vm-2:
-          state: absent
-          id: 353
-          name: test-vm-2
-          disk_size: 10G
-          net0: virtio,bridge=vmbr0
-          ipconfig0: 'ip=dhcp'
-          cores: 2
-          memory: 2048
+        docker-testing:
+          network:
+            ip: "10.10.5.25"
+            gateway: "10.10.5.1"
+          proxmox_vm:
+            state: "present"
+            id: 352
+            name: {{ inventory_hostname }}
+            disk_size: 10G
+            net0: virtio,bridge=vmbr0
+            ipconfig0: 'ip={{ network.ip }}/24,gw={{ network.gateway }}}'
+            cores: 2
+            memory: 4096
