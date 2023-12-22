@@ -15,6 +15,7 @@
   tags:
     - proxmox
     - proxmox.vm
+    - proxmox.vm.create
 
 # Clone the VM block
 - name: Clone the VM
@@ -24,6 +25,7 @@
   tags:
     - proxmox
     - proxmox.vm
+    - proxmox.vm.create
   block:
 
     # Clone the VM

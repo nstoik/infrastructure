@@ -106,10 +106,14 @@ The following ansible tags are available to specify specific tasks to run.
     - proxmox.cloud_images - Download cloud images
     - proxmox.template - Configure the proxmox template
     - proxmox.vm - Clone and configure VMs on the proxmox nodes
+        - proxmox.vm.create - Create a VM on the proxmox node
+        - proxmox.vm.delete - Delete a VM on the proxmox node
 
 # Inventory
 Inventory files are as follows in the [inventory](inventory) directory:
 
+- [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
+    - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms
 - [do_hosts.yaml](inventory/do_hosts.yaml) - Dynamic inventory for DigitalOcean
     - Inventory from DigtalOcean is dynamic using a plugin.
     - When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
