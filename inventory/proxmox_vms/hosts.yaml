@@ -12,9 +12,9 @@ all:
           proxmox_vm:
             state: "present"
             id: 352
-            name: {{ inventory_hostname }}
+            name: "{{ inventory_hostname }}"
             disk_size: 10G
             net0: virtio,bridge=vmbr0
-            ipconfig0: 'ip={{ network.ip }}/24,gw={{ network.gateway }}}'
+            ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 2
             memory: 4096
