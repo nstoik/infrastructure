@@ -4,6 +4,8 @@ all:
     laptop.mike:
       ansible_host: 10.50.50.3
       ansible_user: mike
+    proxmox-2.home.stechsolutions.ca:
+      ansible_host: proxmox-2.home.stechsolutions.ca
     vpn.arnie-karen:
       ansible_host: 10.50.50.4
       ansible_user: arnie
@@ -18,3 +20,7 @@ all:
       hosts:
         laptop.mike:
         vpn.arnie-karen:
+    proxmox_nodes:
+      hosts:
+        proxmox-2.home.stechsolutions.ca:
+    proxmox_vms:

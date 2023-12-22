@@ -44,7 +44,7 @@
       when: netmaker_current_ext_client_list.stdout == "null"
 
     # Build the list of current external clients
-    # yamllint disable rule:line-length
+    # yamllint disable rule:line-length, no-role-prefix
     - name: Build the list of current external clients
       ansible.builtin.set_fact:
         netmaker_client_list: "{{ netmaker_client_list | default([]) +
@@ -59,11 +59,11 @@
         label: "{{ item_ext.clientid }} {{ item_ext.network }}"
       vars:
         item_node: "{{ netmaker_external_client_nodes_list.stdout | from_json
-                        | json_query(query_node) | first }}"  # noqa: var-naming[no-role-prefix] yaml[line-length]
+                        | json_query(query_node) | first }}"
         item_host: "{{ netmaker_external_client_hosts_list.stdout | from_json
-                        | json_query(query_host) | first }}"  # noqa: var-naming[no-role-prefix] yaml[line-length]
-        query_node: "[?id == '{{ item_ext.ingressgatewayid }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
-        query_host: "[?id == '{{ item_node.hostid }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
+                        | json_query(query_host) | first }}"
+        query_node: "[?id == '{{ item_ext.ingressgatewayid }}']"
+        query_host: "[?id == '{{ item_node.hostid }}']"
 
     # Define netmaker_client_list as a default list if it doesn't exist
     - name: Define netmaker_client_list as a default list if it doesn't exist
@@ -87,8 +87,8 @@
         label: "{{ item_ext.name }} with host ID {{ item_host.id }}"
       vars:
         item_host: "{{ netmaker_external_client_hosts_list.stdout | from_json
-                      | json_query(query_host) | first }}"  # noqa: var-naming[no-role-prefix] yaml[line-length]
-        query_host: "[?name == '{{ item_ext.host }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
+                      | json_query(query_host) | first }}"
+        query_host: "[?name == '{{ item_ext.host }}']"
 
     # Create the external client if it doesn't exist
     - name: Create the external client if it doesn't exist
@@ -104,7 +104,7 @@
         | length == 0
       vars:
         node: "{{ netmaker_external_client_nodes_list.stdout | from_json
-                  | json_query(query_node) | first }}"  # noqa: var-naming[no-role-prefix] yaml[line-length]
+                  | json_query(query_node) | first }}"
         query_node: "[?network == '{{ item.network }}' &&
-                      hostid == '{{ item.hostid }}']"  # noqa: var-naming[no-role-prefix] yaml[line-length]
-# yamllint enable rule:line-length
+                      hostid == '{{ item.hostid }}']"
+# yamllint enable rule:line-length, no-role-prefix

@@ -3,7 +3,7 @@
 #
 # This inventory file is used to define the hosts that will be configured with
 # netclient.
-all:
+netclients:
   hosts:
     vpn.home.stechsolutions.ca:
       netmaker_shorthost: vpn.home

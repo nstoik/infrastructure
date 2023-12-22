@@ -1,0 +1,42 @@
+---
+# Delete a VM
+# Will delete a VM if it exists and state is absent.
+
+# Required inputs:
+#  proxmox_vm: The VM to create from the template
+
+# Check if the VM config file exists (does the VM exist)
+- name: Check if the VM exists
+  ansible.builtin.stat:
+    path: /etc/pve/qemu-server/{{ proxmox_vm.id }}.conf
+  register: proxmox_vm_config
+  become: true
+  tags:
+    - proxmox
+    - proxmox.vm
+    - proxmox.vm.delete
+
+# Delete the VM if it exists and the state is absent
+- name: Delete the VM
+  when:
+    proxmox_vm_config.stat.exists
+    and proxmox_vm.state == "absent"
+  tags:
+    - proxmox
+    - proxmox.vm
+    - proxmox.vm.delete
+  block:
+
+    # Stop the VM
+    - name: Stop the VM
+      ansible.builtin.command:
+        cmd: qm stop {{ proxmox_vm.id }}
+      become: true
+      changed_when: false
+
+    # Delete the VM
+    - name: Delete the VM
+      ansible.builtin.command:
+        cmd: qm destroy {{ proxmox_vm.id }} --purge --destroy-unreferenced-disks
+      become: true
+      changed_when: false

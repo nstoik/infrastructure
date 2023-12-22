@@ -1,0 +1,57 @@
+---
+# Start the VM if it is not running and wait for it to be ready
+
+# Required inputs:
+#  proxmox_vm: The VM to start
+#  proxmox_ip: The IP address of the VM
+
+# Check if the VM is running
+- name: Check if the VM is running
+  ansible.builtin.command:
+    cmd: >
+      qm status {{ proxmox_vm.id }}
+  register: proxmox_vm_status
+  become: true
+  changed_when: false
+  tags:
+    - proxmox
+    - proxmox.vm
+    - proxmox.vm.create
+
+# Start the VM
+- name: Start the VM
+  when:
+    "proxmox_vm_status.stdout.find('status: stopped') != -1
+    and proxmox_vm.state == 'present'"
+  tags:
+    - proxmox
+    - proxmox.vm
+    - proxmox.vm.create
+  block:
+
+    # Start the VM
+    - name: Start the VM
+      ansible.builtin.command:
+        cmd: >
+          qm start {{ proxmox_vm.id }}
+      become: true
+      changed_when: false
+
+    # Wait for the VM to be ready
+    - name: Wait for the VM to be ready
+      ansible.builtin.wait_for:
+        host: "{{ proxmox_ip }}"
+        port: 22
+        delay: 10
+        timeout: 300
+      become: true
+      changed_when: false
+
+    # Wait for cloud-init to finish
+    - name: Wait for cloud-init to finish
+      ansible.builtin.wait_for:
+        path: /var/lib/cloud/instance/boot-finished
+        delay: 10
+        timeout: 300
+      become: true
+      changed_when: false

@@ -1,0 +1,109 @@
+---
+# Setup a cloud VM template to be used for cloning.
+# Will create a VM template if it does not exist.
+# Will delete a VM template if it exists and state is absent.
+
+# Required inputs:
+#  proxmox_vm_id: The VM ID to use for the template
+#  proxmox_cloud_img: The cloud image to use for the template
+
+
+# Check if the VM config file exists (does the VM exist)
+- name: Check if the VM exists
+  ansible.builtin.stat:
+    path: /etc/pve/qemu-server/{{ proxmox_vm_id }}.conf
+  register: proxmox_vm_config
+  become: true
+  tags:
+    - proxmox
+    - proxmox.template
+
+# Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
+- name: Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
+  when:
+    not proxmox_vm_config.stat.exists and
+    proxmox_cloud_img.state == "present"
+  tags:
+    - proxmox
+    - proxmox.template
+  block:
+
+    # Create the VM template
+    - name: Create the VM template
+      block:
+
+        # Create temp public-ssh-key file
+        - name: Create temp public-ssh-key file
+          ansible.builtin.copy:
+            content: "{{ secret_ssh_keys[0].key }}"
+            dest: /tmp/public-ssh-key.pub
+            mode: 0600
+
+        # Create the VM
+        - name: Create the VM
+          ansible.builtin.command:
+            cmd: >
+              qm create {{ proxmox_vm_id }}
+              --name {{ proxmox_cloud_img.template_name }}
+              --memory {{ proxmox_template_memory }}
+              --cores {{ proxmox_template_cores }}
+              --net0 virtio,bridge=vmbr0
+              --scsihw virtio-scsi-pci
+          become: true
+          changed_when: false
+
+        # Import disk to VM
+        - name: Import disk to VM
+          ansible.builtin.command:
+            cmd: >
+              qm disk import {{ proxmox_vm_id }}
+              {{ proxmox_iso_path }}/{{ proxmox_cloud_img.template_name }}.iso
+              {{ proxmox_import_storage }}
+              --format qcow2
+          become: true
+          changed_when: false
+
+        # yamllint disable rule:line-length
+        # Set VM hardware options
+        - name: Set VM hardware options
+          ansible.builtin.shell:
+            cmd: |
+              qm set {{ proxmox_vm_id }} --scsi0 {{ proxmox_import_storage }}:vm-{{ proxmox_vm_id }}-disk-0
+              qm set {{ proxmox_vm_id }} --ide2 {{ proxmox_import_storage }}:cloudinit
+              qm set {{ proxmox_vm_id }} --boot c --bootdisk scsi0
+              qm set {{ proxmox_vm_id }} --serial0 socket --vga serial0
+              qm set {{ proxmox_vm_id }} --agent enabled=1
+              qm set {{ proxmox_vm_id }} --sshkeys /tmp/public-ssh-key.pub
+              qm set {{ proxmox_vm_id }} --ciuser {{ default_user }}
+              qm set {{ proxmox_vm_id }} --cipassword {{ secret_user_password }}
+          become: true
+          changed_when: false
+          # yamllint enable rule:line-length
+
+        # Remove temp public-ssh-key file
+        - name: Remove temp public-ssh-key file
+          ansible.builtin.file:
+            path: /tmp/public-ssh-key.pub
+            state: absent
+
+        # Set VM as a template
+        - name: Set VM as a template
+          ansible.builtin.command:
+            cmd: qm template {{ proxmox_vm_id }}
+          become: true
+          changed_when: false
+
+# Delete  VM template with image {{ proxmox_cloud_img.template_name }}
+- name: Delete VM template with image {{ proxmox_cloud_img.template_name }}
+  ansible.builtin.command:
+    cmd: qm destroy {{ proxmox_vm_id }} --purge --destroy-unreferenced-disks
+  become: true
+  changed_when:
+    proxmox_vm_config.stat.exists and
+    proxmox_cloud_img.state == "absent"
+  when:
+    proxmox_vm_config.stat.exists and
+    proxmox_cloud_img.state == "absent"
+  tags:
+    - proxmox
+    - proxmox.template

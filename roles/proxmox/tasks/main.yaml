@@ -1,0 +1,21 @@
+---
+# The main task file for the proxmox role
+
+# Download cloud images to Proxmox server
+- name: Download cloud images to Proxmox server
+  ansible.builtin.include_tasks: download_cloud_images.yaml
+  when: proxmox_cloud_imgs is defined
+  tags:
+    - proxmox
+    - proxmox.cloud_images
+
+# Create the VM template
+- name: Create the VM template
+  ansible.builtin.include_tasks: create_template.yaml
+  vars:
+    proxmox_vm_id: "{{ item.id }}"
+    proxmox_cloud_img: "{{ item }}"
+  loop: "{{ proxmox_cloud_imgs }}"
+  tags:
+    - proxmox
+    - proxmox.template

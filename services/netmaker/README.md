@@ -52,7 +52,6 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
         * monitoring - for monitoring devices and nodes using prometheus and grafana
         * personal - for my personal devices. To connect back to my home network, or to route traffic through my home network.
         * farm network - for network connectivity to devices for the farm monitoring system
-        * home - to connect directly back to my home network
     * Creates enrollment keys for the networks
     * Installs and configures Netclient on the Netmaker server
     * Configures ingress gateway for all networks and creates the external clients
@@ -79,7 +78,7 @@ There is some manual setup required for the external clients.
 
 As of version 0.21.1, there can only be one DNS server specified in the [ext_clients.yaml](/services/netmaker/vars/ext_clients.yaml) configuration. This is a limiation of the NMCTL and the Netmaker server. After adding the configuration to the WireGuard app on a phone or laptop, simply edit the DNS settings and add the second DNS server (eg. 10.10.1.11 and 10.10.5.11)
 
-For the home network, change the Endpoint address to the dynamic DNS address (eg. home.stechsolutions.ca). Also add the same configuration to the WireGuard app on a phone or laptop again and change the allowed IPs to remove the `0.0.0.0/0` entry This would enable only the home network traffic to go through the VPN.
+For the `personal-home` external client, change the Endpoint address to the dynamic DNS address (eg. home.stechsolutions.ca).
 
 ### Adding a new network
 To add a new network, add the network to the [vars/netmaker.yaml](vars/netmaker.yaml) file. Then run the [netmaker_config.yaml](netmaker_config.yaml) playbook with the required tags. This will create the network and the enrollment key for the network.

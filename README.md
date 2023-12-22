@@ -84,14 +84,14 @@ The following ansible tags are available to specify specific tasks to run.
     - base.dotfiles - Configure dotfiles
     - base.known_hosts - Configure known hosts file on the local machine
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
+- cloudflare - Configure Cloudflare
+    - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider
     - digitalocean.tags - Configure the DigitalOcean tags
     - digitalocean.firewall - Configure the DigitalOcean firewall
     - digitalocean.droplet - Configure a DigitalOcean droplet
     - digitalocean.storage - Work with DigitalOcean block storage and volumes
     - digitalocean.user - Configure a user on a DigitalOcean droplet
-- cloudflare - Configure Cloudflare
-    - cloudflare.dns - Configure Cloudflare DNS
 - netmaker - Configure a Netmaker server
     - netmaker.full_setup - Complete the full setup of a Netmaker server
     - netmaker.nmctl - Install the nmctl command line tool
@@ -102,10 +102,18 @@ The following ansible tags are available to specify specific tasks to run.
         - netmaker.netclient.systemd - Configure the Netmaker netclient using systemd
         - netmaker.netclient.join - Join the Netmaker netclient to the network
     - netmaker.ext_client - Configure external clients
+- proxmox - Configure the proxmox nodes and vms
+    - proxmox.cloud_images - Download cloud images
+    - proxmox.template - Configure the proxmox template
+    - proxmox.vm - Clone and configure VMs on the proxmox nodes
+        - proxmox.vm.create - Create a VM on the proxmox node
+        - proxmox.vm.delete - Delete a VM on the proxmox node
 
 # Inventory
 Inventory files are as follows in the [inventory](inventory) directory:
 
+- [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
+    - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms
 - [do_hosts.yaml](inventory/do_hosts.yaml) - Dynamic inventory for DigitalOcean
     - Inventory from DigtalOcean is dynamic using a plugin.
     - When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.

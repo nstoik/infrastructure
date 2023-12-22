@@ -1,0 +1,30 @@
+---
+# Vault secrets
+
+# SSH secrets
+# yamllint disable rule:line-length
+secret_ssh_keys:
+  - name: "Device Name 1"
+    key: "change_me"
+  - name: "Device Name 2"
+    key: "change_me"
+
+# Digitalocean secrets
+# yamllint disable rule:line-length
+secret_do_token: "change_me"
+
+# Cloudflare secrets
+secret_cf_token: "change_me"
+
+# Default user values
+secret_user_password: "change_me"
+secret_become_pass: "change_me"
+
+# Netmaker secrets
+secret_nm_master_key: "change_me"
+secret_nm_mq_password: "change_me"
+secret_nm_license_key: "change_me"
+secret_nm_tenant_id: "change_me"
+secret_nm_admin_account: "change_me"
+secret_nm_admin_password: "change_me"
+secret_nm_turn_password: "change_me"
