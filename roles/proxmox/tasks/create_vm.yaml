@@ -1,7 +1,6 @@
 ---
 # Clone a template VM to create a new VM
 # Will clone a VM if it does not exist.
-# Will delete a VM if it exists and state is absent.
 
 # Required inputs:
 #  proxmox_template_id: The ID of the template VM
@@ -85,29 +84,5 @@
           qm set {{ proxmox_vm.id }}
           --ipconfig0 {{ proxmox_vm.ipconfig0 }}
       when: proxmox_vm.ipconfig0 is defined
-      become: true
-      changed_when: false
-
-# Delete the VM if it exists and the state is absent
-- name: Delete the VM
-  when:
-    proxmox_vm_config.stat.exists
-    and proxmox_vm.state == "absent"
-  tags:
-    - proxmox
-    - proxmox.vm
-  block:
-
-    # Stop the VM
-    - name: Stop the VM
-      ansible.builtin.command:
-        cmd: qm stop {{ proxmox_vm.id }}
-      become: true
-      changed_when: false
-
-    # Delete the VM
-    - name: Delete the VM
-      ansible.builtin.command:
-        cmd: qm destroy {{ proxmox_vm.id }} --purge --destroy-unreferenced-disks
       become: true
       changed_when: false
