@@ -1,0 +1,22 @@
+---
+# This is the setup playbook for the proxmox role.
+# It downloads the cloud images and creates a template.
+
+# Run the proxmox role
+- name: Run the proxmox role
+  hosts: proxmox_nodes
+  vars_files:
+    - ../../vars/vault.yaml
+    - ../../vars/main.yaml
+    - vars/proxmox.yaml
+
+  tasks:
+    # This downloads the cloud images and creates a template
+    - name: Run the proxmox role
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: main
+      tags:
+        - proxmox
+        - proxmox.cloud_images
+        - proxmox.template
