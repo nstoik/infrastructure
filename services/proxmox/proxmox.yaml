@@ -1,0 +1,70 @@
+---
+
+# Run the proxmox role
+- name: Run the proxmox role
+  hosts: proxmox_nodes
+  vars_files:
+    - ../../vars/vault.yaml
+    - ../../vars/main.yaml
+    - vars/proxmox.yaml
+
+  tasks:
+    # This creates the VMs
+    - name: Run the proxmox role to create VMs
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: create_vm
+      vars:
+        proxmox_template_id: 9000
+        proxmox_vm: "{{ hostvars[item].proxmox_vm }}"
+      loop: "{{ groups['proxmox_vms'] }}"
+      tags:
+        - proxmox
+        - proxmox.vm
+        - proxmox.vm.create
+
+    # Start the VMs and wait for them to be ready
+    - name: Run the proxmox role to start VMs
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: start_vm
+      vars:
+        proxmox_vm: "{{ hostvars[item].proxmox_vm }}"
+        proxmox_ip: "{{ hostvars[item].network.ip }}"
+      loop: "{{ groups['proxmox_vms'] }}"
+      tags:
+        - proxmox
+        - proxmox.vm
+        - proxmox.vm.create
+
+    # Update the known_hosts file for hostname
+    - name: Update the known_hosts file for hostname
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ item }}"
+        base_state: present
+        base_comment: "Proxmox VM: {{ item }}"
+      loop: "{{ groups['proxmox_vms'] }}"
+      tags:
+        - proxmox
+        - proxmox.vm
+        - proxmox.vm.create
+        - base.known_hosts
+
+    # Update the known_hosts file for IP
+    - name: Update the known_hosts file for IP
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ hostvars[item].network.ip }}"
+        base_state: present
+        base_comment: "Proxmox VM: {{ item }}"
+      loop: "{{ groups['proxmox_vms'] }}"
+      tags:
+        - proxmox
+        - proxmox.vm
+        - proxmox.vm.create
+        - base.known_hosts
