@@ -7,12 +7,3 @@ proxmox_template_memory: 2048
 proxmox_template_cores: 2
 
 proxmox_import_storage: data
-
-proxmox_cloud_imgs:
-  # yamllint disable-line rule:line-length
-  - url: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
-    template_name: "ubuntu-22.04-server-cloudimg"
-    id: 9000
-    state: "present"
-
-proxmox_ipconfig0: ip=dhcp  # ip6=auto,ip=dhcp
