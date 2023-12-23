@@ -1,0 +1,7 @@
+---
+# Defaults for pihole role
+
+pihole_dnsmasq_dir: /etc/dnsmasq.d
+pihole_dnsmasq_file: 05-pihole-custom-cname.conf
+
+pihole_config_dir: /etc/pihole

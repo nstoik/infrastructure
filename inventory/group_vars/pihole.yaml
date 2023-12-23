@@ -1,0 +1,69 @@
+---
+# Group vars for pihole
+
+ansible_become_password: "{{ secret_become_pass }}"
+
+ansible_ssh_pass: "{{ secret_become_pass }}"
+
+# DNS entries to add to Pi-hole
+# The domain name and the hostname are added
+# to the Pi-hole DNS entries.
+pihole_dns_entries:
+  - domain: "unifi.home.stechsolutions.ca"
+    ip: 10.10.1.1
+  - domain: "pihole-2.home.stechsolutions.ca"
+    ip: 10.10.1.11
+  - domain: "hassio.home.stechsolutions.ca"
+    ip: 10.10.1.51
+  - domain: "pi4-dev.home.stechsolutions.ca"
+    ip: 10.10.1.179
+  - domain: "nelson_ds.home.stechsolutions.ca"
+    ip: 10.10.1.200
+  - domain: "proxmox.home.stechsolutions.ca"
+    ip: 10.10.5.9
+  - domain: "proxmox-2.home.stechsolutions.ca"
+    ip: 10.10.5.10
+  - domain: "pihole-3.home.stechsolutions.ca"
+    ip: 10.10.5.11
+  - domain: "docker-testing.home.stechsolutions.ca"
+    ip: 10.10.5.25
+  - domain: "prometheus.home.stechsolutions.ca"
+    ip: 10.10.5.76
+  - domain: "fileserver.home.stechsolutions.ca"
+    ip: 10.10.5.114
+  - domain: "youtube-dl.home.stechsolutions.ca"
+    ip: 10.10.5.120
+  - domain: "grafana.home.stechsolutions.ca"
+    ip: 10.10.5.142
+  - domain: "w10-testing.home.stechsolutions.ca"
+    ip: 10.10.5.182
+  - domain: "vpn.home.stechsolutions.ca"
+    ip: 10.10.5.223
+  - domain: "docker.home.stechsolutions.ca"
+    ip: 10.10.5.237
+
+# CNAME entries to add to Pi-hole
+# add_hostname: true will add the hostname as a CNAME entry
+#               as well as the domain.
+pihole_cname_entries:
+  - domain: "downloader.home.stechsolutions.ca"
+    target: "docker.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "heimdall.home.stechsolutions.ca"
+    target: "docker.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "media.home.stechsolutions.ca"
+    target: "docker.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "fd1.farmmonitor.ca"
+    target: "pi4-dev.home.stechsolutions.ca"
+    add_hostname: false
+  - domain: "fm1.farmmonitor.ca"
+    target: "pi4-dev.home.stechsolutions.ca"
+    add_hostname: false
+  - domain: "traefik.fd1.farmmonitor.ca"
+    target: "pi4-dev.home.stechsolutions.ca"
+    add_hostname: false
+  - domain: "traefik.fm1.farmmonitor.ca"
+    target: "pi4-dev.home.stechsolutions.ca"
+    add_hostname: false

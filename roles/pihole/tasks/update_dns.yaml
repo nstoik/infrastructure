@@ -1,0 +1,27 @@
+---
+# Update DNS entries to Pi-hole
+
+# Ensure that the required directories exist
+- name: Ensure that the required directories exist
+  ansible.builtin.file:
+    path: "{{ pihole_config_dir }}"
+    state: directory
+    mode: 0755
+  become: true
+  tags:
+    - pihole
+    - pihole.dns
+
+# Write the pihole custom list
+- name: Write the pihole custom list
+  ansible.builtin.template:
+    src: pihole_custom.list.j2
+    dest: "{{ pihole_config_dir }}/custom.list"
+    mode: 0644
+  become: true
+  tags:
+    - pihole
+    - pihole.dns
+    - pihole.dns.add
+  notify:
+    - Restart pihole

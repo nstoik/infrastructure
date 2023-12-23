@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+{% for entry in pihole_cname_entries %}
+cname={{ entry.domain }},{{ entry.target }}
+{% if entry.add_hostname %}
+cname={{ entry.domain.split('.')[0] }},{{ entry.target }}
+{% endif %}
+{% endfor %}

@@ -1,0 +1,16 @@
+---
+# The main task file for the pihole role
+
+# Update DNS entries to Pi-hole
+- name: Update DNS entries to Pi-hole
+  ansible.builtin.include_tasks: update_dns.yaml
+  tags:
+    - pihole
+    - pihole.dns
+
+# Update CNAME entries to Pi-hole
+- name: Update CNAME entries to Pi-hole
+  ansible.builtin.include_tasks: update_cname.yaml
+  tags:
+    - pihole
+    - pihole.cname
