@@ -68,12 +68,31 @@ The main file is [site.yaml](site.yaml) which is the main playbook for the whole
 
 The main configuration is done in the [vars/main.yaml](vars/main.yaml) and the [vars/vault.yaml](vars/vault.yaml) (this file is encrypted) files.
 
+## Playbooks
+The playbooks directory contains the different playbooks that can be run.
+
+The playbooks are:
+- [site.yaml](site.yaml) - The main playbook for the whole infrastructure
+- [pihole.yaml](playbooks/pihole.yaml) - Configure pihole server
+
+## Roles
+The roles directory contains roles that are used by the playbooks.
+
+The roles are:
+- [base](roles/base/)
+- [cloudflare](roles/cloudflare/)
+- [digitalocean](roles/digitalocean/)
+- [netmaker](roles/netmaker/)
+- [pihole](roles/pihole/)
+- [proxmox](roles/proxmox/)
+
 
 ## Services
 The services directory contains the subfolders and playbooks for the various services I run on my infrastructure.
 
 The services are:
 - [Netmaker](services/netmaker/README.md)
+- [Proxmox](services/proxmox/README.md)
 
 ## Ansible Tags
 The following ansible tags are available to specify specific tasks to run.

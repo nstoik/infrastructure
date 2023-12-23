@@ -1,0 +1,8 @@
+---
+# Handlers for pihole role
+
+# Restart pihole
+- name: Restart pihole
+  ansible.builtin.command: pihole restartdns
+  changed_when: true
+  become: true

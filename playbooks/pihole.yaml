@@ -1,0 +1,11 @@
+---
+
+# Configure pihole
+- name: Configure pihole
+  hosts: pihole
+  gather_facts: false
+  vars_files:
+    - ../vars/vault.yaml
+  roles:
+    - pihole
+  tags: pihole
