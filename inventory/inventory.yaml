@@ -11,7 +11,7 @@ all:
     proxmox-2.home.stechsolutions.ca:
       ansible_host: proxmox-2.home.stechsolutions.ca
     vpn.arnie-karen:
-      ansible_host: 10.50.50.4
+      ansible_host: 10.50.50.5
       ansible_user: arnie
     vpn.home.stechsolutions.ca:
       ansible_host: vpn.home.stechsolutions.ca
