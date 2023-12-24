@@ -94,6 +94,22 @@ ansible-playbook services/netmaker/netmaker_config.yaml --tags="netmaker.network
 ansible-playbook services/netmaker/netclients.yaml --tags="netmaker.netclient"
 ```
 
+## Updating
+To update the version of Netmaker follow the steps below.
+
+1. Update the 'netmaker_version' variable in the [netmaker.yaml](vars/netmaker.yaml) configuration file in the netmaker services folder.
+2. Check the GitHub releases page for the [Netmaker server](https://github.com/gravitl/netmaker/releases) and [Netclient](https://github.com/gravitl/netclient/releases) to see if there are any breaking changes. Make any required changes to the configuration files.
+3. Run the following commands to update the Netmaker server and the Netclients on the hosts.
+
+    ```bash
+    ansible-playbook services/netmaker/netmaker.yaml --tags="netmaker"
+    ansible-playbook services/netmaker/netmaker_config.yaml --tags="netmaker"
+    ansible-playbook services/netmaker/netclients.yaml --tags="netmaker.netclient"
+    ansible-playbook services/netmaker/netclients_manual.yaml --tags="netmaker.netclient"
+    ```
+4. Check the Netmaker dashboard to make sure everything is working as expected.
+
+
 ## Pro Usage
 If the Pro version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.
 
