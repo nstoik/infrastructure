@@ -8,7 +8,7 @@ netmaker_pro: false
 # and netmaker-exporter containers without actually using the Pro image or
 # license.
 netmaker_pro_use_pro_image: false
-netmaker_version: "v0.21.1"
+netmaker_version: "v0.21.2"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 netclient_directory: "/home/{{ default_user }}/netclient"
 
