@@ -4,7 +4,6 @@
 # SSH Keys that are already added to the DigitalOcean account.
 digitalocean_droplet_ssh_key_ids:
   - '32852449'  # Nelson's Thinkpad Laptop (DESKTOP-3PU4LF6)
-  - '31285916'  # Nelson's Laptop Computer (DESKTOP-BSU9VDH)
   - '31285795'  # Nelsons Desktop Computer (DESKTOP-SJ8NAUC)
   - '26464123'  # Termius iOS App
 
