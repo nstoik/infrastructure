@@ -6,6 +6,7 @@
   hosts: localhost
   vars_files:
     - vars/netmaker.yaml
+    - vars/networks.yaml
   tags:
     - netmaker.netclient
 
