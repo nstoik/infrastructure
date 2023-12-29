@@ -14,7 +14,7 @@
   become: true
   changed_when: false
   when: proxmox_vm.state == 'present' and
-        proxmox_vm.proxmox_node == ansible_hostname
+        proxmox_vm.proxmox_node == inventory_hostname
   tags:
     - proxmox
     - proxmox.vm
@@ -25,7 +25,7 @@
   when:
     "proxmox_vm_status.stdout.find('status: stopped') != -1 and
     proxmox_vm.state == 'present' and
-    proxmox_vm.proxmox_node == ansible_hostname"
+    proxmox_vm.proxmox_node == inventory_hostname"
   tags:
     - proxmox
     - proxmox.vm

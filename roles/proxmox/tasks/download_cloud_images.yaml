@@ -26,4 +26,4 @@
       become: true
       when: proxmox_cloud_imgs is defined and
             item.state == "present" and
-            item.proxmox_node == ansible_hostname
+            item.proxmox_node == inventory_hostname
