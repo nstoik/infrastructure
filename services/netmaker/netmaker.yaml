@@ -186,7 +186,7 @@
         base_install_docker: true
         base_dotfiles:
           install: true
-          dotbot_skip_ssh_authorized_file: true
+          dotbot_skip_ssh_authorized_file: false
       tags:
         - base
         - base.apt
