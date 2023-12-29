@@ -1,5 +1,15 @@
 ---
 
+# Run the pihole playbook to make sure the DNS records are correct
+- name: Run the pihole role
+  ansible.builtin.import_playbook: "../../playbooks/pihole.yaml"
+  tags:
+    - pihole
+    - proxmox
+    - proxmox.vm
+    - proxmox.vm.create
+    - base.known_hosts
+
 # Run the proxmox role
 - name: Run the proxmox role
   hosts: proxmox_nodes
@@ -47,7 +57,6 @@
         base_state: present
         base_comment: "Proxmox VM: {{ item }}"
       loop: "{{ groups['proxmox_vms'] }}"
-      when: item.proxmox_node == ansible_hostname
       tags:
         - proxmox
         - proxmox.vm
@@ -64,9 +73,50 @@
         base_state: present
         base_comment: "Proxmox VM: {{ item }}"
       loop: "{{ groups['proxmox_vms'] }}"
-      when: item.proxmox_node == ansible_hostname
       tags:
         - proxmox
         - proxmox.vm
         - proxmox.vm.create
         - base.known_hosts
+
+# Run the first time setup to configure the VMs
+- name: Run the first time setup to configure VMs
+  hosts: proxmox_vms
+  vars_files:
+    - ../../vars/vault.yaml
+    - ../../vars/main.yaml
+    - vars/proxmox.yaml
+  tags:
+    - proxmox
+    - proxmox.vm
+    - proxmox.vm.create
+
+  tasks:
+    # Run the base role
+    - name: Import base role
+      ansible.builtin.import_role:
+        name: base
+      vars:
+        base_additional_packages:
+          - "qemu-guest-agent"
+        base_additional_services:
+          - "qemu-guest-agent.service"
+        base_install_docker: true
+        base_dotfiles:
+          install: true
+          dotbot_skip_ssh_authorized_file: false
+      tags:
+        - base
+        - base.apt
+        - base.docker
+        - base.dotfiles
+        - base.known_hosts
+
+    # Run the geerlingguy.security role
+    - name: Import geerlingguy.security role
+      ansible.builtin.import_role:
+        name: geerlingguy.security
+      become: true
+      tags:
+        - base
+        - base.geerlingguy.security
