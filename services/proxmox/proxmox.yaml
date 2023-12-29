@@ -37,13 +37,13 @@
         - proxmox.vm
         - proxmox.vm.create
 
-    # Update the known_hosts file for hostname
-    - name: Update the known_hosts file for hostname
+    # Update the known_hosts file for IP
+    - name: Update the known_hosts file for IP
       ansible.builtin.include_role:
         name: base
         tasks_from: update_known_hosts
       vars:
-        base_hostname: "{{ item }}"
+        base_hostname: "{{ hostvars[item].network.ip }}"
         base_state: present
         base_comment: "Proxmox VM: {{ item }}"
       loop: "{{ groups['proxmox_vms'] }}"
@@ -54,13 +54,13 @@
         - proxmox.vm.create
         - base.known_hosts
 
-    # Update the known_hosts file for IP
-    - name: Update the known_hosts file for IP
+    # Update the known_hosts file for hostname
+    - name: Update the known_hosts file for hostname
       ansible.builtin.include_role:
         name: base
         tasks_from: update_known_hosts
       vars:
-        base_hostname: "{{ hostvars[item].network.ip }}"
+        base_hostname: "{{ item }}"
         base_state: present
         base_comment: "Proxmox VM: {{ item }}"
       loop: "{{ groups['proxmox_vms'] }}"
