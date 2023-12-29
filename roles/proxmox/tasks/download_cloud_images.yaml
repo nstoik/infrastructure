@@ -24,4 +24,6 @@
         timeout: 60
       loop: "{{ proxmox_cloud_imgs }}"
       become: true
-      when: proxmox_cloud_imgs is defined and item.state == "present"
+      when: proxmox_cloud_imgs is defined and
+            item.state == "present" and
+            item.proxmox_node == inventory_hostname

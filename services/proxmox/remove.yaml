@@ -1,0 +1,57 @@
+---
+# Playbook to remove Proxmox VMs that have
+# the state of 'absent'
+
+# Run the proxmox role
+- name: Run the proxmox role
+  hosts: proxmox_nodes
+  vars_files:
+    - ../../vars/vault.yaml
+    - ../../vars/main.yaml
+    - vars/proxmox.yaml
+
+  tasks:
+    # Run the proxmox role to delete the VMs
+    - name: Run the proxmox role to delete the VMs
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: delete_vm
+      vars:
+        proxmox_vm: "{{ hostvars[item].proxmox_vm }}"
+      loop: "{{ groups['proxmox_vms'] }}"
+      tags:
+        - proxmox
+        - proxmox.vm
+        - proxmox.vm.delete
+
+    # Update the known_hosts file for IP
+    - name: Update the known_hosts file for IP
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ hostvars[item].network.ip }}"
+        base_state: absent
+        base_comment: "Proxmox VM: {{ item }}"
+      loop: "{{ groups['proxmox_vms'] }}"
+      tags:
+        - proxmox
+        - proxmox.vm
+        - proxmox.vm.delete
+        - base.known_hosts
+
+    # Update the known_hosts file for hostname
+    - name: Update the known_hosts file for hostname
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ item }}"
+        base_state: absent
+        base_comment: "Proxmox VM: {{ item }}"
+      loop: "{{ groups['proxmox_vms'] }}"
+      tags:
+        - proxmox
+        - proxmox.vm
+        - proxmox.vm.delete
+        - base.known_hosts

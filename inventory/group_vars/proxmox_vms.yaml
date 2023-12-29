@@ -1,0 +1,3 @@
+---
+# group_vars for the proxmox_vms group
+ansible_become_password: "{{ secret_become_pass }}"

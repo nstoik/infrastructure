@@ -3,7 +3,7 @@
 # Will delete a VM if it exists and state is absent.
 
 # Required inputs:
-#  proxmox_vm: The VM to create from the template
+#  proxmox_vm: The VM to delete from the template
 
 # Check if the VM config file exists (does the VM exist)
 - name: Check if the VM exists
@@ -19,8 +19,9 @@
 # Delete the VM if it exists and the state is absent
 - name: Delete the VM
   when:
-    proxmox_vm_config.stat.exists
-    and proxmox_vm.state == "absent"
+    proxmox_vm_config.stat.exists and
+    proxmox_vm.state == "absent" and
+    proxmox_vm.proxmox_node == inventory_hostname
   tags:
     - proxmox
     - proxmox.vm

@@ -20,8 +20,9 @@
 # Clone the VM block
 - name: Clone the VM
   when:
-    not proxmox_vm_config.stat.exists
-    and proxmox_vm.state == "present"
+    not proxmox_vm_config.stat.exists and
+    proxmox_vm.state == "present" and
+    proxmox_vm.proxmox_node == inventory_hostname
   tags:
     - proxmox
     - proxmox.vm
