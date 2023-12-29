@@ -56,6 +56,6 @@
         host: "{{ proxmox_ip }}"
         path: /var/lib/cloud/instance/boot-finished
         delay: 10
-        timeout: 300
+        timeout: 600
       become: true
       changed_when: false
