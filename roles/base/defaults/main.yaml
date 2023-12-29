@@ -8,6 +8,9 @@ base_packages:
   - wireguard
   - wireguard-tools
 
+# the base services to enable and start
+base_services: []
+
 # variables for the dotfiles
 base_dotfiles_dir: /home/{{ default_user }}/dotfiles
 base_dotfiles_repo: https://github.com/nstoik/dotfiles

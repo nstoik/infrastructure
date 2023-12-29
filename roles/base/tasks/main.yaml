@@ -3,6 +3,7 @@
 #
 # inputs:
 #   - base_additonal_packages: list of additional packages to install
+#   - base_additional_services: list of additional services to enable and start
 #   - base_install_docker: boolean to install docker
 #   - base_dotfiles: dictionary of dotfiles configuration
 
@@ -59,6 +60,18 @@
   tags:
     - base
     - base.dotfiles
+
+# set specified systemd services to enabled and started
+- name: Set specified systemd services to enabled and started
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop: "{{ base_services + (base_additional_services | default([])) }}"
+  become: true
+  tags:
+    - base
+    - base.services
 
 # flush all handlers
 - name: Flush handlers

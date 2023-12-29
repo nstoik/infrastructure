@@ -102,6 +102,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.docker - Configure docker
     - base.dotfiles - Configure dotfiles
     - base.known_hosts - Configure known hosts file on the local machine
+    - base.services - Configure systemd services (started and enabled)
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
