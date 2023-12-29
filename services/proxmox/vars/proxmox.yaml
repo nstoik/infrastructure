@@ -7,3 +7,4 @@ proxmox_cloud_imgs:
     template_name: "ubuntu-22.04-server-cloudimg"
     id: 9000
     state: "present"
+    proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
