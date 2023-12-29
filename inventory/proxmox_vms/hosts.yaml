@@ -6,6 +6,7 @@ all:
     proxmox_vms:
       hosts:
         docker-testing:
+          proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
           network:
             ip: "10.10.5.25"
             gateway: "10.10.5.1"

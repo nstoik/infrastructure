@@ -13,6 +13,8 @@
   register: proxmox_vm_status
   become: true
   changed_when: false
+  when: proxmox_vm.state == 'present' and
+        proxmox_vm.proxmox_node == ansible_hostname
   tags:
     - proxmox
     - proxmox.vm
@@ -21,8 +23,9 @@
 # Start the VM
 - name: Start the VM
   when:
-    "proxmox_vm_status.stdout.find('status: stopped') != -1
-    and proxmox_vm.state == 'present'"
+    "proxmox_vm_status.stdout.find('status: stopped') != -1 and
+    proxmox_vm.state == 'present' and
+    proxmox_vm.proxmox_node == ansible_hostname"
   tags:
     - proxmox
     - proxmox.vm

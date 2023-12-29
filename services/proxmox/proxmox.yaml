@@ -47,6 +47,7 @@
         base_state: present
         base_comment: "Proxmox VM: {{ item }}"
       loop: "{{ groups['proxmox_vms'] }}"
+      when: item.proxmox_node == ansible_hostname
       tags:
         - proxmox
         - proxmox.vm
@@ -63,6 +64,7 @@
         base_state: present
         base_comment: "Proxmox VM: {{ item }}"
       loop: "{{ groups['proxmox_vms'] }}"
+      when: item.proxmox_node == ansible_hostname
       tags:
         - proxmox
         - proxmox.vm
