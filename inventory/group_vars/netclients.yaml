@@ -1,3 +1,4 @@
 ---
+# Variables for the netclients group.
 
 ansible_become_password: "{{ secret_become_pass }}"
