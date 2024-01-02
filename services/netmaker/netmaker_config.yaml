@@ -10,7 +10,6 @@
   gather_facts: false
   vars_files:
     - ../../vars/vault.yaml
-    - ../../vars/main.yaml
     - vars/netmaker.yaml
   vars:
     ansible_become_password: "{{ secret_become_pass }}"
@@ -32,7 +31,6 @@
   gather_facts: false
   vars_files:
     - ../../vars/vault.yaml
-    - ../../vars/main.yaml
     - vars/netmaker.yaml
     - vars/ext_clients.yaml
     - vars/networks.yaml

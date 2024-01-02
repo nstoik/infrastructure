@@ -7,7 +7,6 @@
   hosts: proxmox_nodes
   vars_files:
     - ../../vars/vault.yaml
-    - ../../vars/main.yaml
     - vars/proxmox.yaml
 
   tasks:

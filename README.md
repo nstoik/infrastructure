@@ -66,7 +66,7 @@ The main file is [site.yaml](site.yaml) which is the main playbook for the whole
 - Configure a Netmaker server on a DigitalOcean droplet
     - Further info on the Netmaker service can be found [here](services/netmaker/README.md)
 
-The main configuration is done in the [vars/main.yaml](vars/main.yaml) and the [vars/vault.yaml](vars/vault.yaml) (this file is encrypted) files.
+The main configuration is done in the [inventory/group_vars/all.yaml](inventory/group_vars/all.yaml) and the [vars/vault.yaml](vars/vault.yaml) (this file is encrypted) files.
 
 ## Playbooks
 The playbooks directory contains the different playbooks that can be run.

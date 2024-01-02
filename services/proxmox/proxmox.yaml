@@ -15,7 +15,6 @@
   hosts: proxmox_nodes
   vars_files:
     - ../../vars/vault.yaml
-    - ../../vars/main.yaml
     - vars/proxmox.yaml
 
   tasks:
@@ -84,7 +83,6 @@
   hosts: proxmox_vms
   vars_files:
     - ../../vars/vault.yaml
-    - ../../vars/main.yaml
     - vars/proxmox.yaml
   tags:
     - proxmox

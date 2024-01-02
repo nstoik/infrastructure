@@ -13,7 +13,6 @@
   gather_facts: false
   vars_files:
     - ../../vars/vault.yaml
-    - ../../vars/main.yaml
     - vars/netmaker.yaml
     - vars/cloudflare.yaml
   tags:
@@ -87,7 +86,6 @@
   gather_facts: false
   vars_files:
     - ../../vars/vault.yaml
-    - ../../vars/main.yaml
     - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
@@ -152,7 +150,6 @@
   gather_facts: true
   vars_files:
     - ../../vars/vault.yaml
-    - ../../vars/main.yaml
     - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
