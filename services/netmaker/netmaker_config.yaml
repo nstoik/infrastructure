@@ -12,6 +12,7 @@
     - ../../vault/vault.yaml
     - vars/netmaker.yaml
   vars:
+    # This is needed as the role is installed on the localhost
     ansible_become_password: "{{ secret_become_pass }}"
 
   tasks:
@@ -19,8 +20,6 @@
       ansible.builtin.include_role:
         name: netmaker
         tasks_from: nmctl
-      vars:
-        netmaker_check_for_admin: false
       tags:
         - netmaker
         - netmaker.full_setup
@@ -42,8 +41,14 @@
       ansible.builtin.include_role:
         name: netmaker
         tasks_from: nmctl
-      vars:
-        netmaker_check_for_admin: true
+      tags:
+        - netmaker
+        - netmaker.nmctl
+
+    - name: Check for Netmaker admin user
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: nmctl_admin_create
       tags:
         - netmaker
         - netmaker.nmctl
