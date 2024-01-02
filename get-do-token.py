@@ -9,7 +9,7 @@
 import yaml
 import subprocess
 
-ANSIBLE_VAULT_FILE = 'vars/vault.yaml'
+ANSIBLE_VAULT_FILE = 'vault/vault.yaml'
 FILE_DECRYPYTED_FLAG = False
 
 # check if the ansible-vault file is encrypted by reading the first line

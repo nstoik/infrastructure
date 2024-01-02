@@ -12,8 +12,7 @@
   hosts: localhost
   gather_facts: false
   vars_files:
-    - ../../vars/vault.yaml
-    - ../../vars/main.yaml
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
     - vars/cloudflare.yaml
   tags:
@@ -86,8 +85,7 @@
   hosts: do_netmaker
   gather_facts: false
   vars_files:
-    - ../../vars/vault.yaml
-    - ../../vars/main.yaml
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
@@ -151,8 +149,7 @@
   hosts: do_netmaker
   gather_facts: true
   vars_files:
-    - ../../vars/vault.yaml
-    - ../../vars/main.yaml
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
@@ -180,13 +177,9 @@
       ansible.builtin.include_role:
         name: base
       vars:
-        base_additional_packages:
-          - jq
-          - dnsutils
-        base_install_docker: true
-        base_dotfiles:
-          install: true
-          dotbot_skip_ssh_authorized_file: false
+        base_additional_packages: "{{ netmaker_server_additional_packages }}"
+        base_install_docker: "{{ netmaker_server_install_docker }}"
+        base_dotfiles: "{{ netmaker_server_dotfiles }}"
       tags:
         - base
         - base.apt

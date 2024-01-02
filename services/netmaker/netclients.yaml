@@ -13,9 +13,7 @@
     - name: Get the enrollment keys from Netmaker
       ansible.builtin.include_role:
         name: netmaker
-        tasks_from: nmctl_enrollment
-      vars:
-        netmaker_create_enrollment_keys: false
+        tasks_from: nmctl_enrollment_get
       tags:
         - netmaker.netclient
         - netmaker.netclient.systemd
@@ -23,8 +21,7 @@
 - name: Install Netclient on nodes
   hosts: netclients
   vars_files:
-    - ../../vars/vault.yaml
-    - ../../vars/main.yaml
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
   tags:
     - netmaker.netclient

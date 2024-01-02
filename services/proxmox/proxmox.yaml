@@ -14,8 +14,7 @@
 - name: Run the proxmox role
   hosts: proxmox_nodes
   vars_files:
-    - ../../vars/vault.yaml
-    - ../../vars/main.yaml
+    - ../../vault/vault.yaml
     - vars/proxmox.yaml
 
   tasks:
@@ -25,7 +24,7 @@
         name: proxmox
         tasks_from: create_vm
       vars:
-        proxmox_template_id: 9000
+        proxmox_template_id: "{{ hostvars[item].proxmox_vm.template_id }}"
         proxmox_vm: "{{ hostvars[item].proxmox_vm }}"
       loop: "{{ groups['proxmox_vms'] }}"
       tags:
@@ -83,8 +82,7 @@
 - name: Run the first time setup to configure VMs
   hosts: proxmox_vms
   vars_files:
-    - ../../vars/vault.yaml
-    - ../../vars/main.yaml
+    - ../../vault/vault.yaml
     - vars/proxmox.yaml
   tags:
     - proxmox
@@ -97,14 +95,12 @@
       ansible.builtin.import_role:
         name: base
       vars:
-        base_additional_packages:
-          - "qemu-guest-agent"
-        base_additional_services:
-          - "qemu-guest-agent.service"
-        base_install_docker: true
-        base_dotfiles:
-          install: true
-          dotbot_skip_ssh_authorized_file: false
+        # yamllint disable-line rule:line-length
+        base_additional_packages: "{{ hostvars[item].proxmox_vm_additonal_packages }}"
+        # yamllint disable-line rule:line-length
+        base_additional_services: "{{ hostvars[item].proxmox_vm_additional_services }}"
+        base_install_docker: "{{ hostvars[item].install_docker }}"
+        base_dotfiles: "{{ hostvars[item].dotfiles }}"
       tags:
         - base
         - base.apt

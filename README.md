@@ -45,7 +45,7 @@ To decrypt a file, run `ansible-vault decrypt <file>`
 `ansible.cfg` has an entry for `vault_password_file` to point to this file.
 
 ## Environment variables
-There is an example environment file in the root directory called `.env.example`. Copy this file to `.env` and fill in the required values. The required values are stored in the ansible vault file `vars/vault.yaml` and can be copied from there.
+There is an example environment file in the root directory called `.env.example`. Copy this file to `.env` and fill in the required values. The required values are stored in the ansible vault file `vault/vault.yaml` and can be copied from there.
 
 The environment variables should be set in the shell before running any of the playbooks. The easiest way to do this is to use the helper script `setenv.sh` which will read the values from the `.env` file and set them in the shell. 
 
@@ -66,7 +66,7 @@ The main file is [site.yaml](site.yaml) which is the main playbook for the whole
 - Configure a Netmaker server on a DigitalOcean droplet
     - Further info on the Netmaker service can be found [here](services/netmaker/README.md)
 
-The main configuration is done in the [vars/main.yaml](vars/main.yaml) and the [vars/vault.yaml](vars/vault.yaml) (this file is encrypted) files.
+The main configuration is done in the [inventory/group_vars/all.yaml](inventory/group_vars/all.yaml) and the [vault/vault.yaml](vault/vault.yaml) (this file is encrypted) files.
 
 ## Playbooks
 The playbooks directory contains the different playbooks that can be run.

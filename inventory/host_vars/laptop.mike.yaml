@@ -1,0 +1,6 @@
+---
+# Host variables for laptop.mike
+
+ansible_host: 10.50.50.3
+ansible_user: mike
+ansible_become_password: "{{ secret_become_pass_netclient_mike }}"

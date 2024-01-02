@@ -6,8 +6,7 @@
 - name: Run the proxmox role
   hosts: proxmox_nodes
   vars_files:
-    - ../../vars/vault.yaml
-    - ../../vars/main.yaml
+    - ../../vault/vault.yaml
     - vars/proxmox.yaml
 
   tasks:
