@@ -14,9 +14,7 @@
     - name: Get the enrollment keys from Netmaker
       ansible.builtin.include_role:
         name: netmaker
-        tasks_from: nmctl_enrollment
-      vars:
-        netmaker_create_enrollment_keys: false
+        tasks_from: nmctl_enrollment_get
       tags:
         - netmaker.netclient
 

@@ -1,0 +1,21 @@
+---
+# Use the NMCTL CLI tool to get enrollment keys on the
+# Netmaker server.
+# The resulting enrollment keys are stored in the Ansible
+# fact netmaker_enrollment_key_list.stdout
+
+- name: Block for fetching enrollment keys
+  tags:
+    - netmaker
+    - netmaker.enrollment
+    - netmaker.netclient
+    - netmaker.netclient.docker
+    - netmaker.netclient.systemd
+  block:
+
+    # Get the current list of enrollment keys
+    - name: Get the current list of enrollment keys
+      ansible.builtin.command:
+        cmd: "nmctl enrollment_key list -o json"
+      register: netmaker_enrollment_key_list
+      changed_when: false
