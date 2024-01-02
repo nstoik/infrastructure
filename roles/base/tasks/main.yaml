@@ -10,8 +10,8 @@
 # Update and upgrade apt packages
 - name: Update and upgrade apt packages
   ansible.builtin.apt:
+    upgrade: "{{ base_apt_upgrade_packages }}"
     update_cache: true
-    upgrade: true
     cache_valid_time: 3600
   become: true
   tags:
@@ -34,13 +34,16 @@
   ansible.builtin.stat:
     path: /var/run/reboot-required
   register: base_reboot_required_file
+  when: base_reboot_host_if_required is true
   tags:
     - base
 
 # Reboot the host if a reboot is required
 - name: Reboot the host if a reboot is required
   ansible.builtin.reboot:
-  when: base_reboot_required_file.stat.exists
+  when:
+    base_reboot_host_if_required is true and
+    base_reboot_required_file.stat.exists
   become: true
   tags:
     - base
@@ -69,6 +72,7 @@
     enabled: true
   loop: "{{ base_services + (base_additional_services | default([])) }}"
   become: true
+  when: ansible_os_family == "Debian"
   tags:
     - base
     - base.services
