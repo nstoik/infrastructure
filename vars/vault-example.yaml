@@ -20,6 +20,10 @@ secret_cf_token: "change_me"
 secret_user_password: "change_me"
 secret_become_pass: "change_me"
 
+# Netclient_manual become password
+secret_become_pass_netclient_arnie: "change_me"
+secret_become_pass_netclient_mike: "change_me"
+
 # Netmaker secrets
 secret_nm_master_key: "change_me"
 secret_nm_mq_password: "change_me"
