@@ -1,9 +1,18 @@
 ---
 # defaults file for base
 
+# whether to update and upgrade apt packages or not
+# can be "dist", "full", "no", "safe", "yes"
+# if "no" is set, then just apt update is run
+base_apt_upgrade_packages: "yes"
+
+# variables for rebooting the host
+base_reboot_host_if_required: true
+
 # the base packages to install
 base_packages:
   - git
+  - neofetch
   - vnstat
   - wireguard
   - wireguard-tools
@@ -15,7 +24,14 @@ base_services: []
 base_dotfiles_dir: /home/{{ default_user }}/dotfiles
 base_dotfiles_repo: https://github.com/nstoik/dotfiles
 
+base_dotfiles:
+  install: false
+  dotbot_skip_ssh_authorized_file: true
+
 # variables for docker
+# whether to install docker or not
+base_install_docker: false
+
 base_docker_data_dir: /home/{{ default_user }}/docker
 
 base_docker_daemon_options:
