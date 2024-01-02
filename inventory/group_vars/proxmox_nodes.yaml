@@ -1,3 +1,11 @@
 ---
 # group_vars for the proxmox group
 ansible_become_password: "{{ secret_become_pass }}"
+
+# Use apt dist-upgrade on proxmox nodes
+# see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
+base_apt_upgrade_packages: "dist"
+
+# don't automatically reboot the proxmox nodes. Rebooting should be done
+# either explicitly or manually.
+base_reboot_host_if_required: false

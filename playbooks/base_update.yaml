@@ -1,0 +1,13 @@
+---
+# Apply base updates to all hosts:
+
+- name: Apply base updates to all hosts
+  hosts: all
+  vars_files:
+    - ../vars/vault.yaml
+  roles:
+    - role: base
+  tags:
+    - base
+    - base.apt
+    - base.services

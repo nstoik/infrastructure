@@ -4,6 +4,7 @@ all:
     laptop.mike:
       ansible_host: 10.50.50.3
       ansible_user: mike
+      ansible_become_password: "{{ secret_become_pass_netclient_mike }}"
     pihole-2.home.stechsolutions.ca:
       ansible_host: 10.10.1.11
     pihole-3.home.stechsolutions.ca:
@@ -13,6 +14,7 @@ all:
     vpn.arnie-karen:
       ansible_host: 10.50.50.5
       ansible_user: arnie
+      ansible_become_password: "{{ secret_become_pass_netclient_arnie }}"
     vpn.home.stechsolutions.ca:
       ansible_host: vpn.home.stechsolutions.ca
 
