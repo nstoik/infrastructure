@@ -23,7 +23,7 @@
 - name: Install Netclient on nodes
   hosts: netclients
   vars_files:
-    - ../../vars/vault.yaml
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
   tags:
     - netmaker.netclient

@@ -5,4 +5,4 @@ ignore: |
     collections/
     roles/galaxy/
     **/meta/main.yml
-    vars/vault.yaml
+    vault/vault.yaml

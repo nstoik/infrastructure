@@ -14,7 +14,7 @@
 - name: Run the proxmox role
   hosts: proxmox_nodes
   vars_files:
-    - ../../vars/vault.yaml
+    - ../../vault/vault.yaml
     - vars/proxmox.yaml
 
   tasks:
@@ -82,7 +82,7 @@
 - name: Run the first time setup to configure VMs
   hosts: proxmox_vms
   vars_files:
-    - ../../vars/vault.yaml
+    - ../../vault/vault.yaml
     - vars/proxmox.yaml
   tags:
     - proxmox

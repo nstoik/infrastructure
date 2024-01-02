@@ -7,7 +7,7 @@
   hosts: localhost
   gather_facts: false
   vars_files:
-    - vars/vault.yaml
+    - vault/vault.yaml
 
   tasks:
     - name: Configure tags on digitalocean

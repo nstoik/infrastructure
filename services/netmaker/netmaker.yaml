@@ -12,7 +12,7 @@
   hosts: localhost
   gather_facts: false
   vars_files:
-    - ../../vars/vault.yaml
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
     - vars/cloudflare.yaml
   tags:
@@ -85,7 +85,7 @@
   hosts: do_netmaker
   gather_facts: false
   vars_files:
-    - ../../vars/vault.yaml
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
@@ -149,7 +149,7 @@
   hosts: do_netmaker
   gather_facts: true
   vars_files:
-    - ../../vars/vault.yaml
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
   tags:
     - netmaker.full_setup
