@@ -1,0 +1,4 @@
+---
+# Host variables for pihole-2.home.stechsolutions.ca
+
+ansible_host: 10.10.1.11

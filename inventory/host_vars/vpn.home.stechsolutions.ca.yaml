@@ -1,0 +1,4 @@
+---
+# Host variables for vpn.home.stechsolutions.ca
+
+ansible_host: vpn.home.stechsolutions.ca

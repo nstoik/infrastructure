@@ -2,21 +2,11 @@
 all:
   hosts:
     laptop.mike:
-      ansible_host: 10.50.50.3
-      ansible_user: mike
-      ansible_become_password: "{{ secret_become_pass_netclient_mike }}"
     pihole-2.home.stechsolutions.ca:
-      ansible_host: 10.10.1.11
     pihole-3.home.stechsolutions.ca:
-      ansible_host: 10.10.5.11
     proxmox-2.home.stechsolutions.ca:
-      ansible_host: proxmox-2.home.stechsolutions.ca
     vpn.arnie-karen:
-      ansible_host: 10.50.50.5
-      ansible_user: arnie
-      ansible_become_password: "{{ secret_become_pass_netclient_arnie }}"
     vpn.home.stechsolutions.ca:
-      ansible_host: vpn.home.stechsolutions.ca
 
   children:
     netclients:
