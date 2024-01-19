@@ -36,7 +36,7 @@
 
     # Get the host key from the host
     - name: Get the host key from the host
-      ansible.builtin.command: ssh-keyscan -t rsa {{ base_hostname }}
+      ansible.builtin.command: ssh-keyscan -t ed25519 {{ base_hostname }}
       register: base_host_key_results
       when: base_state == 'present' and base_hostname_check_result.found == 0
       delegate_to: localhost
