@@ -104,6 +104,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.known_hosts - Configure known hosts file on the local machine
     - base.services - Configure systemd services (started and enabled)
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
+    - base.user - Configure the default user
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider

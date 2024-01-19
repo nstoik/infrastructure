@@ -1,0 +1,25 @@
+---
+# tasks to setup a user on a host.
+
+# inputs:
+#   - base_default_user: default user to setup
+#   - base_default_user_password: default user password
+#   - base_additional_user_groups: additional user groups to be added to
+
+
+# block for base user tasks
+- name: Block for base user tasks
+  tags:
+    - base
+    - base.user
+  block:
+    # create the default user
+    - name: Create the default user
+      ansible.builtin.user:
+        name: "{{ base_default_user }}"
+        password: "{{ base_default_user_password | password_hash('sha512') }}"
+        createhome: true
+        home: "/home/{{ base_default_user }}"
+        groups: "{{ base_user_groups + (base_additional_user_groups | default([])) }}"  # yamllint disable-line rule:line-length
+        state: present
+      become: true
