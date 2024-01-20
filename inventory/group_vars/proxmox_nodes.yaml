@@ -2,6 +2,10 @@
 # group_vars for the proxmox group
 ansible_become_password: "{{ secret_become_pass }}"
 
+# The proxmox nodes need sudo to be installed
+proxmox_node_additional_packages:
+  - "sudo"
+
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
 base_apt_upgrade_packages: "dist"
@@ -9,3 +13,8 @@ base_apt_upgrade_packages: "dist"
 # don't automatically reboot the proxmox nodes. Rebooting should be done
 # either explicitly or manually.
 base_reboot_host_if_required: false
+
+# override the default geerlingguy.security role variables
+# for proxmox nodes
+security_autoupdate_enabled: false
+security_autoupdate_reboot: false
