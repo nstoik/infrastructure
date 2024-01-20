@@ -6,6 +6,7 @@
 #   - base_additional_services: list of additional services to enable and start
 #   - base_reboot_host_if_required: boolean to reboot the host if required
 #   - base_apt_upgrade_packages: if or how to upgrade apt packages
+#   - base_apt_update_packages: boolean to update apt packages or skip
 #   - base_install_docker: boolean to install docker
 #   - base_dotfiles: dictionary of dotfiles configuration
 #   - base_user_run_setup: boolean to setup a user
@@ -18,6 +19,7 @@
     update_cache: true
     cache_valid_time: 3600
   become: true
+  when: base_apt_update_packages is true
   tags:
     - base
     - base.apt

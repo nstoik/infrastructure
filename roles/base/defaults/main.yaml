@@ -6,6 +6,9 @@
 # if "no" is set, then just apt update is run
 base_apt_upgrade_packages: "yes"
 
+# whether to update apt packages or not
+base_apt_update_packages: true
+
 # variables for rebooting the host
 base_reboot_host_if_required: true
 
