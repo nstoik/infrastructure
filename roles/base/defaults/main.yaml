@@ -24,7 +24,15 @@ base_packages:
 base_services: []
 
 # the base settings for user setup
-base_user_run_setup: false
+base_user_run_setup: true
+
+base_user_default: "{{ default_user }}"
+base_user_password_default: "{{ secret_user_password }}"
+
+# whether to add ssh keys to the user or not
+# defaults to false because generally the ssh keys
+# are added using the dotfiles method.
+base_user_add_ssh_keys: false
 base_user_groups:
   - sudo
 

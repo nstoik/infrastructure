@@ -1,10 +1,13 @@
 ---
 # tasks to setup a user on a host.
+#
+# Creates the user and adds the public ssh keys to the user.
 
 # inputs:
-#   - base_default_user: default user to setup
-#   - base_default_user_password: default user password
-#   - base_additional_user_groups: additional user groups to be added to
+#   - base_user_default: default user to setup
+#   - base_user_password_default: default user password
+#   - base_user_additional_groups: additional user groups to be added to
+#     base_user_add_ssh_keys: boolean to add ssh keys to the user
 
 
 # block for base user tasks
@@ -16,10 +19,25 @@
     # create the default user
     - name: Create the default user
       ansible.builtin.user:
-        name: "{{ base_default_user }}"
-        password: "{{ base_default_user_password | password_hash('sha512') }}"
+        name: "{{ base_user_default }}"
+        password: "{{ base_user_password_default | password_hash('sha512') }}"
+        update_password: on_create
         createhome: true
-        home: "/home/{{ base_default_user }}"
-        groups: "{{ base_user_groups + (base_additional_user_groups | default([])) }}"  # yamllint disable-line rule:line-length
+        home: "/home/{{ base_user_default }}"
+        groups: "{{ base_user_groups + (base_user_additional_groups | default([])) }}"  # yamllint disable-line rule:line-length
         state: present
+        generate_ssh_key: true
+        ssh_key_type: ed25519
       become: true
+
+    # Add the public ssh keys to the user
+    - name: Add the public ssh keys to the user
+      ansible.posix.authorized_key:
+        user: "{{ base_user_default }}"
+        state: present
+        key: "{{ item.key }}"
+        comment: "{{ item.name }}"
+      loop: "{{ secret_ssh_keys }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: base_user_add_ssh_keys is true
