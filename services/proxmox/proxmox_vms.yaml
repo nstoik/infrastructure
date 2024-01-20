@@ -22,7 +22,6 @@
   hosts: proxmox_nodes
   vars_files:
     - ../../vault/vault.yaml
-    - vars/proxmox.yaml
   tags:
     - proxmox
     - proxmox.vm
@@ -80,7 +79,6 @@
   hosts: proxmox_vms
   vars_files:
     - ../../vault/vault.yaml
-    - vars/proxmox.yaml
   tags:
     - proxmox
     - proxmox.vm

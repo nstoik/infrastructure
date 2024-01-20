@@ -18,3 +18,26 @@ base_reboot_host_if_required: false
 # for proxmox nodes
 security_autoupdate_enabled: false
 security_autoupdate_reboot: false
+
+proxmox_cloud_imgs:
+  # yamllint disable-line rule:line-length
+  - url: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
+    template_name: "ubuntu-22.04-server-cloudimg"
+    id: 9000
+    state: "present"
+    proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
+
+proxmox_groups:
+  - name: "Admins"
+    comment: "Admins group"
+    state: "present"
+    permissions:
+      - path: "/"
+      - role: "Administrator"
+
+proxmox_users:
+  - userid: "{{ default_user }}@pam"
+    comment: "Primary user"
+    email: "{{ default_user_email }}"
+    groups: "Admins"
+    state: "present"
