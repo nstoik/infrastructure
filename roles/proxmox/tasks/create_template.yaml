@@ -33,6 +33,8 @@
       block:
 
         # Create temp public-ssh-key file
+        # only need to copy the first key, because the rest of the
+        # keys will be added during the base role.
         - name: Create temp public-ssh-key file
           ansible.builtin.copy:
             content: "{{ secret_ssh_keys[0].key }}"
