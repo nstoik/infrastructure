@@ -1,0 +1,23 @@
+---
+# Tasks to apply the permissions to a proxmox group
+
+# Required Inputs:
+#   node_acl_permissions: The permissions to apply to the group
+#   node_acl_group: The group to apply the permissions to
+
+# Apply the permissions to the proxmox group
+- name: Apply the permissions to the group {{ node_acl_group }}
+  ansible.builtin.command:
+    cmd: >
+      pveum acl modify {{ acl_item.path }}
+      -group {{ node_acl_group }}
+      -role {{ acl_item.role }}
+  become: true
+  loop: "{{ node_acl_permissions }}"
+  loop_control:
+    loop_var: acl_item
+  changed_when: false
+  tags:
+    - proxmox
+    - proxmox.pve
+    - proxmox.pve.permissions
