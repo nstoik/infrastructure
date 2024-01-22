@@ -1,0 +1,129 @@
+---
+# This playbook will configure the Proxmox host.
+
+# Run the pihole playbook to make sure the DNS records are correct
+- name: Run the pihole role
+  ansible.builtin.import_playbook: "../../playbooks/pihole.yaml"
+  tags:
+    - pihole
+    - proxmox
+    - proxmox.pve
+    - base.known_hosts
+
+# These first tasks are run as the root user since it includes
+# setting up the new user with the ssh keys.
+- name: Make sure the Proxmox host is setup
+  hosts: proxmox_nodes
+  vars_files:
+    - ../../vault/vault.yaml
+  vars:
+    ansible_host_key_checking: false
+    ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null'
+    ansible_user: root
+    ansible_ssh_pass: "{{ secret_user_password }}"
+  tags:
+    - proxmox
+    - proxmox.pve
+
+  tasks:
+    # Update the known_hosts var_file
+    - name: Update the known_hosts var_file
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ item }}"
+        base_state: present
+        base_comment: "Proxmox Host: {{ ansible_hostname }}"
+      loop:
+        - "{{ ansible_default_ipv4.address }}"
+        - "{{ ansible_hostname }}"
+        - "{{ inventory_hostname }}"
+      loop_control:
+        label: "{{ item }}"
+      tags:
+        - base.known_hosts
+
+    # Configure the Proxmox repos
+    - name: Configure the Proxmox repos
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pve_repos
+
+    # Run the base role
+    # Add the ssh keys so we can login as the new user later
+    - name: Run the base role
+      ansible.builtin.include_role:
+        name: base
+      vars:
+        # yamllint disable-line rule:line-length
+        base_additional_packages: "{{ hostvars[inventory_hostname].proxmox_node_additional_packages }}"
+        base_user_add_ssh_keys: true
+        base_user_default: "{{ default_user }}"
+        base_user_password_default: "{{ secret_user_password }}"
+      tags:
+        - base.apt
+        - base.user
+
+    # Update the proxmox permissions
+    - name: Update the proxmox permissions
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pve_create_groups
+      tags:
+        - proxmox.pve.permissions
+
+    # Update the proxmox users
+    - name: Update the proxmox users
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pve_create_users
+      tags:
+        - proxmox.pve.users
+
+    # Update the proxmox storage
+    - name: Update the proxmox storage
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pve_storage
+      tags:
+        - proxmox.pve.storage
+
+# These tasks can be run as the new user
+- name: Continue setting up the Proxmox host as the new user
+  hosts: proxmox_nodes
+  vars_files:
+    - ../../vault/vault.yaml
+  tags:
+    - proxmox
+    - proxmox.pve
+  tasks:
+
+    # This is required to explicitly get the ansible facts for the
+    # base.geerlingguy.security role if running only that role via tags.
+    - name: Do ansible setup
+      ansible.builtin.setup:
+      tags:
+        - never
+        - base.geerlingguy.security
+
+    # Run the base role
+    - name: Run the base role
+      ansible.builtin.include_role:
+        name: base
+      vars:
+        base_user_run_setup: false
+        base_dotfiles:
+          install: true
+          dotbot_skip_ssh_authorized_file: false
+      tags:
+        - base.apt
+        - base.user
+
+    # Run the geerlingguy.security role
+    - name: Import geerlingguy.security role
+      ansible.builtin.import_role:
+        name: geerlingguy.security
+      become: true
+      tags:
+        - base.geerlingguy.security
