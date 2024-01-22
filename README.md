@@ -131,6 +131,8 @@ The following ansible tags are available to specify specific tasks to run.
         - proxmox.vm.delete - Delete a VM on the proxmox node
     - proxmox.pve - Configure proxmox hosts
         - proxmox.pve.permissions - Configure proxmox permissions
+        - proxmox.pve.users - Configure proxmox users
+        - proxmox.pve.storage - Configure proxmox storage
 
 # Inventory
 Inventory files are as follows in the [inventory](inventory) directory:

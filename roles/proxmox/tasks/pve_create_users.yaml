@@ -1,0 +1,35 @@
+---
+# Tasks to create users on a proxmox node
+#
+# This assumes that all users will be using the '@pam' realm.
+# Modification of this role and the proxmox_users variable will be required if
+# you want to use a different realm. i.e if using a realm that requires a
+# password, you will need to add the password
+
+- name: Block to create users on a proxmox node
+  tags:
+    - proxmox
+    - proxmox.pve
+    - proxmox.pve.users
+  block:
+
+    - name: Get all the current users
+      ansible.builtin.command:
+        cmd: >
+          pveum user list
+      register: proxmox_user_list_results
+      become: true
+      changed_when: false
+
+    # Create the proxmox user
+    - name: Create the proxmox user
+      ansible.builtin.command:
+        cmd: >
+          pveum user add {{ item.userid }}
+          --comment "{{ item.comment }}"
+          --email "{{ item.email }}"
+          --groups "{{ item.groups }}"
+      become: true
+      loop: "{{ proxmox_users }}"
+      when: item.userid not in proxmox_user_list_results.stdout
+      changed_when: item.userid not in proxmox_user_list_results.stdout
