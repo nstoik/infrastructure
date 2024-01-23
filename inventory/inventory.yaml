@@ -4,6 +4,7 @@ all:
     laptop.mike:
     pihole-2.home.stechsolutions.ca:
     pihole-3.home.stechsolutions.ca:
+    proxmox.home.stechsolutions.ca:
     pve3.home.stechsolutions.ca:
     vpn.arnie-karen:
     vpn.home.stechsolutions.ca:
@@ -23,4 +24,5 @@ all:
     proxmox_nodes:
       hosts:
         pve3.home.stechsolutions.ca:
+        proxmox.home.stechsolutions.ca:
     proxmox_vms:
