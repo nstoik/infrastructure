@@ -33,7 +33,7 @@ proxmox_storage:
     server: "10.10.1.200"
     export: "/volume2/backup/pve_backup_weekly"
     content: "backup"
-    prune_backups: "keep-last=10,keep-yearly=1"
+    prune_backups: "keep-last=5,keep-monthly=2,keep-yearly=1"
 
 # Proxmox cloud images
 proxmox_cloud_imgs:
