@@ -22,7 +22,8 @@
 - name: Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
   when:
     not proxmox_vm_config.stat.exists and
-    proxmox_cloud_img.state == "present"
+    proxmox_cloud_img.state == "present" and
+    inventory_hostname in proxmox_cloud_img.proxmox_nodes
   tags:
     - proxmox
     - proxmox.template
@@ -105,7 +106,8 @@
     proxmox_cloud_img.state == "absent"
   when:
     proxmox_vm_config.stat.exists and
-    proxmox_cloud_img.state == "absent"
+    proxmox_cloud_img.state == "absent" and
+    inventory_hostname in proxmox_cloud_img.proxmox_nodes
   tags:
     - proxmox
     - proxmox.template

@@ -42,7 +42,8 @@ proxmox_cloud_imgs:
     template_name: "ubuntu-22.04-server-cloudimg"
     id: 9000
     state: "present"
-    proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
+    # List of proxmox nodes to download the cloud image to
+    proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
 
 # Proxmox Permissions and ACLs
 proxmox_groups:
