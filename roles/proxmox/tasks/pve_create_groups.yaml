@@ -1,0 +1,38 @@
+---
+# Tasks to create groups on a proxmox node
+
+- name: Block to create groups on a proxmox node
+  tags:
+    - proxmox
+    - proxmox.pve
+    - proxmox.pve.permissions
+
+  block:
+
+    # Get all the current groups
+    - name: Get all the current groups
+      ansible.builtin.command:
+        cmd: >
+          pveum group list
+      register: proxmox_group_list_results
+      become: true
+      changed_when: false
+
+    # Create the proxmox group
+    - name: Create the proxmox group
+      ansible.builtin.command:
+        cmd: >
+          pveum group add {{ item.name }} --comment "{{ item.comment }}"
+      become: true
+      loop: "{{ proxmox_groups }}"
+      when: item.name not in proxmox_group_list_results.stdout
+      changed_when: item.name not in proxmox_group_list_results.stdout
+
+    # Apply the permissions to the proxmox group
+    - name: Apply the permissions to the proxmox group
+      ansible.builtin.include_tasks: pve_acl.yaml
+      vars:
+        node_acl_permissions: "{{ item.permissions }}"
+        node_acl_group: "{{ item.name }}"
+      loop: "{{ proxmox_groups }}"
+      when: item.name not in proxmox_group_list_results.stdout

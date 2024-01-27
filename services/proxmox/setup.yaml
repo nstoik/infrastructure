@@ -7,7 +7,6 @@
   hosts: proxmox_nodes
   vars_files:
     - ../../vault/vault.yaml
-    - vars/proxmox.yaml
 
   tasks:
     # This downloads the cloud images and creates a template

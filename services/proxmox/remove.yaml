@@ -7,7 +7,6 @@
   hosts: proxmox_nodes
   vars_files:
     - ../../vault/vault.yaml
-    - vars/proxmox.yaml
 
   tasks:
     # Run the proxmox role to delete the VMs

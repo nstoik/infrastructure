@@ -104,6 +104,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.known_hosts - Configure known hosts file on the local machine
     - base.services - Configure systemd services (started and enabled)
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
+    - base.user - Configure the default user
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider
@@ -128,6 +129,10 @@ The following ansible tags are available to specify specific tasks to run.
     - proxmox.vm - Clone and configure VMs on the proxmox nodes
         - proxmox.vm.create - Create a VM on the proxmox node
         - proxmox.vm.delete - Delete a VM on the proxmox node
+    - proxmox.pve - Configure proxmox hosts
+        - proxmox.pve.permissions - Configure proxmox permissions
+        - proxmox.pve.users - Configure proxmox users
+        - proxmox.pve.storage - Configure proxmox storage
 
 # Inventory
 Inventory files are as follows in the [inventory](inventory) directory:

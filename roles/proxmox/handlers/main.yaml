@@ -1,0 +1,9 @@
+---
+# Handlers for the proxmox role
+
+# Restart the pveproxy service
+- name: Restart pveproxy
+  ansible.builtin.service:
+    name: pveproxy
+    state: restarted
+  become: true

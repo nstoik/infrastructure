@@ -1,0 +1,34 @@
+---
+# Configure the storage for the proxmox nodes
+
+# Block to configure the storage for the proxmox nodes
+- name: Block to configure the storage for the proxmox nodes
+  tags:
+    - proxmox
+    - proxmox.pve
+    - proxmox.pve.storage
+  block:
+
+    # List the storage present on the proxmox nodes
+    - name: List the storage present on the proxmox nodes
+      ansible.builtin.shell: >
+        pvesm status
+      register: proxmox_storage_status
+      become: true
+      changed_when: false
+
+    # Create the nfs storage if it does not exist
+    - name: Create the nfs storage if it does not exist
+      ansible.builtin.command:
+        cmd: >
+          pvesm add {{ item.type }} {{ item.storage }}
+          --server {{ item.server }}
+          --export {{ item.export }}
+          --content {{ item.content }}
+          --prune-backups {{ item.prune_backups }}
+      become: true
+      loop: "{{ proxmox_storage }}"
+      when:
+        item.storage not in proxmox_storage_status.stdout
+        and item.type == "nfs"
+      changed_when: item.storage not in proxmox_storage_status.stdout

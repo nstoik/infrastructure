@@ -89,7 +89,7 @@
 
     # source the .zshrc file the first time to perform the initial setup
     - name: Source the .zshrc file the first time to perform the initial setup
-      ansible.builtin.shell: "source ~/.zshrc"
+      ansible.builtin.shell: "source /home/{{ default_user }}/.zshrc"
       args:
         chdir: "/home/{{ default_user }}"
         executable: /usr/bin/zsh

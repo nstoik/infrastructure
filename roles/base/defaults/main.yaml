@@ -6,6 +6,9 @@
 # if "no" is set, then just apt update is run
 base_apt_upgrade_packages: "yes"
 
+# whether to update apt packages or not
+base_apt_update_packages: true
+
 # variables for rebooting the host
 base_reboot_host_if_required: true
 
@@ -20,13 +23,26 @@ base_packages:
 # the base services to enable and start
 base_services: []
 
+# the base settings for user setup
+base_user_run_setup: true
+
+base_user_default: "{{ default_user }}"
+base_user_password_default: "{{ secret_user_password }}"
+
+# whether to add ssh keys to the user or not
+# defaults to false because generally the ssh keys
+# are added using the dotfiles method.
+base_user_add_ssh_keys: false
+base_user_groups:
+  - sudo
+
 # variables for the dotfiles
 base_dotfiles_dir: /home/{{ default_user }}/dotfiles
 base_dotfiles_repo: https://github.com/nstoik/dotfiles
 
 base_dotfiles:
   install: false
-  dotbot_skip_ssh_authorized_file: true
+  dotbot_skip_ssh_authorized_file: false
 
 # variables for docker
 # whether to install docker or not

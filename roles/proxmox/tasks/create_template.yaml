@@ -22,7 +22,8 @@
 - name: Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
   when:
     not proxmox_vm_config.stat.exists and
-    proxmox_cloud_img.state == "present"
+    proxmox_cloud_img.state == "present" and
+    inventory_hostname in proxmox_cloud_img.proxmox_nodes
   tags:
     - proxmox
     - proxmox.template
@@ -33,6 +34,8 @@
       block:
 
         # Create temp public-ssh-key file
+        # only need to copy the first key, because the rest of the
+        # keys will be added during the base role.
         - name: Create temp public-ssh-key file
           ansible.builtin.copy:
             content: "{{ secret_ssh_keys[0].key }}"
@@ -103,7 +106,8 @@
     proxmox_cloud_img.state == "absent"
   when:
     proxmox_vm_config.stat.exists and
-    proxmox_cloud_img.state == "absent"
+    proxmox_cloud_img.state == "absent" and
+    inventory_hostname in proxmox_cloud_img.proxmox_nodes
   tags:
     - proxmox
     - proxmox.template

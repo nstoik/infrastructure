@@ -19,10 +19,10 @@ pihole_dns_entries:
     ip: 10.10.1.179
   - domain: "nelson_ds.home.stechsolutions.ca"
     ip: 10.10.1.200
+  - domain: "pve3.home.stechsolutions.ca"
+    ip: 10.10.5.8
   - domain: "proxmox.home.stechsolutions.ca"
     ip: 10.10.5.9
-  - domain: "proxmox-2.home.stechsolutions.ca"
-    ip: 10.10.5.10
   - domain: "pihole-3.home.stechsolutions.ca"
     ip: 10.10.5.11
   - domain: "docker-testing.home.stechsolutions.ca"

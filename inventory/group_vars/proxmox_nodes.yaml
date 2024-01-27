@@ -2,6 +2,10 @@
 # group_vars for the proxmox group
 ansible_become_password: "{{ secret_become_pass }}"
 
+# The proxmox nodes need sudo to be installed
+proxmox_node_additional_packages:
+  - "sudo"
+
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
 base_apt_upgrade_packages: "dist"
@@ -9,3 +13,50 @@ base_apt_upgrade_packages: "dist"
 # don't automatically reboot the proxmox nodes. Rebooting should be done
 # either explicitly or manually.
 base_reboot_host_if_required: false
+
+# override the default geerlingguy.security role variables
+# for proxmox nodes
+security_autoupdate_enabled: false
+security_autoupdate_reboot: false
+security_ssh_permit_root_login: "yes"
+security_ssh_password_authentication: "yes"
+security_ssh_allowed_users:
+  - "{{ default_user }}"
+  - "root"
+
+# Proxmox nfs storage
+proxmox_storage:
+  # Synology backup weekly NFS storage
+  - storage: "syno_bw"
+    type: "nfs"
+    state: "present"
+    server: "10.10.1.200"
+    export: "/volume2/backup/pve_backup_weekly"
+    content: "backup"
+    prune_backups: "keep-last=5,keep-monthly=2,keep-yearly=1"
+
+# Proxmox cloud images
+proxmox_cloud_imgs:
+  # yamllint disable-line rule:line-length
+  - url: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
+    template_name: "ubuntu-22.04-server-cloudimg"
+    id: 9000
+    state: "present"
+    # List of proxmox nodes to download the cloud image to
+    proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
+
+# Proxmox Permissions and ACLs
+proxmox_groups:
+  - name: "Admins"
+    comment: "Admins group"
+    state: "present"
+    permissions:
+      - path: "/"
+        role: "Administrator"
+
+proxmox_users:
+  - userid: "{{ default_user }}@pam"
+    comment: "Primary user"
+    email: "{{ default_user_email }}"
+    groups: "Admins"
+    state: "present"

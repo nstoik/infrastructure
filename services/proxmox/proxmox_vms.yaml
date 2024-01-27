@@ -1,4 +1,11 @@
 ---
+# This playbook will setup all the specified VMs. It will update the DNS
+# entries in Pi-hole and then create the VMs in Proxmox.It will then start
+# the VMs and wait for them to be ready. Once the VMs are ready, it will
+# update the known_hosts file for the IP and hostname.
+#
+# After the VMs are ready, it will run the first time setup to configure
+# the base VMs.
 
 # Run the pihole playbook to make sure the DNS records are correct
 - name: Run the pihole role
@@ -15,7 +22,10 @@
   hosts: proxmox_nodes
   vars_files:
     - ../../vault/vault.yaml
-    - vars/proxmox.yaml
+  tags:
+    - proxmox
+    - proxmox.vm
+    - proxmox.vm.create
 
   tasks:
     # This creates the VMs
@@ -27,10 +37,6 @@
         proxmox_template_id: "{{ hostvars[item].proxmox_vm.template_id }}"
         proxmox_vm: "{{ hostvars[item].proxmox_vm }}"
       loop: "{{ groups['proxmox_vms'] }}"
-      tags:
-        - proxmox
-        - proxmox.vm
-        - proxmox.vm.create
 
     # Start the VMs and wait for them to be ready
     - name: Run the proxmox role to start VMs
@@ -41,10 +47,6 @@
         proxmox_vm: "{{ hostvars[item].proxmox_vm }}"
         proxmox_ip: "{{ hostvars[item].network.ip }}"
       loop: "{{ groups['proxmox_vms'] }}"
-      tags:
-        - proxmox
-        - proxmox.vm
-        - proxmox.vm.create
 
     # Update the known_hosts file for IP
     - name: Update the known_hosts file for IP
@@ -57,9 +59,6 @@
         base_comment: "Proxmox VM: {{ item }}"
       loop: "{{ groups['proxmox_vms'] }}"
       tags:
-        - proxmox
-        - proxmox.vm
-        - proxmox.vm.create
         - base.known_hosts
 
     # Update the known_hosts file for hostname
@@ -73,9 +72,6 @@
         base_comment: "Proxmox VM: {{ item }}"
       loop: "{{ groups['proxmox_vms'] }}"
       tags:
-        - proxmox
-        - proxmox.vm
-        - proxmox.vm.create
         - base.known_hosts
 
 # Run the first time setup to configure the VMs
@@ -83,11 +79,11 @@
   hosts: proxmox_vms
   vars_files:
     - ../../vault/vault.yaml
-    - vars/proxmox.yaml
   tags:
     - proxmox
     - proxmox.vm
     - proxmox.vm.create
+    - base
 
   tasks:
     # Run the base role
@@ -102,7 +98,6 @@
         base_install_docker: "{{ hostvars[item].install_docker }}"
         base_dotfiles: "{{ hostvars[item].dotfiles }}"
       tags:
-        - base
         - base.apt
         - base.docker
         - base.dotfiles
@@ -114,5 +109,4 @@
         name: geerlingguy.security
       become: true
       tags:
-        - base
         - base.geerlingguy.security
