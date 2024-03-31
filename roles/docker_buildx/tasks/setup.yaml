@@ -1,0 +1,27 @@
+---
+# tasks to setup docker buildx
+#
+# inputs:
+#  - docker_buildx_instance_name: name of the buildx instance
+
+- name: Block for docker buildx setup
+  tags:
+    - docker
+    - docker.buildx
+  block:
+
+    - name: Ensure Docker Buildx is installed
+      ansible.builtin.command: docker buildx version
+      register: docker_buildx_version
+      changed_when: false
+
+    - name: List the available builder instances
+      ansible.builtin.command: docker buildx ls
+      register: docker_buildx_list
+      changed_when: false
+
+    - name: Configure Docker Buildx
+      ansible.builtin.command: >
+        docker buildx create --name {{ docker_buildx_instance_name }}
+      when: docker_buildx_instance_name not in docker_buildx_list.stdout
+      changed_when: docker_buildx_instance_name not in docker_buildx_list.stdout
