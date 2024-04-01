@@ -1,0 +1,68 @@
+---
+# Playbook to build the fd container images using docker buildx bake
+#
+# The vars_prompt section will prompt the user for the required variables. If
+# --extra-vars is used, the prompt will be skipped.
+
+- name: Build the fd container images
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars/buildx.yaml
+  vars_prompt:
+    - name: fd_tags_version
+      prompt: >
+        Enter the version to tag the fd container images with. Can be a comma
+        separated list of tags.
+      private: false
+      default: "latest"
+    - name: fd_git_tag
+      prompt: "Enter the git tag/branch to build the fd container images from"
+      private: false
+      default: "HEAD"
+    - name: fd_push_images
+      prompt: >
+        Do you want to push the fd container images to the registry?
+        (default is loaded locally)
+      private: false
+      default: "no"
+  tags:
+    - fm
+    - fm.buildx
+
+  tasks:
+    - name: Overwrite the fd_buildx_env_vars with the fd_tags_version
+      ansible.builtin.set_fact:
+        fd_buildx_env_vars_updated: "{{ fd_buildx_env_vars |
+                                        combine({'TAGS': fd_tags_version}) }}"
+      tags:
+        - fm
+        - docker
+        - docker.buildx
+
+    - name: Setup Docker Buildx
+      ansible.builtin.include_role:
+        name: docker_buildx
+        tasks_from: setup
+      vars:
+        docker_buildx_instance_name: "{{ fd_buildx_name }}"
+      tags:
+        - fm
+        - docker
+        - docker.buildx
+
+    - name: Build the fd container images
+      ansible.builtin.include_role:
+        name: docker_buildx
+        tasks_from: main
+      vars:
+        docker_buildx_instance_name: "{{ fd_buildx_name }}"
+        docker_buildx_git_repo: "{{ fd_buildx_git_repo }}"
+        docker_buildx_git_tag: "{{ fd_git_tag }}"
+        docker_buildx_bake_file: "{{ fd_buildx_bake_file }}"
+        docker_buildx_env_vars: "{{ fd_buildx_env_vars_updated }}"
+        docker_buildx_push: "{{ fd_push_images | bool }}"
+      tags:
+        - fm
+        - docker
+        - docker.buildx
