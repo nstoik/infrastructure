@@ -109,6 +109,24 @@ To update the version of Netmaker follow the steps below.
     ```
 4. Check the Netmaker dashboard to make sure everything is working as expected.
 
+### Issues with Netclients when updating
+When upgrading to v0.23.0, one of the netclients did not properly reconnect after the update.
+
+```bash
+arnie@vpn:~$ sudo netclient
+Segmentation fault (core dumped)
+```
+
+In order to fix this, I had to clear out the /etc/netclient directory and then follow the steps listed above to manually install the netclient and join the network.
+
+When rejoining the monitoring network, the VPN IP address changes so that had to be updated in the inventory file.
+
+```bash
+sudo rm -rf /etc/netclient/*
+```
+
+
+
 
 ## Pro Usage
 If the Pro version is installed, there is a [grafana dashboard](https://grafana.netmaker.stechsolutions.ca/) and a [prometheus instance](https://prometheus.netmaker.stechsolutions.ca/) that can be used to monitor the Netmaker server.

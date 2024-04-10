@@ -29,10 +29,6 @@ services:
       - COREDNS_ADDR={{ ansible_default_ipv4.address }}
       # Overrides SERVER_HOST if set. Useful for making HTTP available via different interfaces/networks.
       - SERVER_HTTP_HOST=api.{{ netmaker_base_domain }}
-      # domain for your turn server
-      - TURN_SERVER_HOST=turn.{{ netmaker_base_domain }}
-      # domain of the turn api server
-      - TURN_SERVER_API_HOST=https://turnapi.{{ netmaker_base_domain }}
 
   netmaker-ui:
     container_name: netmaker-ui
@@ -66,12 +62,13 @@ services:
       - "443:443"
 
   coredns:
+    #network_mode: host
     container_name: coredns
     image: coredns/coredns:1.10.1
     command: -conf /root/dnsconfig/Corefile
+    restart: always
     depends_on:
       - netmaker
-    restart: always
     volumes:
       - dnsconfig:/root/dnsconfig
 
@@ -90,22 +87,6 @@ services:
       - mosquitto_logs:/mosquitto/log
       - mosquitto_data:/mosquitto/data
 
-  turn:
-    container_name: turn
-    image: gravitl/turnserver:v1.0.0
-    restart: unless-stopped
-    env_file:
-      - {{ netmaker_directory }}/netmaker.env
-    environment:
-      # config-dependant vars
-      - USERNAME={{ netmaker_turn_username }}
-      - PASSWORD={{ secret_nm_turn_password }}
-      # domain for your turn server
-      - TURN_SERVER_HOST=turn.{{ netmaker_base_domain }}
-    network_mode: "host"
-    volumes:
-      - turn_server:/etc/config
-
 volumes:
   caddy_data: { } # runtime data for caddy
   caddy_conf: { } # configuration file for Caddy
@@ -113,4 +94,3 @@ volumes:
   dnsconfig: { } # storage for coredns
   mosquitto_logs: { } # storage for mqtt logs
   mosquitto_data: { } # storage for mqtt data
-  turn_server: { }

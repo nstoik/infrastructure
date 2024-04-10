@@ -1,7 +1,6 @@
 ---
 all:
   hosts:
-    laptop.mike:
     pihole-2.home.stechsolutions.ca:
     pihole-3.home.stechsolutions.ca:
     proxmox.home.stechsolutions.ca:
@@ -15,7 +14,6 @@ all:
         vpn.home.stechsolutions.ca:
     netclients_manual:
       hosts:
-        laptop.mike:
         vpn.arnie-karen:
     pihole:
       hosts:
