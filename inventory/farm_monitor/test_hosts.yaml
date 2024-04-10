@@ -1,0 +1,15 @@
+---
+# Hosts that are test devices for the farm_monitor and farm_device applications
+
+all:
+  children:
+    farm_monitor_test:
+      hosts:
+        pi3-dev-1.home.stechsolutions.ca:
+          install_docker: true
+          dotfiles:
+            install: false
+            dotbot_skip_ssh_authorized_file: false
+          network:
+            ip: "10.10.1.25"
+            gateway: "10.10.1.1"

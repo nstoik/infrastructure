@@ -1,0 +1,5 @@
+---
+# Variables for the farm_monitor_test group.
+
+ansible_user: ubuntu
+ansible_become_password: "{{ secret_become_pass }}"
