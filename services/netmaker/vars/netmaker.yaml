@@ -12,9 +12,6 @@ netmaker_version: "v0.21.2"
 netmaker_directory: "/home/{{ default_user }}/netmaker"
 netclient_directory: "/home/{{ default_user }}/netclient"
 
-# TURN variables
-netmaker_turn_username: "netmaker"
-
 # Mosquitto variables
 netmaker_mq_config_url:
   "https://raw.githubusercontent.com/gravitl/netmaker/\

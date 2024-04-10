@@ -24,16 +24,6 @@ https://api.{{ netmaker_base_domain }} {
         reverse_proxy http://netmaker:8081
 }
 
-# TURN
-https://turn.{{ netmaker_base_domain }} {
-	reverse_proxy host.docker.internal:3479
-}
-
-#TURN API
-https://turnapi.{{ netmaker_base_domain }} {
-        reverse_proxy http://host.docker.internal:8089
-}
-
 # MQ
 wss://broker.{{ netmaker_base_domain }} {
         reverse_proxy ws://mq:8883
