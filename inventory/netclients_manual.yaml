@@ -7,8 +7,6 @@
 # Then the hosts can be configured with ansible the rest of the way.
 netclients_manual:
   hosts:
-    laptop.mike:
-      netmaker_shorthost: mike-ThinkPad-Edge-E530c
     vpn.arnie-karen:
       netmaker_shorthost: vpn.arnie-karen
 
