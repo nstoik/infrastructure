@@ -12,6 +12,15 @@
         policy: ACCEPT
       become: true
 
+    # For coredns and dns resolution with Netmaker
+    # https://docs.netmaker.io/architecture.html#coredns
+    - name: Stop and disable systemd-resolved
+      ansible.builtin.systemd:
+        name: systemd-resolved
+        state: stopped
+        enabled: no
+      become: true
+
     - name: Create the Netmaker directory
       ansible.builtin.file:
         path: "{{ netmaker_directory }}"
