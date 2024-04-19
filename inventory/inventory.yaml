@@ -3,6 +3,7 @@ all:
   hosts:
     pihole-2.home.stechsolutions.ca:
     pihole-3.home.stechsolutions.ca:
+    prometheus.home.stechsolutions.ca:
     proxmox.home.stechsolutions.ca:
     pve3.home.stechsolutions.ca:
     vpn.arnie-karen:
@@ -12,6 +13,7 @@ all:
     netclients:
       hosts:
         vpn.home.stechsolutions.ca:
+        prometheus.home.stechsolutions.ca:
     netclients_manual:
       hosts:
         vpn.arnie-karen:

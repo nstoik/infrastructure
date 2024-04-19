@@ -41,3 +41,22 @@ netclients:
           }
         ]
       }
+    prometheus.home.stechsolutions.ca:
+      netmaker_shorthost: prometheus.home
+      netmaker_networks:
+        - {
+          name: 'monitoring',
+          tags: "monitoring-tag"
+        }
+      netmaker_host_settings: {
+        isdefault: false,
+        node_settings: [
+          {
+            # monitoring network
+            network: '{{ netmaker_networks[0].name }}',
+            isegressgateway: false,
+            isingressgateway: false,
+            egressgatewayranges: [],
+          }
+        ]
+      }
