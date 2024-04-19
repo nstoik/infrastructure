@@ -18,7 +18,7 @@
       ansible.builtin.systemd:
         name: systemd-resolved
         state: stopped
-        enabled: no
+        enabled: false
       become: true
 
     - name: Create the Netmaker directory
