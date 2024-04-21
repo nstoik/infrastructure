@@ -73,13 +73,6 @@ The setup runs through the steps as outlined in the [Netmaker documentation](htt
     ansible-playbook services/netmaker/netclients_manual.yaml
     ```
 
-### External Clients manual setup
-There is some manual setup required for the external clients.
-
-As of version 0.21.1, there can only be one DNS server specified in the [ext_clients.yaml](/services/netmaker/vars/ext_clients.yaml) configuration. This is a limiation of the NMCTL and the Netmaker server. After adding the configuration to the WireGuard app on a phone or laptop, simply edit the DNS settings and add the second DNS server (eg. 10.10.1.11 and 10.10.5.11)
-
-For the `personal-home` external client, change the Endpoint address to the dynamic DNS address (eg. home.stechsolutions.ca).
-
 ### Adding a new network
 To add a new network, add the network to the [vars/netmaker.yaml](vars/netmaker.yaml) file. Then run the [netmaker_config.yaml](netmaker_config.yaml) playbook with the required tags. This will create the network and the enrollment key for the network.
 
@@ -93,6 +86,22 @@ ansible-playbook services/netmaker/netmaker_config.yaml --tags="netmaker.network
 
 ansible-playbook services/netmaker/netclients.yaml --tags="netmaker.netclient"
 ```
+
+## Manual Setup
+
+### External Clients manual setup
+There is some manual setup required for the external clients.
+
+As of version 0.23.0, there can only be one DNS server specified in the [ext_clients.yaml](/services/netmaker/vars/ext_clients.yaml) configuration. This is a limiation of the NMCTL and the Netmaker server. After adding the configuration to the WireGuard app on a phone or laptop, simply edit the DNS settings and add the second DNS server (eg. 10.10.1.11 and 10.10.5.11)
+
+If you want all network traffic to go through the external client, you can manually edit the WireGuard configuration file on the external client. Add `0.0.0.0/0` to the `AllowedIPs` section of the WireGuard configuration file.
+
+For the `personal-home` external client, change the Endpoint address to the dynamic DNS address (eg. home.stechsolutions.ca).
+
+### Internet Gateway
+As of version 0.23.0, the internet gateway is not automatically set up. This needs to be done manually.
+
+For example, login to the Netmaker dashboard, go to the `Networks` page, click on the `personal` network, click on the `Remote Access` tab, edit the `netmaker01` Gateway, and toggle the `Internet Gateway` switch in order to enable the internet gateway.
 
 ## Updating
 To update the version of Netmaker follow the steps below.

@@ -5,35 +5,71 @@
 # When the external client configuration is exported, the name of the
 # configuration file is {{ item.name }}-{{ item.network }}-netmaker-client.conf
 ext_clients:
+  # Montitoring network
   - {
     name: 'iPhone-monitoring',
     host: '{{ netmaker_droplet.name }}',
     # monitoring network
     network: '{{ netmaker_networks[0].name }}',
     allowedips: "",
-    dns: "",
+    dns: "10.50.50.1",
   }
+  # Personal network - via Netmaker server
   - {
     name: 'iPhone-personal',
     host: '{{ netmaker_droplet.name }}',
     # personal network
     network: '{{ netmaker_networks[1].name }}',
     allowedips: "",
-    dns: "10.10.5.11",
+    dns: "10.50.60.1",
   }
+  - {
+    name: 'Nelson-Laptop',
+    host: '{{ netmaker_droplet.name }}',
+    # personal network
+    network: '{{ netmaker_networks[1].name }}',
+    allowedips: "",
+    dns: "10.50.60.1"
+  }
+  - {
+    name: 'Travel-Router',
+    host: '{{ netmaker_droplet.name }}',
+    # personal network
+    network: '{{ netmaker_networks[1].name }}',
+    allowedips: "",
+    dns: "10.50.60.1"
+  }
+  # Personal network - via VPN at home
   - {
     name: 'iPhone-personal-home',
     host: 'vpn.home',
     # personal network
     network: '{{ netmaker_networks[1].name }}',
     allowedips: "",
-    dns: "10.10.5.11",
+    dns: "10.50.60.1",
   }
+  - {
+    name: 'Nelson-Laptop-home',
+    host: 'vpn.home',
+    # personal network
+    network: '{{ netmaker_networks[1].name }}',
+    allowedips: "",
+    dns: "10.50.60.1",
+  }
+  - {
+    name: 'Travel-Router-home',
+    host: 'vpn.home',
+    # personal network
+    network: '{{ netmaker_networks[1].name }}',
+    allowedips: "",
+    dns: "10.50.60.1",
+  }
+  # Farm network
   - {
     name: 'iPhone-farm-network',
     host: '{{ netmaker_droplet.name }}',
     # farm-network network
     network: '{{ netmaker_networks[2].name }}',
     allowedips: "",
-    dns: "",
+    dns: "10.50.70.1",
   }
