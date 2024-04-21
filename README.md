@@ -123,6 +123,8 @@ The following ansible tags are available to specify specific tasks to run.
         - netmaker.netclient.systemd - Configure the Netmaker netclient using systemd
         - netmaker.netclient.join - Join the Netmaker netclient to the network
     - netmaker.ext_client - Configure external clients
+    - netmaker.acl - Configure the Netmaker ACLs
+- pihole - Configure a pihole server
 - proxmox - Configure the proxmox nodes and vms
     - proxmox.cloud_images - Download cloud images
     - proxmox.template - Configure the proxmox template

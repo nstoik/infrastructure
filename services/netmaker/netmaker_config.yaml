@@ -30,6 +30,7 @@
   gather_facts: false
   vars_files:
     - ../../vault/vault.yaml
+    - vars/acls.yaml
     - vars/netmaker.yaml
     - vars/ext_clients.yaml
     - vars/networks.yaml
@@ -108,3 +109,15 @@
       tags:
         - netmaker
         - netmaker.ext_client
+
+    # Update the ACLs on the Netmaker server
+    - name: Update ACLs on the Netmaker server
+      ansible.builtin.include_role:
+        name: netmaker
+        tasks_from: nmctl_acl
+      vars:
+        netmaker_acl_network: "{{ item.key }}"
+      loop: "{{ netmaker_acls | dict2items }}"
+      tags:
+        - netmaker
+        - netmaker.acl

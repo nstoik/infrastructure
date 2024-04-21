@@ -1,0 +1,68 @@
+---
+# Use the NMCTL CLI tool to update ACLs on the Netmaker server.
+#
+# input vars:
+#   netmaker_network: the network to set the ACLs for
+#   netmaker_acl_name: the node name
+#   netmaker_acl_nodes: the nodes to set the ACLs for
+#   netmaker_acl_translation: the translation of node IDs to node names
+#   netmaker_existing_acls: the existing ACLs on the server
+
+- name: Block for setting Netmaker ACLs
+  tags:
+    - netmaker
+    - netmaker.acl
+
+  block:
+
+    # Filter the exisiting acls to this host only
+    - name: Filter the exisiting acls to this host only
+      ansible.builtin.set_fact:
+        current_acls: "{{ netmaker_existing_acls
+                        | dict2items
+                        | selectattr('key',
+                                     'equalto',
+                                   netmaker_acl_translation[netmaker_acl_name])
+                        | list
+                        | items2dict }}"
+      changed_when: false
+
+    # Set the allow ACLs
+    - name: Set the allow ACLs
+      ansible.builtin.command:
+        cmd: >-
+          nmctl acl allow {{ netmaker_network }}
+           {{ netmaker_acl_translation[netmaker_acl_name] }}
+           {{ netmaker_acl_translation[my_item.key] }}
+      loop: "{{ netmaker_acl_nodes | dict2items }}"
+      loop_control:
+        label: "{{ netmaker_acl_name }} to {{ my_item.key }}"
+        loop_var: my_item
+      when: >
+        current_acls[netmaker_acl_translation[netmaker_acl_name]]
+          [netmaker_acl_translation[my_item.key]] == 1
+        and my_item.value is true
+      changed_when: >
+        current_acls[netmaker_acl_translation[netmaker_acl_name]]
+          [netmaker_acl_translation[my_item.key]] == 1
+        and my_item.value is true
+
+    # Set the deny ACLs
+    - name: Set the deny ACLs
+      ansible.builtin.command:
+        cmd: >-
+          nmctl acl deny {{ netmaker_network }}
+           {{ netmaker_acl_translation[netmaker_acl_name] }}
+           {{ netmaker_acl_translation[my_item.key] }}
+      loop: "{{ netmaker_acl_nodes | dict2items }}"
+      loop_control:
+        label: "{{ netmaker_acl_name }} to {{ my_item.key }}"
+        loop_var: my_item
+      when: >
+        current_acls[netmaker_acl_translation[netmaker_acl_name]]
+          [netmaker_acl_translation[my_item.key]] == 2
+        and my_item.value is false
+      changed_when: >
+        current_acls[netmaker_acl_translation[netmaker_acl_name]]
+          [netmaker_acl_translation[my_item.key]] == 2
+        and my_item.value is false
