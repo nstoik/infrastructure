@@ -31,14 +31,6 @@ ext_clients:
     allowedips: "",
     dns: "10.50.60.1"
   }
-  - {
-    name: 'Travel-Router',
-    host: '{{ netmaker_droplet.name }}',
-    # personal network
-    network: '{{ netmaker_networks[1].name }}',
-    allowedips: "",
-    dns: "10.50.60.1"
-  }
   # Personal network - via VPN at home
   - {
     name: 'iPhone-personal-home',
@@ -50,14 +42,6 @@ ext_clients:
   }
   - {
     name: 'Nelson-Laptop-home',
-    host: 'vpn.home',
-    # personal network
-    network: '{{ netmaker_networks[1].name }}',
-    allowedips: "",
-    dns: "10.50.60.1",
-  }
-  - {
-    name: 'Travel-Router-home',
     host: 'vpn.home',
     # personal network
     network: '{{ netmaker_networks[1].name }}',
