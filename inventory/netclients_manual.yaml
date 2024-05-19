@@ -24,7 +24,9 @@ netclients_manual:
           network: '{{ netmaker_networks[0].name }}',
           isegressgateway: false,
           isingressgateway: false,
-          egressgatewayranges: [],
+          egressgatewayranges: [
+            "10.200.1.0/24",
+          ],
         }
       ]
     }

@@ -49,11 +49,9 @@ netmaker_server_host_settings: {
     {
       # personal network
       network: '{{ netmaker_networks[1].name }}',
-      isegressgateway: true,
+      isegressgateway: false,
       isingressgateway: true,
-      egressgatewayranges: [
-        "0.0.0.0/0"
-      ],
+      egressgatewayranges: [],
     },
     {
       # farm-network network

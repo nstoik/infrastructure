@@ -1,0 +1,14 @@
+---
+# netmaker_acls
+
+netmaker_acls:
+  farm-network:
+    - fd1.farmmonitor.ca:
+        netmaker01: true
+        pi4-test: false
+    - netmaker01:
+        fd1.farmmonitor.ca: true
+        pi4-test: true
+    - pi4-test:
+        fd1.farmmonitor.ca: false
+        netmaker01: true
