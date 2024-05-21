@@ -13,6 +13,8 @@ pihole_dns_entries:
     ip: 10.10.1.1
   - domain: "pihole-2.home.stechsolutions.ca"
     ip: 10.10.1.11
+  - domain: "pi3-dev-1.home.stechsolutions.ca"
+    ip: 10.10.1.25
   - domain: "hassio.home.stechsolutions.ca"
     ip: 10.10.1.51
   - domain: "pi4-dev.home.stechsolutions.ca"
@@ -31,12 +33,8 @@ pihole_dns_entries:
     ip: 10.10.5.76
   - domain: "fileserver.home.stechsolutions.ca"
     ip: 10.10.5.114
-  - domain: "youtube-dl.home.stechsolutions.ca"
-    ip: 10.10.5.120
   - domain: "grafana.home.stechsolutions.ca"
     ip: 10.10.5.142
-  - domain: "w10-testing.home.stechsolutions.ca"
-    ip: 10.10.5.182
   - domain: "vpn.home.stechsolutions.ca"
     ip: 10.10.5.223
   - domain: "docker.home.stechsolutions.ca"

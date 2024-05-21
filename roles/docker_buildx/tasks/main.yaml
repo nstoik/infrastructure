@@ -1,0 +1,55 @@
+---
+# use the docker_buildx role and bake.hcl configuration to build container
+# images.
+#
+# inputs:
+#  - docker_buildx_instance_name: name of the buildx instance
+#  - docker_buildx_git_repo: git repository to clone (git, https, ssh)
+#  - docker_buildx_git_version: git version to checkout (branch, tag, commit)
+#  - docker_buildx_bake_file: the bake.hcl file
+#  - docker_buildx_env_vars: environment variables for the buildx instance
+#  - docker_buildx_push: whether to push the built images to the registry.
+#                        Otherwise, load the images locally.
+
+
+- name: Block for docker buildx
+  tags:
+    - docker
+    - docker.buildx
+  block:
+
+    - name: Make a temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+      register: docker_buildx_temp_dir
+      changed_when: false
+
+    - name: Clone the git repository
+      ansible.builtin.git:
+        repo: "{{ docker_buildx_git_repo }}"
+        dest: "{{ docker_buildx_temp_dir.path }}"
+        version: "{{ docker_buildx_git_version | default('HEAD') }}"
+      register: docker_buildx_git
+      changed_when: docker_buildx_git.changed
+
+    - name: Build the container image
+      ansible.builtin.command: >
+        docker buildx bake --builder {{ docker_buildx_instance_name }}
+        --file {{ docker_buildx_bake_file }}
+        {% if docker_buildx_push %}
+        --push
+        {% else %}
+        --load
+        {% endif %}
+      args:
+        chdir: "{{ docker_buildx_temp_dir.path }}"
+      environment:
+        "{{ docker_buildx_env_vars }}"
+      register: docker_buildx_bake
+      changed_when: docker_buildx_bake.rc != 0
+
+    - name: Remove the temporary directory
+      ansible.builtin.file:
+        path: "{{ docker_buildx_temp_dir.path }}"
+        state: absent
+      changed_when: false

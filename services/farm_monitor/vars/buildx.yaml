@@ -1,0 +1,22 @@
+---
+fm_buildx_name: fm_buildx
+fm_buildx_git_repo: "file:///home/nelson/GitHub/farm_monitor/"
+fm_buildx_bake_file: "docker-bake.hcl"
+fm_buildx_traefik_domains:
+  - "localhost"
+  - "fm1-farmmonitor-ca"
+fm_buildx_env_vars:
+  TAGS: "latest"
+  MULTI_STAGE_TARGET: "prod-stage"
+  TRAEFIK_DOMAINS: "{{ fm_buildx_traefik_domains | join(',') }}"
+  VITE_API_PREFIX: "/api"
+  VITE_API_PORT: "443"
+  VITE_API_PROTOCOL: "https"
+  VITE_PUBLIC_PATH: "/frontend/"
+
+fd_buildx_name: fd_buildx
+fd_buildx_git_repo: "file:///home/nelson/GitHub/farm_device/"
+fd_buildx_bake_file: "docker-bake.hcl"
+fd_buildx_env_vars:
+  TAGS: "latest"
+  MULTI_STAGE_TARGET: "prod-stage"

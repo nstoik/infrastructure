@@ -1,0 +1,17 @@
+---
+# Playbook to deploy the farm_device system to a Raspberry Pi device
+#
+# Required variables:
+#   host_ip: The IP address of the Raspberry Pi device
+
+- name: Deploy farm_device system to Raspberry Pi
+  hosts: localhost
+
+  tasks:
+    # Setup the Raspberry Pi
+    - name: Setup the Raspberry Pi
+      ansible.builtin.include_role:
+        name: rpi
+        tasks_from: main.yaml
+      vars:
+        rpi_ip: "{{ host_ip }}"
