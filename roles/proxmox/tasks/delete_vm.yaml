@@ -50,6 +50,6 @@
       vars:
         base_hostname: "{{ proxmox_vm.name_fqdn }}"
         base_state: "{{ proxmox_vm.state }}"
-        base_comment: "Proxmox VM: {{ proxmox_vm.name_fqdn }}"
+        base_comment: "Proxmox VM: {{ proxmox_vm.name }}"
       tags:
         - base.known_hosts
