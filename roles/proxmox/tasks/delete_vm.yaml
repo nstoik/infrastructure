@@ -41,3 +41,15 @@
         cmd: qm destroy {{ proxmox_vm.id }} --purge --destroy-unreferenced-disks
       become: true
       changed_when: false
+
+    # Update the known_hosts file
+    - name: Update the known_hosts file for {{ proxmox_vm.name }}
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ proxmox_vm.name_fqdn }}"
+        base_state: "{{ proxmox_vm.state }}"
+        base_comment: "Proxmox VM: {{ proxmox_vm.name_fqdn }}"
+      tags:
+        - base.known_hosts
