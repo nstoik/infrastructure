@@ -1,11 +1,15 @@
 ---
 # Hosts that are proxmox VMs and their configuration
 
+# If adding proxmox VMs to multiple proxmox nodes, the network.ip,
+# proxmox_vm.proxmox_node, proxmox_vm.id, and proxmox_vm.name
+# must be unique across all proxmox nodes.
+
 all:
   children:
     proxmox_vms:
       hosts:
-        docker-testing:
+        docker-testing.home.stechsolutions.ca:
           install_docker: true
           dotfiles:
             install: true
@@ -18,9 +22,30 @@ all:
             template_id: 9000
             state: "present"
             id: 352
-            name: "{{ inventory_hostname }}"
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            name_fqdn: "{{ inventory_hostname }}"
             disk_size: 10G
             net0: virtio,bridge=vmbr0
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 2
+            memory: 4096
+        fileserver-testing.home.stechsolutions.ca:
+          install_docker: false
+          dotfiles:
+            install: true
+            dotbot_skip_ssh_authorized_file: false
+          network:
+            ip: "10.10.5.26"
+            gateway: "10.10.5.1"
+          proxmox_vm:
+            proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
+            template_id: 9000
+            state: "present"
+            id: 353
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            name_fqdn: "{{ inventory_hostname }}"
+            disk_size: 10G
+            net0: virtio,bridge=vmbr0
+            ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
+            cores: 8
             memory: 4096
