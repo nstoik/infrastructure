@@ -20,6 +20,13 @@
     - proxmox.vm
     - proxmox.vm.create
 
+# Set the 'proxmox_vm_status' variable if previous task was skipped
+- name: Set the 'proxmox_vm_status' variable if previous task was skipped
+  ansible.builtin.set_fact:
+    proxmox_vm_status:
+      stdout: "N/A"
+  when: proxmox_vm_status.skipped | default('false') | bool
+
 # Start the VM
 - name: Start the VM
   when:
