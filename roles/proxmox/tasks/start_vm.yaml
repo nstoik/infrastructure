@@ -52,17 +52,15 @@
       ansible.builtin.wait_for:
         host: "{{ proxmox_ip }}"
         port: 22
-        delay: 10
-        timeout: 300
-      become: true
+      delegate_to: localhost
       changed_when: false
 
     # Wait for cloud-init to finish
     - name: Wait for cloud-init to finish
-      ansible.builtin.wait_for:
-        host: "{{ proxmox_ip }}"
-        path: /var/lib/cloud/instance/boot-finished
-        delay: 10
-        timeout: 600
-      become: true
+      ansible.builtin.command: cloud-init status --wait
+      register: cloud_init_status
+      retries: 10
+      delay: 20
+      until: cloud_init_status.rc == 0
+      delegate_to: "{{ proxmox_ip }}"
       changed_when: false
