@@ -55,6 +55,24 @@
       delegate_to: localhost
       changed_when: false
 
+    # Update the known_hosts file
+    - name: Update the known_hosts file for {{ known_hosts_item }}
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ known_hosts_item }}"
+        base_state: "{{ proxmox_vm.state }}"
+        base_comment: "Proxmox VM: {{ proxmox_vm.name }}"
+      loop:
+        - "{{ proxmox_ip }}"
+        - "{{ proxmox_vm.name }}"
+        - "{{ proxmox_vm.name_fqdn }}"
+      loop_control:
+        loop_var: known_hosts_item
+      tags:
+        - base.known_hosts
+
     # Wait for cloud-init to finish
     - name: Wait for cloud-init to finish
       ansible.builtin.command: cloud-init status --wait
