@@ -32,6 +32,7 @@
         port: 22
         state: started
         timeout: 60
+      delegate_to: localhost
       when: base_state == 'present' and base_hostname_check_result.found == 0
 
     # Get the host key from the host
@@ -50,6 +51,7 @@
         path: "{{ known_hosts_ansible_file }}"
         line: "{{ item_line }}"
         state: "{{ base_state }}"
+        insertafter: "{{ base_comment }}"
       with_items:
         - "# {{ base_comment }}"
         - "{{ base_host_key_results.stdout | default('') }} \n"
@@ -60,10 +62,12 @@
       no_log: true
 
     # remove the comment and hostname from the known_hosts_ansible file
+    # This removes all lines that start with the base_comment until the next
+    # comment line or the end of the file
     - name: Remove comment and hostname from the known_hosts_ansible file
       ansible.builtin.replace:
         path: "{{ known_hosts_ansible_file }}"
-        regexp: "^# {{ base_comment }}(.*\n){4}"
+        regexp: "^# {{ base_comment }}(?:^(?!#).*\n)*"
         replace: ""
       when: base_state == 'absent'
       delegate_to: localhost
