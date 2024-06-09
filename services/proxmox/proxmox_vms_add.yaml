@@ -66,12 +66,13 @@
         name: base
       vars:
         # yamllint disable-line rule:line-length
-        base_additional_packages: "{{ hostvars[item].proxmox_vm_additonal_packages }}"
+        base_additional_packages: "{{ hostvars[inventory_hostname].proxmox_vm_additonal_packages }}"
         # yamllint disable-line rule:line-length
-        base_additional_services: "{{ hostvars[item].proxmox_vm_additional_services }}"
-        base_install_docker: "{{ hostvars[item].install_docker }}"
-        base_dotfiles: "{{ hostvars[item].dotfiles }}"
+        base_additional_services: "{{ hostvars[inventory_hostname].proxmox_vm_additional_services }}"
+        base_install_docker: "{{ hostvars[inventory_hostname].install_docker }}"
+        base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
       tags:
+        - base
         - base.apt
         - base.docker
         - base.dotfiles
