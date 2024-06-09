@@ -44,6 +44,13 @@ proxmox_cloud_imgs:
     state: "present"
     # List of proxmox nodes to download the cloud image to
     proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
+  # yamllint disable-line rule:line-length
+  - url: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+    template_name: "ubuntu-24.04-server-cloudimg"
+    id: 9001
+    state: "present"
+    # List of proxmox nodes to download the cloud image to
+    proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
 
 # Proxmox Permissions and ACLs
 proxmox_groups:
