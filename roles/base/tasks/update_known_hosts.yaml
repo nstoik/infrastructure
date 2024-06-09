@@ -67,7 +67,7 @@
     - name: Remove comment and hostname from the known_hosts_ansible file
       ansible.builtin.replace:
         path: "{{ known_hosts_ansible_file }}"
-        regexp: "^# {{ base_comment }}(?:^(?!#).*\n)*"
+        regexp: "^# {{ base_comment }}\n.*\n(?:^(?!#).*\n)*"
         replace: ""
       when: base_state == 'absent'
       delegate_to: localhost
