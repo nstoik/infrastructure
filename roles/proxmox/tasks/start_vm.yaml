@@ -79,6 +79,8 @@
       register: cloud_init_status
       retries: 10
       delay: 20
-      until: cloud_init_status.rc == 0
+      # 0 = success, 1 = crash, 2 = recoverable error
+      until: cloud_init_status.rc in [0, 2]
+      failed_when: cloud_init_status.rc not in [0, 2]
       delegate_to: "{{ proxmox_ip }}"
       changed_when: false
