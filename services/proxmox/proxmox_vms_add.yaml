@@ -85,3 +85,14 @@
       become: true
       tags:
         - base.geerlingguy.security
+
+    # Run the fileserver role
+    - name: Import fileserver role
+      ansible.builtin.import_role:
+        name: fileserver
+      when:
+        hostvars[inventory_hostname].fileserver_install_samba is defined and
+        hostvars[inventory_hostname].fileserver_install_samba is true
+      tags:
+        - fileserver
+        - fileserver.samba

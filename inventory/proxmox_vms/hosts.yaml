@@ -49,3 +49,10 @@ all:
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 8
             memory: 4096
+            passthrough_disks:
+              - scsi: "scsi1"
+                device: "/dev/disk/by-id/ata-ST12000NM0127_ZJV0P7MQ"
+                backup: 0
+              - scsi: "scsi2"
+                device: "/dev/disk/by-id/ata-ST12000NM0127_ZJV0PGT8"
+                backup: 0
