@@ -89,3 +89,17 @@
       when: proxmox_vm.ipconfig0 is defined
       become: true
       changed_when: false
+
+    # Set passthrough disks
+    - name: Set passthrough disks
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm.id }}
+          --{{ item_disk.scsi }}
+          {{ item_disk.device }},backup={{ item_disk.backup }}
+      loop: "{{ proxmox_vm.passthrough_disks }}"
+      loop_control:
+        loop_var: item_disk
+      when: proxmox_vm.passthrough_disks is defined
+      become: true
+      changed_when: false
