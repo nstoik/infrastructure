@@ -1,0 +1,19 @@
+---
+# Host variables for docker-testing.home.stechsolutions.ca host
+
+# other variables are set in group_vars/proxmox_nodes.yaml
+
+fileserver_setup: true
+fileserver_install_nfs_client: true
+
+fileserver_nfs_mounts:
+  - path: "/mnt/nfs/movies"
+    server: fileserver-testing.home.stechsolutions.ca
+    nfs_export: "/home/nfs/movies"
+    options: defaults 0 0
+    state: mounted
+  - path: "/mnt/nfs/tv"
+    server: fileserver-testing.home.stechsolutions.ca
+    nfs_export: "/home/nfs/tv"
+    options: defaults 0 0
+    state: mounted

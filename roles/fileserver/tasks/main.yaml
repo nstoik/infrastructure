@@ -1,0 +1,22 @@
+---
+# main tasks file for the fileserver role
+#
+# inputs:
+#   - fileserver_install_nfs_server: boolean
+
+# Setup the NFS server
+- name: Setup the NFS server
+  ansible.builtin.include_tasks: setup_nfs_server.yaml
+  when: fileserver_install_nfs_server is true
+  tags:
+    - fileserver
+    - fileserver.nfs-server
+
+# Setup the NFS client
+- name: Setup the NFS client
+  ansible.builtin.include_tasks: setup_nfs_client.yaml
+  when: fileserver_install_nfs_client is true
+  tags:
+    - fileserver
+    - fileserver.nfs-client
+

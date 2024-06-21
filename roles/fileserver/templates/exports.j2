@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+
+{% for export in nfs_exports %}
+{{ export.path }} \
+{% for machine in export.machines %}
+    {{machine.name}}({{machine.options}}){% if not loop.last %} \{% endif %}
+
+{% endfor %}
+{% endfor %}

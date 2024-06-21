@@ -1,0 +1,28 @@
+---
+# tasks to setup nfs client on a host.
+
+# block for nfs client tasks
+- name: Block for nfs client tasks
+  tags:
+    - fileserver
+    - fileserver.nfs
+  block:
+    # install nfs client
+    - name: Install nfs client
+      ansible.builtin.apt:
+        pkg:
+          - nfs-common
+        state: present
+      become: true
+
+    # Mount the NFS shares
+    - name: Mount the NFS shares
+      ansible.posix.mount:
+        src: "{{ item.server }}:{{ item.nfs_export }}"
+        path: "{{ item.path }}"
+        opts: "{{ item.options | default(omit) }}"
+        state: "{{ item.state }}"
+        fstype: nfs
+      loop: "{{ fileserver_nfs_mounts }}"
+      when: fileserver_nfs_mounts is defined
+      become: true

@@ -1,0 +1,19 @@
+---
+# Host variables for fileserver-testing.home.stechsolutions.ca
+
+# other variables are set in group_vars/proxmox_nodes.yaml
+
+fileserver_setup: true
+fileserver_install_nfs_server: true
+fileserver_setup_mergerfs: true
+
+fileserver_nfs_exports:
+  - path: "/home/nfs/movies"
+    machines:
+      - name: 10.10.5.25  # docker-testing
+        options: rw,sync,no_subtree_check,no_root_squash
+  - path: "/home/nfs/tv"
+    machines:
+      - name: 10.10.5.25  # docker-testing
+        options: rw,sync,no_subtree_check,no_root_squash
+
