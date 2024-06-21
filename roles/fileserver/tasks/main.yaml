@@ -2,7 +2,27 @@
 # main tasks file for the fileserver role
 #
 # inputs:
+#   - fileserver_setup_mergerfs: boolean
 #   - fileserver_install_nfs_server: boolean
+#   - fileserver_install_nfs_client: boolean
+
+# Setup mergerfs
+- name: Block for mergerfs tasks
+  tags:
+    - fileserver
+    - fileserver.mergerfs
+    - fileserver.ext4
+  when: fileserver_setup_mergerfs is true
+  block:
+    # Setup required disks with ext4 filesystem
+    - name: Setup required disks with ext4 filesystem
+      ansible.builtin.include_tasks: setup_ext4.yaml
+      vars:
+        fileserver_ext4_disks: "{{ fileserver_mergerfs_disks }}"
+
+    # Setup mergerfs
+    - name: Setup mergerfs
+      ansible.builtin.include_tasks: setup_mergerfs.yaml
 
 # Setup the NFS server
 - name: Setup the NFS server
@@ -19,4 +39,3 @@
   tags:
     - fileserver
     - fileserver.nfs-client
-
