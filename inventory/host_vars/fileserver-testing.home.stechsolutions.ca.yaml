@@ -46,5 +46,18 @@ fileserver_mergerfs:
   filesystem_type: fuse.mergerfs
   # yamllint disable rule:line-length
   options: "defaults,use_ino,allow_other,dropcacheonclose=true,category.create=mfs,minfreespace=25G,fsname=mergerfs"
-  # yamllint enable rule:line-length
   state: mounted
+  mergerfs_tools:
+    - name: mergerfs.ctl
+      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.ctl
+    - name: mergerfs.fsck
+      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.fsck
+    - name: mergerfs.dup
+      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.dup
+    - name: mergerfs.dedup
+      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.dedup
+    - name: mergerfs.balance
+      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.balance
+    - name: mergerfs.consolidate
+      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.consolidate
+      # yamllint enable rule:line-length

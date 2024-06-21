@@ -11,10 +11,11 @@
     - fileserver.mergerfs
   block:
     # Install mergerfs
-    - name: Install mergerfs
+    - name: Install mergerfs and dependencies
       ansible.builtin.apt:
         pkg:
           - mergerfs
+          - rsync
         state: present
       become: true
 
@@ -38,4 +39,13 @@
         fstype: "{{ fileserver_mergerfs.filesystem_type }}"
         opts: "{{ fileserver_mergerfs.options }}"
         state: "{{ fileserver_mergerfs.state }}"
+      become: true
+
+    # Download mergerfs-tools
+    - name: Download mergerfs-tools
+      ansible.builtin.get_url:
+        url: "{{ item.url }}"
+        dest: /usr/local/bin/{{ item.name }}
+        mode: '0755'
+      loop: "{{ fileserver_mergerfs.mergerfs_tools }}"
       become: true
