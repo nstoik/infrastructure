@@ -5,6 +5,7 @@
 
 fileserver_setup: true
 fileserver_setup_mergerfs: true
+fileserver_setup_snapraid: true
 fileserver_install_nfs_server: true
 
 
@@ -16,6 +17,7 @@ fileserver_mergerfs_disks:
     options: defaults,errors=remount-ro
     state: mounted
     disk_type: data
+    snapraid_label: d1
   - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi4
     partition_label: 10-GB-VD-1
     mount_point: /mnt/disks/disk2
@@ -23,6 +25,7 @@ fileserver_mergerfs_disks:
     options: defaults,errors=remount-ro
     state: mounted
     disk_type: data
+    snapraid_label: d2
   - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi5
     partition_label: 12-GB-VD-0
     mount_point: /mnt/disks/parity1
@@ -30,6 +33,7 @@ fileserver_mergerfs_disks:
     options: defaults,errors=remount-ro
     state: mounted
     disk_type: parity
+    snapraid_label: parity
 
 fileserver_mergerfs:
   src: /mnt/disks/disk*
@@ -51,7 +55,11 @@ fileserver_mergerfs:
       url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.balance
     - name: mergerfs.consolidate
       url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.consolidate
-      # yamllint enable rule:line-length
+
+fileserver_snapraid:
+  url: https://github.com/amadvance/snapraid/releases/download/v12.3/snapraid-12.3.tar.gz
+  # yamllint enable rule:line-length
+  version: 12.3
 
 fileserver_nfs_exports:
   - path: "/home/nfs/movies"
