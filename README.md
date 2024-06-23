@@ -105,6 +105,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.services - Configure systemd services (started and enabled)
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
     - base.user - Configure the default user
+    - base.postfix - Configure postfix
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider

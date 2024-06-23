@@ -71,12 +71,14 @@
         base_additional_services: "{{ hostvars[inventory_hostname].proxmox_vm_additional_services }}"
         base_install_docker: "{{ hostvars[inventory_hostname].install_docker }}"
         base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
+        base_postfix: "{{ hostvars[inventory_hostname].postfix }}"
       tags:
         - base
         - base.apt
         - base.docker
         - base.dotfiles
         - base.known_hosts
+        - base.postfix
 
     # Run the geerlingguy.security role
     - name: Import geerlingguy.security role
