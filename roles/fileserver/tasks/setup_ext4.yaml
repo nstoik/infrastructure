@@ -48,6 +48,8 @@
   become: true
 
 # Set the filesystem label of the partition
+# Labels can be seen from the command line with
+# sudo lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL
 - name: Set the filesystem label
   ansible.builtin.command: >
     e2label "/dev/disk/by-id/{{ item.item.name }}-part1"

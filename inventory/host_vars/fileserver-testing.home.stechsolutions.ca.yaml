@@ -1,7 +1,8 @@
 ---
 # Host variables for fileserver-testing.home.stechsolutions.ca
 
-# other variables are set in group_vars/proxmox_nodes.yaml
+# other variables are set in group_vars/proxmox_nodes.yaml and
+# proxmox_vms/hosts.yaml
 
 fileserver_setup: true
 fileserver_setup_mergerfs: true

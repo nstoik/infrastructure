@@ -73,6 +73,7 @@ The playbooks directory contains the different playbooks that can be run.
 
 The playbooks are:
 - [site.yaml](site.yaml) - The main playbook for the whole infrastructure
+- [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
 - [pihole.yaml](playbooks/pihole.yaml) - Configure pihole server
 
 ## Roles

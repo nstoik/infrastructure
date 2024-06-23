@@ -24,8 +24,8 @@
     - name: Setup mergerfs
       ansible.builtin.include_tasks: setup_mergerfs.yaml
 
-# Setup SnapRAID and SnapRAID runner
-- name: Setup SnapRAID and SnapRAID runner
+# Setup SnapRAID and SnapRAID aio
+- name: Setup SnapRAID and SnapRAID aio
   tags:
     - fileserver
     - fileserver.snapraid
