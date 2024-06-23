@@ -20,6 +20,13 @@
     - proxmox.vm
     - proxmox.vm.create
 
+# Set the 'proxmox_vm_status' variable if previous task was skipped
+- name: Set the 'proxmox_vm_status' variable if previous task was skipped
+  ansible.builtin.set_fact:
+    proxmox_vm_status:
+      stdout: "N/A"
+  when: proxmox_vm_status.skipped | default('false') | bool
+
 # Start the VM
 - name: Start the VM
   when:
@@ -45,17 +52,35 @@
       ansible.builtin.wait_for:
         host: "{{ proxmox_ip }}"
         port: 22
-        delay: 10
-        timeout: 300
-      become: true
+      delegate_to: localhost
       changed_when: false
+
+    # Update the known_hosts file
+    - name: Update the known_hosts file for {{ known_hosts_item }}
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ known_hosts_item }}"
+        base_state: "{{ proxmox_vm.state }}"
+        base_comment: "Proxmox VM: {{ proxmox_vm.name }}"
+      loop:
+        - "{{ proxmox_ip }}"
+        - "{{ proxmox_vm.name }}"
+        - "{{ proxmox_vm.name_fqdn }}"
+      loop_control:
+        loop_var: known_hosts_item
+      tags:
+        - base.known_hosts
 
     # Wait for cloud-init to finish
     - name: Wait for cloud-init to finish
-      ansible.builtin.wait_for:
-        host: "{{ proxmox_ip }}"
-        path: /var/lib/cloud/instance/boot-finished
-        delay: 10
-        timeout: 600
-      become: true
+      ansible.builtin.command: cloud-init status --wait
+      register: cloud_init_status
+      retries: 10
+      delay: 20
+      # 0 = success, 1 = crash, 2 = recoverable error
+      until: cloud_init_status.rc in [0, 2]
+      failed_when: cloud_init_status.rc not in [0, 2]
+      delegate_to: "{{ proxmox_ip }}"
       changed_when: false

@@ -1,0 +1,23 @@
+---
+# Playbook to remove Proxmox VMs that have
+# the state of 'absent'
+
+# Run the proxmox role
+- name: Run the proxmox role
+  hosts: proxmox_nodes
+  vars_files:
+    - ../../vault/vault.yaml
+
+  tasks:
+    # Run the proxmox role to delete the VMs
+    - name: Run the proxmox role to delete the VMs
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: delete_vm
+      vars:
+        proxmox_vm: "{{ hostvars[item].proxmox_vm }}"
+      loop: "{{ groups['proxmox_vms'] }}"
+      tags:
+        - proxmox
+        - proxmox.vm
+        - proxmox.vm.delete

@@ -1,5 +1,6 @@
 ---
 # tasks for digitalocean block storage formatting.
+# TODO: refactor this to use the role fileserver/tasks/setup_ext4.yaml instead
 
 # Block for digitalocean block storage formatting
 - name: Format block storage block

@@ -73,6 +73,7 @@ The playbooks directory contains the different playbooks that can be run.
 
 The playbooks are:
 - [site.yaml](site.yaml) - The main playbook for the whole infrastructure
+- [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
 - [pihole.yaml](playbooks/pihole.yaml) - Configure pihole server
 
 ## Roles
@@ -105,6 +106,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.services - Configure systemd services (started and enabled)
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
     - base.user - Configure the default user
+    - base.postfix - Configure postfix
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider

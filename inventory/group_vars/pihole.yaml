@@ -27,6 +27,8 @@ pihole_dns_entries:
     ip: 10.10.5.11
   - domain: "docker-testing.home.stechsolutions.ca"
     ip: 10.10.5.25
+  - domain: "fileserver-testing.home.stechsolutions.ca"
+    ip: 10.10.5.26
   - domain: "prometheus.home.stechsolutions.ca"
     ip: 10.10.5.76
   - domain: "fileserver.home.stechsolutions.ca"
@@ -45,6 +47,13 @@ pihole_dns_entries:
 # CNAME entries to add to Pi-hole
 # add_hostname: true will add the hostname as a CNAME entry
 #               as well as the domain.
+# example:
+#   domain: "downloader.home.stechsolutions.ca"
+#   target: "docker.home.stechsolutions.ca"
+#   add_hostname: true
+# This will add the following entries to Pi-hole:
+#   downloader.home.stechsolutions.ca -> docker.home.stechsolutions.ca
+#   downloader -> docker.home.stechsolutions.ca
 pihole_cname_entries:
   - domain: "downloader.home.stechsolutions.ca"
     target: "docker.home.stechsolutions.ca"

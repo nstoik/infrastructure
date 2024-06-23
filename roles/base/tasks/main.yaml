@@ -10,6 +10,7 @@
 #   - base_install_docker: boolean to install docker
 #   - base_dotfiles: dictionary of dotfiles configuration
 #   - base_user_run_setup: boolean to setup a user
+#   - base_postfix: dictionary of postfix configuration
 
 
 # Update and upgrade apt packages
@@ -90,6 +91,14 @@
   tags:
     - base
     - base.services
+
+# setup postfix when the flag is set
+- name: Setup postfix
+  ansible.builtin.include_tasks: setup_postfix.yaml
+  when: base_postfix['install'] is true
+  tags:
+    - base
+    - base.postfix
 
 # flush all handlers
 - name: Flush handlers

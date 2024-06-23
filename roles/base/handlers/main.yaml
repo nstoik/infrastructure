@@ -7,3 +7,10 @@
     name: docker
     state: restarted
   become: true
+
+# Restart postfix
+- name: Restart postfix
+  ansible.builtin.service:
+    name: postfix
+    state: restarted
+  become: true

@@ -1,0 +1,9 @@
+---
+# handlers file for fileserver
+
+# apply nfs exports
+- name: Apply nfs exports
+  ansible.builtin.command: exportfs -ra
+  register: exportfs_result
+  become: true
+  changed_when: exportfs_result.rc == 0

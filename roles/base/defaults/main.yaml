@@ -54,3 +54,10 @@ base_docker_daemon_options:
   data-root: '{{ base_docker_data_dir }}'
   log-opts:
     max-size: "10m"
+
+# variables for postfix
+base_postfix:
+  install: false
+  relayhost: ""
+  relayhost_username: ""
+  relayhost_password: ""

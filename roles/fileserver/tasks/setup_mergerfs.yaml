@@ -1,0 +1,51 @@
+---
+# Tasks to setup mergerfs filesystem
+#
+# inputs:
+#   - fileserver_mergerfs_disks: disks to use for mergerfs
+
+# block for mergerfs tasks
+- name: Block for mergerfs tasks
+  tags:
+    - fileserver
+    - fileserver.mergerfs
+  block:
+    # Install mergerfs
+    - name: Install mergerfs and dependencies
+      ansible.builtin.apt:
+        pkg:
+          - mergerfs
+          - rsync
+        state: present
+      become: true
+
+    # Mount the mergerfs disks
+    - name: Mount the mergerfs disks
+      ansible.posix.mount:
+        src: "/dev/disk/by-id/{{ item.name }}-part1"
+        path: "{{ item.mount_point }}"
+        opts: "{{ item.options | default(omit) }}"
+        state: "{{ item.state }}"
+        fstype: "{{ item.filesystem_type }}"
+      loop: "{{ fileserver_mergerfs_disks }}"
+      when: fileserver_mergerfs_disks is defined
+      become: true
+
+    # Mount the mergerfs filesystem
+    - name: Mount the mergerfs filesystem
+      ansible.posix.mount:
+        src: "{{ fileserver_mergerfs.src }}"
+        path: "{{ fileserver_mergerfs.mount_point }}"
+        fstype: "{{ fileserver_mergerfs.filesystem_type }}"
+        opts: "{{ fileserver_mergerfs.options }}"
+        state: "{{ fileserver_mergerfs.state }}"
+      become: true
+
+    # Download mergerfs-tools
+    - name: Download mergerfs-tools
+      ansible.builtin.get_url:
+        url: "{{ item.url }}"
+        dest: /usr/local/bin/{{ item.name }}
+        mode: '0755'
+      loop: "{{ fileserver_mergerfs.mergerfs_tools }}"
+      become: true
