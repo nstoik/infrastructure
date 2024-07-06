@@ -43,6 +43,10 @@
     - fileserver
     - fileserver.nfs-server
 
+# Flush handlers to apply NFS exports
+- name: Flush handlers to apply NFS exports
+  ansible.builtin.meta: flush_handlers
+
 # Setup the NFS client
 - name: Setup the NFS client
   ansible.builtin.include_tasks: setup_nfs_client.yaml

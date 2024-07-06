@@ -18,14 +18,12 @@
     # create some sample directories for nfs exports to test
     - name: Create directories for nfs exports
       ansible.builtin.file:
-        path: "{{ item }}"
+        path: "{{ item.path }}"
         state: directory
         mode: '0755'
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
-      loop:
-        - "/home/nfs/tv"
-        - "/home/nfs/movies"
+      loop: "{{ fileserver_nfs_exports }}"
       become: true
 
     # configure exports file

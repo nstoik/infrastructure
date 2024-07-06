@@ -41,7 +41,7 @@ fileserver_mergerfs:
   mount_point: /mnt/storage
   filesystem_type: fuse.mergerfs
   # yamllint disable rule:line-length
-  options: "defaults,use_ino,allow_other,dropcacheonclose=true,category.create=mfs,minfreespace=25G,fsname=mergerfs"
+  options: "defaults,use_ino,allow_other,dropcacheonclose=true,category.create=mfs,minfreespace=4G,fsname=mergerfs"
   state: mounted
   mergerfs_tools:
     - name: mergerfs.ctl
@@ -63,11 +63,23 @@ fileserver_snapraid:
   version: 12.3
 
 fileserver_nfs_exports:
-  - path: "/home/nfs/movies"
+  - path: /mnt/storage/movies
     machines:
       - name: 10.10.5.25  # docker-testing
-        options: rw,sync,no_subtree_check,no_root_squash
-  - path: "/home/nfs/tv"
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=10
+  - path: /mnt/storage/tv
     machines:
       - name: 10.10.5.25  # docker-testing
-        options: rw,sync,no_subtree_check,no_root_squash
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=11
+  - path: /mnt/storage/music
+    machines:
+      - name: 10.10.5.25  # docker-testing
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=12
+  - path: /mnt/storage/audiobooks
+    machines:
+      - name: 10.10.5.25  # docker-testing
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=13
+  - path: /mnt/storage/sports
+    machines:
+      - name: 10.10.5.25  # docker-testing
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=14
