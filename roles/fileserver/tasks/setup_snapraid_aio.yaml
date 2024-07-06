@@ -1,0 +1,68 @@
+---
+# Tasks to setup SnapRAID aio
+
+# block for SnapRAID aio tasks
+- name: Block for SnapRAID aio tasks
+  tags:
+    - fileserver
+    - fileserver.snapraid
+  block:
+    # Download SnapRAID aio script
+    - name: Download SnapRAID aio script
+      ansible.builtin.get_url:
+        url: "{{ fileserver_snapraid_aio.url }}"
+        dest: "/tmp/snapraid-aio{{ fileserver_snapraid_aio.version }}.tar.gz"
+        mode: '0755'
+      become: true
+
+    # Extract SnapRAID aio
+    - name: Extract SnapRAID aio
+      ansible.builtin.unarchive:
+        src: "/tmp/snapraid-aio{{ fileserver_snapraid_aio.version }}.tar.gz"
+        dest: /tmp
+        remote_src: true
+      become: true
+
+    # Copy SnapRAID aio script
+    - name: Copy SnapRAID aio script
+      ansible.builtin.copy:
+        src: "/tmp/snapraid-aio-script-{{ fileserver_snapraid_aio.version }}/"
+        dest: /usr/local/bin/snapraid-aio-script/
+        remote_src: true
+        mode: '0755'
+      become: true
+
+    # Set SnapRAID aio script permissions
+    - name: Set SnapRAID aio script permissions
+      ansible.builtin.file:
+        path: /usr/local/bin/snapraid-aio-script/snapraid-aio-script.sh
+        mode: '+x'
+      become: true
+
+    # Setup SnapRAID aio configuration
+    - name: Setup SnapRAID aio configuration
+      ansible.builtin.template:
+        src: snapraid-aio-script-config.sh.j2
+        dest: /usr/local/bin/snapraid-aio-script/script-config.sh
+        mode: '0644'
+      become: true
+
+    # Create the log directory
+    - name: Create the log directory
+      ansible.builtin.file:
+        path: "{{ fileserver_snapraid_aio.log_dir }}"
+        state: directory
+        mode: '+w'
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+
+    # Set SnapRAID aio to run on a schedule
+    - name: Set SnapRAID aio to run on a schedule
+      ansible.builtin.cron:
+        name: "SnapRAID aio script"
+        job: "/usr/local/bin/snapraid-aio-script/snapraid-aio-script.sh"
+        minute: "0"
+        hour: "3"
+        user: "root"
+        state: present
+      become: true

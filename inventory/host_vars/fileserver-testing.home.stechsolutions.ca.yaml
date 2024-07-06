@@ -59,8 +59,19 @@ fileserver_mergerfs:
 
 fileserver_snapraid:
   url: https://github.com/amadvance/snapraid/releases/download/v12.3/snapraid-12.3.tar.gz
-  # yamllint enable rule:line-length
   version: 12.3
+
+fileserver_snapraid_aio:
+  url: https://github.com/auanasgheps/snapraid-aio-script/archive/refs/tags/v3.3.2.tar.gz
+  # yamllint enable rule:line-length
+  version: 3.3.2
+  enable_hc: true
+  sync_warn_threshold: 5
+  scrub_percent: 5
+  scrub_age: 20
+  scrub_delayed_run: 3
+  log_retention_days: 30
+  log_dir: /home/{{ default_user }}/snapraid-logs
 
 fileserver_nfs_exports:
   - path: /mnt/storage/movies
