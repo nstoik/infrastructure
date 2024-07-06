@@ -44,7 +44,7 @@
     - name: Resize the disk
       ansible.builtin.command:
         cmd: >
-          qm resize {{ proxmox_vm.id }}
+          qm disk resize {{ proxmox_vm.id }}
           scsi0
           {{ proxmox_vm.disk_size }}
       become: true
@@ -87,6 +87,16 @@
           qm set {{ proxmox_vm.id }}
           --ipconfig0 {{ proxmox_vm.ipconfig0 }}
       when: proxmox_vm.ipconfig0 is defined
+      become: true
+      changed_when: false
+
+    # Set start on boot
+    - name: Set start on boot
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm.id }}
+          --onboot {{ proxmox_vm.start_onboot }}
+      when: proxmox_vm.start_onboot is defined
       become: true
       changed_when: false
 
