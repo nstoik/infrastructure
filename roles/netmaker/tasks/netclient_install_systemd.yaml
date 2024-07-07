@@ -30,7 +30,7 @@
         dest: "/sbin/netclient"
         owner: "root"
         group: "root"
-        mode: 0755
+        mode: "0755"
         # Force the download even if the file already exists so it can be
         # updated if needed.
         force: true
@@ -51,7 +51,7 @@
       ansible.builtin.copy:
         src: "netclient.service"
         dest: "/etc/systemd/system/netclient.service"
-        mode: 0666
+        mode: "0666"
       become: true
       notify: Restart Netclient systemd
 

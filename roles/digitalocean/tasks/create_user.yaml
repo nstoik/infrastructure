@@ -32,7 +32,7 @@
         state: directory
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
-        mode: 0700
+        mode: "0700"
 
     # copy the authorized_keys file from the root user to the new user
     - name: Copy the authorized_keys file from the root user to the new user

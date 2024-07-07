@@ -27,14 +27,14 @@
         state: directory
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
-        mode: 0766
+        mode: "0766"
 
     # Copy the Netmaker MQ configuration file
     - name: Copy the Netmaker MQ configuration file
       ansible.builtin.copy:
         src: "mosquitto.conf"
         dest: "{{ netmaker_directory }}/mosquitto.conf"
-        mode: 0666
+        mode: "0666"
       notify: Restart Netmaker
 
     # Copy the Netmaker wait script
@@ -42,7 +42,7 @@
       ansible.builtin.copy:
         src: "wait.sh"
         dest: "{{ netmaker_directory }}/wait.sh"
-        mode: 0777
+        mode: "0777"
       notify: Restart Netmaker
 
     # Write the Caddyfile
@@ -50,7 +50,7 @@
       ansible.builtin.template:
         src: Caddyfile.j2
         dest: "{{ netmaker_directory }}/Caddyfile"
-        mode: 0666
+        mode: "0666"
       when: not netmaker_pro
       notify: Restart Netmaker
 
@@ -59,7 +59,7 @@
       ansible.builtin.template:
         src: Caddyfile_pro.j2
         dest: "{{ netmaker_directory }}/Caddyfile"
-        mode: 0666
+        mode: "0666"
       when: netmaker_pro
       notify: Restart Netmaker
 
@@ -68,7 +68,7 @@
       ansible.builtin.template:
         src: netmaker.env.j2
         dest: "{{ netmaker_directory }}/netmaker.env"
-        mode: 0666
+        mode: "0666"
       notify: Restart Netmaker
 
     # Write the  docker-compose file
@@ -76,7 +76,7 @@
       ansible.builtin.template:
         src: docker-compose.yml.j2
         dest: "{{ netmaker_directory }}/docker-compose.yml"
-        mode: 0666
+        mode: "0666"
       notify: Restart Netmaker
 
     # Write the enterprise docker-compose file
@@ -84,7 +84,7 @@
       ansible.builtin.template:
         src: docker-compose-pro.yml.j2
         dest: "{{ netmaker_directory }}/docker-compose.override.yml"
-        mode: 0666
+        mode: "0666"
       when: netmaker_pro
       notify: Restart Netmaker
 

@@ -26,7 +26,7 @@
         state: directory
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
-        mode: 0700
+        mode: "0700"
 
     # clone the dotfiles repository
     - name: Clone the dotfiles repository  # noqa: latest
@@ -49,7 +49,7 @@
     - name: Make the install scripts executable
       ansible.builtin.file:
         path: "{{ base_dotfiles_dir }}/{{ item }}"
-        mode: 0700
+        mode: "0700"
       loop:
         - install-profile
         - install-standalone
