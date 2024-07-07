@@ -7,6 +7,15 @@
     - fileserver
     - fileserver.snapraid
   block:
+    # Install SnapRAID dependencies
+    - name: Install SnapRAID dependencies
+      ansible.builtin.apt:
+        pkg:
+          - gcc
+          - make
+        state: present
+      become: true
+
     # Download SnapRAID
     - name: Download SnapRAID
       ansible.builtin.get_url:

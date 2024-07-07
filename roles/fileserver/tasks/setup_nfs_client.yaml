@@ -15,6 +15,11 @@
         state: present
       become: true
 
+    # Delay for 5 seconds
+    - name: Delay for 5 seconds
+      ansible.builtin.wait_for:
+        timeout: 5
+
     # Mount the NFS shares
     - name: Mount the NFS shares
       ansible.posix.mount:
