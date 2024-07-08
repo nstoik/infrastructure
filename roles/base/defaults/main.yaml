@@ -28,6 +28,7 @@ base_user_run_setup: true
 
 base_user_default: "{{ default_user }}"
 base_user_password_default: "{{ secret_user_password }}"
+base_user_password_prehashed: "{{ secret_user_password_prehashed }}"
 
 # whether to add ssh keys to the user or not
 # defaults to false because generally the ssh keys

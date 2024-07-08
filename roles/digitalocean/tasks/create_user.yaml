@@ -18,7 +18,7 @@
       remote_user: root
       ansible.builtin.user:
         name: "{{ default_user }}"
-        password: "{{ secret_user_password | password_hash('sha512') }}"
+        password: "{{ secret_user_password_prehashed }}"
         update_password: on_create
         groups: sudo
         state: present
