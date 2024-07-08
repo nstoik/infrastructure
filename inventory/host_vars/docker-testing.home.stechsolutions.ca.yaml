@@ -5,7 +5,7 @@
 # proxmox_vms/hosts.yaml
 
 fileserver_setup: true
-fileserver_install_nfs_client: true
+fileserver_setup_nfs_client: true
 
 fileserver_nfs_mounts:
   - path: /mnt/nfs/movies

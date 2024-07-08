@@ -3,8 +3,9 @@
 #
 # inputs:
 #   - fileserver_setup_mergerfs: boolean
-#   - fileserver_install_nfs_server: boolean
-#   - fileserver_install_nfs_client: boolean
+#   - fileserver_setup_nfs_server: boolean
+#   - fileserver_setup_nfs_client: boolean
+#   - fileserver_setup_snapraid: boolean
 
 # Setup mergerfs
 - name: Block for mergerfs tasks

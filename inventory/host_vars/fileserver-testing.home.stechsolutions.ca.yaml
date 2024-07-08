@@ -7,7 +7,7 @@
 fileserver_setup: true
 fileserver_setup_mergerfs: true
 fileserver_setup_snapraid: true
-fileserver_install_nfs_server: true
+fileserver_setup_nfs_server: true
 
 
 fileserver_mergerfs_disks:
