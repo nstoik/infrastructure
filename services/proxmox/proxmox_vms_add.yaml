@@ -60,6 +60,22 @@
     - base
 
   tasks:
+    # Run the fileserver role
+    - name: Import fileserver role
+      ansible.builtin.import_role:
+        name: fileserver
+      when:
+        hostvars[inventory_hostname].fileserver_setup is defined and
+        hostvars[inventory_hostname].fileserver_setup is true
+      tags:
+        - fileserver
+        - fileserver.nfs-server
+        - fileserver.nfs-client
+        - fileserver.mergerfs
+        - fileserver.ext4
+        - fileserver.snapraid
+        - fileserver.zfs
+
     # Run the base role
     - name: Import base role
       ansible.builtin.import_role:
@@ -87,19 +103,3 @@
       become: true
       tags:
         - base.geerlingguy.security
-
-    # Run the fileserver role
-    - name: Import fileserver role
-      ansible.builtin.import_role:
-        name: fileserver
-      when:
-        hostvars[inventory_hostname].fileserver_setup is defined and
-        hostvars[inventory_hostname].fileserver_setup is true
-      tags:
-        - fileserver
-        - fileserver.nfs-server
-        - fileserver.nfs-client
-        - fileserver.mergerfs
-        - fileserver.ext4
-        - fileserver.snapraid
-        - fileserver.zfs
