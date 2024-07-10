@@ -30,6 +30,11 @@ all:
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 2
             memory: 4096
+            virtual_disks:
+              - comment: 10 GB test disk for docker volumes
+                scsi: "scsi1"
+                device: "data:10,discard=on"
+                backup: 0
         fileserver-testing.home.stechsolutions.ca:
           install_docker: false
           dotfiles:

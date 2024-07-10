@@ -7,6 +7,32 @@
 #   - fileserver_setup_nfs_client: boolean
 #   - fileserver_setup_snapraid: boolean
 #   - fileserver_setup_zfs: boolean
+#   - fileserver_setup_attached_disks: boolean
+
+# Setup attached disks with ext4 filesystem
+- name: Setup attached disks with ext4 filesystem
+  tags:
+    - fileserver
+    - fileserver.ext4
+  when: fileserver_setup_attached_disks is true
+  block:
+    # Setup required disks with ext4 filesystem
+    - name: Setup required disks with ext4 filesystem
+      ansible.builtin.include_tasks: setup_ext4.yaml
+      vars:
+        fileserver_ext4_disks: "{{ fileserver_attached_disks }}"
+
+    # Mount the attached disks
+    - name: Mount the attached disks
+      ansible.posix.mount:
+        src: "/dev/disk/by-id/{{ item.name }}-part1"
+        path: "{{ item.mount_point }}"
+        opts: "{{ item.options | default(omit) }}"
+        state: "{{ item.state }}"
+        fstype: "{{ item.filesystem_type }}"
+      loop: "{{ fileserver_attached_disks }}"
+      when: fileserver_attached_disks is defined
+      become: true
 
 # Setup mergerfs
 - name: Block for mergerfs tasks
