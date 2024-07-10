@@ -40,7 +40,7 @@
           ansible.builtin.copy:
             content: "{{ secret_ssh_keys[0].key }}"
             dest: /tmp/public-ssh-key.pub
-            mode: 0600
+            mode: "0600"
 
         # Create the VM
         - name: Create the VM
@@ -71,7 +71,7 @@
         - name: Set VM hardware options
           ansible.builtin.shell:
             cmd: |
-              qm set {{ proxmox_vm_id }} --scsi0 {{ proxmox_import_storage }}:vm-{{ proxmox_vm_id }}-disk-0
+              qm set {{ proxmox_vm_id }} --scsi0 {{ proxmox_import_storage }}:vm-{{ proxmox_vm_id }}-disk-0,discard=on
               qm set {{ proxmox_vm_id }} --ide2 {{ proxmox_import_storage }}:cloudinit
               qm set {{ proxmox_vm_id }} --boot c --bootdisk scsi0
               qm set {{ proxmox_vm_id }} --serial0 socket --vga serial0

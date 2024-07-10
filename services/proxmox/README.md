@@ -26,13 +26,13 @@ The following steps are required to setup a new proxmox host manually.
 Run the following command to configure the proxmox hosts. By default this will run against all the hosts in the `proxmox_nodes` group.
 
 ```bash
-    ansible-playbook services/proxmox/pve_hosts
+    ansible-playbook services/proxmox/pve_hosts.yaml
 ```
 
 To setup the cloud images and templates on the proxmox hosts, run the following command.
 
 ```bash
-    ansible-playbook services/proxmox/setup
+    ansible-playbook services/proxmox/pve_hosts_templates.yaml
 ```
 
 ## Prerequisites
@@ -40,4 +40,19 @@ To use password authentication to the proxmox server, `sshpass` needs to be inst
 
 ```bash
 sudo apt install sshpass
+```
+
+## Proxmox VMs Ansible Configuration
+VM configurations is specified in the `inventory\proxmox_vms\` folder and the individual files for each VM in the `inventory\host_vars\` folder.
+
+Run the following command to create and configure the VMs on the proxmox hosts. This runs against all the hosts in the `proxmox_nodes` group.
+
+```bash
+    ansible-playbook services/proxmox/proxmox_vms_add.yaml
+```
+
+To remove the VMs on the proxmox hosts, set the `state` variable for the VM to absent and run the following command.
+
+```bash
+    ansible-playbook services/proxmox/proxmox_vms_remove.yaml
 ```

@@ -1,0 +1,46 @@
+---
+# Tasks to setup ZFS pool on a host.
+
+# block for ZFS pool tasks
+- name: Block for ZFS pool tasks
+  tags:
+    - fileserver
+    - fileserver.zfs
+  block:
+
+    # Install ZFS utilities
+    - name: Install ZFS utilities
+      ansible.builtin.apt:
+        pkg:
+          - zfsutils-linux
+          - sanoid
+        state: present
+      become: true
+
+    # Check if the ZFS pool exists
+    - name: Check if the ZFS pool exists
+      ansible.builtin.command: >
+        zpool list -H "{{ fileserver_zfs_pool.pool_name }}"
+      register: zpool_check
+      changed_when: false
+      failed_when: false
+
+    # Create the ZFS pool if it does not exist
+    - name: Create the ZFS pool if it does not exist
+      ansible.builtin.command: >
+        zpool create
+        -m "{{ fileserver_zfs_pool.mount_point }}"
+        -o ashift=12
+        -O compression=lz4
+        -O xattr=sa
+        -O normalization=formD
+        "{{ fileserver_zfs_pool.pool_name }}"
+        {% for vdev in fileserver_zfs_pool.vdevs %}
+        "{{ vdev.raid_type }}"
+        {% for disk in vdev.disks %}
+        "{{ disk.name }}"
+        {% endfor %}
+        {% endfor %}
+      when: zpool_check.rc != 0
+      changed_when: zpool_check.rc != 0
+      become: true

@@ -1,0 +1,40 @@
+---
+# tasks to setup nfs server on a host.
+
+# block for nfs server tasks
+- name: Block for nfs server tasks
+  tags:
+    - fileserver
+    - fileserver.nfs
+  block:
+    # install nfs server
+    - name: Install nfs server
+      ansible.builtin.apt:
+        pkg:
+          - nfs-kernel-server
+        state: present
+      become: true
+
+    # create some sample directories for nfs exports to test
+    - name: Create directories for nfs exports
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+      loop: "{{ fileserver_nfs_exports }}"
+      become: true
+
+    # configure exports file
+    - name: Configure exports file
+      ansible.builtin.template:
+        src: exports.j2
+        dest: /etc/exports
+        owner: root
+        group: root
+        mode: '0644'
+      vars:
+        nfs_exports: "{{ fileserver_nfs_exports }}"
+      become: true
+      notify: Apply nfs exports

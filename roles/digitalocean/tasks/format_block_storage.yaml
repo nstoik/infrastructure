@@ -1,5 +1,6 @@
 ---
 # tasks for digitalocean block storage formatting.
+# TODO: refactor this to use the role fileserver/tasks/setup_ext4.yaml instead
 
 # Block for digitalocean block storage formatting
 - name: Format block storage block
@@ -40,7 +41,7 @@
       ansible.builtin.file:
         path: "{{ netmaker_droplet.volume.mount_point }}"
         state: directory
-        mode: 0766
+        mode: "0766"
         owner: "{{ netmaker_droplet.volume.owner }}"
         group: "{{ netmaker_droplet.volume.group }}"
       become: "{{ netmaker_droplet.volume.become_to_mount }}"

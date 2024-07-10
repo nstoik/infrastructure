@@ -1,0 +1,62 @@
+---
+# Tasks to properly format the disk with ext4 filesystem
+#
+# inputs:
+#   - fileserver_ext4_disk: disk to format with ext4 filesystem
+
+# Check if the partition exists
+- name: Check if the partition exists
+  ansible.builtin.stat:
+    path: "/dev/disk/by-id/{{ item.name }}-part1"
+  register: partition_check
+  loop: "{{ fileserver_ext4_disks }}"
+
+# Create the partition if it does not exist
+- name: Create the partition if it does not exist
+  community.general.parted:
+    device: "/dev/disk/by-id/{{ item.item.name }}"
+    number: 1
+    state: present
+    part_end: 100%
+    part_start: 0%
+    part_type: primary
+  when: not item.stat.exists
+  loop: "{{ partition_check.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  become: true
+
+# Check if the partition is already formatted
+- name: Check if the partition is already formatted
+  ansible.builtin.command: >
+    blkid -s TYPE -o value "/dev/disk/by-id/{{ item.name }}-part1"
+  register: blkid_result
+  loop: "{{ fileserver_ext4_disks }}"
+  changed_when: false
+  become: true
+
+# Format the partition as ext4 if it is not already formatted
+- name: Format the partition as ext4 if it is not already formatted
+  community.general.system.filesystem:
+    fstype: ext4
+    dev: "/dev/disk/by-id/{{ item.item.name }}-part1"
+  when: item.stdout == ""
+  loop: "{{ blkid_result.results }}"
+  loop_control:
+    label: "{{ item.item.name }}-part1"
+  changed_when: item.stdout == ""
+  become: true
+
+# Set the filesystem label of the partition
+# Labels can be seen from the command line with
+# sudo lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL
+- name: Set the filesystem label
+  ansible.builtin.command: >
+    e2label "/dev/disk/by-id/{{ item.item.name }}-part1"
+    "{{ item.item.partition_label }}"
+  when: item.stdout == ""
+  loop: "{{ blkid_result.results }}"
+  loop_control:
+    label: "{{ item.item.name }}-part1"
+  changed_when: item.stdout == ""
+  become: true

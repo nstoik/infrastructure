@@ -31,7 +31,7 @@
       ansible.builtin.template:
         src: docker-compose-netclient.yml.j2
         dest: "{{ netclient_directory }}/docker-compose.yml"
-        mode: 0666
+        mode: "0666"
       vars:
         netmaker_hostname: "{{ netmaker_nc_hostname }}"
       notify:

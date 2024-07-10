@@ -1,0 +1,66 @@
+---
+# tasks to setup postfix onto a host.
+#
+# inputs:
+#  - base_postfix: dictionary of postfix configuration
+#    - install: boolean to install postfix
+#    - relayhost: string of the relayhost to use
+#    - relayhost_username: string of the relayhost username
+#    - relayhost_password: string of the relayhost password
+
+# block for postfix tasks
+- name: Block for base postfix tasks
+  tags:
+    - base
+    - base.postfix
+  block:
+    # Set debcionf main mailer type
+    - name: Set debconf main mailer type
+      ansible.builtin.debconf:
+        name: "postfix"
+        question: "postfix/main_mailer_type"
+        value: "Satellite system"
+        vtype: "select"
+      become: true
+
+    # Set debconf mailname
+    - name: Set debconf mailname
+      ansible.builtin.debconf:
+        name: "postfix"
+        question: "postfix/mailname"
+        value: "{{ ansible_fqdn }}"
+        vtype: "string"
+      become: true
+
+    # Set debconf relayhost
+    - name: Set debconf relayhost
+      ansible.builtin.debconf:
+        name: "postfix"
+        question: "postfix/relayhost"
+        value: "{{ base_postfix.relayhost }}"
+        vtype: "string"
+      become: true
+
+    # Install required packages
+    - name: Install required packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - postfix
+        - mailutils
+      become: true
+
+    # Add the following to the postfix main.cf at the end
+    - name: Add the following to the postfix main.cf
+      ansible.builtin.lineinfile:
+        path: /etc/postfix/main.cf
+        line: "{{ item }}"
+      loop:
+        - "smtp_sasl_auth_enable = yes"
+        # yamllint disable rule:line-length
+        - "smtp_sasl_password_maps = static:{{ base_postfix.relayhost_username }}:{{ base_postfix.relayhost_password }}"
+        # yamllint enable rule:line-length
+        - "smtp_sasl_security_options = noanonymous"
+      notify: Restart postfix
+      become: true

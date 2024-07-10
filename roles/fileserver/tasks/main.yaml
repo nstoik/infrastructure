@@ -1,0 +1,103 @@
+---
+# main tasks file for the fileserver role
+#
+# inputs:
+#   - fileserver_setup_mergerfs: boolean
+#   - fileserver_setup_nfs_server: boolean
+#   - fileserver_setup_nfs_client: boolean
+#   - fileserver_setup_snapraid: boolean
+#   - fileserver_setup_zfs: boolean
+#   - fileserver_setup_attached_disks: boolean
+
+# Setup attached disks with ext4 filesystem
+- name: Setup attached disks with ext4 filesystem
+  tags:
+    - fileserver
+    - fileserver.ext4
+  when: fileserver_setup_attached_disks is true
+  block:
+    # Setup required disks with ext4 filesystem
+    - name: Setup required disks with ext4 filesystem
+      ansible.builtin.include_tasks: setup_ext4.yaml
+      vars:
+        fileserver_ext4_disks: "{{ fileserver_attached_disks }}"
+
+    # Mount the attached disks
+    - name: Mount the attached disks
+      ansible.posix.mount:
+        src: "/dev/disk/by-id/{{ item.name }}-part1"
+        path: "{{ item.mount_point }}"
+        opts: "{{ item.options | default(omit) }}"
+        state: "{{ item.state }}"
+        fstype: "{{ item.filesystem_type }}"
+      loop: "{{ fileserver_attached_disks }}"
+      when: fileserver_attached_disks is defined
+      become: true
+
+# Setup mergerfs
+- name: Block for mergerfs tasks
+  tags:
+    - fileserver
+    - fileserver.mergerfs
+    - fileserver.ext4
+  when: fileserver_setup_mergerfs is true
+  block:
+    # Setup required disks with ext4 filesystem
+    - name: Setup required disks with ext4 filesystem
+      ansible.builtin.include_tasks: setup_ext4.yaml
+      vars:
+        fileserver_ext4_disks: "{{ fileserver_mergerfs_disks }}"
+
+    # Setup mergerfs
+    - name: Setup mergerfs
+      ansible.builtin.include_tasks: setup_mergerfs.yaml
+
+# Setup SnapRAID and SnapRAID aio
+- name: Setup SnapRAID and SnapRAID aio
+  tags:
+    - fileserver
+    - fileserver.snapraid
+  when: fileserver_setup_snapraid is true
+  block:
+    # Setup SnapRAID
+    - name: Setup SnapRAID
+      ansible.builtin.include_tasks: setup_snapraid.yaml
+
+    # Setup SnapRAID aio
+    - name: Setup SnapRAID aio
+      ansible.builtin.include_tasks: setup_snapraid_aio.yaml
+
+# Setup ZFS
+- name: Setup ZFS pool
+  tags:
+    - fileserver
+    - fileserver.zfs
+  when: fileserver_setup_zfs is true
+  block:
+    # Setup ZFS pool
+    - name: Setup ZFS pool
+      ansible.builtin.include_tasks: setup_zfs_pool.yaml
+
+    # Setup ZFS datasets
+    - name: Setup ZFS datasets
+      ansible.builtin.include_tasks: setup_zfs_datasets.yaml
+
+# Setup the NFS server
+- name: Setup the NFS server
+  ansible.builtin.include_tasks: setup_nfs_server.yaml
+  when: fileserver_setup_nfs_server is true
+  tags:
+    - fileserver
+    - fileserver.nfs-server
+
+# Flush handlers to apply NFS exports
+- name: Flush handlers to apply NFS exports
+  ansible.builtin.meta: flush_handlers
+
+# Setup the NFS client
+- name: Setup the NFS client
+  ansible.builtin.include_tasks: setup_nfs_client.yaml
+  when: fileserver_setup_nfs_client is true
+  tags:
+    - fileserver
+    - fileserver.nfs-client

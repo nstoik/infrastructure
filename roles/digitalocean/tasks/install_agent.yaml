@@ -6,7 +6,7 @@
   ansible.builtin.get_url:
     url: https://repos.insights.digitalocean.com/install.sh
     dest: "/home/{{ default_user }}/install_do_agent.sh"
-    mode: 0755
+    mode: "0755"
   notify: Install digitalocean agent
   tags:
     - digitalocean

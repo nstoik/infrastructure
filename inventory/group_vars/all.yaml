@@ -1,6 +1,6 @@
 ---
 # group_vars for the all group
-# ansible_become_password: "{{ secret_become_pass }}"
+ansible_become_password: "{{ secret_become_pass }}"
 
 # Default user values
 default_user: "nelson"

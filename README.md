@@ -73,6 +73,7 @@ The playbooks directory contains the different playbooks that can be run.
 
 The playbooks are:
 - [site.yaml](site.yaml) - The main playbook for the whole infrastructure
+- [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
 - [pihole.yaml](playbooks/pihole.yaml) - Configure pihole server
 
 ## Roles
@@ -82,6 +83,7 @@ The roles are:
 - [base](roles/base/)
 - [cloudflare](roles/cloudflare/)
 - [digitalocean](roles/digitalocean/)
+- [fileserver](roles/fileserver/)
 - [netmaker](roles/netmaker/)
 - [pihole](roles/pihole/)
 - [proxmox](roles/proxmox/)
@@ -105,6 +107,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.services - Configure systemd services (started and enabled)
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
     - base.user - Configure the default user
+    - base.postfix - Configure postfix
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider
@@ -113,6 +116,13 @@ The following ansible tags are available to specify specific tasks to run.
     - digitalocean.droplet - Configure a DigitalOcean droplet
     - digitalocean.storage - Work with DigitalOcean block storage and volumes
     - digitalocean.user - Configure a user on a DigitalOcean droplet
+- fileserver - Configure a fileserver
+    - fileserver.ext4 - Configure an ext4 filesystem
+    - fileserver.mergerfs - Configure mergerfs
+    - fileserver.snapraid - Configure snapraid on top of mergerfs
+    - fileserver.zfs - Configure zfs
+    - fileseerver.nfs-server - Configure an NFS server
+    - fileserver.nfs-client - Configure an NFS client
 - netmaker - Configure a Netmaker server
     - netmaker.full_setup - Complete the full setup of a Netmaker server
     - netmaker.nmctl - Install the nmctl command line tool
@@ -139,14 +149,26 @@ The following ansible tags are available to specify specific tasks to run.
 # Inventory
 Inventory files are as follows in the [inventory](inventory) directory:
 
+- [group_vars](inventory/group_vars/) - Inventory for each group
+    - [all.yaml](inventory/group_vars/all.yaml) - Inventory for all hosts
+    - [do_ansible.yaml](inventory/group_vars/do_ansible.yaml) - Inventory for the DigitalOcean VMs that are managed by Ansible
+    - [do_netmaker.yaml](inventory/group_vars/do_netmaker.yaml) - Inventory for the DigitalOcean VMs that are used for Netmaker
+    - [netclients_manual.yaml](inventory/group_vars/netclients_manual.yaml) - Inventory for the netclients that have to be installed manually
+    - [netclients.yaml](inventory/group_vars/netclients.yaml) - Inventory for the netclients
+    - [pihole.yaml](inventory/group_vars/pihole.yaml) - Inventory for the pihole servers
+    - [proxmox_nodes.yaml](inventory/group_vars/proxmox_nodes.yaml) - Inventory for the proxmox nodes
+    - [proxmox_vms.yaml](inventory/group_vars/proxmox_vms.yaml) - Inventory for the proxmox vms
+- [host_vars](inventory/host_vars/) - Inventory for each host
 - [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
     - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms
 - [do_hosts.yaml](inventory/do_hosts.yaml) - Dynamic inventory for DigitalOcean
     - Inventory from DigtalOcean is dynamic using a plugin.
     - When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
-- [netclients.yaml](inventory/netclients.yaml) - Inventory for the netclients
+- [inventory.yaml](inventory/inventory.yaml) - Main inventory file
+    - This file includes the main inventory hosts and groups
 - [netclients_manual.yaml](inventory/netclients_manual.yaml) - Inventory for the netclients
     - This inventory is used for hosts that have to first have netclient installed manually so they can be reached by Ansible.
+- [netclients.yaml](inventory/netclients.yaml) - Inventory for the netclients
 
 
 # Testing and linting

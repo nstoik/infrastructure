@@ -48,32 +48,6 @@
         proxmox_ip: "{{ hostvars[item].network.ip }}"
       loop: "{{ groups['proxmox_vms'] }}"
 
-    # Update the known_hosts file for IP
-    - name: Update the known_hosts file for IP
-      ansible.builtin.include_role:
-        name: base
-        tasks_from: update_known_hosts
-      vars:
-        base_hostname: "{{ hostvars[item].network.ip }}"
-        base_state: present
-        base_comment: "Proxmox VM: {{ item }}"
-      loop: "{{ groups['proxmox_vms'] }}"
-      tags:
-        - base.known_hosts
-
-    # Update the known_hosts file for hostname
-    - name: Update the known_hosts file for hostname
-      ansible.builtin.include_role:
-        name: base
-        tasks_from: update_known_hosts
-      vars:
-        base_hostname: "{{ item }}"
-        base_state: present
-        base_comment: "Proxmox VM: {{ item }}"
-      loop: "{{ groups['proxmox_vms'] }}"
-      tags:
-        - base.known_hosts
-
 # Run the first time setup to configure the VMs
 - name: Run the first time setup to configure VMs
   hosts: proxmox_vms
@@ -86,22 +60,41 @@
     - base
 
   tasks:
+    # Run the fileserver role
+    - name: Import fileserver role
+      ansible.builtin.import_role:
+        name: fileserver
+      when:
+        hostvars[inventory_hostname].fileserver_setup is defined and
+        hostvars[inventory_hostname].fileserver_setup is true
+      tags:
+        - fileserver
+        - fileserver.nfs-server
+        - fileserver.nfs-client
+        - fileserver.mergerfs
+        - fileserver.ext4
+        - fileserver.snapraid
+        - fileserver.zfs
+
     # Run the base role
     - name: Import base role
       ansible.builtin.import_role:
         name: base
       vars:
         # yamllint disable-line rule:line-length
-        base_additional_packages: "{{ hostvars[item].proxmox_vm_additonal_packages }}"
+        base_additional_packages: "{{ hostvars[inventory_hostname].proxmox_vm_additonal_packages }}"
         # yamllint disable-line rule:line-length
-        base_additional_services: "{{ hostvars[item].proxmox_vm_additional_services }}"
-        base_install_docker: "{{ hostvars[item].install_docker }}"
-        base_dotfiles: "{{ hostvars[item].dotfiles }}"
+        base_additional_services: "{{ hostvars[inventory_hostname].proxmox_vm_additional_services }}"
+        base_install_docker: "{{ hostvars[inventory_hostname].install_docker }}"
+        base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
+        base_postfix: "{{ hostvars[inventory_hostname].postfix }}"
       tags:
+        - base
         - base.apt
         - base.docker
         - base.dotfiles
         - base.known_hosts
+        - base.postfix
 
     # Run the geerlingguy.security role
     - name: Import geerlingguy.security role

@@ -30,7 +30,7 @@
       ansible.builtin.file:
         path: "/etc/docker"
         state: directory
-        mode: 0766
+        mode: "0766"
         group: root
         owner: root
       become: true
@@ -42,7 +42,7 @@
       ansible.builtin.file:
         path: "{{ base_docker_data_dir }}"
         state: directory
-        mode: 0766
+        mode: "0766"
       become: true
 
     # create the docker daemon config file
@@ -50,7 +50,7 @@
       ansible.builtin.copy:
         content: "{{ base_docker_daemon_options | to_nice_json }}"
         dest: /etc/docker/daemon.json
-        mode: 0644
+        mode: "0644"
       when: base_docker_daemon_options.keys() | length > 0
       become: true
       notify: Restart docker

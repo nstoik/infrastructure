@@ -5,7 +5,7 @@
 
 # inputs:
 #   - base_user_default: default user to setup
-#   - base_user_password_default: default user password
+#   - base_user_password_prehashed: default user password prehashed
 #   - base_user_additional_groups: additional user groups to be added to
 #     base_user_add_ssh_keys: boolean to add ssh keys to the user
 
@@ -20,7 +20,7 @@
     - name: Create the default user
       ansible.builtin.user:
         name: "{{ base_user_default }}"
-        password: "{{ base_user_password_default | password_hash('sha512') }}"
+        password: "{{ base_user_password_prehashed }}"
         update_password: on_create
         createhome: true
         home: "/home/{{ base_user_default }}"

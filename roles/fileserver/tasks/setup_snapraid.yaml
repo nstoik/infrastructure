@@ -1,0 +1,63 @@
+---
+# Tasks to setup SnapRAID
+
+# block for SnapRAID tasks
+- name: Block for SnapRAID tasks
+  tags:
+    - fileserver
+    - fileserver.snapraid
+  block:
+    # Install SnapRAID dependencies
+    - name: Install SnapRAID dependencies
+      ansible.builtin.apt:
+        pkg:
+          - gcc
+          - make
+        state: present
+      become: true
+
+    # Download SnapRAID
+    - name: Download SnapRAID
+      ansible.builtin.get_url:
+        url: "{{ fileserver_snapraid.url }}"
+        dest: "/tmp/snapraid{{ fileserver_snapraid.version }}.tar.gz"
+        mode: '0755'
+      register: snapraid_download
+      become: true
+
+    # Extract SnapRAID
+    - name: Extract SnapRAID
+      ansible.builtin.unarchive:
+        src: "/tmp/snapraid{{ fileserver_snapraid.version }}.tar.gz"
+        dest: /tmp
+        remote_src: true
+      when: snapraid_download.changed  # noqa: no-handler
+      become: true
+
+    # Compile and install SnapRAID
+    - name: Compile and install SnapRAID
+      ansible.builtin.shell: |
+        cd /tmp/snapraid-{{ fileserver_snapraid.version }}
+        ./configure
+        make
+        make check
+        make install
+      when: snapraid_download.changed  # noqa: no-handler
+      changed_when: snapraid_download.changed
+      become: true
+
+    # Setup SnapRAID configuration
+    - name: Setup SnapRAID configuration
+      ansible.builtin.template:
+        src: snapraid.conf.j2
+        dest: /etc/snapraid.conf
+        mode: '0644'
+      vars:
+        snapraid_disks: "{{ fileserver_mergerfs_disks }}"
+      become: true
+
+    # Manually run SnapRAID sync
+    - name: Manually run SnapRAID sync
+      ansible.builtin.command: snapraid sync
+      become: true
+      changed_when: true

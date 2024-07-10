@@ -18,7 +18,7 @@
       remote_user: root
       ansible.builtin.user:
         name: "{{ default_user }}"
-        password: "{{ secret_user_password | password_hash('sha512') }}"
+        password: "{{ secret_user_password_prehashed }}"
         update_password: on_create
         groups: sudo
         state: present
@@ -32,7 +32,7 @@
         state: directory
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
-        mode: 0700
+        mode: "0700"
 
     # copy the authorized_keys file from the root user to the new user
     - name: Copy the authorized_keys file from the root user to the new user

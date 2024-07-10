@@ -5,6 +5,7 @@ ansible_become_password: "{{ secret_become_pass }}"
 # The proxmox nodes need sudo to be installed
 proxmox_node_additional_packages:
   - "sudo"
+  - "lshw"
 
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
@@ -41,6 +42,13 @@ proxmox_cloud_imgs:
   - url: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
     template_name: "ubuntu-22.04-server-cloudimg"
     id: 9000
+    state: "present"
+    # List of proxmox nodes to download the cloud image to
+    proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
+  # yamllint disable-line rule:line-length
+  - url: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+    template_name: "ubuntu-24.04-server-cloudimg"
+    id: 9001
     state: "present"
     # List of proxmox nodes to download the cloud image to
     proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
