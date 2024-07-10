@@ -1,0 +1,48 @@
+---
+# Tasks to setup ZFS datasets on a host.
+
+# block for ZFS datasets tasks
+- name: Block for ZFS datasets tasks
+  tags:
+    - fileserver
+    - fileserver.zfs
+  block:
+
+    # Check if the ZFS dataset exists
+    - name: Check if the ZFS dataset exists
+      ansible.builtin.command: >
+        zfs list -H "{{ item.name }}"
+      register: zfs_dataset_check
+      loop: "{{ fileserver_zfs_pool.datasets }}"
+      changed_when: false
+      failed_when: false
+
+    # Create the ZFS dataset if it does not exist
+    - name: Create the ZFS dataset if it does not exist
+      ansible.builtin.command: >
+        zfs create
+        -o mountpoint="{{ item.item.mount_point }}"
+        -o compression=lz4
+        -o xattr=sa
+        -o normalization=formD
+        -o quota="{{ item.item.quota }}"
+        "{{ item.item.name }}"
+      loop: "{{ zfs_dataset_check.results }}"
+      loop_control:
+        label: "{{ item.item.name }}"
+      when: item.rc != 0
+      changed_when: item.rc != 0
+      become: true
+
+    # Set the dataset mount permissions
+    - name: Set the dataset mount permissions
+      ansible.builtin.file:
+        path: "{{ item.mount_point }}"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        state: directory
+        mode: "0755"
+      loop: "{{ fileserver_zfs_pool.datasets }}"
+      loop_control:
+        label: "{{ item.name }}"
+      become: true

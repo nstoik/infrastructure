@@ -97,4 +97,9 @@
         hostvars[inventory_hostname].fileserver_setup is true
       tags:
         - fileserver
-        - fileserver.nfs
+        - fileserver.nfs-server
+        - fileserver.nfs-client
+        - fileserver.mergerfs
+        - fileserver.ext4
+        - fileserver.snapraid
+        - fileserver.zfs

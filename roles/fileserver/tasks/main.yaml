@@ -6,6 +6,7 @@
 #   - fileserver_setup_nfs_server: boolean
 #   - fileserver_setup_nfs_client: boolean
 #   - fileserver_setup_snapraid: boolean
+#   - fileserver_setup_zfs: boolean
 
 # Setup mergerfs
 - name: Block for mergerfs tasks
@@ -39,6 +40,21 @@
     # Setup SnapRAID aio
     - name: Setup SnapRAID aio
       ansible.builtin.include_tasks: setup_snapraid_aio.yaml
+
+# Setup ZFS
+- name: Setup ZFS pool
+  tags:
+    - fileserver
+    - fileserver.zfs
+  when: fileserver_setup_zfs is true
+  block:
+    # Setup ZFS pool
+    - name: Setup ZFS pool
+      ansible.builtin.include_tasks: setup_zfs_pool.yaml
+
+    # Setup ZFS datasets
+    - name: Setup ZFS datasets
+      ansible.builtin.include_tasks: setup_zfs_datasets.yaml
 
 # Setup the NFS server
 - name: Setup the NFS server
