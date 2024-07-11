@@ -70,6 +70,16 @@
       become: true
       changed_when: false
 
+    # Set memory balloon configuration
+    - name: Set memory balloon configuration
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm.id }}
+          --balloon {{ proxmox_vm.balloon }}
+      when: proxmox_vm.balloon is defined
+      become: true
+      changed_when: false
+
     # Set network configuration
     - name: Set network configuration
       ansible.builtin.command:
