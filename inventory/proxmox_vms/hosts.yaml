@@ -35,7 +35,7 @@ all:
                 scsi: "scsi1"
                 device: "data:10,discard=on"
                 backup: 0
-        fileserver-testing.home.stechsolutions.ca:
+        storage.home.stechsolutions.ca:
           install_docker: false
           dotfiles:
             install: true
@@ -43,8 +43,8 @@ all:
           postfix:
             install: true
             relayhost: smtp.mailgun.org:587
-            relayhost_username: fileserver@mg.stechsolutions.ca
-            relayhost_password: "{{ secret_postfix_mg_fileserver_password }}"
+            relayhost_username: storage@mg.stechsolutions.ca
+            relayhost_password: "{{ secret_postfix_mg_storage_password }}"
           network:
             ip: "10.10.5.26"
             gateway: "10.10.5.1"

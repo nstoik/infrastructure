@@ -27,7 +27,7 @@ pihole_dns_entries:
     ip: 10.10.5.11
   - domain: "docker-testing.home.stechsolutions.ca"
     ip: 10.10.5.25
-  - domain: "fileserver-testing.home.stechsolutions.ca"
+  - domain: "storage.home.stechsolutions.ca"
     ip: 10.10.5.26
   - domain: "prometheus.home.stechsolutions.ca"
     ip: 10.10.5.76
