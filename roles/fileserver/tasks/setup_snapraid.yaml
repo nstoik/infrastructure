@@ -60,4 +60,5 @@
     - name: Manually run SnapRAID sync
       ansible.builtin.command: snapraid sync
       become: true
-      changed_when: true
+      when: snapraid_download.changed  # noqa: no-handler
+      changed_when: snapraid_download.changed
