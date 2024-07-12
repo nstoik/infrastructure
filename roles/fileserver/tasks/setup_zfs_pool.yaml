@@ -17,6 +17,15 @@
         state: present
       become: true
 
+    # Try to import the ZFS pool
+    - name: Try to import the ZFS pool
+      ansible.builtin.command: >
+        zpool import -f "{{ fileserver_zfs_pool.pool_name }}"
+      register: zpool_import
+      changed_when: false
+      failed_when: false
+      become: true
+
     # Check if the ZFS pool exists
     - name: Check if the ZFS pool exists
       ansible.builtin.command: >

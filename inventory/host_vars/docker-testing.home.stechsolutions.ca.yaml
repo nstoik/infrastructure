@@ -19,12 +19,12 @@ fileserver_attached_disks:
 
 fileserver_nfs_mounts:
   - path: /mnt/nfs/movies
-    server: fileserver-testing.home.stechsolutions.ca
+    server: storage.home.stechsolutions.ca
     nfs_export: /mnt/storage/movies
     options: defaults
     state: mounted
   - path: /mnt/nfs/tv
-    server: fileserver-testing.home.stechsolutions.ca
+    server: storage.home.stechsolutions.ca
     nfs_export: /mnt/storage/tv
     options: defaults
     state: mounted
