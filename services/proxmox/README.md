@@ -51,7 +51,13 @@ Run the following command to create and configure the VMs on the proxmox hosts. 
     ansible-playbook services/proxmox/proxmox_vms_add.yaml
 ```
 
-To remove the VMs on the proxmox hosts, set the `state` variable for the VM to absent and run the following command.
+To only add a specific VM, run the following command. The `pihole` and `proxmox_nodes` groups need to be specified to properly run the configuraiton. The `VM Name` should be replaced with the ansible name of the VM.
+
+```bash
+    ansible-playbook services/proxmox/proxmox_vms_add.yaml --limit=pihole:proxmox_nodes:[VM Name]:
+```
+
+To remove the VMs on the proxmox hosts, set the `state` variable for the VM to absent and run the following command. This is run against all the hosts in the `proxmox_nodes` group so the VM state (`absent`) needs to be properly set in the appropriate `inventory\proxmox_vms\` file.
 
 ```bash
     ansible-playbook services/proxmox/proxmox_vms_remove.yaml
