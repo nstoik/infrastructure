@@ -124,7 +124,7 @@ fileserver_nfs_exports:
         options: rw,sync,no_subtree_check,no_root_squash,fsid=16
       - name: 10.10.5.1/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=17
-  - path: /mnt/storage/sports
+  - path: /mnt/storage/sport
     machines:
       - name: 10.10.1.1/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=18

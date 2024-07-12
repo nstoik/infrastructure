@@ -28,7 +28,7 @@
 # They can be in the disks used for data, parity or boot,
 # but each file must be in a different disk
 # Format: "content FILE"
-content /var/snapraid.content
+content /var/.snapraid.content
 {% for disk in snapraid_disks %}
 {% if disk.disk_type == 'data' %}
 content {{ disk.mount_point }}/.snapraid.content
