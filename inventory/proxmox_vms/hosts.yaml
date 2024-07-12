@@ -30,6 +30,7 @@ all:
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 2
             memory: 4096
+            balloon: 2048
             virtual_disks:
               - comment: 10 GB test disk for docker volumes
                 scsi: "scsi1"
@@ -56,11 +57,12 @@ all:
             name: "{{ inventory_hostname.split('.')[0] }}"
             name_fqdn: "{{ inventory_hostname }}"
             start_onboot: true
-            disk_size: 10G
+            disk_size: 20G
             net0: virtio,bridge=vmbr0
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 8
-            memory: 4096
+            memory: 16384
+            balloon: 4096
             passthrough_disks:
               - comment: 12TB disk for ZFS
                 scsi: "scsi1"
@@ -70,16 +72,19 @@ all:
                 scsi: "scsi2"
                 device: "/dev/disk/by-id/ata-ST12000NM0127_ZJV0PGT8"
                 backup: 0
-            virtual_disks:
-              - comment: 10 GB test disk for mergerfs
+              - comment: 8 TB disk for mergerfs
                 scsi: "scsi3"
-                device: "data:10,discard=on"
+                device: "/dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHUNJ6Z"
                 backup: 0
-              - comment: 10 GB test disk for mergerfs
+              - comment: 8 TB disk for mergerfs
                 scsi: "scsi4"
-                device: "data:10,discard=on"
+                device: "/dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHVSEBZ"
                 backup: 0
-              - comment: 12 GB test disk for mergerfs
+              - comment: 12 TB disk for snapraid parity
                 scsi: "scsi5"
-                device: "data:12,discard=on"
+                device: "/dev/disk/by-id/ata-WDC_WD120EMFZ-11A6JA0_Z2KZU83T"
+                backup: 0
+              - comment: 12 TB disk for mergerfs
+                scsi: "scsi6"
+                device: "/dev/disk/by-id/ata-WDC_WD120EFBX-68B0EN0_5QJRU8GB"
                 backup: 0
