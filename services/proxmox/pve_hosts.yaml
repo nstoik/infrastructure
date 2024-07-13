@@ -68,6 +68,7 @@
       tags:
         - base.apt
         - base.user
+        - base.timezone
 
     # Update the proxmox permissions
     - name: Update the proxmox permissions
@@ -122,7 +123,9 @@
           dotbot_skip_ssh_authorized_file: false
       tags:
         - base.apt
-        - base.user
+        - base.docker
+        - base.timezone
+        - base.dotfiles
 
     # Run the geerlingguy.security role
     - name: Import geerlingguy.security role
