@@ -1,0 +1,9 @@
+---
+# Defaults file for docker role.
+
+docker_data_dir: /home/{{ default_user }}/docker
+
+docker_daemon_options:
+  data-root: '{{ docker_data_dir }}'
+  log-opts:
+    max-size: "10m"

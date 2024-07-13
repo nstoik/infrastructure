@@ -47,14 +47,8 @@ base_dotfiles:
 
 # variables for docker
 # whether to install docker or not
+# the rest of the docker setup is specified in the docker role
 base_install_docker: false
-
-base_docker_data_dir: /home/{{ default_user }}/docker
-
-base_docker_daemon_options:
-  data-root: '{{ base_docker_data_dir }}'
-  log-opts:
-    max-size: "10m"
 
 # variables for postfix
 base_postfix:

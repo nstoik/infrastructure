@@ -117,6 +117,7 @@ The following ansible tags are available to specify specific tasks to run.
     - digitalocean.droplet - Configure a DigitalOcean droplet
     - digitalocean.storage - Work with DigitalOcean block storage and volumes
     - digitalocean.user - Configure a user on a DigitalOcean droplet
+- docker - Configure docker
 - fileserver - Configure a fileserver
     - fileserver.ext4 - Configure an ext4 filesystem
     - fileserver.mergerfs - Configure mergerfs

@@ -75,11 +75,15 @@
 
 # install docker when the flag is set
 - name: Install docker
-  ansible.builtin.include_tasks: setup_docker.yaml
+  ansible.builtin.import_role:
+    name: docker
+  vars:
+    docker_install: "{{ base_install_docker }}"
   when: base_install_docker is true
   tags:
     - base
     - base.docker
+    - docker
 
 # setup dotfiles when the flag is set
 - name: Setup dotfiles

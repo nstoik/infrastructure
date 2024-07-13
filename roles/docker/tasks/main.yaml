@@ -1,0 +1,11 @@
+---
+# main task file for docker role
+# inputs:
+#   - docker_install: boolean to install docker
+
+# install docker
+- name: Install docker
+  ansible.builtin.include_tasks: install_docker.yaml
+  when: docker_install is true
+  tags:
+    - docker
