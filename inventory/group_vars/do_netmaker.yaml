@@ -1,6 +1,14 @@
 ---
 # variables for the dynamic inventory group do_netmaker
 
+# variables for digitalocean
+digitalocean_droplet_size: s-1vcpu-1gb
+digitalocean_droplet_region: tor1
+digitalocean_droplet_image: ubuntu-22-04-x64
+
+# timezone is set to UTC for cloud servers
+base_timezone: "UTC"
+
 netmaker_server_additional_packages:
   - jq
   - dnsutils

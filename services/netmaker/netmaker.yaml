@@ -186,6 +186,7 @@
         - base.docker
         - base.dotfiles
         - base.known_hosts
+        - base.timezone
 
     - name: Include main role from netmaker
       ansible.builtin.include_role:

@@ -62,3 +62,6 @@ base_postfix:
   relayhost: ""
   relayhost_username: ""
   relayhost_password: ""
+
+# variables for timezone
+base_timezone: "America/Edmonton"

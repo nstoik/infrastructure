@@ -95,6 +95,7 @@
         - base.dotfiles
         - base.known_hosts
         - base.postfix
+        - base.timezone
 
     # Run the geerlingguy.security role
     - name: Import geerlingguy.security role

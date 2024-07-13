@@ -108,6 +108,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
     - base.user - Configure the default user
     - base.postfix - Configure postfix
+    - base.timezone - Configure the timezone
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider
