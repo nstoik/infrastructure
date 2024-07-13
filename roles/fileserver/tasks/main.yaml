@@ -22,6 +22,18 @@
       vars:
         fileserver_ext4_disks: "{{ fileserver_attached_disks }}"
 
+    # Create the mount points for the attached disks
+    - name: Create the mount points for the attached disks
+      ansible.builtin.file:
+        path: "{{ item.mount_point }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+      loop: "{{ fileserver_attached_disks }}"
+      when: fileserver_attached_disks is defined
+      become: true
+
     # Mount the attached disks
     - name: Mount the attached disks
       ansible.posix.mount:
