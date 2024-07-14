@@ -1,0 +1,13 @@
+---
+# Apply docker compose updates to docker hosts
+
+- name: Apply docker compose updates to docker hosts
+  hosts: docker_hosts
+  vars_files:
+    - ../vault/vault.yaml
+  roles:
+    - role: docker
+  tags:
+    - docker
+    - docker.compose
+    - docker.prune
