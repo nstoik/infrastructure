@@ -74,6 +74,7 @@ The playbooks directory contains the different playbooks that can be run.
 The playbooks are:
 - [site.yaml](site.yaml) - The main playbook for the whole infrastructure
 - [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
+- [docker_compose.yaml](playbooks/docker_compose.yaml) - Run the docker role on the docker hosts.
 - [pihole.yaml](playbooks/pihole.yaml) - Configure pihole server
 
 ## Roles
@@ -83,6 +84,7 @@ The roles are:
 - [base](roles/base/)
 - [cloudflare](roles/cloudflare/)
 - [digitalocean](roles/digitalocean/)
+- [docker](roles/docker/)
 - [fileserver](roles/fileserver/)
 - [netmaker](roles/netmaker/)
 - [pihole](roles/pihole/)
@@ -118,6 +120,8 @@ The following ansible tags are available to specify specific tasks to run.
     - digitalocean.storage - Work with DigitalOcean block storage and volumes
     - digitalocean.user - Configure a user on a DigitalOcean droplet
 - docker - Configure docker
+    - docker.compose - Set up services using docker compose
+    - docker.prune - Prune the docker host of unused images and containers
 - fileserver - Configure a fileserver
     - fileserver.ext4 - Configure an ext4 filesystem
     - fileserver.mergerfs - Configure mergerfs
