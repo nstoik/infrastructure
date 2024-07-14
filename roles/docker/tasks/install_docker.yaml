@@ -11,7 +11,7 @@
       ansible.builtin.apt:
         pkg:
           - docker.io
-          - docker-compose
+          - docker-compose-v2
         state: present
       become: true
 

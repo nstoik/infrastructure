@@ -1,18 +1,18 @@
 ---
 # Handlers for Netmaker
 
-# Restart the Netmaker service using docker-compose
+# Restart the Netmaker service using docker compose
 - name: Restart Netmaker
-  community.docker.docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{ netmaker_directory }}"
     state: present
     restarted: true
     remove_orphans: true
   become: true
 
-# Restart the Netclient service using docker-compose
-- name: Restart Netclient docker-compose
-  community.docker.docker_compose:
+# Restart the Netclient service using docker compose
+- name: Restart Netclient docker compose
+  community.docker.docker_compose_v2:
     project_src: "{{ netclient_directory }}"
     state: present
     restarted: true
