@@ -43,3 +43,12 @@
       when: docker_daemon_options.keys() | length > 0
       become: true
       notify: Restart docker
+
+    # Create the directory for docker compose files
+    - name: Create the directory for docker compose files
+      ansible.builtin.file:
+        path: "{{ docker_compose_dir }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"

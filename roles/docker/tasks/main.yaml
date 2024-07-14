@@ -2,6 +2,7 @@
 # main task file for docker role
 # inputs:
 #   - docker_install: boolean to install docker
+#   - docker_config: boolean to configure docker
 
 # install docker
 - name: Install docker
@@ -9,3 +10,25 @@
   when: docker_install is true
   tags:
     - docker
+
+# run the docker compose tasks
+- name: Run the docker compose tasks
+  ansible.builtin.include_tasks: docker_compose.yaml
+  when: docker_config is true
+  tags:
+    - docker
+    - docker.compose
+
+# prune the docker system
+- name: Prune everything (including non-dangling images)
+  community.docker.docker_prune:
+    containers: true
+    images: true
+    images_filters:
+      dangling: false
+    networks: true
+    volumes: true
+    builder_cache: true
+  tags:
+    - docker
+    - docker.prune

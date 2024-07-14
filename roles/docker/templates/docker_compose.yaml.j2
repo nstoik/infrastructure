@@ -1,0 +1,44 @@
+name: {{ compose.name }}
+
+services:
+{% for container in compose.containers %}
+  {{ container.name }}:
+    image: {{ container.image }}
+{# container_name has to be unique if scale is defined #}
+{% if container.scale is not defined %}
+    container_name: {{ container.name }}
+{% endif %}
+{# set the command if defined #}
+{% if container.command  is defined%}
+    command: {{ container.command }}
+{% endif %}
+{# set the scale if defined #}
+{% if container.scale is defined %}
+    scale: {{ container.scale }}
+{% endif %}
+{# set the volumes if defined #}
+{% if container.volumes is defined %}
+    volumes:
+{% for volume in container.volumes %}
+        - {{ volume }}
+{% endfor %}
+{% endif %}
+{# set the ports if defined #}
+{% if container.ports is defined %}
+    ports:
+{% for port in container.ports %}
+        - "{{ port }}"
+{% endfor %}
+{% endif %}
+{# set the restart policy if defined #}
+{% if container.restart is defined %}
+    restart: {{ container.restart }}
+{% endif %}
+{# set the labels if defined #}
+{% if container.labels is defined %}
+    labels:
+{% for label in container.labels %}
+      - "{{ label }}"
+{% endfor %}
+{% endif %}
+{% endfor %}
