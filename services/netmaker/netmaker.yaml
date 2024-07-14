@@ -178,7 +178,7 @@
         name: base
       vars:
         base_additional_packages: "{{ netmaker_server_additional_packages }}"
-        base_install_docker: "{{ netmaker_server_install_docker }}"
+        base_docker_install: "{{ netmaker_server_docker_install }}"
         base_dotfiles: "{{ netmaker_server_dotfiles }}"
       tags:
         - base

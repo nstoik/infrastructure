@@ -10,7 +10,7 @@ all:
     proxmox_vms:
       hosts:
         docker-testing.home.stechsolutions.ca:
-          install_docker: true
+          docker_install: true
           dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
