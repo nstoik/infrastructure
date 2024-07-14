@@ -30,3 +30,22 @@ fileserver_nfs_mounts:
     nfs_export: /mnt/storage/tv
     options: defaults
     state: mounted
+
+# docker compose
+docker_compose:
+  - name: proxy
+    state: present
+    containers:
+      - name: reverse-proxy
+        image: traefik:v3.0
+        command: --api.insecure=true --providers.docker=true
+        ports:
+          - "80:80"
+          - "8080:8080"
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock"
+        restart: always
+      - name: whoami
+        image: traefik/whoami
+        labels:
+          - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
