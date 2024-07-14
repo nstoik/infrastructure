@@ -1,6 +1,9 @@
 ---
 # Defaults file for docker role.
 
+# Only install docker if explicitly set to true
+docker_install: false
+
 docker_data_dir: /home/{{ default_user }}/docker
 
 docker_daemon_options:

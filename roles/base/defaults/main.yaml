@@ -48,7 +48,7 @@ base_dotfiles:
 # variables for docker
 # whether to install docker or not
 # the rest of the docker setup is specified in the docker role
-base_install_docker: false
+base_docker_install: false
 
 # variables for postfix
 base_postfix:

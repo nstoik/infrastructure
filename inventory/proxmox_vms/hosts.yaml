@@ -10,7 +10,7 @@ all:
     proxmox_vms:
       hosts:
         storage.home.stechsolutions.ca:
-          install_docker: false
+          docker_install: false
           dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
