@@ -37,7 +37,7 @@
 
 # Format the partition as ext4 if it is not already formatted
 - name: Format the partition as ext4 if it is not already formatted
-  community.general.system.filesystem:
+  community.general.filesystem:
     fstype: ext4
     dev: "/dev/disk/by-id/{{ item.item.name }}-part1"
   when: item.stdout == ""
