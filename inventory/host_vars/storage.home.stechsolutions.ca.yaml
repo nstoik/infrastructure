@@ -94,7 +94,7 @@ fileserver_snapraid_aio:
   enable_hc: true
   sync_warn_threshold: 5
   scrub_percent: 5
-  scrub_age: 20
+  scrub_age: 10
   scrub_delayed_run: 3
   log_retention_days: 30
   log_dir: /home/{{ default_user }}/snapraid-logs
