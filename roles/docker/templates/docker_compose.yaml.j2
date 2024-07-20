@@ -12,9 +12,20 @@ services:
 {% if container.command  is defined%}
     command: {{ container.command }}
 {% endif %}
+{# set the network mode if defined #}
+{% if container.network_mode is defined %}
+    network_mode: {{ container.network_mode }}
+{% endif %}
 {# set the scale if defined #}
 {% if container.scale is defined %}
     scale: {{ container.scale }}
+{% endif %}
+{# set the environment variables if defined #}
+{% if container.environment is defined %}
+    environment:
+{% for env in container.environment %}
+        - {{ env }}
+{% endfor %}
 {% endif %}
 {# set the volumes if defined #}
 {% if container.volumes is defined %}
