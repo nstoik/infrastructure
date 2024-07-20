@@ -33,7 +33,15 @@ all:
             memory: 4096
             balloon: 2048
             virtual_disks:
-              - comment: 10 GB test disk for docker volumes
+              - comment: 50 GB test disk for tdarr scratch space
                 scsi: "scsi1"
-                device: "data:10,discard=on"
+                device: "local-thin-pool-ssd1:50,discard=on"
                 backup: 0
+              - comment: 10 GB test disk for docker compose proxy volume
+                scsi: "scsi2"
+                device: "data:10,discard=on"
+                backup: 1
+              - comment: 10 GB test disk for docker compose tdarr volume
+                scsi: "scsi3"
+                device: "data:10,discard=on"
+                backup: 1
