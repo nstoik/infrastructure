@@ -1,12 +1,12 @@
-name: {{ compose.name }}
+name: {{ compose.compose_name }}
 
 services:
 {% for container in compose.containers %}
-  {{ container.name }}:
+  {{ container.container_name }}:
     image: {{ container.image }}
 {# container_name has to be unique if scale is defined #}
 {% if container.scale is not defined %}
-    container_name: {{ container.name }}
+    container_name: {{ container.container_name }}
 {% endif %}
 {# set the command if defined #}
 {% if container.command  is defined%}

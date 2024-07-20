@@ -33,10 +33,10 @@ fileserver_nfs_mounts:
 
 # docker compose
 docker_compose:
-  - name: proxy
+  - compose_name: proxy
     state: present
     containers:
-      - name: reverse-proxy
+      - container_name: reverse-proxy
         image: traefik:v3.0
         command: --api.insecure=true --providers.docker=true
         ports:
@@ -45,7 +45,7 @@ docker_compose:
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
         restart: always
-      - name: whoami
+      - container_name: whoami
         image: traefik/whoami
         labels:
           - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
