@@ -25,6 +25,7 @@
         createhome: true
         home: "/home/{{ base_user_default }}"
         groups: "{{ base_user_groups + (base_user_additional_groups | default([])) }}"  # yamllint disable-line rule:line-length
+        append: true
         state: present
         generate_ssh_key: true
         ssh_key_type: ed25519
