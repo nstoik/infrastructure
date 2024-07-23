@@ -19,7 +19,7 @@
         loop_var: file
         label: "{{ file.name }}"
 
-    # copy the docker compose files
+    # copy the docker configuration files
     - name: Copy the configuration files for docker containers
       ansible.builtin.copy:
         src: "{{ file.src }}"
@@ -29,3 +29,17 @@
       loop_control:
         loop_var: file
         label: "{{ file.name }}"
+      register: docker_configuration_files_copy_result
+      notify: Restart docker container
+
+    # Build a list of docker container names to restart
+    - name: Build a list of docker container names to restart
+      ansible.builtin.set_fact:
+        docker_containers_to_restart: "{{ (docker_containers_to_restart | default([])) + [result.file.container_name] }}"
+      loop: "{{ docker_configuration_files_copy_result.results }}"
+      loop_control:
+        loop_var: result
+        label: "{{ result.file.name }}"
+      when: result.changed is true
+      changed_when: false
+

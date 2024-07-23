@@ -7,3 +7,13 @@
     name: docker
     state: restarted
   become: true
+
+# restart docker container
+- name: Restart docker container
+  community.docker.docker_container:
+    name: "{{ item }}"
+    state: started
+    restart: true
+  loop: "{{ docker_containers_to_restart }}"
+  become: true
+  when: docker_containers_to_restart is defined
