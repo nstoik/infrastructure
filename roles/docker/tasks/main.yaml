@@ -11,6 +11,14 @@
   tags:
     - docker
 
+# copy required docker container configuration files
+- name: Copy required docker container configuration files
+  ansible.builtin.include_tasks: copy_configuration_files.yaml
+  when: docker_config is true
+  tags:
+    - docker
+    - docker.compose
+
 # run the docker compose tasks
 - name: Run the docker compose tasks
   ansible.builtin.include_tasks: docker_compose.yaml
