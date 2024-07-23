@@ -26,7 +26,7 @@ all:
             name: "{{ inventory_hostname.split('.')[0] }}"
             name_fqdn: "{{ inventory_hostname }}"
             start_onboot: true
-            disk_size: 10G
+            disk_size: 20G
             net0: virtio,bridge=vmbr0
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 2
