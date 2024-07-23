@@ -75,7 +75,18 @@ docker_compose:
           - "/var/run/docker.sock:/var/run/docker.sock"
           - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
         restart: always
-      - container_name: whoami
-        image: traefik/whoami
+      - container_name: homepage
+        image: ghcr.io/gethomepage/homepage:v0.9.5
+        environment:
+          - TZ=America/Edmonton
+          - PUID=1000
+          - PGID=1000
+        ports:
+          - 3000:3000
+        volumes:
+          - "/home/{{ default_user }}/docker_mounts/proxy/homepage:/app/config"
         labels:
-          - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
+          - "traefik.enable=true"
+          - "traefik.http.routers.homepage.rule=Host(`homepage.home.stechsolutions.ca`)"
+          - "traefik.http.routers.homepage.entrypoints=websecure"
+          - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
