@@ -1,0 +1,31 @@
+---
+# Copy any required configuration files for the docker containers
+
+# block for copying configuration files
+- name: Copy any required configuration files for the docker containers
+  tags:
+    - docker
+    - docker.compose
+  when: docker_config is true
+  block:
+    # make sure the directory exists
+    - name: Ensure the directory exists
+      ansible.builtin.file:
+        path: "{{ file.dest | dirname }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ docker_configuration_files }}"
+      loop_control:
+        loop_var: file
+        label: "{{ file.name }}"
+
+    # copy the docker compose files
+    - name: Copy the configuration files for docker containers
+      ansible.builtin.copy:
+        src: "{{ file.src }}"
+        dest: "{{ file.dest }}"
+        mode: "{{ file.mode }}"
+      loop: "{{ docker_configuration_files }}"
+      loop_control:
+        loop_var: file
+        label: "{{ file.name }}"

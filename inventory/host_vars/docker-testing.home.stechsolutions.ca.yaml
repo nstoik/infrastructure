@@ -49,19 +49,31 @@ fileserver_nfs_mounts:
     options: defaults
     state: mounted
 
+# docker container configuration files
+docker_configuration_files:
+  - name: traefik.yaml
+    src: traefik.yaml
+    dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
+    mode: '0664'
+
 # docker compose
 docker_compose:
   - compose_name: proxy
     state: present
     containers:
-      - container_name: reverse-proxy
-        image: traefik:v3.0
-        command: --api.insecure=true --providers.docker=true
+      - container_name: traefik
+        image: traefik:v3.1
+        environment:
+          - TZ=America/Edmonton
+          - "CF_API_EMAIL={{ default_user_email }}"
+          - "CF_DNS_API_TOKEN={{ secret_cf_token }}"
         ports:
-          - "80:80"
-          - "8080:8080"
+          - 80:80
+          - 443:443
+          - 8080:8080
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
+          - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
         restart: always
       - container_name: whoami
         image: traefik/whoami
