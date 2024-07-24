@@ -85,7 +85,7 @@
         base_additional_packages: "{{ hostvars[inventory_hostname].proxmox_vm_additonal_packages }}"
         # yamllint disable-line rule:line-length
         base_additional_services: "{{ hostvars[inventory_hostname].proxmox_vm_additional_services }}"
-        base_install_docker: "{{ hostvars[inventory_hostname].install_docker }}"
+        base_docker_install: "{{ hostvars[inventory_hostname].docker_install }}"
         base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
         base_postfix: "{{ hostvars[inventory_hostname].postfix }}"
       tags:
@@ -95,6 +95,7 @@
         - base.dotfiles
         - base.known_hosts
         - base.postfix
+        - base.timezone
 
     # Run the geerlingguy.security role
     - name: Import geerlingguy.security role

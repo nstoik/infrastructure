@@ -74,3 +74,6 @@ pihole_cname_entries:
   - domain: "traefik.fm1.farmmonitor.ca"
     target: "pi4-dev.home.stechsolutions.ca"
     add_hostname: false
+  - domain: "homepage.home.stechsolutions.ca"
+    target: "docker-testing.home.stechsolutions.ca"
+    add_hostname: true

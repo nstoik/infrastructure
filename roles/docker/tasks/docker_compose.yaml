@@ -1,0 +1,36 @@
+---
+# Create and start the docker compose services
+
+# block for docker compose tasks
+- name: Create and start the docker compose services
+  tags:
+    - docker
+    - docker.compose
+  when: docker_config is true
+  block:
+    # create the docker_compose files
+    - name: Create the docker_compose files
+      ansible.builtin.template:
+        src: docker_compose.yaml.j2
+        dest: "{{ docker_compose_dir }}/{{ compose.compose_name }}-docker-compose.yaml"
+        mode: '0664'
+      loop: "{{ docker_compose }}"
+      loop_control:
+        loop_var: compose
+        label: "{{ compose.compose_name }}"
+
+    # bring up the docker compose services
+    - name: Bring up the docker compose services
+      community.docker.docker_compose_v2:
+        project_src: "{{ docker_compose_dir }}"
+        files:
+          - "{{ compose.compose_name }}-docker-compose.yaml"
+        project_name: "{{ compose.compose_name }}"
+        state: "{{ compose.state }}"
+        # wait: true
+        # wait_timeout: 60
+      loop: "{{ docker_compose }}"
+      loop_control:
+        loop_var: compose
+        label: "{{ compose.compose_name }}"
+      become: true

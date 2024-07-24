@@ -1,18 +1,17 @@
 ---
-# tasks to setup docker on a host.
+# file to install docker on a host
 
-# block for base docker tasks
-- name: Block for base docker tasks
+# block for docker tasks
+- name: Install docker
   tags:
-    - base
-    - base.docker
+    - docker
   block:
     # install docker
     - name: Install docker
       ansible.builtin.apt:
         pkg:
           - docker.io
-          - docker-compose
+          - docker-compose-v2
         state: present
       become: true
 
@@ -25,22 +24,12 @@
       become: true
       notify: Restart docker
 
-    # create the docker config directory with root as owner
-    - name: Create docker data and config directories
-      ansible.builtin.file:
-        path: "/etc/docker"
-        state: directory
-        mode: "0766"
-        group: root
-        owner: root
-      become: true
-
-    # create the docker data directory.
+    # create the docker config directory
     # This is where docker will store images and containers.
     # This directory is owned by root as docker is run as root.
     - name: Create docker data directory
       ansible.builtin.file:
-        path: "{{ base_docker_data_dir }}"
+        path: "{{ docker_data_dir }}"
         state: directory
         mode: "0766"
       become: true
@@ -48,9 +37,18 @@
     # create the docker daemon config file
     - name: Create docker daemon config file
       ansible.builtin.copy:
-        content: "{{ base_docker_daemon_options | to_nice_json }}"
+        content: "{{ docker_daemon_options | to_nice_json }}"
         dest: /etc/docker/daemon.json
         mode: "0644"
-      when: base_docker_daemon_options.keys() | length > 0
+      when: docker_daemon_options.keys() | length > 0
       become: true
       notify: Restart docker
+
+    # Create the directory for docker compose files
+    - name: Create the directory for docker compose files
+      ansible.builtin.file:
+        path: "{{ docker_compose_dir }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"

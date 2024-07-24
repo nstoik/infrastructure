@@ -7,10 +7,11 @@
 #   - base_reboot_host_if_required: boolean to reboot the host if required
 #   - base_apt_upgrade_packages: if or how to upgrade apt packages
 #   - base_apt_update_packages: boolean to update apt packages or skip
-#   - base_install_docker: boolean to install docker
+#   - base_docker_install: boolean to install docker
 #   - base_dotfiles: dictionary of dotfiles configuration
 #   - base_user_run_setup: boolean to setup a user
 #   - base_postfix: dictionary of postfix configuration
+#   - base_timezone: timezone to set
 
 
 # Update and upgrade apt packages
@@ -35,6 +36,15 @@
   tags:
     - base
     - base.apt
+
+# set the timezone
+- name: Set the timezone
+  community.general.timezone:
+    name: "{{ base_timezone }}"
+  become: true
+  tags:
+    - base
+    - base.timezone
 
 # Check if a reboot is required
 - name: Check if a reboot is required
@@ -65,11 +75,15 @@
 
 # install docker when the flag is set
 - name: Install docker
-  ansible.builtin.include_tasks: setup_docker.yaml
-  when: base_install_docker is true
+  ansible.builtin.import_role:
+    name: docker
+  vars:
+    docker_install: "{{ base_docker_install }}"
+  when: base_docker_install is true
   tags:
     - base
     - base.docker
+    - docker
 
 # setup dotfiles when the flag is set
 - name: Setup dotfiles

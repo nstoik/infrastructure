@@ -34,6 +34,18 @@
       when: fileserver_attached_disks is defined
       become: true
 
+    # Set the permissions for the mount points of the attached disks
+    - name: Set the permissions for the mount points
+      ansible.builtin.file:
+        path: "{{ item.mount_point }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+      loop: "{{ fileserver_attached_disks }}"
+      when: fileserver_attached_disks is defined
+      become: true
+
 # Setup mergerfs
 - name: Block for mergerfs tasks
   tags:

@@ -74,6 +74,7 @@ The playbooks directory contains the different playbooks that can be run.
 The playbooks are:
 - [site.yaml](site.yaml) - The main playbook for the whole infrastructure
 - [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
+- [docker_compose.yaml](playbooks/docker_compose.yaml) - Run the docker role on the docker hosts.
 - [pihole.yaml](playbooks/pihole.yaml) - Configure pihole server
 
 ## Roles
@@ -83,6 +84,7 @@ The roles are:
 - [base](roles/base/)
 - [cloudflare](roles/cloudflare/)
 - [digitalocean](roles/digitalocean/)
+- [docker](roles/docker/)
 - [fileserver](roles/fileserver/)
 - [netmaker](roles/netmaker/)
 - [pihole](roles/pihole/)
@@ -96,6 +98,13 @@ The services are:
 - [Netmaker](services/netmaker/README.md)
 - [Proxmox](services/proxmox/README.md)
 
+## Files
+The files directory contains files that are used by certain roles or hosts.
+
+- [traefik](files/traefik) - Traefik configuration files
+    - [traefik-dev.yaml](files/traefik/traefik-dev.yaml) - Traefik configuration for development
+    - [traefik-prod.yaml](files/traefik/traefik-prod.yaml) - Traefik configuration for production
+
 ## Ansible Tags
 The following ansible tags are available to specify specific tasks to run.
 
@@ -108,6 +117,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.geerlingguy.security - Configure security settings using the geerlingguy.security role
     - base.user - Configure the default user
     - base.postfix - Configure postfix
+    - base.timezone - Configure the timezone
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider
@@ -116,6 +126,9 @@ The following ansible tags are available to specify specific tasks to run.
     - digitalocean.droplet - Configure a DigitalOcean droplet
     - digitalocean.storage - Work with DigitalOcean block storage and volumes
     - digitalocean.user - Configure a user on a DigitalOcean droplet
+- docker - Configure docker
+    - docker.compose - Set up services using docker compose
+    - docker.prune - Prune the docker host of unused images and containers
 - fileserver - Configure a fileserver
     - fileserver.ext4 - Configure an ext4 filesystem
     - fileserver.mergerfs - Configure mergerfs
@@ -161,6 +174,7 @@ Inventory files are as follows in the [inventory](inventory) directory:
 - [host_vars](inventory/host_vars/) - Inventory for each host
 - [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
     - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms
+    - [docker_hosts.yaml](inventory/proxmox_vms/docker_hosts.yaml) - Inventory for the docker hosts running on proxmox
 - [do_hosts.yaml](inventory/do_hosts.yaml) - Dynamic inventory for DigitalOcean
     - Inventory from DigtalOcean is dynamic using a plugin.
     - When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
