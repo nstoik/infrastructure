@@ -98,6 +98,13 @@ The services are:
 - [Netmaker](services/netmaker/README.md)
 - [Proxmox](services/proxmox/README.md)
 
+## Files
+The files directory contains files that are used by certain roles or hosts.
+
+- [traefik](files/traefik) - Traefik configuration files
+    - [traefik-dev.yaml](files/traefik/traefik-dev.yaml) - Traefik configuration for development
+    - [traefik-prod.yaml](files/traefik/traefik-prod.yaml) - Traefik configuration for production
+
 ## Ansible Tags
 The following ansible tags are available to specify specific tasks to run.
 
@@ -167,6 +174,7 @@ Inventory files are as follows in the [inventory](inventory) directory:
 - [host_vars](inventory/host_vars/) - Inventory for each host
 - [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
     - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms
+    - [docker_hosts.yaml](inventory/proxmox_vms/docker_hosts.yaml) - Inventory for the docker hosts running on proxmox
 - [do_hosts.yaml](inventory/do_hosts.yaml) - Dynamic inventory for DigitalOcean
     - Inventory from DigtalOcean is dynamic using a plugin.
     - When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
