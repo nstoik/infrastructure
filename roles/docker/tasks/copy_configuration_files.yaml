@@ -40,6 +40,5 @@
       loop_control:
         loop_var: result
         label: "{{ result.file.name }}"
-      when: result.changed is true
+      when: result.changed is true  # noqa: no-handler
       changed_when: false
-
