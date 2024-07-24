@@ -52,7 +52,7 @@ fileserver_nfs_mounts:
 # docker container configuration files
 docker_configuration_files:
   - name: traefik.yaml
-    src: traefik.yaml
+    src: "{{ inventory_dir }}/../files/traefik/traefik-dev.yaml"
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
     mode: '0664'
     container_name: traefik
