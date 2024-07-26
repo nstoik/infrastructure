@@ -81,6 +81,18 @@ docker_compose:
         volumes:
           - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
         restart: always
+      - container_name: docker-socket-proxy
+        image: tecnativa/docker-socket-proxy:0.2.0
+        networks:
+          - traefik
+        environment:
+          - CONTAINERS=1 # Allow access to viewing containers
+          - POST=0 # Disallow any POST operations (effectively read-only) 
+        ports:
+          - 2375:2375
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock"
+        restart: unless-stopped
       - container_name: homepage
         image: ghcr.io/gethomepage/homepage:v0.9.5
         networks:
