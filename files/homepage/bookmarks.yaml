@@ -13,3 +13,17 @@
         - abbr: RE
           icon: reddit.png
           href: https://reddit.com/
+
+- Sports:
+    - Oilers:
+        - icon: si-nhl
+          href: https://nhl.com/oilers
+    - Oil Kings:
+        - abbr: OK
+          href: https://oilkings.ca/
+    - Blue Jays:
+        - icon: si-mlb
+          href: https://mlb.com/bluejays
+    - River Hawks:
+        - abbr: RH
+          href: https://riverhawksbaseball.com/
