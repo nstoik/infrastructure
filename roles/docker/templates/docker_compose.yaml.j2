@@ -4,6 +4,13 @@ services:
 {% for container in compose.containers %}
   {{ container.container_name }}:
     image: {{ container.image }}
+{# set the network if defined #}
+{% if container.networks is defined %}
+    networks:
+{% for network in container.networks %}
+      - {{ network }}
+{% endfor %}
+{% endif %}
 {# container_name has to be unique if scale is defined #}
 {% if container.scale is not defined %}
     container_name: {{ container.container_name }}
@@ -53,3 +60,10 @@ services:
 {% endfor %}
 {% endif %}
 {% endfor %}
+{# section for setting network settings #}
+{% if compose.networks is defined %}
+networks:
+{% for network in compose.networks %}
+  {{ network.name }}:
+{% endfor %}
+{% endif %}

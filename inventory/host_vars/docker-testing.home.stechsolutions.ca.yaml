@@ -61,9 +61,15 @@ docker_configuration_files:
 docker_compose:
   - compose_name: proxy
     state: present
+    networks:
+      - name: traefik
+      - name: default
     containers:
       - container_name: traefik
         image: traefik:v3.1
+        networks:
+          - traefik
+          - default
         environment:
           - TZ=America/Edmonton
           - "CF_API_EMAIL={{ default_user_email }}"
@@ -73,11 +79,13 @@ docker_compose:
           - 443:443
           - 8080:8080
         volumes:
-          - "/var/run/docker.sock:/var/run/docker.sock"
           - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
         restart: always
       - container_name: homepage
         image: ghcr.io/gethomepage/homepage:v0.9.5
+        networks:
+          - traefik
+          - default
         environment:
           - TZ=America/Edmonton
           - PUID=1000
