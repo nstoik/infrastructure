@@ -80,7 +80,7 @@ docker_compose:
           - 8080:8080
         volumes:
           - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
-        restart: always
+        restart: unless-stopped
       - container_name: docker-socket-proxy
         image: tecnativa/docker-socket-proxy:0.2.0
         networks:
@@ -106,6 +106,7 @@ docker_compose:
           - 3000:3000
         volumes:
           - "/home/{{ default_user }}/docker_mounts/proxy/homepage:/app/config"
+        restart: unless-stopped
         labels:
           - "traefik.enable=true"
           - "traefik.http.routers.homepage.rule=Host(`homepage.home.stechsolutions.ca`)"
@@ -137,3 +138,4 @@ docker_compose:
           - "/home/{{ default_user }}/docker_mounts/tdarr/server:/app/server"
           - "/home/{{ default_user }}/docker_mounts/tdarr/configs:/app/configs"
           - "/home/{{ default_user }}/docker_mounts/tdarr/logs:/app/logs"
+        restart: unless-stopped
