@@ -1,0 +1,14 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/service-widgets
+
+- openweathermap:
+    label: Edmonton
+    latitude: 53.58788958599827
+    longitude: -113.67766029101952
+    units: metric
+    apiKey: {{ secret_owm_api_key }}
+    cache: 10 # minutes
+    format:
+      maximumFractionDigits: 0
+

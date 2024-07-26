@@ -1,0 +1,15 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/bookmarks
+
+- Developer:
+    - Github Profile:
+        - abbr: GH
+          icon: github.png
+          href: https://github.com/nstoik
+
+- Social:
+    - Reddit:
+        - abbr: RE
+          icon: reddit.png
+          href: https://reddit.com/

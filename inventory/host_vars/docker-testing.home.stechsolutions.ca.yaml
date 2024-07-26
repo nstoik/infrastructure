@@ -56,6 +56,34 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
     mode: '0664'
     container_name: traefik
+  - name: homepage_settings.yaml
+    src: "{{ inventory_dir }}/../files/homepage/settings.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/settings.yaml
+    mode: '0664'
+    container_name: homepage
+  - name: homepage_bookmarks.yaml
+    src: "{{ inventory_dir }}/../files/homepage/bookmarks.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/bookmarks.yaml
+    mode: '0664'
+    container_name: homepage
+  - name: homepage_services.yaml
+    src: "{{ inventory_dir }}/../files/homepage/services.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/services.yaml
+    mode: '0664'
+    container_name: homepage
+  - name: homepage_docker.yaml
+    src: "{{ inventory_dir }}/../files/homepage/docker.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/docker.yaml
+    mode: '0664'
+    container_name: homepage
+
+# docker container template files
+docker_template_files:
+  - name: homepage_widgets.yaml
+    src: "{{ inventory_dir }}/../files/homepage/widgets.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/widgets.yaml
+    mode: '0664'
+    container_name: homepage
 
 # docker compose
 docker_compose:

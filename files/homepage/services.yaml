@@ -1,0 +1,27 @@
+---
+- Proxy:
+    - Traefik:
+        href: http://docker-testing.home.stechsolutions.ca:8080/dashboard/#/
+        siteMonitor: http://docker-testing.home.stechsolutions.ca:8080
+        description: Reverse Proxy
+        icon: traefik.png
+        server: my-docker
+        container: traefik
+        widget:
+          type: traefik
+          url: http://docker-testing.home.stechsolutions.ca:8080
+          routers:
+          services:
+          middleware:
+
+- Media:
+    - Tdarr:
+        href: http://docker-testing.home.stechsolutions.ca:8265
+        siteMonitor: http://docker-testing.home.stechsolutions.ca:8265
+        description: Transcoding System
+        server: my-docker
+        container: tdarr
+        icon: tdarr.png
+        widget:
+          type: tdarr
+          url: http://docker-testing.home.stechsolutions.ca:8265

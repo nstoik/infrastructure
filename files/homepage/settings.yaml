@@ -1,0 +1,20 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/settings
+
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: false
+  showSearchSuggestions: true
+  hideVisitURL: false
+  provider: google # google, duckduckgo, bing, baidu, brave or custom
+
+layout:
+  Media:
+    style: row
+    columns: 4
+    useEqualHeights: true
+  Proxy:
+    style: row
+    columns: 4
+    useEqualHeights: true
