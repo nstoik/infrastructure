@@ -115,7 +115,7 @@ docker_compose:
           - traefik
         environment:
           - CONTAINERS=1 # Allow access to viewing containers
-          - POST=0 # Disallow any POST operations (effectively read-only) 
+          - POST=0 # Disallow any POST operations (effectively read-only)
         ports:
           - 2375:2375
         volumes:
