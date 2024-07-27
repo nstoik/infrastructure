@@ -24,7 +24,7 @@ providers:
     exposedByDefault: false
 
 log:
-  level: INFO
+  level: DEBUG
 
 certificatesResolvers:
   letsencrypt:
