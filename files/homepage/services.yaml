@@ -16,12 +16,12 @@
 
 - Media:
     - Tdarr:
-        href: http://docker-testing.home.stechsolutions.ca:8265
-        siteMonitor: http://docker-testing.home.stechsolutions.ca:8265
+        href: https://tdarr.home.stechsolutions.ca
+        siteMonitor: https://tdarr.home.stechsolutions.ca
         description: Transcoding System
         server: my-docker
         container: tdarr
         icon: tdarr.png
         widget:
           type: tdarr
-          url: http://docker-testing.home.stechsolutions.ca:8265
+          url: https://tdarr.home.stechsolutions.ca

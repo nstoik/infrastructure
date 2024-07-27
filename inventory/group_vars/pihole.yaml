@@ -77,3 +77,6 @@ pihole_cname_entries:
   - domain: "homepage.home.stechsolutions.ca"
     target: "docker-testing.home.stechsolutions.ca"
     add_hostname: true
+  - domain: "tdarr.home.stechsolutions.ca"
+    target: "docker-testing.home.stechsolutions.ca"
+    add_hostname: true
