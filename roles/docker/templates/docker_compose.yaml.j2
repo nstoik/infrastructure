@@ -63,7 +63,13 @@ services:
 {# section for setting network settings #}
 {% if compose.networks is defined %}
 networks:
-{% for network in compose.networks %}
-  {{ network.name }}:
+{% for network_key, network_value in compose.networks.items() %}
+  {{ network_key }}:
+{% if network_value.name is defined %}
+    name: {{ network_value.name }}
+{% endif %}
+{% if network_value.external is defined%}
+    external: {{ network_value.external | lower }}
+{% endif %}
 {% endfor %}
 {% endif %}

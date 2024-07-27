@@ -90,14 +90,16 @@ docker_compose:
   - compose_name: proxy
     state: present
     networks:
-      - name: traefik
-      - name: default
+      traefik:
+        name: traefik
+      docker-proxy:
+        name: docker-proxy
     containers:
       - container_name: traefik
         image: traefik:v3.1
         networks:
           - traefik
-          - default
+          - docker-proxy
         environment:
           - TZ=America/Edmonton
           - "CF_API_EMAIL={{ default_user_email }}"
@@ -112,12 +114,10 @@ docker_compose:
       - container_name: docker-socket-proxy
         image: tecnativa/docker-socket-proxy:0.2.0
         networks:
-          - traefik
+          - docker-proxy
         environment:
           - CONTAINERS=1 # Allow access to viewing containers
           - POST=0 # Disallow any POST operations (effectively read-only)
-        ports:
-          - 2375:2375
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
         restart: unless-stopped
@@ -125,30 +125,33 @@ docker_compose:
         image: ghcr.io/gethomepage/homepage:v0.9.5
         networks:
           - traefik
-          - default
+          - docker-proxy
         environment:
           - TZ=America/Edmonton
           - PUID=1000
           - PGID=1000
-        ports:
-          - 3000:3000
         volumes:
           - "/home/{{ default_user }}/docker_mounts/proxy/homepage:/app/config"
         restart: unless-stopped
         labels:
           - "traefik.enable=true"
           - "traefik.http.routers.homepage.rule=Host(`homepage.home.stechsolutions.ca`)"
+          - "traefik.http.services.homepage.loadbalancer.server.port=3000"
           - "traefik.http.routers.homepage.entrypoints=websecure"
           - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
   - compose_name: tdarr
     state: present
+    networks:
+      traefik:
+        name: traefik
+        external: true
     containers:
       - container_name: tdarr
         image: ghcr.io/haveagitgat/tdarr:2.23.01
-        network_mode: bridge
-        ports:
           - "8265:8265"
           - "8266:8266"
+        networks:
+          - traefik
         environment:
           - TZ=America/Edmonton
           - PUID=1000
