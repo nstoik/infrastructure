@@ -108,6 +108,8 @@ docker_compose:
           - 80:80
           - 443:443
           - 8080:8080
+        depends_on:
+          - docker-socket-proxy
         volumes:
           - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
         restart: unless-stopped
@@ -126,6 +128,8 @@ docker_compose:
         networks:
           - traefik
           - docker-proxy
+        depends_on:
+          - docker-socket-proxy
         environment:
           - TZ=America/Edmonton
           - PUID=1000

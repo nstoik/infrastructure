@@ -48,6 +48,13 @@ services:
         - "{{ port }}"
 {% endfor %}
 {% endif %}
+{# set the depends on if defined #}
+{% if container.depends_on is defined %}
+    depends_on:
+{% for dependent in container.depends_on %}
+        - {{ dependent }}
+{% endfor %}
+{% endif %}
 {# set the restart policy if defined #}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
