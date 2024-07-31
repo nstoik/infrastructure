@@ -1,6 +1,7 @@
 ---
 all:
   hosts:
+    docker-02.home.stechsolutions.ca:
     pihole-2.home.stechsolutions.ca:
     pihole-3.home.stechsolutions.ca:
     prometheus.home.stechsolutions.ca:
@@ -29,3 +30,4 @@ all:
     docker_hosts:
       hosts:
         docker-testing.home.stechsolutions.ca:
+        docker-02.home.stechsolutions.ca:

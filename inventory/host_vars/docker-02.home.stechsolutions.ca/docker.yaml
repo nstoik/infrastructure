@@ -1,0 +1,129 @@
+---
+# Docker host variables for docker-02.home.stechsolutions.ca host
+
+# other variables are set in group_vars/proxmox_vms.yaml and
+# promox_vms/docker_hosts.yaml
+
+# docker container configuration files
+docker_configuration_files:
+  - name: traefik.yaml
+    src: "{{ inventory_dir }}/../files/traefik/traefik-prod.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
+    mode: '0664'
+    container_name: traefik
+  - name: homepage_settings.yaml
+    src: "{{ inventory_dir }}/../files/homepage/settings.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/settings.yaml
+    mode: '0664'
+    container_name: homepage
+  - name: homepage_bookmarks.yaml
+    src: "{{ inventory_dir }}/../files/homepage/bookmarks.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/bookmarks.yaml
+    mode: '0664'
+    container_name: homepage
+  - name: homepage_services.yaml
+    src: "{{ inventory_dir }}/../files/homepage/services.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/services.yaml
+    mode: '0664'
+    container_name: homepage
+  - name: homepage_docker.yaml
+    src: "{{ inventory_dir }}/../files/homepage/docker.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/docker.yaml
+    mode: '0664'
+    container_name: homepage
+
+# docker container template files
+docker_template_files:
+  - name: homepage_widgets.yaml
+    src: "{{ inventory_dir }}/../files/homepage/widgets.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/widgets.yaml
+    mode: '0664'
+    container_name: homepage
+
+# docker compose
+docker_compose:
+  - compose_name: proxy
+    state: present
+    networks:
+      traefik:
+        name: traefik
+      docker-proxy:
+        name: docker-proxy
+    containers:
+      - container_name: traefik
+        image: traefik:v3.1
+        networks:
+          - traefik
+          - docker-proxy
+        environment:
+          - TZ=America/Edmonton
+          - "CF_API_EMAIL={{ default_user_email }}"
+          - "CF_DNS_API_TOKEN={{ secret_cf_token }}"
+        ports:
+          - 80:80
+          - 443:443
+          - 8080:8080
+        depends_on:
+          - docker-socket-proxy
+        volumes:
+          - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
+        restart: unless-stopped
+      - container_name: docker-socket-proxy
+        image: tecnativa/docker-socket-proxy:0.2.0
+        networks:
+          - docker-proxy
+        environment:
+          - CONTAINERS=1 # Allow access to viewing containers
+          - POST=0 # Disallow any POST operations (effectively read-only)
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock"
+        restart: unless-stopped
+      - container_name: homepage
+        image: ghcr.io/gethomepage/homepage:v0.9.5
+        networks:
+          - traefik
+          - docker-proxy
+        depends_on:
+          - docker-socket-proxy
+        environment:
+          - TZ=America/Edmonton
+          - PUID=1000
+          - PGID=1000
+        volumes:
+          - "/home/{{ default_user }}/docker_mounts/proxy/homepage:/app/config"
+        restart: unless-stopped
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.homepage.rule=Host(`homepage.home.stechsolutions.ca`)"
+          - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+          - "traefik.http.routers.homepage.entrypoints=websecure"
+          - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
+  - compose_name: tdarr
+    state: present
+    networks:
+      traefik:
+        name: traefik
+        external: true
+    containers:
+      - container_name: tdarr
+        image: ghcr.io/haveagitgat/tdarr:2.23.01
+        networks:
+          - traefik
+        environment:
+          - TZ=America/Edmonton
+          - PUID=1000
+          - PGID=1000
+          - UMASK_SET=022
+          - serverIP=0.0.0.0
+          - serverPort=8266
+          - webUIPort=8265
+          - internalNode=true
+          - inContainer=true
+          - ffmpegVersion=6
+          - nodeName=MyInternalNode
+        volumes:
+          - "/mnt/scratch/tdarr:/temp"
+          - "/home/{{ default_user }}/docker_mounts/tdarr/server:/app/server"
+          - "/home/{{ default_user }}/docker_mounts/tdarr/configs:/app/configs"
+          - "/home/{{ default_user }}/docker_mounts/tdarr/logs:/app/logs"
+        restart: unless-stopped

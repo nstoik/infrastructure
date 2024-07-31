@@ -29,6 +29,8 @@ pihole_dns_entries:
     ip: 10.10.5.25
   - domain: "storage.home.stechsolutions.ca"
     ip: 10.10.5.26
+  - domain: "docker-02.home.stechsolutions.ca"
+    ip: 10.10.5.27
   - domain: "prometheus.home.stechsolutions.ca"
     ip: 10.10.5.76
   - domain: "youtube-dl.home.stechsolutions.ca"
@@ -53,6 +55,12 @@ pihole_dns_entries:
 #   downloader.home.stechsolutions.ca -> docker.home.stechsolutions.ca
 #   downloader -> docker.home.stechsolutions.ca
 pihole_cname_entries:
+  - domain: "homepage.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "tdarr.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
   - domain: "downloader.home.stechsolutions.ca"
     target: "docker.home.stechsolutions.ca"
     add_hostname: true
@@ -74,9 +82,6 @@ pihole_cname_entries:
   - domain: "traefik.fm1.farmmonitor.ca"
     target: "pi4-dev.home.stechsolutions.ca"
     add_hostname: false
-  - domain: "homepage.home.stechsolutions.ca"
-    target: "docker-testing.home.stechsolutions.ca"
-    add_hostname: true
-  - domain: "tdarr.home.stechsolutions.ca"
+  - domain: "homepage-testing.home.stechsolutions.ca"
     target: "docker-testing.home.stechsolutions.ca"
     add_hostname: true
