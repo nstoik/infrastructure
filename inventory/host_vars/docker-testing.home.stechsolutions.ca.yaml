@@ -113,6 +113,18 @@ docker_compose:
         volumes:
           - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
         restart: unless-stopped
+        labels:
+          - "homepage.group=Proxy"
+          - "homepage.name=Traefik"
+          - "homepage.description=Reverse Proxy"
+          - "homepage.icon=traefik.png"
+          - "homepage.href=http://docker-testing.home.stechsolutions.ca:8080/dashboard/#/"
+          - "homepage.siteMonitor=http://docker-testing.home.stechsolutions.ca:8080"
+          - "homepage.widget.type=traefik"
+          - "homepage.widget.url=http://docker-testing.home.stechsolutions.ca:8080"
+          - "homepage.widget.routers="
+          - "homepage.widget.services="
+          - "homepage.widget.middleware="
       - container_name: docker-socket-proxy
         image: tecnativa/docker-socket-proxy:0.2.0
         networks:
