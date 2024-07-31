@@ -1,8 +1,8 @@
 ---
 # Host variables for docker-testing.home.stechsolutions.ca host
 
-# other variables are set in group_vars/proxmox_nodes.yaml and
-# proxmox_vms/hosts.yaml
+# other variables are set in group_vars/proxmox_vms.yaml and
+# proxmox_vms/docker_hosts.yaml
 
 fileserver_setup: true
 fileserver_setup_nfs_client: true

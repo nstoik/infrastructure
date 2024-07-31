@@ -16,7 +16,7 @@ entryPoints:
 
 api:
   dashboard: true
-  insecure: false
+  insecure: true
 
 providers:
   docker:
