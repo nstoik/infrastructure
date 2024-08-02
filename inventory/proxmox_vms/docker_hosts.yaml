@@ -58,7 +58,7 @@ all:
             proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
             template_id: 9001
             state: "present"
-            id: 352
+            id: 950
             name: "{{ inventory_hostname.split('.')[0] }}"
             name_fqdn: "{{ inventory_hostname }}"
             start_onboot: true
@@ -70,6 +70,6 @@ all:
             balloon: 2048
             virtual_disks:
               - comment: 10 GB test disk for docker compose proxy volume
-                scsi: "scsi2"
+                scsi: "scsi1"
                 device: "data:10,discard=on"
                 backup: 1
