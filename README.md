@@ -57,24 +57,17 @@ source setenv.sh
 ```
 
 # Usage
-## Primary Usage
-The main file is [site.yaml](site.yaml) which is the main playbook for the whole infrastructure. It includes the other playbooks and performs the following tasks:
-
-- Configure the DigitalOcean cloud provider
-    - Set the Tags
-    - Set the firewall rules
-- Configure a Netmaker server on a DigitalOcean droplet
-    - Further info on the Netmaker service can be found [here](services/netmaker/README.md)
-
 The main configuration is done in the [inventory/group_vars/all.yaml](inventory/group_vars/all.yaml) and the [vault/vault.yaml](vault/vault.yaml) (this file is encrypted) files.
 
 ## Playbooks
 The playbooks directory contains the different playbooks that can be run.
 
 The playbooks are:
-- [site.yaml](site.yaml) - The main playbook for the whole infrastructure
 - [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
 - [docker_compose.yaml](playbooks/docker_compose.yaml) - Run the docker role on the docker hosts.
+- [hosts_configure.yaml](playbooks/hosts_configure.yaml) - Configure the hosts. This defaults to all hosts but can be limited to specific hosts.
+    - eg. `ansible-playbook playbooks/hosts_configure.yaml --limit=docker-02.home.stechsolutions.ca`
+- [netmaker.yaml](playbooks/netmaker.yaml) - The playbook to set up the Netmaker VPN server and clients
 - [pihole.yaml](playbooks/pihole.yaml) - Configure pihole server
 
 ## Roles
@@ -101,6 +94,12 @@ The services are:
 ## Files
 The files directory contains files that are used by certain roles or hosts.
 
+- [homepage](files/homepage) - Homepage files
+    - [bookmarks.yaml](files/homepage/bookmarks.yaml) - Bookmarks for the homepage
+    - [docker.yaml](files/homepage/docker.yaml) - Docker configuration for the homepage
+    - [services.yaml](files/homepage/services.yaml) - Services for the homepage
+    - [settings.yaml](files/homepage/settings.yaml) - Settings for the homepage
+    - [widgets.yaml](files/homepage/widgets.yaml) - Widgets for the homepage
 - [traefik](files/traefik) - Traefik configuration files
     - [traefik-dev.yaml](files/traefik/traefik-dev.yaml) - Traefik configuration for development
     - [traefik-prod.yaml](files/traefik/traefik-prod.yaml) - Traefik configuration for production
@@ -172,9 +171,10 @@ Inventory files are as follows in the [inventory](inventory) directory:
     - [proxmox_nodes.yaml](inventory/group_vars/proxmox_nodes.yaml) - Inventory for the proxmox nodes
     - [proxmox_vms.yaml](inventory/group_vars/proxmox_vms.yaml) - Inventory for the proxmox vms
 - [host_vars](inventory/host_vars/) - Inventory for each host
+    - [docker-02.home.stechsolutions.ca](inventory/host_vars/docker-02.home.stechsolutions.ca) - Folder for multiple inventory files for the docker-02 host
 - [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
-    - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms
     - [docker_hosts.yaml](inventory/proxmox_vms/docker_hosts.yaml) - Inventory for the docker hosts running on proxmox
+    - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms
 - [do_hosts.yaml](inventory/do_hosts.yaml) - Dynamic inventory for DigitalOcean
     - Inventory from DigtalOcean is dynamic using a plugin.
     - When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
