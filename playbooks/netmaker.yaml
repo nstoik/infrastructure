@@ -1,6 +1,8 @@
 ---
-# complete site configuration.
+# complete netmaker configuration.
 
+# except for the netclients_manual playbook, which needs to be
+# run manually when network connectivity is available.
 
 # configure the DigitalOcean configuration
 - name: Configure DigitalOcean
