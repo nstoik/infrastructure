@@ -9,8 +9,6 @@ ansible_ssh_pass: "{{ secret_become_pass }}"
 # The domain name and the hostname are added
 # to the Pi-hole DNS entries.
 pihole_dns_entries:
-  - domain: "unifi.home.stechsolutions.ca"
-    ip: 10.10.1.1
   - domain: "pihole-2.home.stechsolutions.ca"
     ip: 10.10.1.11
   - domain: "hassio.home.stechsolutions.ca"
@@ -59,6 +57,9 @@ pihole_cname_entries:
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
   - domain: "tdarr.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "unifi.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
   - domain: "downloader.home.stechsolutions.ca"

@@ -1,0 +1,20 @@
+---
+http:
+  routers:
+    unifi-router:
+      rule: Host(`unifi.home.stechsolutions.ca`)
+      entryPoints:
+        - websecure
+      service: unifi-service
+      tls:
+        certResolver: letsencrypt
+  services:
+    unifi-service:
+      loadBalancer:
+        servers:
+          - url: https://10.10.1.1/
+        passHostHeader: true
+        serversTransport: unifi-transport
+  serversTransports:
+    unifi-transport:
+      insecureSkipVerify: true
