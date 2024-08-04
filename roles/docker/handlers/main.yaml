@@ -6,6 +6,7 @@
   ansible.builtin.service:
     name: docker
     state: restarted
+  register: docker_restart_result
   become: true
 
 # restart docker container
@@ -16,4 +17,5 @@
     restart: true
   loop: "{{ docker_containers_to_restart }}"
   become: true
-  when: docker_containers_to_restart is defined
+  when: docker_containers_to_restart is defined and
+        docker_restart_result is not defined

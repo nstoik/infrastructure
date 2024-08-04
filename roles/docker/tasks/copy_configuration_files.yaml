@@ -1,6 +1,14 @@
 ---
 # Copy any required configuration files for the docker containers
 
+# Create a list of docker containers to restart
+- name: Create a list of docker containers to restart
+  ansible.builtin.set_fact:
+    docker_containers_to_restart: []
+  tags:
+    - docker
+    - docker.compose
+
 # block for copying configuration files
 - name: Copy any required configuration files for the docker containers
   tags:
@@ -35,10 +43,60 @@
     # Build a list of docker container names to restart
     - name: Build a list of docker container names to restart
       ansible.builtin.set_fact:
-        docker_containers_to_restart: "{{ (docker_containers_to_restart | default([])) + [result.file.container_name] }}"
+        docker_containers_to_restart: "{{ docker_containers_to_restart + [result.file.container_name] }}"
       loop: "{{ docker_configuration_files_copy_result.results }}"
       loop_control:
         loop_var: result
         label: "{{ result.file.name }}"
       when: result.changed is true  # noqa: no-handler
       changed_when: false
+
+# block for copying template files
+- name: Copy any required template files for the docker containers
+  tags:
+    - docker
+    - docker.compose
+  when: docker_config is true
+  block:
+    # make sure the directory exists
+    - name: Ensure the directory exists
+      ansible.builtin.file:
+        path: "{{ file.dest | dirname }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ docker_template_files }}"
+      loop_control:
+        loop_var: file
+        label: "{{ file.name }}"
+
+    # process the template files
+    - name: Process the template files for docker containers
+      ansible.builtin.template:
+        src: "{{ file.src }}"
+        dest: "{{ file.dest }}"
+        mode: "{{ file.mode }}"
+      loop: "{{ docker_template_files }}"
+      loop_control:
+        loop_var: file
+        label: "{{ file.name }}"
+      register: docker_template_files_copy_result
+      notify: Restart docker container
+
+    # Build a list of docker container names to restart
+    - name: Build a list of docker container names to restart
+      ansible.builtin.set_fact:
+        docker_containers_to_restart: "{{ docker_containers_to_restart + [result.file.container_name] }}"
+      loop: "{{ docker_template_files_copy_result.results }}"
+      loop_control:
+        loop_var: result
+        label: "{{ result.file.name }}"
+      when: result.changed is true  # noqa: no-handler
+      changed_when: false
+
+# remove any duplicates from the list of docker containers to restart
+- name: Remove any duplicates from the list of docker containers to restart
+  ansible.builtin.set_fact:
+    docker_containers_to_restart: "{{ docker_containers_to_restart | unique }}"
+  tags:
+    - docker
+    - docker.compose

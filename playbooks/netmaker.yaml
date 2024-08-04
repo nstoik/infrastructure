@@ -1,13 +1,15 @@
 ---
-# complete site configuration.
+# complete netmaker configuration.
 
+# except for the netclients_manual playbook, which needs to be
+# run manually when network connectivity is available.
 
 # configure the DigitalOcean configuration
 - name: Configure DigitalOcean
   hosts: localhost
   gather_facts: false
   vars_files:
-    - vault/vault.yaml
+    - ../vault/vault.yaml
 
   tasks:
     - name: Configure tags on digitalocean
@@ -28,19 +30,19 @@
 
 # run the netmaker playbook to configure a netmaker VPS
 - name: Run the netmaker playbook
-  ansible.builtin.import_playbook: services/netmaker/netmaker.yaml
+  ansible.builtin.import_playbook: ../services/netmaker/netmaker.yaml
   tags:
     - netmaker
 
 # run the netmaker_config playbook to configure netmaker
 - name: Run the netmaker_config playbook
-  ansible.builtin.import_playbook: services/netmaker/netmaker_config.yaml
+  ansible.builtin.import_playbook: ../services/netmaker/netmaker_config.yaml
   tags:
     - netmaker
 
 # run the netclients playbook to configure netclients
 - name: Run the netclients playbook
-  ansible.builtin.import_playbook: services/netmaker/netclients.yaml
+  ansible.builtin.import_playbook: ../services/netmaker/netclients.yaml
   tags:
     - netmaker
     - netmaker.netclient

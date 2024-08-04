@@ -1,0 +1,58 @@
+---
+# Configure hosts using the base role
+# Defaults to all hosts but can be overridden
+
+
+# Run the first time setup to configure the VMs
+- name: Run the first time setup to configure VMs
+  hosts: all
+  vars_files:
+    - ../vault/vault.yaml
+  tags:
+    - base
+
+  tasks:
+    # Run the fileserver role
+    - name: Import fileserver role
+      ansible.builtin.import_role:
+        name: fileserver
+      when:
+        hostvars[inventory_hostname].fileserver_setup is defined and
+        hostvars[inventory_hostname].fileserver_setup is true
+      tags:
+        - fileserver
+        - fileserver.nfs-server
+        - fileserver.nfs-client
+        - fileserver.mergerfs
+        - fileserver.ext4
+        - fileserver.snapraid
+        - fileserver.zfs
+
+    # Run the base role
+    - name: Import base role
+      ansible.builtin.import_role:
+        name: base
+      vars:
+        # yamllint disable-line rule:line-length
+        base_additional_packages: "{{ hostvars[inventory_hostname].proxmox_vm_additonal_packages }}"
+        # yamllint disable-line rule:line-length
+        base_additional_services: "{{ hostvars[inventory_hostname].proxmox_vm_additional_services }}"
+        base_docker_install: "{{ hostvars[inventory_hostname].docker_install }}"
+        base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
+        base_postfix: "{{ hostvars[inventory_hostname].postfix }}"
+      tags:
+        - base
+        - base.apt
+        - base.docker
+        - base.dotfiles
+        - base.known_hosts
+        - base.postfix
+        - base.timezone
+
+    # Run the geerlingguy.security role
+    - name: Import geerlingguy.security role
+      ansible.builtin.import_role:
+        name: geerlingguy.security
+      become: true
+      tags:
+        - base.geerlingguy.security

@@ -4,6 +4,7 @@
 - name: Get the enrollment keys from the Netmaker server
   hosts: localhost
   vars_files:
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
     - vars/networks.yaml
   tags:
@@ -48,6 +49,7 @@
 - name: Configure netclient for the 'netclients' group
   hosts: localhost
   vars_files:
+    - ../../vault/vault.yaml
     - vars/netmaker.yaml
   tags:
     - netmaker.netclient

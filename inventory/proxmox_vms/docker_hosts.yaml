@@ -9,6 +9,42 @@ all:
   children:
     proxmox_vms:
       hosts:
+        docker-02.home.stechsolutions.ca:
+          docker_install: true
+          docker_config: true
+          dotfiles:
+            install: true
+            dotbot_skip_ssh_authorized_file: false
+          network:
+            ip: "10.10.5.27"
+            gateway: "10.10.5.1"
+          proxmox_vm:
+            proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
+            template_id: 9001
+            state: "present"
+            id: 354
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            name_fqdn: "{{ inventory_hostname }}"
+            start_onboot: true
+            disk_size: 40G
+            net0: virtio,bridge=vmbr0
+            ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
+            cores: 32
+            memory: 65536
+            balloon: 16384
+            virtual_disks:
+              - comment: 50 GB disk for tdarr scratch space
+                scsi: "scsi1"
+                device: "local-thin-pool-ssd1:50,discard=on"
+                backup: 0
+              - comment: 10 GB disk for docker compose proxy volume
+                scsi: "scsi2"
+                device: "data:10,discard=on"
+                backup: 1
+              - comment: 10 GB disk for docker compose tdarr volume
+                scsi: "scsi3"
+                device: "data:10,discard=on"
+                backup: 1
         docker-testing.home.stechsolutions.ca:
           docker_install: true
           docker_config: true
@@ -22,7 +58,7 @@ all:
             proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
             template_id: 9001
             state: "present"
-            id: 352
+            id: 950
             name: "{{ inventory_hostname.split('.')[0] }}"
             name_fqdn: "{{ inventory_hostname }}"
             start_onboot: true
@@ -33,15 +69,7 @@ all:
             memory: 4096
             balloon: 2048
             virtual_disks:
-              - comment: 50 GB test disk for tdarr scratch space
-                scsi: "scsi1"
-                device: "local-thin-pool-ssd1:50,discard=on"
-                backup: 0
               - comment: 10 GB test disk for docker compose proxy volume
-                scsi: "scsi2"
-                device: "data:10,discard=on"
-                backup: 1
-              - comment: 10 GB test disk for docker compose tdarr volume
-                scsi: "scsi3"
+                scsi: "scsi1"
                 device: "data:10,discard=on"
                 backup: 1

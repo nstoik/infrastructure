@@ -4,6 +4,13 @@ services:
 {% for container in compose.containers %}
   {{ container.container_name }}:
     image: {{ container.image }}
+{# set the network if defined #}
+{% if container.networks is defined %}
+    networks:
+{% for network in container.networks %}
+      - {{ network }}
+{% endfor %}
+{% endif %}
 {# container_name has to be unique if scale is defined #}
 {% if container.scale is not defined %}
     container_name: {{ container.container_name }}
@@ -41,6 +48,13 @@ services:
         - "{{ port }}"
 {% endfor %}
 {% endif %}
+{# set the depends on if defined #}
+{% if container.depends_on is defined %}
+    depends_on:
+{% for dependent in container.depends_on %}
+        - {{ dependent }}
+{% endfor %}
+{% endif %}
 {# set the restart policy if defined #}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
@@ -53,3 +67,16 @@ services:
 {% endfor %}
 {% endif %}
 {% endfor %}
+{# section for setting network settings #}
+{% if compose.networks is defined %}
+networks:
+{% for network_key, network_value in compose.networks.items() %}
+  {{ network_key }}:
+{% if network_value.name is defined %}
+    name: {{ network_value.name }}
+{% endif %}
+{% if network_value.external is defined%}
+    external: {{ network_value.external | lower }}
+{% endif %}
+{% endfor %}
+{% endif %}

@@ -1,4 +1,7 @@
-# traefik.yaml
+---
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: true
 
 entryPoints:
   web:
@@ -13,12 +16,14 @@ entryPoints:
 
 api:
   dashboard: true
-  insecure: false
+  insecure: true
 
 providers:
   docker:
-    endpoint: "unix:///var/run/docker.sock"
+    endpoint: "tcp://docker-socket-proxy:2375"
     exposedByDefault: false
+  file:
+    directory: "/etc/traefik/dynamic"
 
 log:
   level: INFO
