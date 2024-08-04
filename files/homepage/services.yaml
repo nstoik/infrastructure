@@ -1,22 +1,22 @@
 ---
 - Network:
-  - Unifi OS:
-      href: https://unifi.home.stechsolutions.ca
-      description: Unifi OS
-      icon: unifi.png
-  - Unifi Controller:
-      href: https://unifi.home.stechsolutions.ca/network/default/dashboard
-      description: Unifi Controller
-      icon: unifi-controller.png
-      widget:
-        type: unifi
-        url: https://unifi.home.stechsolutions.ca
-        username: "HomepageUser"
-        password: "{{  secret_unifi_username_password}}"
-        uptime:
-        wan:
-        lan:
-  - Unifi Protect:
-      href: https://unifi.home.stechsolutions.ca/protect/dashboard
-      description: Unifi Protect
-      icon: unifi-protect.png
+    - Unifi OS:
+        href: https://unifi.home.stechsolutions.ca
+        description: Unifi OS
+        icon: unifi.png
+    - Unifi Controller:
+        href: https://unifi.home.stechsolutions.ca/network/default/dashboard
+        description: Unifi Controller
+        icon: unifi-controller.png
+        widget:
+          type: unifi
+          url: https://unifi.home.stechsolutions.ca
+          username: HomepageUser
+          password: "{{  secret_unifi_username_password}}"
+          uptime:
+          wan:
+          lan:
+    - Unifi Protect:
+        href: https://unifi.home.stechsolutions.ca/protect/dashboard
+        description: Unifi Protect
+        icon: unifi-protect.png
