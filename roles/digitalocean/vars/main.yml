@@ -23,6 +23,8 @@ digitalocean_tags:
     state: "present"
   - name: "HTTPS"
     state: "present"
+  - name: "Docker"
+    state: "present"
 
 # Tags that are added to all DigitalOcean Droplets managed by Ansible.
 digitalocean_default_tags:
