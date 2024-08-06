@@ -59,7 +59,7 @@
         name: cloudflare
       vars:
         cloudflare_ip_address: "{{ do_ip_address | default('') }}"
-        cloudflare_record: "{{ netmaker_cf_record }}"
+        cloudflare_records: "{{ netmaker_cf_records }}"
       tags:
         - cloudflare
 
@@ -130,7 +130,7 @@
         name: fileserver
         tasks_from: setup_disks
       vars:
-        fileserver_attached_disks: "{{ netmaker_droplet.volumes[0] }}"
+        fileserver_attached_disks: "{{ netmaker_droplet.volumes }}"
       tags:
         - digitalocean
         - digitalocean.storage

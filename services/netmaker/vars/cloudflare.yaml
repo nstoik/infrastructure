@@ -1,7 +1,7 @@
 ---
 # Netmaker Cloudflare DNS Record for root, dashboard, api, and broker
 # subdomains.
-netmaker_cf_record:
+netmaker_cf_records:
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
@@ -30,12 +30,14 @@ netmaker_cf_record:
     proxied: false,
     state: '{{ netmaker_droplet.state }}'
   }
+  # TODO: Remove in future update (v0.24.0+)
+  # Was set to absent in v0.23.0
   - {
     name: 'netmaker01',
     zone: 'stechsolutions.ca',
     record: 'stun.netmaker',
     proxied: false,
-    state: '{{ netmaker_droplet.state }}'
+    state: "absent"
   }
   - {
     name: 'netmaker01',
@@ -43,15 +45,6 @@ netmaker_cf_record:
     record: 'turn.netmaker',
     proxied: false,
     state: '{{ netmaker_droplet.state }}'
-  }
-  # TODO: Remove in future update (v0.24.0+)
-  # Was set to absent in v0.23.0
-  - {
-    name: 'netmaker01',
-    zone: 'stechsolutions.ca',
-    record: 'turnapi.netmaker',
-    proxied: false,
-    state: "absent"
   }
   # Netmaker Cloudflare DNS Record for grafana, prometheus,
   # and netmaker-exporter subdomains for the Pro setup.
