@@ -24,7 +24,7 @@
         name: digitalocean
         tasks_from: create_block_storage
       vars:
-        digitalocean_volume:
+        digitalocean_volumes:
           - "{{ netmaker_volume }}"
       tags:
         - digitalocean
@@ -127,11 +127,10 @@
     # The user has to be created before the block storage can be formatted.
     - name: Format the block storage
       ansible.builtin.include_role:
-        name: digitalocean
-        tasks_from: format_block_storage
+        name: fileserver
+        tasks_from: setup_disks
       vars:
-        digitalocean_volume:
-          - "{{ netmaker_volume }}"
+        fileserver_attached_disks: "{{ netmaker_droplet.volumes[0] }}"
       tags:
         - digitalocean
         - digitalocean.storage
