@@ -69,24 +69,12 @@ digitalocean_firewall:
         protocol: "udp"
         sources:
           addresses: ["0.0.0.0/0", "::/0"]
-      # yamllint disable rule:comments-indentation
-      # STUN
-      # - ports: "3478"
-      #   protocol: "udp"
-      #   sources:
-      #     addresses: ["0.0.0.0/0", "::/0"]
     outbound_rules:
       # Wireguard
       - ports: "51820-51830"
         protocol: "udp"
         destinations:
           addresses: ["0.0.0.0/0", "::/0"]
-      # STUN
-      # - ports: "3478"
-      #   protocol: "udp"
-      #   destinations:
-      #     addresses: ["0.0.0.0/0", "::/0"]
-      # yamllint enable rule:comments-indentation
   - name: "StechSolutions-HTTPS"
     state: "present"
     tags: ["HTTPS", "Netmaker"]
