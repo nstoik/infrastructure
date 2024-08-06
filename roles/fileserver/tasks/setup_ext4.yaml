@@ -2,7 +2,7 @@
 # Tasks to properly format the disk with ext4 filesystem
 #
 # inputs:
-#   - fileserver_ext4_disk: disk to format with ext4 filesystem
+#   - fileserver_ext4_disks: disks to format with ext4 filesystem
 
 # Check if the partition exists
 - name: Check if the partition exists
