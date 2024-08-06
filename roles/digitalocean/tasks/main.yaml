@@ -29,7 +29,7 @@
 - name: Attach DigitalOcean block storage
   community.digitalocean.digital_ocean_block_storage:
     oauth_token: "{{ secret_do_token }}"
-    state: "{{ digitalocean_droplet['volume']['state'] }}"
+    state: "{{ digitalocean_droplet.state }}"
     command: "attach"
     region: "{{ digitalocean_droplet_region }}"
     volume_name: "{{ item.name }}"
