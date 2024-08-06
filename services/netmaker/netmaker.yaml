@@ -25,7 +25,7 @@
         tasks_from: create_block_storage
       vars:
         digitalocean_volumes:
-          - "{{ netmaker_volume }}"
+          - "{{ netmaker_attached_volume }}"
       tags:
         - digitalocean
         - digitalocean.storage
