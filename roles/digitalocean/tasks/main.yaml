@@ -32,9 +32,10 @@
     state: "{{ digitalocean_droplet['volume']['state'] }}"
     command: "attach"
     region: "{{ digitalocean_droplet_region }}"
-    volume_name: "{{ digitalocean_droplet['volume']['volume_name'] }}"
+    volume_name: "{{ item.name }}"
     droplet_id: "{{ digitalocean_droplet_result.data.droplet.id }}"
-  when: digitalocean_droplet['volume'] is defined and
+  loop: "{{ digitalocean_droplet.volumes }}"
+  when: digitalocean_droplet.volumes is defined and
         digitalocean_droplet.state == 'present'
   tags:
     - digitalocean

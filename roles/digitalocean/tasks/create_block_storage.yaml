@@ -10,7 +10,7 @@
     block_size: "{{ item.block_size | default(10) }}"
     volume_name: "{{ item.volume_name }}"
     project_name: "nelsonstoik"
-  loop: "{{ digitalocean_volume }}"
+  loop: "{{ digitalocean_volumes }}"
   tags:
     - digitalocean
     - digitalocean.storage
