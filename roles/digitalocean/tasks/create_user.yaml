@@ -1,5 +1,10 @@
 ---
-# create a user on a digitalocean droplet
+# create a user on a digitalocean droplet.
+#
+# This creates the user using the root user and copies the authorized_keys file.
+# As such, there is additional logic to check if the root user can login to the
+# droplet, since afterwards root login is disabled. If the root user can login,
+# the new user probably needs to be created.
 
 # specify a block to add tags to all tasks in this file
 - name: Create a user on the Droplet block
@@ -10,8 +15,21 @@
   block:
     # Wait for the host to become reachable.
     - name: Wait for host to become reachable
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host }}"
+        port: 22
+        timeout: 30
+      delegate_to: localhost
+
+    # Check if the user already exisits
+    - name: Check if the user already exists
+      ansible.builtin.command:
+        cmd: "getent passwd {{ default_user }}"
+      register: user_exists
+      changed_when: false
+      failed_when: false
+      ignore_unreachable: true
       remote_user: root
-      ansible.builtin.wait_for_connection:
 
     # create a new user using the root user
     - name: Create a new user on the Droplet
@@ -20,9 +38,14 @@
         name: "{{ default_user }}"
         password: "{{ secret_user_password_prehashed }}"
         update_password: on_create
+        createhome: true
+        home: "/home/{{ default_user }}"
         groups: sudo
-        state: present
         append: true
+        state: present
+        generate_ssh_key: true
+        ssh_key_type: ed25519
+      when: user_exists.rc is defined and user_exists.rc != 0
 
     # create the user's ssh directory
     - name: Create the user's ssh directory
@@ -33,6 +56,7 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: "0700"
+      when: user_exists.rc is defined and user_exists.rc != 0
 
     # copy the authorized_keys file from the root user to the new user
     - name: Copy the authorized_keys file from the root user to the new user
@@ -44,3 +68,4 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: preserve
+      when: user_exists.rc is defined and user_exists.rc != 0
