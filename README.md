@@ -64,6 +64,7 @@ The playbooks directory contains the different playbooks that can be run.
 
 The playbooks are:
 - [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
+- [digitalocean.yaml](playbooks/digitalocean.yaml) - Configure DigitalOcean configuration as specified.
 - [docker_compose.yaml](playbooks/docker_compose.yaml) - Run the docker role on the docker hosts.
 - [hosts_configure.yaml](playbooks/hosts_configure.yaml) - Configure the hosts. This defaults to all hosts but can be limited to specific hosts.
     - eg. `ansible-playbook playbooks/hosts_configure.yaml --limit=docker-02.home.stechsolutions.ca`
@@ -88,6 +89,7 @@ The roles are:
 The services directory contains the subfolders and playbooks for the various services I run on my infrastructure.
 
 The services are:
+- [Cloud Hosts](services/cloud_hosts/README.md)
 - [Netmaker](services/netmaker/README.md)
 - [Proxmox](services/proxmox/README.md)
 

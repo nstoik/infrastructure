@@ -33,3 +33,5 @@ all:
       hosts:
         docker-testing.home.stechsolutions.ca:
         docker-02.home.stechsolutions.ca:
+      children:
+        do_docker:
