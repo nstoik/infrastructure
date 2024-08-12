@@ -1,0 +1,52 @@
+---
+# Create a DigitalOcean Droplet, update the Cloudflare DNS records,
+# and update the known_hosts file.
+#
+# inputs:
+#   droplet: details for the droplet to create.
+
+- name: Set Droplet State
+  ansible.builtin.include_role:
+    name: digitalocean
+  vars:
+    digitalocean_droplet: "{{ droplet }}"
+
+- name: Get the DigitalOcean Droplet public IP address
+  ansible.builtin.set_fact:
+    do_ip_address: >-
+      {{ digitalocean_droplet_result.data.droplet.networks.v4 |
+          selectattr('type','eq','public') |
+          map(attribute='ip_address') |
+          first
+      }}
+  when: droplet.state == "present"
+  no_log: true
+  tags:
+    - digitalocean
+    - cloudflare
+
+- name: Configure Cloudflare DNS Record
+  ansible.builtin.include_role:
+    name: cloudflare
+  vars:
+    cloudflare_ip_address: "{{ do_ip_address | default('') }}"
+    cloudflare_records: "{{ droplet.cf_records }}"
+  tags:
+    - cloudflare
+
+- name: Update the known_hosts file
+  ansible.builtin.include_role:
+    name: base
+    tasks_from: update_known_hosts
+  vars:
+    base_hostname: "{{ known_hosts_item }}"
+    base_state: "{{ droplet.state }}"
+    base_comment: "DO Droplet: {{ droplet.name }}"
+  loop:
+    - "{{ do_ip_address | default('') }}"
+    - "{{ droplet.name_fqdn }}"
+  loop_control:
+    loop_var: known_hosts_item
+  tags:
+    - base
+    - base.known_hosts
