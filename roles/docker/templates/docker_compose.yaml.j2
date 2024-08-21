@@ -55,6 +55,23 @@ services:
         - {{ dependent }}
 {% endfor %}
 {% endif %}
+{# set the healthcheck if defined #}
+{% if container.healthcheck is defined %}
+    healthcheck:
+        test: {{ container.healthcheck.test | to_nice_json }}
+{% if container.healthcheck.interval is defined %}
+        interval: {{ container.healthcheck.interval }}
+{% endif %}
+{% if container.healthcheck.timeout is defined %}
+        timeout: {{ container.healthcheck.timeout }}
+{% endif %}
+{% if container.healthcheck.retries is defined %}
+        retries: {{ container.healthcheck.retries }}
+{% endif %}
+{% if container.healthcheck.start_period is defined %}
+        start_period: {{ container.healthcheck.start_period }}
+{% endif %}
+{% endif %}
 {# set the restart policy if defined #}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
