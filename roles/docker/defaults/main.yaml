@@ -8,6 +8,7 @@ docker_config: false
 docker_data_dir: /home/{{ default_user }}/docker
 
 docker_compose_dir: /home/{{ default_user }}/docker_compose
+docker_mounts_dir: /home/{{ default_user }}/docker_mounts
 
 docker_daemon_options:
   data-root: '{{ docker_data_dir }}'

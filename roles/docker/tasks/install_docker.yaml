@@ -52,3 +52,12 @@
         mode: "0755"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
+
+    # Create the directory for docker mounts files
+    - name: Create the directory for docker mounts files
+      ansible.builtin.file:
+        path: "{{ docker_mounts_dir }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
