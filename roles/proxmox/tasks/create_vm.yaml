@@ -110,30 +110,8 @@
       become: true
       changed_when: false
 
-    # Set passthrough disks
-    - name: Set passthrough disks
-      ansible.builtin.command:
-        cmd: >
-          qm set {{ proxmox_vm.id }}
-          --{{ item_disk.scsi }}
-          {{ item_disk.device }},backup={{ item_disk.backup }}
-      loop: "{{ proxmox_vm.passthrough_disks }}"
-      loop_control:
-        loop_var: item_disk
-      when: proxmox_vm.passthrough_disks is defined
-      become: true
-      changed_when: false
-
-    # Set virtual disks
-    - name: Set virtual disks
-      ansible.builtin.command:
-        cmd: >
-          qm set {{ proxmox_vm.id }}
-          --{{ item_disk.scsi }}
-          {{ item_disk.device }},backup={{ item_disk.backup }}
-      loop: "{{ proxmox_vm.virtual_disks }}"
-      loop_control:
-        loop_var: item_disk
-      when: proxmox_vm.virtual_disks is defined
-      become: true
-      changed_when: false
+    # Set disks
+    - name: Include attach disks role
+      ansible.builtin.include_tasks: attach_disks.yaml
+      vars:
+        proxmox_vm_info: "{{ proxmox_vm }}"

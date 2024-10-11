@@ -1,0 +1,57 @@
+---
+# Attach virtual and passthrough disks to a Proxmox VM.
+#
+# Only attach disks that are not already attached to the VM.
+# This task assumes that the VM is created and has at least one disk attached.
+
+# Required inputs:
+#   proxmox_vm_info: The Proxmox VM to attach the disks to
+
+# Get the exisitng disks for the VM
+- name: Get the existing disks for the VM
+  ansible.builtin.command:
+    cmd: >
+      qm config {{ proxmox_vm_info.id }}
+  register: vm_config
+  become: true
+  changed_when: false
+
+# Disk block
+- name: Attach disks to Proxmox VM
+  when:
+    proxmox_vm_info.virtual_disks is defined or
+    proxmox_vm_info.passthrough_disks is defined
+  tags:
+    - proxmox
+    - proxmox.vm
+  block:
+
+    # Set passthrough disks
+    - name: Set passthrough disks
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm_info.id }}
+          --{{ item_disk.scsi }}
+          {{ item_disk.device }},backup={{ item_disk.backup }}
+      loop: "{{ proxmox_vm_info.passthrough_disks }}"
+      loop_control:
+        loop_var: item_disk
+      when: proxmox_vm_info.passthrough_disks is defined and
+            vm_config.stdout.find(item_disk.scsi) == -1
+      become: true
+      changed_when: false
+
+    # Set virtual disks
+    - name: Set virtual disks
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm_info.id }}
+          --{{ item_disk.scsi }}
+          {{ item_disk.device }},backup={{ item_disk.backup }}
+      loop: "{{ proxmox_vm_info.virtual_disks }}"
+      loop_control:
+        loop_var: item_disk
+      when: proxmox_vm_info.virtual_disks is defined and
+            vm_config.stdout.find(item_disk.scsi) == -1
+      become: true
+      changed_when: false
