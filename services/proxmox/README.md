@@ -45,6 +45,7 @@ sudo apt install sshpass
 ## Proxmox VMs Ansible Configuration
 VM configurations is specified in the `inventory\proxmox_vms\` folder and the individual files for each VM in the `inventory\host_vars\` folder.
 
+### Adding VMs
 Run the following command to create and configure the VMs on the proxmox hosts. This runs against all the hosts in the `proxmox_nodes` group.
 
 ```bash
@@ -57,6 +58,19 @@ To only add a specific VM, run the following command. The `pihole` and `proxmox_
     ansible-playbook services/proxmox/proxmox_vms_add.yaml --limit=pihole:proxmox_nodes:[VM Name]:
 ```
 
+### Adding VM disks
+To add virtual and passthrough disks on the VMs, update the VM configuration as required and run the following command. This runs against all the hosts in the `proxmox_nodes` group.
+
+```bash
+    ansible-playbook services/proxmox/proxmox_vms_add_disks.yaml
+```
+To add disks for a specific VM, use host limits. This can be limitied to a specific proxmox node and VM. The `VM Name` should be replaced with the ansible name of the VM.
+
+```bash
+    ansible-playbook services/proxmox/proxmox_vms_add_disks.yaml --limit=pve3.home.stechsolutions.ca:[VM Name]:
+```
+
+### Removing VMs
 To remove the VMs on the proxmox hosts, set the `state` variable for the VM to absent and run the following command. This is run against all the hosts in the `proxmox_nodes` group so the VM state (`absent`) needs to be properly set in the appropriate `inventory\proxmox_vms\` file.
 
 ```bash
