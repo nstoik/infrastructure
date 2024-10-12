@@ -2,6 +2,7 @@
 # Setup a cloud VM template to be used for cloning.
 # Will create a VM template if it does not exist.
 # Will delete a VM template if it exists and state is absent.
+# Will delete and recreate a VM template if it exists and state is recreate.
 
 # Required inputs:
 #  proxmox_vm_id: The VM ID to use for the template
@@ -18,11 +19,37 @@
     - proxmox
     - proxmox.template
 
+# Delete  VM template with image {{ proxmox_cloud_img.template_name }}
+- name: Delete VM template with image {{ proxmox_cloud_img.template_name }}
+  ansible.builtin.command:
+    cmd: qm destroy {{ proxmox_vm_id }} --purge --destroy-unreferenced-disks
+  become: true
+  changed_when:
+    proxmox_vm_config.stat.exists and
+    proxmox_cloud_img.state in ["absent", "recreate"]
+  when:
+    proxmox_vm_config.stat.exists and
+    proxmox_cloud_img.state in ["absent", "recreate"] and
+    inventory_hostname in proxmox_cloud_img.proxmox_nodes
+  tags:
+    - proxmox
+    - proxmox.template
+
+# Check if the VM config file exists (does the VM exist)
+- name: Check if the VM exists again
+  ansible.builtin.stat:
+    path: /etc/pve/qemu-server/{{ proxmox_vm_id }}.conf
+  register: proxmox_vm_config
+  become: true
+  tags:
+    - proxmox
+    - proxmox.template
+
 # Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
 - name: Setup cloud VM template with image {{ proxmox_cloud_img.template_name }}
   when:
     not proxmox_vm_config.stat.exists and
-    proxmox_cloud_img.state == "present" and
+    proxmox_cloud_img.state in ["present", "recreate"] and
     inventory_hostname in proxmox_cloud_img.proxmox_nodes
   tags:
     - proxmox
@@ -95,19 +122,3 @@
             cmd: qm template {{ proxmox_vm_id }}
           become: true
           changed_when: false
-
-# Delete  VM template with image {{ proxmox_cloud_img.template_name }}
-- name: Delete VM template with image {{ proxmox_cloud_img.template_name }}
-  ansible.builtin.command:
-    cmd: qm destroy {{ proxmox_vm_id }} --purge --destroy-unreferenced-disks
-  become: true
-  changed_when:
-    proxmox_vm_config.stat.exists and
-    proxmox_cloud_img.state == "absent"
-  when:
-    proxmox_vm_config.stat.exists and
-    proxmox_cloud_img.state == "absent" and
-    inventory_hostname in proxmox_cloud_img.proxmox_nodes
-  tags:
-    - proxmox
-    - proxmox.template
