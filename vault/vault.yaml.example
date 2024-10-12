@@ -40,3 +40,6 @@ secret_postfix_mg_storage_password: "get from mailgun"
 
 # Unifi OS, Controller, and Protect secrets
 secret_unifi_username_password: "change_me"
+
+# Ntfy secrets
+secret_ntfy_password: "change_me"
