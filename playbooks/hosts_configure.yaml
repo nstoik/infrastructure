@@ -66,3 +66,7 @@
         hostvars[inventory_hostname].ntfy_setup is true
       tags:
         - ntfy
+
+# Run the netmaker netclient playbook
+- name: Import netmaker netclient playbook
+  import_playbook: ../services/netmaker/netclients.yaml
