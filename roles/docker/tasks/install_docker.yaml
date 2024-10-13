@@ -52,6 +52,7 @@
         mode: "0755"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
+      become: true
 
     # Create the directory for docker mounts files
     - name: Create the directory for docker mounts files
@@ -61,3 +62,4 @@
         mode: "0755"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
+      become: true
