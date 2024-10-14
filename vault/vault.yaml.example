@@ -45,4 +45,4 @@ secret_ntfy_password: "change_me"
 # Traefik secrets
 secret_traefik_dashboard_password: "change_me"
 # Hash generated from https://hostingcanada.org/htpasswd-generator/ with mode bcrypt
-secret_traefik_dashboard_password_prehashed: "hashed version of 'secret_traefik_dashboard_password'"
+secret_traefik_dashboard_password_hash: "hashed version of 'secret_traefik_dashboard_password'"
