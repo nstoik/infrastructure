@@ -33,8 +33,8 @@ all:
             disk_size: 20G
             net0: virtio,bridge=vmbr0
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
-            cores: 8
-            memory: 16384
+            cores: 12
+            memory: 20480
             balloon: 4096
             passthrough_disks:
               - comment: 12TB disk for ZFS
