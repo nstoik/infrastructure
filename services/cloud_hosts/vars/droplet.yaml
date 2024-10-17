@@ -22,11 +22,6 @@ cloud_droplets:
         state: 'present'
       - name: 'docker-cloud-01'
         zone: 'stechsolutions.ca'
-        record: 'portal'
-        proxied: false
-        state: 'present'
-      - name: 'docker-cloud-01'
-        zone: 'stechsolutions.ca'
-        record: 'notify'
+        record: 'ntfy'
         proxied: false
         state: 'present'
