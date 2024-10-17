@@ -1,4 +1,9 @@
 ---
+- Monitoring:
+    - Ntfy:
+        href: https://ntfy.stechsolutions.ca
+        description: Ntfy Messaging
+        icon: ntfy.png
 - Proxy:
     - Traefik Remote:
         href: https://docker-cloud-01.stechsolutions.ca/dashboard/
