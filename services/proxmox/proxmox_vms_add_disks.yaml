@@ -1,0 +1,41 @@
+---
+# This playbook will add the disks for all the specified VMs. It will add
+# virtual and passthrough disks to the VMs in Proxmox.
+
+# Run the proxmox role
+- name: Run the proxmox role
+  hosts: proxmox_nodes
+  vars_files:
+    - ../../vault/vault.yaml
+  tags:
+    - proxmox
+    - proxmox.vm
+
+  tasks:
+    # Build the list of VMs to update
+    # Convert the ansible_limit variable to a list of VMs
+    - name: Convert the ansible_limit variable to a list of VMs
+      ansible.builtin.set_fact:
+        vm_hosts: "{{ ansible_limit | split(':') }}"
+      when: ansible_limit is defined
+
+    # Ensure the vm_hosts are only in the proxmox_vms group
+    - name: Ensure the vm_hosts are only in the proxmox_vms group
+      ansible.builtin.set_fact:
+        vm_hosts: "{{ vm_hosts | intersect(groups['proxmox_vms']) }}"
+      when: ansible_limit is defined
+
+    # If the vm_hosts variable is not defined, use all the VMs in the proxmox_vms group
+    - name: Default to all VMs in the proxmox_vms group if vm_hosts is empty
+      ansible.builtin.set_fact:
+        vm_hosts: "{{ groups['proxmox_vms'] }}"
+      when: vm_hosts is not defined or vm_hosts == []
+
+    # This updates the disks for the VMs
+    - name: Run the proxmox role to update disks for VMs
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: attach_disks
+      vars:
+        proxmox_vm_info: "{{ hostvars[item].proxmox_vm }}"
+      loop: "{{ vm_hosts }}"

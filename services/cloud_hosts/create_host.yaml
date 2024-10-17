@@ -1,0 +1,81 @@
+---
+# Set up a VPS on DigtalOcean.
+
+- name: Create DigitalOcean Droplet
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../../vault/vault.yaml
+    - vars/droplet.yaml
+
+  tasks:
+    - name: Configure block storage on digitalocean
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: create_block_storage
+      vars:
+        digitalocean_volumes: "{{ cloud_volumes }}"
+      when: cloud_volumes is defined
+      tags:
+        - digitalocean
+        - digitalocean.storage
+
+    - name: Configure DigitalOcean Droplet
+      ansible.builtin.include_tasks:
+        file: create_droplet.yaml
+      vars:
+        droplet: "{{ item }}"
+      loop: "{{ cloud_droplets }}"
+      tags:
+        - cloudflare
+        - digitalocean
+        - digitalocean.droplet
+
+- name: Initial Setup of Netmaker Droplet
+  hosts: do_ansible
+  gather_facts: false
+  vars_files:
+    - ../../vault/vault.yaml
+    - vars/droplet.yaml
+
+  tasks:
+    - name: Import create_user role from digitalocean
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: create_user
+      tags:
+        - digitalocean
+        - digitalocean.user
+
+    - name: Import install_agent role from digitalocean
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: install_agent
+      tags:
+        - digitalocean
+
+    # Get the droplet definition using the inventory_hostname
+    - name: Get the droplet definition
+      ansible.builtin.set_fact:
+        droplet: "{{ (cloud_droplets | selectattr('name', 'equalto', inventory_hostname) | first) | default(None) }}"
+
+    # The user has to be created before the block storage can be formatted.
+    - name: Format the block storage
+      ansible.builtin.include_role:
+        name: fileserver
+        tasks_from: setup_disks
+      vars:
+        fileserver_attached_disks: "{{ droplet.volumes }}"
+      when: droplet is defined and droplet.volumes is defined
+      tags:
+        - digitalocean
+        - digitalocean.storage
+
+    # Wait for any unattended upgrades to finish
+    - name: Wait for unattended upgrades to finish
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: wait_for_unattended_upgrade
+      tags:
+        - base
+        - base.apt

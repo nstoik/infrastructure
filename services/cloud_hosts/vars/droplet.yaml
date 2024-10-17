@@ -1,0 +1,27 @@
+---
+
+# if a cloud volume is added, a volume section is also required
+# for the droplet. See Netmaker Droplet for an example.
+# cloud_volumes:
+#   -
+
+cloud_droplets:
+  # docker-cloud-01 Droplet
+  - name: 'docker-cloud-01'
+    name_fqdn: 'docker-cloud-01.stechsolutions.ca'
+    state: 'present'
+    size: 's-1vcpu-1gb'
+    region: 'tor1'
+    image: 'ubuntu-24-04-x64'
+    tags: ['HTTPS', 'Docker']
+    cf_records:
+      - name: 'docker-cloud-01'
+        zone: 'stechsolutions.ca'
+        record: 'docker-cloud-01'
+        proxied: false
+        state: 'present'
+      - name: 'docker-cloud-01'
+        zone: 'stechsolutions.ca'
+        record: 'ntfy'
+        proxied: false
+        state: 'present'

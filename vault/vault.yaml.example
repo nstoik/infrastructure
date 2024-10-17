@@ -2,7 +2,6 @@
 # Vault secrets
 
 # SSH secrets
-# yamllint disable rule:line-length
 secret_ssh_keys:
   - name: "Device Name 1"
     key: "change_me"
@@ -10,7 +9,6 @@ secret_ssh_keys:
     key: "change_me"
 
 # Digitalocean secrets
-# yamllint disable rule:line-length
 secret_do_token: "change_me"
 
 # Cloudflare secrets
@@ -40,3 +38,11 @@ secret_postfix_mg_storage_password: "get from mailgun"
 
 # Unifi OS, Controller, and Protect secrets
 secret_unifi_username_password: "change_me"
+
+# Ntfy secrets
+secret_ntfy_password: "change_me"
+
+# Traefik secrets
+secret_traefik_dashboard_password: "change_me"
+# Hash generated from https://hostingcanada.org/htpasswd-generator/ with mode bcrypt
+secret_traefik_dashboard_password_hash: "hashed version of 'secret_traefik_dashboard_password'"

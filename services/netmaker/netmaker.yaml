@@ -24,8 +24,8 @@
         name: digitalocean
         tasks_from: create_block_storage
       vars:
-        digitalocean_volume:
-          - "{{ netmaker_volume }}"
+        digitalocean_volumes:
+          - "{{ netmaker_attached_volume }}"
       tags:
         - digitalocean
         - digitalocean.storage
@@ -59,7 +59,7 @@
         name: cloudflare
       vars:
         cloudflare_ip_address: "{{ do_ip_address | default('') }}"
-        cloudflare_record: "{{ netmaker_cf_record }}"
+        cloudflare_records: "{{ netmaker_cf_records }}"
       tags:
         - cloudflare
 
@@ -91,27 +91,10 @@
     - netmaker.full_setup
 
   tasks:
-    # Get the changed status from the droplet creation play
-    # The create_user_flag will either be 'true' or 'false'.
-    # This is used to determine if the user needs to be created the first time
-    # If the status is not changed, the create_user play will not run.
-    #
-    # The hostvars['localhost']['digitalocean_droplet_result'] list contains
-    # a dictionary with the keys 'changed', 'data', 'failed'.
-
-    - name: Get the changed status from the digitalocean_droplet_result variable
-      ansible.builtin.set_fact:
-        create_user_flag: >-
-          {{ hostvars['localhost']['digitalocean_droplet_result']['changed'] }}
-      no_log: true
-      tags:
-        - digitalocean
-
     - name: Import create_user role from digitalocean
       ansible.builtin.include_role:
         name: digitalocean
         tasks_from: create_user
-      when: create_user_flag
       tags:
         - digitalocean
         - digitalocean.user
@@ -127,11 +110,10 @@
     # The user has to be created before the block storage can be formatted.
     - name: Format the block storage
       ansible.builtin.include_role:
-        name: digitalocean
-        tasks_from: format_block_storage
+        name: fileserver
+        tasks_from: setup_disks
       vars:
-        digitalocean_volume:
-          - "{{ netmaker_volume }}"
+        fileserver_attached_disks: "{{ netmaker_droplet.volumes }}"
       tags:
         - digitalocean
         - digitalocean.storage

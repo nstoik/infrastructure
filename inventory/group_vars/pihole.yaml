@@ -19,6 +19,7 @@ pihole_dns_entries:
     ip: 10.10.1.200
   - domain: "pve3.home.stechsolutions.ca"
     ip: 10.10.5.8
+    # host is down. IP and domain is reserved for future backup host
   - domain: "proxmox.home.stechsolutions.ca"
     ip: 10.10.5.9
   - domain: "pihole-3.home.stechsolutions.ca"

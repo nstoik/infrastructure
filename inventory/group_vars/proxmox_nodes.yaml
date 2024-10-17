@@ -37,6 +37,7 @@ proxmox_storage:
     prune_backups: "keep-last=5,keep-monthly=2,keep-yearly=1"
 
 # Proxmox cloud images
+# state: present, absent, recreate
 proxmox_cloud_imgs:
   # yamllint disable-line rule:line-length
   - url: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
@@ -49,7 +50,7 @@ proxmox_cloud_imgs:
   - url: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
     template_name: "ubuntu-24.04-server-cloudimg"
     id: 9001
-    state: "present"
+    state: "recreate"
     # List of proxmox nodes to download the cloud image to
     proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
 

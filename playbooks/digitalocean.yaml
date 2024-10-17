@@ -1,0 +1,25 @@
+---
+# configure the DigitalOcean configuration
+
+- name: Configure DigitalOcean
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../vault/vault.yaml
+
+  tasks:
+    - name: Configure tags on digitalocean
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: tag
+      tags:
+        - digitalocean
+        - digitalocean.tags
+
+    - name: Configure firewalls on digitalocean
+      ansible.builtin.include_role:
+        name: digitalocean
+        tasks_from: firewall
+      tags:
+        - digitalocean
+        - digitalocean.firewall

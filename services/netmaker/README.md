@@ -151,7 +151,7 @@ You can see what the netmaker-exporter is sending by posting to the `prometheus\
 ## Removal
 To remove the Netmaker server completely set the following two varaiables in the [vars/netmaker.yaml](vars/netmaker.yaml) file to `absent`:
 
-* netmaker_volume.state = absent
+* netmaker_attached_volume.state = absent
 * netmaker_droplet.state = absent
 
 Then run the [netmaker.yaml](netmaker.yaml) playbook again.

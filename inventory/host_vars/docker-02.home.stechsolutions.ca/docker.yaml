@@ -67,21 +67,29 @@ docker_compose:
         ports:
           - 80:80
           - 443:443
-          - 8080:8080
         depends_on:
           - docker-socket-proxy
         volumes:
           - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
         restart: unless-stopped
         labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.dashboard.rule=Host(`docker-02.home.stechsolutions.ca`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+          - "traefik.http.routers.dashboard.service=api@internal"
+          - "traefik.http.routers.dashboard.middlewares=auth"
+          - "traefik.http.middlewares.auth.basicauth.users={{ default_user }}:{{ secret_traefik_dashboard_password_hash }}"
+          - "traefik.http.routers.dashboard.entrypoints=websecure"
+          - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
           - "homepage.group=Proxy"
           - "homepage.name=Traefik"
           - "homepage.description=Reverse Proxy"
           - "homepage.icon=traefik.png"
-          - "homepage.href=http://docker-02.home.stechsolutions.ca:8080/dashboard/#/"
-          - "homepage.siteMonitor=http://docker-02.home.stechsolutions.ca:8080"
+          - "homepage.href=https://docker-02.home.stechsolutions.ca/dashboard/#/"
+          - "homepage.siteMonitor=https://docker-02.home.stechsolutions.ca/dashboard/#/"
           - "homepage.widget.type=traefik"
-          - "homepage.widget.url=http://docker-02.home.stechsolutions.ca:8080"
+          - "homepage.widget.url=https://docker-02.home.stechsolutions.ca"
+          - "homepage.widget.username={{ default_user }}"
+          - "homepage.widget.password={{ secret_traefik_dashboard_password }}"
           - "homepage.widget.routers="
           - "homepage.widget.services="
           - "homepage.widget.middleware="

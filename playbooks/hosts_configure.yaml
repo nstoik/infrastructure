@@ -33,9 +33,7 @@
       ansible.builtin.import_role:
         name: base
       vars:
-        # yamllint disable-line rule:line-length
         base_additional_packages: "{{ hostvars[inventory_hostname].proxmox_vm_additonal_packages }}"
-        # yamllint disable-line rule:line-length
         base_additional_services: "{{ hostvars[inventory_hostname].proxmox_vm_additional_services }}"
         base_docker_install: "{{ hostvars[inventory_hostname].docker_install }}"
         base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
@@ -56,3 +54,17 @@
       become: true
       tags:
         - base.geerlingguy.security
+
+    # Run the ntfy role
+    - name: Import ntfy role
+      ansible.builtin.import_role:
+        name: ntfy
+      when:
+        hostvars[inventory_hostname].ntfy_setup is defined and
+        hostvars[inventory_hostname].ntfy_setup is true
+      tags:
+        - ntfy
+
+# Run the netmaker netclient playbook
+- name: Import netmaker netclient playbook
+  import_playbook: ../services/netmaker/netclients.yaml

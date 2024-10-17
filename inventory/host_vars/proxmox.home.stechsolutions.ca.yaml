@@ -1,4 +1,0 @@
----
-# Host variables for proxmox.home.stechsolutions.ca host
-
-ansible_host: proxmox.home.stechsolutions.ca

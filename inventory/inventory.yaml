@@ -7,7 +7,6 @@ all:
     pihole-2.home.stechsolutions.ca:
     pihole-3.home.stechsolutions.ca:
     prometheus.home.stechsolutions.ca:
-    proxmox.home.stechsolutions.ca:
     pve3.home.stechsolutions.ca:
     vpn.arnie-karen:
     vpn.home.stechsolutions.ca:
@@ -27,9 +26,10 @@ all:
     proxmox_nodes:
       hosts:
         pve3.home.stechsolutions.ca:
-        proxmox.home.stechsolutions.ca:
     proxmox_vms:
     docker_hosts:
       hosts:
         docker-testing.home.stechsolutions.ca:
         docker-02.home.stechsolutions.ca:
+      children:
+        do_docker:

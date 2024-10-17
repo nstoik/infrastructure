@@ -1,4 +1,9 @@
 ---
+- Proxy:
+    - Traefik Remote:
+        href: https://docker-cloud-01.stechsolutions.ca/dashboard/
+        description: Remote Reverse Proxy
+        icon: traefik.png
 - Network:
     - Unifi OS:
         href: https://unifi.home.stechsolutions.ca
