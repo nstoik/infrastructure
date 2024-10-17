@@ -60,3 +60,22 @@ netclients:
           }
         ]
       }
+    docker-cloud-01.stechsolutions.ca:
+      netmaker_shorthost: docker-cloud-01
+      netmaker_networks:
+        - {
+          name: 'monitoring',
+          tags: "monitoring-tag"
+        }
+      netmaker_host_settings: {
+        isdefault: false,
+        node_settings: [
+          {
+            # monitoring network
+            network: '{{ netmaker_networks[0].name }}',
+            isegressgateway: false,
+            isingressgateway: false,
+            egressgatewayranges: [],
+          }
+        ]
+      }
