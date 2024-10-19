@@ -5,11 +5,6 @@ ntfy_setup: true
 ntfy_user: "{{ default_user }}"
 ntfy_password: "{{ secret_ntfy_password }}"
 ntfy_base_url: "https://ntfy.stechsolutions.ca"
-ntfy_topics:
-  - topic: "{{ ntfy_base_url }}/test"
-    message: "Test message"
-  - topic: "{{ ntfy_base_url }}/test2"
-    message: "Test message"
 
 # docker container configuration files
 docker_configuration_files:
