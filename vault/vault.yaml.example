@@ -4,45 +4,45 @@
 # SSH secrets
 secret_ssh_keys:
   - name: "Device Name 1"
-    key: "change_me"
+    key: change_me
   - name: "Device Name 2"
-    key: "change_me"
+    key: change_me
 
 # Digitalocean secrets
-secret_do_token: "change_me"
+secret_do_token: change_me
 
 # Cloudflare secrets
-secret_cf_token: "change_me"
+secret_cf_token: change_me
 
 # Default user values
-secret_user_password: "change_me"
-secret_user_password_prehashed: "hashed version of 'secret_user_password'"
-secret_become_pass: "change_me"
+secret_user_password: change_me
+secret_user_password_prehashed: hashed version of 'secret_user_password'
+secret_become_pass: change_me
 
 # Netclient_manual become password
-secret_become_pass_netclient_arnie: "change_me"
+secret_become_pass_netclient_arnie: change_me
 
 # Netmaker secrets
-secret_nm_master_key: "change_me"
-secret_nm_mq_password: "change_me"
-secret_nm_license_key: "change_me"
-secret_nm_tenant_id: "change_me"
-secret_nm_admin_account: "change_me"
-secret_nm_admin_password: "change_me"
+secret_nm_master_key: change_me
+secret_nm_mq_password: change_me
+secret_nm_license_key: change_me
+secret_nm_tenant_id: change_me
+secret_nm_admin_account: change_me
+secret_nm_admin_password: change_me
 
 # Healthchecks.io secrets
-secret_hc_snapraid_uuid: "change_me"
+secret_hc_snapraid_uuid: change_me
 
 # Postfix secrets
-secret_postfix_mg_storage_password: "get from mailgun"
+secret_postfix_mg_storage_password: get from mailgun
 
 # Unifi OS, Controller, and Protect secrets
-secret_unifi_username_password: "change_me"
+secret_unifi_username_password: change_me
 
 # Ntfy secrets
-secret_ntfy_password: "change_me"
+secret_ntfy_password: change_me
 
 # Traefik secrets
-secret_traefik_dashboard_password: "change_me"
+secret_traefik_dashboard_password: change_me
 # Hash generated from https://hostingcanada.org/htpasswd-generator/ with mode bcrypt
-secret_traefik_dashboard_password_hash: "hashed version of 'secret_traefik_dashboard_password'"
+secret_traefik_dashboard_password_hash: hashed version of 'secret_traefik_dashboard_password'
