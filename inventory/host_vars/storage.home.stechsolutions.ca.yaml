@@ -10,6 +10,10 @@ fileserver_setup_snapraid: true
 fileserver_setup_nfs_server: true
 fileserver_setup_zfs: true
 
+ntfy_base_url: "https://ntfy.stechsolutions.ca"
+ntfy_user: "{{ default_user }}"
+
+
 fileserver_zfs_pool:
   pool_name: storage1
   raid_type: mirror
@@ -66,7 +70,6 @@ fileserver_mergerfs:
   src: /mnt/disks/disk*
   mount_point: /mnt/storage
   filesystem_type: fuse.mergerfs
-  # yamllint disable rule:line-length
   options: "defaults,use_ino,allow_other,dropcacheonclose=true,category.create=mfs,minfreespace=4G,fsname=mergerfs"
   state: mounted
   mergerfs_tools:
@@ -89,9 +92,11 @@ fileserver_snapraid:
 
 fileserver_snapraid_aio:
   url: https://github.com/auanasgheps/snapraid-aio-script/archive/refs/tags/v3.3.2.tar.gz
-  # yamllint enable rule:line-length
   version: 3.3.2
   enable_hc: true
+  enable_ntfy: true
+  ntfy_script_path: /usr/local/bin/snapraid-aio-script/ntfy-send-snapraid.sh
+  ntfy_topic: "SnapRAID"
   sync_warn_threshold: 5
   scrub_percent: 5
   scrub_age: 10

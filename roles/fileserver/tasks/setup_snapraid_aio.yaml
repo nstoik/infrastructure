@@ -39,6 +39,23 @@
         mode: '+x'
       become: true
 
+    # Setup ntfy-send.sh script
+    - name: Setup ntfy-send.sh script
+      ansible.builtin.template:
+        src: ntfy-send-snapraid.sh.j2
+        dest: "{{ fileserver_snapraid_aio.ntfy_script_path }}"
+        mode: '0644'
+      vars:
+        ntfy_topic: "{{ fileserver_snapraid_aio.ntfy_topic }}"
+      become: true
+
+    # Set ntfy-send.sh script permissions
+    - name: Set ntfy-send.sh script permissions
+      ansible.builtin.file:
+        path: "{{ fileserver_snapraid_aio.ntfy_script_path }}"
+        mode: '+x'
+      become: true
+
     # Setup SnapRAID aio configuration
     - name: Setup SnapRAID aio configuration
       ansible.builtin.template:

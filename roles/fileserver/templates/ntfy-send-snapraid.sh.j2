@@ -1,0 +1,21 @@
+#!/bin/bash
+# ntfy-send-snapraid.sh [title] [message]
+
+# Get the current date and time in YYYY-MM-DD HH:MM:SS format
+CURRENT_DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
+CONTENT_TYPE="text/html"
+
+NTFY_API_URL="{{ ntfy_base_url}}/{{ ntfy_topic }}"
+
+AUTH_HEADER="Basic $(echo -n '{{ ntfy_user }}:{{ secret_ntfy_password }}' | base64)"
+
+echo $AUTH_HEADER
+
+# Send the message to the ntfy server using curl
+
+curl \
+    -H "Authorization: $AUTH_HEADER" \
+    -H "Title: $1" \
+    -H "Content-Type: $CONTENT_TYPE" \
+    -d "message=$2" \
+    $NTFY_API_URL
