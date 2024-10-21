@@ -93,7 +93,8 @@ fileserver_snapraid:
 fileserver_snapraid_aio:
   # url: https://github.com/auanasgheps/snapraid-aio-script/archive/refs/tags/v3.3.2.tar.gz
   # use my fork as it has changes to work with ntfy
-  # Credit: https://www.reddit.com/r/Snapraid/comments/1blqvay/comment/kws09bh/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+  # Credit:
+  # https://www.reddit.com/r/Snapraid/comments/1blqvay/comment/kws09bh/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
   url: https://github.com/nstoik/snapraid-aio-script/archive/refs/tags/v3.3.2.tar.gz
   version: 3.3.2
   enable_hc: true
