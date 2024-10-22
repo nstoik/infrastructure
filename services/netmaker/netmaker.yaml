@@ -160,8 +160,8 @@
         name: base
       vars:
         base_additional_packages: "{{ netmaker_server_additional_packages }}"
-        base_docker_install: "{{ netmaker_server_docker_install }}"
-        base_dotfiles: "{{ netmaker_server_dotfiles }}"
+        base_docker_install: "{{ hostvars[inventory_hostname].docker_install }}"
+        base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
       tags:
         - base
         - base.apt

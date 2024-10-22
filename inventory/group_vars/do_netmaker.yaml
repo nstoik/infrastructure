@@ -5,8 +5,8 @@ netmaker_server_additional_packages:
   - jq
   - dnsutils
 
-netmaker_server_docker_install: true
+docker_install: true
 
-netmaker_server_dotfiles:
+dotfiles:
   install: true
   dotbot_skip_ssh_authorized_file: false
