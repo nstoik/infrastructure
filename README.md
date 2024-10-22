@@ -66,6 +66,7 @@ The playbooks are:
 - [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
 - [digitalocean.yaml](playbooks/digitalocean.yaml) - Configure DigitalOcean configuration as specified.
 - [docker_compose.yaml](playbooks/docker_compose.yaml) - Run the docker role on the docker hosts.
+- [dotfiles_update.yaml](playbooks/dotfiles_update.yaml) - Update the dotfiles on all hosts
 - [hosts_configure.yaml](playbooks/hosts_configure.yaml) - Configure the hosts. This defaults to all hosts but can be limited to specific hosts.
     - eg. `ansible-playbook playbooks/hosts_configure.yaml --limit=docker-02.home.stechsolutions.ca`
 - [netmaker.yaml](playbooks/netmaker.yaml) - The playbook to set up the Netmaker VPN server and clients
@@ -81,6 +82,7 @@ The roles are:
 - [docker](roles/docker/)
 - [fileserver](roles/fileserver/)
 - [netmaker](roles/netmaker/)
+- [ntfy](roles/ntfy/)
 - [pihole](roles/pihole/)
 - [proxmox](roles/proxmox/)
 
@@ -102,8 +104,13 @@ The files directory contains files that are used by certain roles or hosts.
     - [services.yaml](files/homepage/services.yaml) - Services for the homepage
     - [settings.yaml](files/homepage/settings.yaml) - Settings for the homepage
     - [widgets.yaml](files/homepage/widgets.yaml) - Widgets for the homepage
+- [ntfy](files/ntfy) - Ntfy configuration files
+    - [server.yaml](files/ntfy/server.yaml) - Ntfy server configuration
 - [traefik](files/traefik) - Traefik configuration files
+    - [dynamic.yaml](files/traefik/dynamic.yaml) - Traefik dynamic configuration for https proxy
+        - [unifi.yaml](files/traefik/dynamic/unifi.yaml) - Unifi router file
     - [traefik-dev.yaml](files/traefik/traefik-dev.yaml) - Traefik configuration for development
+    - [traefik-prod-no-file-provider.yaml](files/traefik/traefik-prod-no-file-provider.yaml) - Traefik configuration for production without a file provider for dynamic configuration.
     - [traefik-prod.yaml](files/traefik/traefik-prod.yaml) - Traefik configuration for production
 
 ## Ansible Tags
@@ -166,6 +173,7 @@ Inventory files are as follows in the [inventory](inventory) directory:
 - [group_vars](inventory/group_vars/) - Inventory for each group
     - [all.yaml](inventory/group_vars/all.yaml) - Inventory for all hosts
     - [do_ansible.yaml](inventory/group_vars/do_ansible.yaml) - Inventory for the DigitalOcean VMs that are managed by Ansible
+    - [do_docker.yaml](inventory/group_vars/do_docker.yaml) - Inventory for the DigitalOcean VMs that are used for Docker
     - [do_netmaker.yaml](inventory/group_vars/do_netmaker.yaml) - Inventory for the DigitalOcean VMs that are used for Netmaker
     - [netclients_manual.yaml](inventory/group_vars/netclients_manual.yaml) - Inventory for the netclients that have to be installed manually
     - [netclients.yaml](inventory/group_vars/netclients.yaml) - Inventory for the netclients
