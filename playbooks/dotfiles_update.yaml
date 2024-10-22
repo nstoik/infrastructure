@@ -1,0 +1,20 @@
+---
+# Update dotfiles on all hosts
+
+- name: Update dotfiles on all hosts
+  hosts: all
+  vars_files:
+    - ../vault/vault.yaml
+
+
+  tasks:
+    - name: Update dotfiles
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: setup_dotfiles.yaml
+      vars:
+        base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
+      when: base_dotfiles['install'] is true
+      tags:
+        - base
+        - base.dotfiles
