@@ -14,6 +14,9 @@ layout:
     style: row
     columns: 4
     useEqualHeights: true
+  Monitoring:
+    style: row
+    columns: 4
   Proxy:
     style: row
     columns: 4
@@ -21,6 +24,3 @@ layout:
   Network:
     style: row
     columns: 3
-  Monitoring:
-    style: row
-    columns: 4

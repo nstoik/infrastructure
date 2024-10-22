@@ -54,7 +54,9 @@ DISCORD_WEBHOOK_URL="your-webhook-url"
 # This script will pass the following parameters to HOOK_NOTIFICATION:
 # 1st parameter will be the subject
 # 2nd parameter will be the body
-HOOK_NOTIFICATION=""
+HOOK_NOTIFICATION={% if fileserver_snapraid_aio.enable_ntfy %}"{{ fileserver_snapraid_aio.ntfy_script_path }}"
+{% else %}""
+{% endif %}
 
 ### SCRIPT AND SNAPRAID SETTINGS ###
 
@@ -140,7 +142,7 @@ SMART_LOG_NOTIFY=0
 # Run 'snapraid status' command to show array general information.
 # Use SNAP_STATUS_NOTIFY to send the output to Telegram/Discord
 # 1 to enable, any other value to disable.
-SNAP_STATUS=0
+SNAP_STATUS=1
 SNAP_STATUS_NOTIFY=0
 
 # SnapRAID configuration file location. The default path works on most 

@@ -69,7 +69,7 @@ base-url: "{{ ntfy_base_url }}"
 #   ntfy user and group by running: chown ntfy.ntfy <filename>.
 #
 cache-file: /var/lib/ntfy/cache.db
-cache-duration: "72h"
+cache-duration: "30d"
 # cache-startup-queries:
 # cache-batch-size: 0
 # cache-batch-timeout: "0ms"
@@ -114,7 +114,7 @@ behind-proxy: true
 attachment-cache-dir: /var/lib/ntfy/attachments
 # attachment-total-size-limit: "5G"
 # attachment-file-size-limit: "15M"
-attachment-expiry-duration: "24h"
+attachment-expiry-duration: "30d"
 
 # If enabled, allow outgoing e-mail notifications via the 'X-Email' header. If this header is set,
 # messages will additionally be sent out as e-mail using an external SMTP server.

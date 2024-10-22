@@ -25,13 +25,3 @@
   when: ntfy_user_list.stderr.find(ntfy_user) == -1
   tags:
     - ntfy
-
-# Send the ntfy messages to create the topics
-- name: Send the ntfy messages to create the topics
-  community.docker.docker_container_exec:
-    container: ntfy
-    command: ntfy publish -u {{ ntfy_user }}:{{ ntfy_password }} {{ item.topic }} "{{ item.message }}"
-  register: ntfy_topics
-  loop: "{{ ntfy_topics }}"
-  tags:
-    - ntfy

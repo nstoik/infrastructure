@@ -1,0 +1,25 @@
+#!/bin/bash
+# Credit: https://www.reddit.com/r/Snapraid/comments/1blqvay/comment/kws09bh/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+# ntfy-send-snapraid.sh [title] [message] [attachment]
+
+# Get the current date and time in YYYY-MM-DD HH:MM:SS format
+CURRENT_DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
+CONTENT_TYPE="text/html"
+
+NTFY_API_URL="{{ ntfy_base_url}}/{{ ntfy_topic }}"
+NTFY_FILE="report-$CURRENT_DATETIME.html"
+
+AUTH_HEADER="Basic $(echo -n '{{ ntfy_user }}:{{ secret_ntfy_password }}' | base64)"
+
+# Convert newline to \n in notification message
+MESSAGE_ENCODED=$(echo "$2" | sed '$! s/$/\\n/' | tr -d '\n')
+
+# Send the message to the ntfy server using curl
+curl -s \
+    -H "Authorization: $AUTH_HEADER" \
+    -H "X-Title: $1" \
+    -H "X-Message: $MESSAGE_ENCODED" \
+    -H "X-Filename: $NTFY_FILE" \
+    --data-binary "@-" \
+    -H "Content-Type: $CONTENT_TYPE" \
+    "$NTFY_API_URL" < <(echo "$3")
