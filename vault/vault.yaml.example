@@ -50,3 +50,4 @@ secret_traefik_dashboard_password_hash: hashed version of 'secret_traefik_dashbo
 # Healthchecks secrets
 secret_hc_mg_password: get from mailgun
 secret_hc_secret_key: change_me
+secret_hc_db_password: change_me

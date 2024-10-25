@@ -6,6 +6,10 @@ ntfy_user: "{{ default_user }}"
 ntfy_password: "{{ secret_ntfy_password }}"
 ntfy_base_url: "https://ntfy.stechsolutions.ca"
 
+# Healthchecks variables
+hc_db_name: hc
+hc_db_user: healthchecks_user
+hc_db_password: "{{ secret_hc_db_password }}"
 # docker container configuration files
 docker_configuration_files:
   - name: traefik.yaml
@@ -80,6 +84,8 @@ docker_compose:
       traefik:
         name: traefik
         external: true
+      postgres:
+        name: postgres
     containers:
       - container_name: ntfy
         image: binwiederhier/ntfy:v2.11.0
@@ -102,9 +108,22 @@ docker_compose:
           - "traefik.http.services.ntfy.loadbalancer.server.port=80"
           - "traefik.http.routers.ntfy.entrypoints=websecure"
           - "traefik.http.routers.ntfy.tls.certresolver=letsencrypt"
-          - "homepage.group=Monitoring"
-          - "homepage.name=Ntfy"
-          - "homepage.description=Ntfy Notification Server"
-          - "homepage.icon=ntfy.png"
-          - "homepage.href=https://ntfy.stechsolutions.ca"
-          - "homepage.siteMonitor=https://ntfy.stechsolutions.ca"
+      - container_name: postgres_db
+        image: postgres:17
+        user: 1000:1000
+        networks:
+          - postgres
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U {{ hc_db_user }} -d {{ hc_db_name }}"]
+          interval: 60s
+          timeout: 10s
+          retries: 3
+          start_period: 40s
+        environment:
+          - POSTGRES_DB={{ hc_db_name }}
+          - POSTGRES_USER={{ hc_db_user }}
+          - POSTGRES_PASSWORD={{ secret_hc_db_password }}
+        volumes:
+          - "/home/{{ default_user }}/docker_mounts/monitoring/postgres:/var/lib/postgresql/data"
+          - "/etc/passwd:/etc/passwd:ro"
+        restart: unless-stopped
