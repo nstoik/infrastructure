@@ -9,6 +9,22 @@
     - docker
     - docker.compose
 
+# create any docker mounts subdirectories if required
+- name: Create any docker mounts subdirectories if required
+  ansible.builtin.file:
+    path: "{{ folder.dest }}"
+    state: directory
+    mode: "{{ folder.mode }}"
+    owner: "{{ folder.owner | default(default_user) }}"
+    group: "{{ folder.group | default(default_user) }}"
+  loop: "{{ docker_mounts_subfolders }}"
+  loop_control:
+    loop_var: folder
+    label: "{{ folder.name }}"
+  tags:
+    - docker
+    - docker.compose
+
 # block for copying configuration files
 - name: Copy any required configuration files for the docker containers
   tags:

@@ -20,7 +20,14 @@ docker_template_files:
     src: "{{ inventory_dir }}/../files/ntfy/server.yaml"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy/server.yaml
     mode: '0664'
-    container_name: ntfy
+    container_name: 
+    
+# docker mounts subfolders
+docker_mounts_subfolders:
+  - name: postgres
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/postgres
+    mode: '0775'
+    container_name: postgres_db
 
 # docker compose:
 docker_compose:
