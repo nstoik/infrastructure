@@ -144,6 +144,7 @@ The following ansible tags are available to specify specific tasks to run.
     - fileserver.zfs - Configure zfs
     - fileseerver.nfs-server - Configure an NFS server
     - fileserver.nfs-client - Configure an NFS client
+    - fileserver.swap - Configure swap file
 - netmaker - Configure a Netmaker server
     - netmaker.full_setup - Complete the full setup of a Netmaker server
     - netmaker.nmctl - Install the nmctl command line tool
