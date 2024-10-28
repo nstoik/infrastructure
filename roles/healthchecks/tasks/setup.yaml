@@ -1,0 +1,87 @@
+---
+# Tasks to create the healthchecks superuser
+
+# Create the superuser for the healthchecks container if it does not exist
+- name: Create the superuser for the healthchecks container if it does not exist
+  ansible.builtin.command: |
+    docker container exec healthchecks /opt/healthchecks/manage.py shell -c
+    "from django.contrib.auth import get_user_model
+    User = get_user_model()
+    if not User.objects.filter(email='{{ hc_superuser_email }}').exists():
+      User.objects.create_superuser(username='{{ hc_superuser_username }}', email='{{ hc_superuser_email }}', password='{{ hc_superuser_password }}')
+    else:
+      print('Superuser already exists')"
+  register: healthchecks_superuser_create_result
+  changed_when: healthchecks_superuser_create_result.stdout != "Superuser already exists"
+  tags:
+    - healthchecks
+
+# Get the list of projects.
+- name: Get the list of projects
+  ansible.builtin.command: |
+    docker container exec -it healthchecks /opt/healthchecks/manage.py shell -c
+    "from hc.accounts.models import Project
+    print(Project.objects.all())"
+  register: healthchecks_projects
+  changed_when: false
+  tags:
+    - healthchecks
+
+# Create the healthchecks projects
+- name: Create the healthchecks projects
+  ansible.builtin.command: |
+    docker container exec -it healthchecks /opt/healthchecks/manage.py shell -c
+    "from hc.accounts.models import Project
+    from django.contrib.auth.models import User
+    from uuid import uuid4
+    user = User.objects.get(email='{{ hc_superuser_email }}')
+    project = Project(owner=user)
+    project.name = '{{ project.name }}'
+    project.api_key = '{{ secret_hc_projects[project.name].api_key }}'
+    project.ping_key = '{{ secret_hc_projects[project.name].ping_key }}'
+    project.code = project.badge_key = str(uuid4())
+    project.save()"
+  when: project.name not in healthchecks_projects.stdout
+  loop: "{{ hc_projects }}"
+  loop_control:
+    loop_var: project
+    label: "{{ project.name }}"
+  register: healthchecks_project_create_result
+  changed_when: project.name not in healthchecks_projects.stdout
+  tags:
+    - healthchecks
+
+# Get the list of channels.
+- name: Get the list of channels
+  ansible.builtin.command: |
+    docker container exec -it healthchecks /opt/healthchecks/manage.py shell -c
+    "from hc.api.models import Channel
+    print(Channel.objects.all())"
+  register: healthchecks_channels
+  changed_when: false
+  tags:
+    - healthchecks
+
+# Create the healthchecks channels
+- name: Create the healthchecks channels
+  ansible.builtin.command: |
+    docker container exec -it healthchecks /opt/healthchecks/manage.py shell -c
+    "import json
+    from hc.api.models import Channel
+    from hc.accounts.models import Project
+    project = Project.objects.get(name='{{ item.0.name }}')
+    channel = Channel(project=project)
+    channel.kind = '{{ item.1.kind }}'
+    channel.value = json.dumps({{ item.1.value }})
+    channel.name = '{{ item.1.name }}'
+    channel.email_verified = True
+    channel.save()"
+  when: item.1.name not in healthchecks_channels.stdout
+  loop: "{{ hc_projects | subelements('channels') }}"
+  loop_control:
+    loop_var: item
+    label: "{{ item.0.name }} - {{ item.1.kind }}"
+  register: healthchecks_channel_create_result
+  changed_when: item.1.name not in healthchecks_channels.stdout
+  tags:
+    - healthchecks
