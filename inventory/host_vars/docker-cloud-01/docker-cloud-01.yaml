@@ -14,10 +14,6 @@ ntfy_user: "{{ default_user }}"
 ntfy_password: "{{ secret_ntfy_password }}"
 ntfy_base_url: "https://ntfy.stechsolutions.ca"
 
-# Healthchecks variables
-hc_db_name: hc
-hc_db_user: healthchecks_user
-hc_db_password: "{{ secret_hc_db_password }}"
 # docker container configuration files
 docker_configuration_files:
   - name: traefik.yaml
@@ -32,8 +28,8 @@ docker_template_files:
     src: "{{ inventory_dir }}/../files/ntfy/server.yaml"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy/server.yaml
     mode: '0664'
-    container_name: 
-    
+    container_name: ntfy
+
 # docker mounts subfolders
 docker_mounts_subfolders:
   - name: postgres
@@ -135,3 +131,38 @@ docker_compose:
           - "/home/{{ default_user }}/docker_mounts/monitoring/postgres:/var/lib/postgresql/data"
           - "/etc/passwd:/etc/passwd:ro"
         restart: unless-stopped
+      - container_name: healthchecks
+        image: healthchecks/healthchecks:v3.7
+        networks:
+          - traefik
+          - postgres
+        environment:
+          - ALLOWED_HOSTS={{ hc_allowed_hosts }}
+          - DB={{ hc_db }}
+          - DB_HOST={{ hc_db_host }}
+          - DB_NAME={{ hc_db_name }}
+          - DB_USER={{ hc_db_user }}
+          - DB_PASSWORD={{ secret_hc_db_password }}
+          - DB_PORT={{ hc_db_port }}
+          - DEBUG={{ hc_debug }}
+          - DEFAULT_FROM_EMAIL={{ hc_default_from_email }}
+          - EMAIL_HOST={{ hc_email_host }}
+          - EMAIL_HOST_PASSWORD={{ hc_email_host_password }}
+          - EMAIL_HOST_USER={{ hc_email_host_user }}
+          - EMAIL_PORT={{ hc_email_port }}
+          - REGISTRATION_OPEN={{ hc_registration_open }}
+          - SECRET_KEY={{ hc_secret_key }}
+          - SITE_NAME={{ hc_site_name }}
+          - SITE_LOGO_URL={{ hc_site_logo_url }}
+          - SITE_ROOT={{ hc_site_root }}
+          # Reduce the number of worker processes to 1
+          - UWSGI_PROCESSES=1
+        depends_on:
+          - postgres_db
+        restart: unless-stopped
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.hc.rule=Host(`{{ hc_allowed_hosts }}`)"
+          - "traefik.http.services.hc.loadbalancer.server.port=8000"
+          - "traefik.http.routers.hc.entrypoints=websecure"
+          - "traefik.http.routers.hc.tls.certresolver=letsencrypt"

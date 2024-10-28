@@ -1,0 +1,44 @@
+---
+# Healthchecks configuration for docker-cloud-01
+
+# Healthchecks container variables
+hc_container_setup: true
+hc_allowed_hosts: hc.stechsolutions.ca
+hc_db: postgres
+hc_db_host: postgres_db
+hc_db_name: hc
+hc_db_user: healthchecks_user
+hc_db_password: "{{ secret_hc_db_password }}"
+hc_db_port: 5432
+hc_debug: false
+hc_default_from_email: "{{ default_user_email }}"
+hc_email_host: smtp.mailgun.org
+hc_email_host_password: "{{ secret_hc_mg_password }}"
+hc_email_host_user: hc@mg.stechsolutions.ca
+hc_email_port: 587
+hc_email_use_tls: true
+hc_registration_open: false
+hc_secret_key: "{{ secret_hc_secret_key }}"
+hc_site_name: Stech HC
+hc_site_logo_url: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/healthchecks-v2.png
+hc_site_root: https://hc.stechsolutions.ca
+
+# Healthchecks user variables
+hc_superuser_username: "{{ default_user }}"
+hc_superuser_email: "{{ default_user_email }}"
+hc_superuser_password: "{{ secret_hc_superuser_password }}"
+
+# Healthchecks projects
+# Note: additional secret_hc_projects variables are required
+# Note: name has to be unique
+hc_projects:
+  - name: Stechsolutions
+    channels:
+      - name: Email Notification 1
+        kind: email
+        value: | 
+          {
+            "down": true,
+            "up": true,
+            "value": "{{ default_user_email }}"
+          }
