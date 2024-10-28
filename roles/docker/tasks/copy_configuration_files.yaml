@@ -21,6 +21,7 @@
   loop_control:
     loop_var: folder
     label: "{{ folder.name }}"
+  when: docker_config is true and docker_mounts_subfolders is defined
   tags:
     - docker
     - docker.compose
