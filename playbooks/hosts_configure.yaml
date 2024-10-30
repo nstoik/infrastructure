@@ -1,5 +1,7 @@
 ---
 # Configure hosts using the base role
+#
+# This task assumes the hosts have all been created and are accessible and ready to be configured.
 # Defaults to all hosts but can be overridden
 
 
@@ -65,6 +67,16 @@
         hostvars[inventory_hostname].ntfy_setup is true
       tags:
         - ntfy
+
+    # Run the healthchecks role
+    - name: Import healthchecks role
+      ansible.builtin.import_role:
+        name: healthchecks
+      when:
+        hostvars[inventory_hostname].hc_container_setup is defined and
+        hostvars[inventory_hostname].hc_container_setup is true
+      tags:
+        - healthchecks
 
 # Run the netmaker netclient playbook
 - name: Import netmaker netclient playbook
