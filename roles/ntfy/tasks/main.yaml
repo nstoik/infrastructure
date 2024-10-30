@@ -25,3 +25,25 @@
   when: ntfy_user_list.stderr.find(ntfy_user) == -1
   tags:
     - ntfy
+
+# Call the tokens task to extract the tokens
+- name: Extract the ntfy tokens
+  ansible.builtin.include_tasks: tokens.yaml
+  tags:
+    - ntfy
+
+# Create the ntfy tokens if they do not exist
+- name: Create the ntfy tokens
+  community.docker.docker_container_exec:
+    container: ntfy
+    command: ntfy token add --label "{{ token.label }}" "{{ ntfy_user }}"
+  loop: "{{ ntfy_tokens }}"
+  loop_control:
+    loop_var: token
+    label: "{{ token.label }}"
+  register: ntfy_token_add
+  when: token.label not in ntfy_tokens_extracted.keys()
+  changed_when: token.label not in ntfy_tokens_extracted.keys()
+
+  tags:
+    - ntfy
