@@ -72,6 +72,7 @@
     - name: Import healthchecks role
       ansible.builtin.import_role:
         name: healthchecks
+        tasks_from: setup
       when:
         hostvars[inventory_hostname].hc_container_setup is defined and
         hostvars[inventory_hostname].hc_container_setup is true
