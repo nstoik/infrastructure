@@ -33,12 +33,23 @@ hc_superuser_password: "{{ secret_hc_superuser_password }}"
 # Note: name has to be unique
 hc_projects:
   - name: Stechsolutions
-    channels:
-      - name: Email Notification 1
-        kind: email
-        value: | 
-          {
-            "down": true,
-            "up": true,
-            "value": "{{ default_user_email }}"
-          }
+
+# Healthchecks channels
+# Note: name has to be unique
+# Values are unique for each kind (email, ntfy). See the Healthchecks API for more information.
+# Values are transformed into JSON format using the Jinja2 template engine in the Ansible playbook.
+hc_channels:
+  - project: "{{ hc_projects[0].name }}"
+    name: Email Notification
+    kind: email
+    value_up: true
+    value_down: true
+    value_value: "{{ default_user_email }}"
+  - project: "{{ hc_projects[0].name }}"
+    name: Ntfy Notification
+    kind: ntfy
+    token_name: Healthchecks
+    value_topic: Healthchecks
+    value_url: "{{ ntfy_base_url }}"
+    value_priority: 3
+    value_priority_up: 3
