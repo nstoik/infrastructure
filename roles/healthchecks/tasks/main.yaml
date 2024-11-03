@@ -2,7 +2,6 @@
 # The main task file for the healthchecks role
 #
 # This role assumes that healthchecks is installed via docker and that the healthchecks container is running.
-# This role is also currently only setup to work with one project.
 
 # Run the setup tasks
 - name: Run the setup tasks

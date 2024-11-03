@@ -53,3 +53,12 @@ hc_channels:
     value_url: "{{ ntfy_base_url }}"
     value_priority: 3
     value_priority_up: 3
+
+hc_checks:
+  - project: "{{ hc_projects[0].name }}"
+    name: SnapRAID-AIO backup
+    slug: snapraid-aio-backup
+    desc: SnapRAID-AIO periodic backup
+    timeout: 86400
+    grace: 86400
+    channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"
