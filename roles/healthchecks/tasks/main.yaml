@@ -1,0 +1,36 @@
+---
+# The main task file for the healthchecks role
+#
+# This role assumes that healthchecks is installed via docker and that the healthchecks container is running.
+# This role is also currently only setup to work with one project.
+
+# Run the setup tasks
+- name: Run the setup tasks
+  ansible.builtin.include_tasks: setup.yaml
+  tags:
+    - healthchecks
+    - healthchecks.setup
+
+# Create or update the healthchecks checks
+- name: Create or update the healthchecks checks
+  ansible.builtin.uri:
+    url: "{{ hc_site_root }}/api/v3/checks/"
+    method: POST
+    headers:
+      X-Api-Key: "{{ secret_hc_projects[check.project].api_key }}"
+    body_format: json
+    body: |
+      { "name": "{{ check.name }}",
+        "slug": "{{ check.slug }}",
+        "desc": "{{ check.desc }}",
+        "timeout": {{ check.timeout }},
+        "grace": {{ check.grace }},
+        "channels": "{{ check.channels }}",
+        "unique": ["name"]
+      }
+    status_code: [200, 201]
+  register: hc_check_result
+  loop: "{{ hc_checks }}"
+  loop_control:
+    loop_var: check
+    label: "{{ check.name }}"
