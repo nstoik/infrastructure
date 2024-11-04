@@ -202,6 +202,18 @@ Inventory files are as follows in the [inventory](inventory) directory:
 # Manual Configuration
 While the purpose of this repository is to automate the configuration of the infrastructure, there are some manual configurations that need to be done.
 
+## Netmaker
+Some netclient hosts are split into a seperate inventory file [netclients_manual.yaml](inventory/netclients_manual.yaml). These hosts have a netclient that needs to be manually installed with at least one network first so that they are on the network and accessible by ansible. Then the hosts can be configured with ansible the rest of the way.
+
+## Ntfy
+The subscribed topics need to be added manually in the Ntfy clients (web or iOS app). The list of topics to subscribe to are:
+- Healthchecks
+- SnapRAID
+- Uptime-Kuma
+
+## Proxmox
+The proxmox hosts need to be bootstrapped to a point where they can be managed by ansible. See the [Proxmox Hosts Manual Configuration](services/proxmox/README.md) for more information.
+
 ## Uptime-Kuma
 Uptime-Kuma is installed as a docker container by Ansible. Currently, the configuration is not automated and needs to be done manually (until an API for uptime-kuma is available).
 
