@@ -11,16 +11,12 @@ quicklaunch:
 
 layout:
   Media:
-    style: row
-    columns: 4
+    style: column
     useEqualHeights: true
   Monitoring:
-    style: row
-    columns: 4
+    style: column
   Proxy:
-    style: row
-    columns: 4
+    style: column
     useEqualHeights: true
   Network:
-    style: row
-    columns: 3
+    style: column
