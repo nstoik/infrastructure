@@ -50,6 +50,12 @@ docker_compose:
         networks:
           - traefik
           - docker-proxy
+        healthcheck:
+          test: ['CMD', 'traefik', 'healthcheck', '--ping']
+          interval: 60s
+          timeout: 10s
+          retries: 3
+          start_period: 40s
         environment:
           - TZ=America/Edmonton
           - "CF_API_EMAIL={{ default_user_email }}"
@@ -74,6 +80,12 @@ docker_compose:
         image: tecnativa/docker-socket-proxy:0.2.0
         networks:
           - docker-proxy
+        healthcheck:
+          test: wget --spider http://docker-socket-proxy:2375/version || exit 1
+          interval: 60s
+          timeout: 10s
+          retries: 3
+          start_period: 40s
         environment:
           - CONTAINERS=1 # Allow access to viewing containers
           - POST=0 # Disallow any POST operations (effectively read-only)
