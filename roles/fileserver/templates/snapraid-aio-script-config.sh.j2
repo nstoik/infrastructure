@@ -28,8 +28,8 @@ CHECK_UPDATES=1
 HEALTHCHECKS={% if fileserver_snapraid_aio.enable_hc %}1
 {% else %}0
 {% endif %}
-HEALTHCHECKS_ID="{{ secret_hc_snapraid_uuid }}"
-HEALTHCHECKS_URL="https://hc-ping.com/"
+HEALTHCHECKS_ID="{{ fileserver_snapraid_aio.hc_uuid | default('') }}"
+HEALTHCHECKS_URL="{{ fileserver_snapraid_aio.hc_url | default('') }}"
 
 # Use Telegram to report script execution summary (not the whole report)
 # Set 1 to enable. Create a bot using @botfather, then copy the API token.

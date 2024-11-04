@@ -81,6 +81,7 @@ The roles are:
 - [digitalocean](roles/digitalocean/)
 - [docker](roles/docker/)
 - [fileserver](roles/fileserver/)
+- [healthchecks](roles/healthchecks/)
 - [netmaker](roles/netmaker/)
 - [ntfy](roles/ntfy/)
 - [pihole](roles/pihole/)
@@ -144,6 +145,8 @@ The following ansible tags are available to specify specific tasks to run.
     - fileserver.zfs - Configure zfs
     - fileseerver.nfs-server - Configure an NFS server
     - fileserver.nfs-client - Configure an NFS client
+    - fileserver.swap - Configure swap file
+- healthchecks - Configure healthchecks
 - netmaker - Configure a Netmaker server
     - netmaker.full_setup - Complete the full setup of a Netmaker server
     - netmaker.nmctl - Install the nmctl command line tool
@@ -182,6 +185,7 @@ Inventory files are as follows in the [inventory](inventory) directory:
     - [proxmox_vms.yaml](inventory/group_vars/proxmox_vms.yaml) - Inventory for the proxmox vms
 - [host_vars](inventory/host_vars/) - Inventory for each host
     - [docker-02.home.stechsolutions.ca](inventory/host_vars/docker-02.home.stechsolutions.ca) - Folder for multiple inventory files for the docker-02 host
+    - [docker-cloud-01](inventory/host_vars/docker-cloud-01) - Folder for multiple inventory files for the docker-cloud-01 host
 - [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
     - [docker_hosts.yaml](inventory/proxmox_vms/docker_hosts.yaml) - Inventory for the docker hosts running on proxmox
     - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms

@@ -1,10 +1,12 @@
 ---
 # Configure hosts using the base role
+#
+# This task assumes the hosts have all been created and are accessible and ready to be configured.
 # Defaults to all hosts but can be overridden
 
 
-# Run the first time setup to configure the VMs
-- name: Run the first time setup to configure VMs
+# Run the first time setup to configure the hosts
+- name: Run the first time setup to configure hosts
   hosts: all
   vars_files:
     - ../vault/vault.yaml
@@ -27,6 +29,7 @@
         - fileserver.ext4
         - fileserver.snapraid
         - fileserver.zfs
+        - fileserver.swap
 
     # Run the base role
     - name: Import base role
@@ -64,6 +67,16 @@
         hostvars[inventory_hostname].ntfy_setup is true
       tags:
         - ntfy
+
+    # Run the healthchecks role
+    - name: Import healthchecks role
+      ansible.builtin.import_role:
+        name: healthchecks
+      when:
+        hostvars[inventory_hostname].hc_container_setup is defined and
+        hostvars[inventory_hostname].hc_container_setup is true
+      tags:
+        - healthchecks
 
 # Run the netmaker netclient playbook
 - name: Import netmaker netclient playbook

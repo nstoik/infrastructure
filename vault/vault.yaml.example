@@ -31,6 +31,7 @@ secret_nm_admin_account: change_me
 secret_nm_admin_password: change_me
 
 # Healthchecks.io secrets
+secret_hc_ping_key: change_me
 secret_hc_snapraid_uuid: change_me
 
 # Postfix secrets
@@ -46,3 +47,17 @@ secret_ntfy_password: change_me
 secret_traefik_dashboard_password: change_me
 # Hash generated from https://hostingcanada.org/htpasswd-generator/ with mode bcrypt
 secret_traefik_dashboard_password_hash: hashed version of 'secret_traefik_dashboard_password'
+
+# Healthchecks secrets
+secret_hc_mg_password: get from mailgun
+secret_hc_secret_key: change_me
+secret_hc_db_password: change_me
+secret_hc_superuser_password: change_me
+
+secret_hc_projects:
+  "Project Name 1":
+    api_key: 24 byte key
+    ping_key: 16 byte key
+  "Project Name 2":
+    api_key: 24 byte key
+    ping_key: 16 byte key

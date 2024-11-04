@@ -8,6 +8,7 @@
 #   - fileserver_setup_snapraid: boolean
 #   - fileserver_setup_zfs: boolean
 #   - fileserver_setup_attached_disks: boolean
+#   - fileserver_setup_swap_file: boolean
 
 # Setup attached disks with ext4 filesystem
 - name: Setup attached disks with ext4 filesystem
@@ -16,6 +17,14 @@
     - fileserver
     - fileserver.ext4
   when: fileserver_setup_attached_disks is true
+
+# Setup swap file
+- name: Setup swap file
+  ansible.builtin.include_tasks: setup_swap_file.yaml
+  tags:
+    - fileserver
+    - fileserver.swap
+  when: fileserver_setup_swap_file is true
 
 # Setup mergerfs
 - name: Block for mergerfs tasks

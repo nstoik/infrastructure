@@ -1,0 +1,54 @@
+---
+# Tasks to setup a swap file
+#
+# inputs:
+#   - fileserver_swap_file.size: size of the swap file
+#   - fileserver_swap_file.path: path to the swap file
+
+# Check if the swap file exists
+- name: Check if the swap file exists
+  ansible.builtin.stat:
+    path: "{{ fileserver_swap_file.path }}"
+  register: fileserver_swapfile_stat
+
+# Block to create the swap file if it does not exist
+- name: Block to create the swap file if it does not exist
+  when: not fileserver_swapfile_stat.stat.exists
+  block:
+    # Create the swap file if it does not exist
+    - name: Create the swap file
+      ansible.builtin.command: >
+        fallocate -l {{ fileserver_swap_file.size }} "{{ fileserver_swap_file.path }}"
+      changed_when: true
+      become: true
+
+    # Set the swap file permissions
+    - name: Set the swap file permissions
+      ansible.builtin.file:
+        path: "{{ fileserver_swap_file.path }}"
+        mode: '0600'
+      become: true
+
+    # Format the swap file
+    - name: Format the swap file
+      ansible.builtin.command: >
+        mkswap "{{ fileserver_swap_file.path }}"
+      changed_when: true
+      become: true
+
+    # Enable the swap file
+    - name: Enable the swap file
+      ansible.builtin.command: >
+        swapon "{{ fileserver_swap_file.path }}"
+      changed_when: true
+      become: true
+
+    # Add the swap file to /etc/fstab
+    - name: Add the swap file to /etc/fstab
+      ansible.posix.mount:
+        src: "{{ fileserver_swap_file.path }}"
+        path: "{{ fileserver_swap_file.path }}"
+        fstype: swap
+        opts: sw
+        state: present
+      become: true

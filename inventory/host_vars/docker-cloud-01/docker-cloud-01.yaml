@@ -1,10 +1,12 @@
 ---
 # Host variables for docker-cloud-01 host.
 
-ntfy_setup: true
-ntfy_user: "{{ default_user }}"
-ntfy_password: "{{ secret_ntfy_password }}"
-ntfy_base_url: "https://ntfy.stechsolutions.ca"
+fileserver_setup: true
+fileserver_setup_swap_file: true
+
+fileserver_swap_file:
+  path: /swapfile
+  size: 2G
 
 # docker container configuration files
 docker_configuration_files:
@@ -21,6 +23,13 @@ docker_template_files:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy/server.yaml
     mode: '0664'
     container_name: ntfy
+
+# docker mounts subfolders
+docker_mounts_subfolders:
+  - name: postgres
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/postgres
+    mode: '0775'
+    container_name: postgres_db
 
 # docker compose:
 docker_compose:
@@ -73,6 +82,8 @@ docker_compose:
       traefik:
         name: traefik
         external: true
+      postgres:
+        name: postgres
     containers:
       - container_name: ntfy
         image: binwiederhier/ntfy:v2.11.0
@@ -95,9 +106,58 @@ docker_compose:
           - "traefik.http.services.ntfy.loadbalancer.server.port=80"
           - "traefik.http.routers.ntfy.entrypoints=websecure"
           - "traefik.http.routers.ntfy.tls.certresolver=letsencrypt"
-          - "homepage.group=Monitoring"
-          - "homepage.name=Ntfy"
-          - "homepage.description=Ntfy Notification Server"
-          - "homepage.icon=ntfy.png"
-          - "homepage.href=https://ntfy.stechsolutions.ca"
-          - "homepage.siteMonitor=https://ntfy.stechsolutions.ca"
+      - container_name: postgres_db
+        image: postgres:17
+        user: 1000:1000
+        networks:
+          - postgres
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U {{ hc_db_user }} -d {{ hc_db_name }}"]
+          interval: 60s
+          timeout: 10s
+          retries: 3
+          start_period: 40s
+        environment:
+          - POSTGRES_DB={{ hc_db_name }}
+          - POSTGRES_USER={{ hc_db_user }}
+          - POSTGRES_PASSWORD={{ secret_hc_db_password }}
+        volumes:
+          - "/home/{{ default_user }}/docker_mounts/monitoring/postgres:/var/lib/postgresql/data"
+          - "/etc/passwd:/etc/passwd:ro"
+        restart: unless-stopped
+      - container_name: healthchecks
+        image: healthchecks/healthchecks:v3.7
+        networks:
+          - traefik
+          - postgres
+        environment:
+          - ALLOWED_HOSTS={{ hc_allowed_hosts }}
+          - DB={{ hc_db }}
+          - DB_HOST={{ hc_db_host }}
+          - DB_NAME={{ hc_db_name }}
+          - DB_USER={{ hc_db_user }}
+          - DB_PASSWORD={{ secret_hc_db_password }}
+          - DB_PORT={{ hc_db_port }}
+          - DEBUG={{ hc_debug }}
+          - DEFAULT_FROM_EMAIL={{ hc_default_from_email }}
+          - EMAIL_HOST={{ hc_email_host }}
+          - EMAIL_HOST_PASSWORD={{ hc_email_host_password }}
+          - EMAIL_HOST_USER={{ hc_email_host_user }}
+          - EMAIL_PORT={{ hc_email_port }}
+          - REGISTRATION_OPEN={{ hc_registration_open }}
+          - SECRET_KEY={{ hc_secret_key }}
+          - SITE_NAME={{ hc_site_name }}
+          - SITE_LOGO_URL={{ hc_site_logo_url }}
+          - SITE_ROOT={{ hc_site_root }}
+          # Reduce the number of worker processes to 1
+          - UWSGI_PROCESSES=1
+        depends_on:
+          - postgres_db
+        restart: unless-stopped
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.hc.rule=Host(`{{ hc_allowed_hosts }}`)"
+          - "traefik.docker.network=traefik"
+          - "traefik.http.services.hc.loadbalancer.server.port=8000"
+          - "traefik.http.routers.hc.entrypoints=websecure"
+          - "traefik.http.routers.hc.tls.certresolver=letsencrypt"

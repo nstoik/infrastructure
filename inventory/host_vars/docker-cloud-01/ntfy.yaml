@@ -1,0 +1,12 @@
+---
+# ntfy configuration for docker-cloud-01
+
+# ntfy variables
+ntfy_setup: true
+ntfy_user: "{{ default_user }}"
+ntfy_password: "{{ secret_ntfy_password }}"
+ntfy_base_url: "https://ntfy.stechsolutions.ca"
+
+ntfy_tokens:
+  - label: Healthchecks
+  - label: Test

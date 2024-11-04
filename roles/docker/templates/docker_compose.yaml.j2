@@ -4,6 +4,10 @@ services:
 {% for container in compose.containers %}
   {{ container.container_name }}:
     image: {{ container.image }}
+{# set the user if defined #}
+{% if container.user is defined %}
+    user: {{ container.user }}
+{% endif %}
 {# set the network if defined #}
 {% if container.networks is defined %}
     networks:

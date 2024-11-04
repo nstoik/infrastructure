@@ -1,0 +1,62 @@
+---
+# Setup channels on Healthchecks for ntfy notifications
+#
+# Input:
+#   - healtchecks_channels_existing: list of channels already created on Healthchecks
+
+# Get the ntfy tokens
+- name: Get the ntfy tokens
+  ansible.builtin.include_role:
+    name: ntfy
+    tasks_from: tokens.yaml
+  tags:
+    - healthchecks
+
+# Initialize the list of ntfy channel values
+- name: Initialize the list of ntfy channel values
+  ansible.builtin.set_fact:
+    ntfy_channel_values: {}
+  tags:
+    - healthchecks
+
+# Loop through the healtcheck channels and fill in the token value.
+- name: Set the ntfy token value for the channels
+  ansible.builtin.set_fact:
+    ntfy_channel_values: "{{ ntfy_channel_values | combine({hc_channel.name: lookup('template', 'ntfy_channel.j2')}) }}"
+  vars:
+    hc_channel_topic: "{{ hc_channel.value_topic }}"
+    hc_channel_url: "{{ hc_channel.value_url }}"
+    hc_channel_priority: "{{ hc_channel.value_priority }}"
+    hc_channel_priority_up: "{{ hc_channel.value_priority_up }}"
+    hc_channel_token: "{{ ntfy_tokens_extracted[hc_channel.token_name] }}"
+  loop: "{{ hc_channels }}"
+  loop_control:
+    loop_var: hc_channel
+    label: "{{ hc_channel.name }}"
+  when: hc_channel.kind == "ntfy"
+  tags:
+    - healthchecks
+
+# Create the healthchecks channels
+- name: Create the healthchecks ntfy channels
+  ansible.builtin.command: |
+    docker container exec -it healthchecks /opt/healthchecks/manage.py shell -c
+    "import json
+    from hc.api.models import Channel
+    from hc.accounts.models import Project
+    project = Project.objects.get(name='{{ channel.project }}')
+    channel = Channel(project=project)
+    channel.kind = '{{ channel.kind }}'
+    channel.value = json.dumps({{ ntfy_channel_values[channel.name] }})
+    channel.name = '{{ channel.name }}'
+    channel.email_verified = True
+    channel.save()"
+  when: channel.name not in healtchecks_channels_existing.stdout and channel.kind == "ntfy"
+  loop: "{{ hc_channels }}"
+  loop_control:
+    loop_var: channel
+    label: "{{ channel.project }} - {{ channel.kind }}"
+  register: healthchecks_channel_create_result
+  changed_when: channel.name not in healtchecks_channels_existing.stdout
+  tags:
+    - healthchecks
