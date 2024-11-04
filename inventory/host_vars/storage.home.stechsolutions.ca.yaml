@@ -97,10 +97,12 @@ fileserver_snapraid_aio:
   # https://www.reddit.com/r/Snapraid/comments/1blqvay/comment/kws09bh/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
   url: https://github.com/nstoik/snapraid-aio-script/archive/refs/tags/v3.3.2.tar.gz
   version: 3.3.2
-  enable_hc: true
   enable_ntfy: true
   ntfy_script_path: /usr/local/bin/snapraid-aio-script/ntfy-send-snapraid.sh
   ntfy_topic: "SnapRAID"
+  enable_hc: true
+  hc_url: "https://hc.stechsolutions.ca/ping/"
+  hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/snapraid-aio-backup"
   sync_warn_threshold: 5
   scrub_percent: 5
   scrub_age: 10

@@ -157,6 +157,7 @@ docker_compose:
         labels:
           - "traefik.enable=true"
           - "traefik.http.routers.hc.rule=Host(`{{ hc_allowed_hosts }}`)"
+          - "traefik.docker.network=traefik"
           - "traefik.http.services.hc.loadbalancer.server.port=8000"
           - "traefik.http.routers.hc.entrypoints=websecure"
           - "traefik.http.routers.hc.tls.certresolver=letsencrypt"
