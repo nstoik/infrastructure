@@ -12,6 +12,14 @@
           type: healthchecks
           url: https://hc.stechsolutions.ca
           key: "{{ secret_hc_projects['Stechsolutions'].api_key }}"
+    - Uptime-Kuma:
+        href: https://uptime.stechsolutions.ca
+        description: Uptime-Kuma
+        icon: uptime-kuma.png
+        widget:
+          type: uptimekuma
+          url: https://uptime.stechsolutions.ca
+          slug: all-services
 - Proxy:
     - Traefik Remote:
         href: https://docker-cloud-01.stechsolutions.ca/dashboard/

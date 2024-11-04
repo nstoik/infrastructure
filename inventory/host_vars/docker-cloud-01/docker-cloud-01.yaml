@@ -30,6 +30,10 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/postgres
     mode: '0775'
     container_name: postgres_db
+  - name: uptime-kuma
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/uptime-kuma
+    mode: '0775'
+    container_name: uptime-kuma
 
 # docker compose:
 docker_compose:
@@ -161,3 +165,19 @@ docker_compose:
           - "traefik.http.services.hc.loadbalancer.server.port=8000"
           - "traefik.http.routers.hc.entrypoints=websecure"
           - "traefik.http.routers.hc.tls.certresolver=letsencrypt"
+      - container_name: uptime-kuma
+        image: louislam/uptime-kuma:2.0.0-beta.0
+        networks:
+          - traefik
+        environment:
+          - PUID=1000
+          - PGID=1000
+        volumes:
+          - "/home/{{ default_user }}/docker_mounts/monitoring/uptime-kuma:/app/data"
+        restart: unless-stopped
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.uptime-kuma.rule=Host(`uptime.stechsolutions.ca`)"
+          - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+          - "traefik.http.routers.uptime-kuma.entrypoints=websecure"
+          - "traefik.http.routers.uptime-kuma.tls.certresolver=letsencrypt"

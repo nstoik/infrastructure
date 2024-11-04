@@ -199,6 +199,12 @@ Inventory files are as follows in the [inventory](inventory) directory:
 - [netclients.yaml](inventory/netclients.yaml) - Inventory for the netclients
 
 
+# Manual Configuration
+While the purpose of this repository is to automate the configuration of the infrastructure, there are some manual configurations that need to be done.
+
+## Uptime-Kuma
+Uptime-Kuma is installed as a docker container by Ansible. Currently, the configuration is not automated and needs to be done manually (until an API for uptime-kuma is available).
+
 # Testing and linting
 Linting can be done with the following commands
 

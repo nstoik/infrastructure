@@ -30,3 +30,8 @@ cloud_droplets:
         record: 'hc'
         proxied: false
         state: 'present'
+      - name: 'docker-cloud-01'
+        zone: 'stechsolutions.ca'
+        record: 'uptime'
+        proxied: false
+        state: 'present'
