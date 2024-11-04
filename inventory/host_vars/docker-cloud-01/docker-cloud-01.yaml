@@ -70,6 +70,7 @@ docker_compose:
         restart: unless-stopped
         labels:
           - "traefik.enable=true"
+          - "traefik.docker.network=traefik"
           - "traefik.http.routers.dashboard.rule=Host(`docker-cloud-01.stechsolutions.ca`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
           - "traefik.http.routers.dashboard.service=api@internal"
           - "traefik.http.routers.dashboard.middlewares=auth"
