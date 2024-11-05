@@ -35,9 +35,12 @@ netclients:
           {
             # monitoring network
             network: '{{ netmaker_networks[1].name }}',
-            isegressgateway: false,
+            isegressgateway: true,
             isingressgateway: false,
-            egressgatewayranges: [],
+            egressgatewayranges: [
+              "10.10.1.11/32",
+              "10.10.5.0/24",
+            ],
           }
         ]
       }
@@ -60,7 +63,29 @@ netclients:
           }
         ]
       }
-    docker-cloud-01.stechsolutions.ca:
+    docker-02.home.stechsolutions.ca:
+      netmaker_shorthost: docker-02
+      netmaker_networks:
+        - {
+          name: 'monitoring',
+          tags: "monitoring-tag"
+        }
+      netmaker_host_settings: {
+        isdefault: false,
+        node_settings: [
+          {
+            # monitoring network
+            network: '{{ netmaker_networks[0].name }}',
+            isegressgateway: false,
+            isingressgateway: false,
+            # 10.10.5.27/32 is the IP of docker-02.home.stechsolutions.ca
+            egressgatewayranges: [
+              "10.10.5.27/32"
+            ]
+          }
+        ]
+      }
+    docker-cloud-01:
       netmaker_shorthost: docker-cloud-01
       netmaker_networks:
         - {
