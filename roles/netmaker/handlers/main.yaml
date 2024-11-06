@@ -5,8 +5,7 @@
 - name: Restart Netmaker
   community.docker.docker_compose_v2:
     project_src: "{{ netmaker_directory }}"
-    state: present
-    restarted: true
+    state: restarted
     remove_orphans: true
   become: true
 
@@ -14,8 +13,7 @@
 - name: Restart Netclient docker compose
   community.docker.docker_compose_v2:
     project_src: "{{ netclient_directory }}"
-    state: present
-    restarted: true
+    state: restarted
   become: true
 
 # Restart the Netclient service using systemd
