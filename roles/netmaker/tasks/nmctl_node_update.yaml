@@ -16,9 +16,9 @@
         cmd: >
           nmctl node
           {% if netmaker_node_definition.isingressgateway %}
-            create_ingress
+            create_remote_access_gateway
           {% else %}
-            delete_ingress
+            delete_remote_access_gateway
           {% endif %}
           {{ netmaker_node_definition.network }}
           {{ netmaker_node_definition.id }}
