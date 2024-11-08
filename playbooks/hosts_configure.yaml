@@ -12,6 +12,8 @@
     - ../vault/vault.yaml
   tags:
     - base
+    - tailscale
+    - tailscale.install
 
   tasks:
     # Run the fileserver role
@@ -57,6 +59,16 @@
       become: true
       tags:
         - base.geerlingguy.security
+
+    # Run the tailscale role
+    - name: Import tailscale role
+      ansible.builtin.import_role:
+        name: tailscale
+      when:
+        hostvars[inventory_hostname].tailscale_setup is defined and
+        hostvars[inventory_hostname].tailscale_setup is true
+      tags:
+        - tailscale
 
     # Run the ntfy role
     - name: Import ntfy role
