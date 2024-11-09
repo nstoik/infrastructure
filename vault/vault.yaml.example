@@ -61,3 +61,7 @@ secret_hc_projects:
   "Project Name 2":
     api_key: 24 byte key
     ping_key: 16 byte key
+
+# Tailscale secrets
+secret_ts_client_id: change_me
+secret_ts_client_secret: change_me
