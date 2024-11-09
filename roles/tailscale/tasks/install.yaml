@@ -34,3 +34,17 @@
     path: "{{ tailscale_socket }}"
     state: present
     timeout: 60
+
+- name: Generate Tailscale completion script for zsh
+  ansible.builtin.command: tailscale completion zsh
+  register: tailscale_completion_script
+  changed_when: false
+
+- name: Install Tailscale zsh completion
+  ansible.builtin.copy:
+    content: "{{ tailscale_completion_script.stdout }}"
+    dest: /usr/share/zsh/vendor-completions/_tailscale
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
