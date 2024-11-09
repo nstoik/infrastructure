@@ -20,3 +20,5 @@ layout:
     useEqualHeights: true
   Network:
     style: column
+  Vehicle:
+    style: column
