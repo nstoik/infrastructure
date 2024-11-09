@@ -45,6 +45,10 @@ all:
                 scsi: "scsi3"
                 device: "data:10,discard=on"
                 backup: 1
+              - comment: 5 GB disk for docker compose vehicle volume
+                scsi: "scsi4"
+                device: "data:5,discard=on"
+                backup: 1
         docker-testing.home.stechsolutions.ca:
           docker_install: true
           docker_config: true

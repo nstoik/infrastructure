@@ -57,6 +57,9 @@ pihole_cname_entries:
   - domain: "homepage.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
+  - domain: "lubelogger.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
   - domain: "tdarr.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
