@@ -4,6 +4,12 @@
 # other variables are set in group_vars/proxmox_vms.yaml and
 # promox_vms/docker_hosts.yaml
 
+# lubelogger setup
+vehicle_db_name: vehicle
+vehicle_db_user: vehicle_user
+vehicle_db_password: vehicle_password
+vehicle_connection_string: "Host=postgres_vehicle_db:5432;Database={{ vehicle_db_name }};Username={{ vehicle_db_user }};Password={{ vehicle_db_password }}"
+
 # docker container configuration files
 docker_configuration_files:
   - name: traefik.yaml
@@ -44,6 +50,45 @@ docker_template_files:
     dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/services.yaml
     mode: '0664'
     container_name: homepage
+
+# docker mounts subfolders
+docker_mounts_subfolders:
+  - name: postgres_vehicle
+    dest: /home/{{ default_user }}/docker_mounts/vehicle/postgres
+    mode: '0775'
+    container_name: postgres_vehicle_db
+  - name: lubelogger_config
+    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/config
+    mode: '0775'
+    container_name: lubelogger
+  - name: lubelogger_data
+    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/data
+    mode: '0775'
+    container_name: lubelogger
+  - name: lubelogger_documents
+    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/documents
+    mode: '0775'
+    container_name: lubelogger
+  - name: lubelogger_images
+    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/images
+    mode: '0775'
+    container_name: lubelogger
+  - name: lubelogger_log
+    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/log
+    mode: '0775'
+    container_name: lubelogger
+  - name: lubelogger_temp
+    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/temp
+    mode: '0775'
+    container_name: lubelogger
+  - name: lubelogger_translations
+    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/translations
+    mode: '0775'
+    container_name: lubelogger
+  - name: lubelogger_keys
+    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/keys
+    mode: '0775'
+    container_name: lubelogger
 
 # docker compose
 docker_compose:
@@ -168,3 +213,60 @@ docker_compose:
           - "homepage.siteMonitor=https://tdarr.home.stechsolutions.ca"
           - "homepage.widget.type=tdarr"
           - "homepage.widget.url=https://tdarr.home.stechsolutions.ca"
+  - compose_name: vehicle
+    state: present
+    networks:
+      traefik:
+        name: traefik
+        external: true
+      vehicle_postgres:
+        name: vehicle_postgres
+    containers:
+      - container_name: postgres_vehicle_db
+        image: postgres:17
+        user: 1000:1000
+        networks:
+          - vehicle_postgres
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U {{ vehicle_db_user }} -d {{ vehicle_db_name }}"]
+          interval: 60s
+          timeout: 10s
+          retries: 3
+          start_period: 40s
+        environment:
+          - POSTGRES_DB={{ vehicle_db_name }}
+          - POSTGRES_USER={{ vehicle_db_user }}
+          - POSTGRES_PASSWORD={{ vehicle_db_password }}
+        volumes:
+          - "/home/{{ default_user }}/docker_mounts/vehicle/postgres:/var/lib/postgresql/data"
+          - "/etc/passwd:/etc/passwd:ro"
+        restart: unless-stopped
+      - container_name: lubelogger
+        image: hargata/lubelogger:v1.3.9
+        user: 1000:1000
+        networks:
+          - traefik
+          - vehicle_postgres
+        environment:
+          - LC_ALL=en_US.UTF-8
+          - LANG=en_US.UTF-8
+          - POSTGRES_CONNECTION={{ vehicle_connection_string }}
+        volumes:
+          - "/home/{{ default_user }}/docker_mounts/vehicle/lubelogger/config:/App/config"
+          - "/home/{{ default_user }}/docker_mounts/vehicle/lubelogger/data:/App/data"
+          - "/home/{{ default_user }}/docker_mounts/vehicle/lubelogger/translations:/App/wwwroot/translations"
+          - "/home/{{ default_user }}/docker_mounts/vehicle/lubelogger/documents:/App/wwwroot/documents"
+          - "/home/{{ default_user }}/docker_mounts/vehicle/lubelogger/images:/App/wwwroot/images"
+          - "/home/{{ default_user }}/docker_mounts/vehicle/lubelogger/temp:/App/wwwroot/temp"
+          - "/home/{{ default_user }}/docker_mounts/vehicle/lubelogger/log:/App/log"
+          - "/home/{{ default_user }}/docker_mounts/vehicle/lubelogger/keys:/root/.aspnet/DataProtection-Keys"
+        depends_on:
+          - postgres_vehicle_db
+        restart: unless-stopped
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.lubelogger.rule=Host(`lubelogger.home.stechsolutions.ca`)"
+          - "traefik.docker.network=traefik"
+          - "traefik.http.services.lubelogger.loadbalancer.server.port=8080"
+          - "traefik.http.routers.lubelogger.entrypoints=websecure"
+          - "traefik.http.routers.lubelogger.tls.certresolver=letsencrypt"
