@@ -26,10 +26,10 @@ docker_template_files:
 
 # docker mounts subfolders
 docker_mounts_subfolders:
-  - name: postgres
+  - name: postgres_hc
     dest: /home/{{ default_user }}/docker_mounts/monitoring/postgres
     mode: '0775'
-    container_name: postgres_db
+    container_name: postgres_hc_db
   - name: uptime-kuma
     dest: /home/{{ default_user }}/docker_mounts/monitoring/uptime-kuma
     mode: '0775'
@@ -99,8 +99,8 @@ docker_compose:
       traefik:
         name: traefik
         external: true
-      postgres:
-        name: postgres
+      hc_postgres:
+        name: hc_postgres
     containers:
       - container_name: ntfy
         image: binwiederhier/ntfy:v2.11.0
@@ -123,11 +123,11 @@ docker_compose:
           - "traefik.http.services.ntfy.loadbalancer.server.port=80"
           - "traefik.http.routers.ntfy.entrypoints=websecure"
           - "traefik.http.routers.ntfy.tls.certresolver=letsencrypt"
-      - container_name: postgres_db
+      - container_name: postgres_hc_db
         image: postgres:17
         user: 1000:1000
         networks:
-          - postgres
+          - hc_postgres
         healthcheck:
           test: ["CMD-SHELL", "pg_isready -U {{ hc_db_user }} -d {{ hc_db_name }}"]
           interval: 60s
@@ -146,7 +146,7 @@ docker_compose:
         image: healthchecks/healthchecks:v3.7
         networks:
           - traefik
-          - postgres
+          - hc_postgres
         environment:
           - ALLOWED_HOSTS={{ hc_allowed_hosts }}
           - DB={{ hc_db }}
@@ -169,7 +169,7 @@ docker_compose:
           # Reduce the number of worker processes to 1
           - UWSGI_PROCESSES=1
         depends_on:
-          - postgres_db
+          - postgres_hc_db
         restart: unless-stopped
         labels:
           - "traefik.enable=true"
