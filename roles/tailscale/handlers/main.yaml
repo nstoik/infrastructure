@@ -1,0 +1,7 @@
+---
+# Handlers for the Tailscale role
+
+- name: Reload sysctl
+  ansible.builtin.command: sysctl -p /etc/sysctl.d/99-tailscale.conf
+  become: true
+  changed_when: false

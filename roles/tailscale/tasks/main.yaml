@@ -1,0 +1,27 @@
+---
+
+# install tailscale
+- name: Install Tailscale
+  ansible.builtin.include_tasks:
+    file: install.yaml
+  tags:
+    - tailscale
+    - tailscale.install
+
+# setup IP forwarding
+- name: Setup IP forwarding
+  ansible.builtin.include_tasks:
+    file: ip_forwarding.yaml
+  when: tailscale_subnet_router | default(false)
+  tags:
+    - tailscale
+    - tailscale.subnet_router
+
+- name: Bring Tailscale up
+  ansible.builtin.command: >
+    tailscale up --authkey="{{ tailscale_authkey }}" {{ tailscale_args | default('') }}
+  changed_when: false
+  become: true
+  tags:
+    - tailscale
+    - tailscale.up

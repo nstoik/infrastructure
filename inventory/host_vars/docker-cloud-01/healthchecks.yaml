@@ -5,7 +5,7 @@
 hc_container_setup: true
 hc_allowed_hosts: hc.stechsolutions.ca
 hc_db: postgres
-hc_db_host: postgres_db
+hc_db_host: postgres_hc_db
 hc_db_name: hc
 hc_db_user: healthchecks_user
 hc_db_password: "{{ secret_hc_db_password }}"

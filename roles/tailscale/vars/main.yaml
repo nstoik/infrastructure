@@ -1,0 +1,12 @@
+# Variables that an end user should likely never modify
+
+tailscale_package: tailscale
+tailscale_service: tailscaled
+tailscale_socket: /run/tailscale/tailscaled.sock
+
+tailscale_apt_keyring_path: /usr/share/keyrings/tailscale-archive-keyring.gpg
+
+tailscale_apt_path: https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}
+tailscale_apt_repository: deb [signed-by={{ tailscale_apt_keyring_path }}] {{ tailscale_apt_path }} {{ ansible_distribution_release | lower }} main
+
+tailscale_apt_signkey: "{{ tailscale_apt_path }}/{{ ansible_distribution_release | lower }}.noarmor.gpg"

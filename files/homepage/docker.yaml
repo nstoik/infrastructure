@@ -5,3 +5,8 @@
 my-docker:
   host: docker-socket-proxy
   port: 2375
+
+# Host should be the tailscale magic DNS name.
+docker-cloud-01:
+  host: docker-cloud-01.tailfacdb.ts.net
+  port: 2375
