@@ -38,6 +38,10 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/postgres
     mode: '0775'
     container_name: postgres_hc_db
+  - name: uptime-kuma
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/uptime-kuma
+    mode: '0775'
+    container_name: uptime-kuma
 
 # docker compose:
 docker_compose:
@@ -54,6 +58,12 @@ docker_compose:
         networks:
           - traefik
           - docker-proxy
+        healthcheck:
+          test: ['CMD', 'traefik', 'healthcheck', '--ping']
+          interval: 60s
+          timeout: 10s
+          retries: 3
+          start_period: 40s
         environment:
           - TZ=America/Edmonton
           - "CF_API_EMAIL={{ default_user_email }}"
@@ -92,6 +102,12 @@ docker_compose:
         image: tecnativa/docker-socket-proxy:0.2.0
         networks:
           - docker-proxy
+        healthcheck:
+          test: wget --spider http://docker-socket-proxy:2375/version || exit 1
+          interval: 60s
+          timeout: 10s
+          retries: 3
+          start_period: 40s
         environment:
           - CONTAINERS=1 # Allow access to viewing containers
           - POST=0 # Disallow any POST operations (effectively read-only)
@@ -201,3 +217,28 @@ docker_compose:
           - "homepage.widget.type=healthchecks"
           - "homepage.widget.url=https://hc.stechsolutions.ca"
           - "homepage.widget.key={{ secret_hc_projects['Stechsolutions'].api_key }}"
+      - container_name: uptime-kuma
+        image: louislam/uptime-kuma:2.0.0-beta.0
+        networks:
+          - traefik
+        environment:
+          - PUID=1000
+          - PGID=1000
+        volumes:
+          - "/home/{{ default_user }}/docker_mounts/monitoring/uptime-kuma:/app/data"
+        restart: unless-stopped
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.uptime-kuma.rule=Host(`uptime.stechsolutions.ca`)"
+          - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+          - "traefik.http.routers.uptime-kuma.entrypoints=websecure"
+          - "traefik.http.routers.uptime-kuma.tls.certresolver=letsencrypt"
+          - "homepage.group=Monitoring"
+          - "homepage.name=Uptime Kuma"
+          - "homepage.description=Uptime Monitoring"
+          - "homepage.icon=uptime-kuma.png"
+          - "homepage.href=https://uptime.stechsolutions.ca"
+          - "homepage.siteMonitor=https://uptime.stechsolutions.ca"
+          - "homepage.widget.type=uptimekuma"
+          - "homepage.widget.url=https://uptime.stechsolutions.ca"
+          - "homepage.widget.slug=all-services"

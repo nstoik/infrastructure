@@ -1,4 +1,30 @@
 ---
+- Monitoring:
+    - Ntfy:
+        href: https://ntfy.stechsolutions.ca
+        description: Ntfy Messaging
+        icon: ntfy.png
+    - Healthchecks:
+        href: https://hc.stechsolutions.ca
+        description: Self-hosted Healthchecks
+        icon: healthchecks-v2.png
+        widget:
+          type: healthchecks
+          url: https://hc.stechsolutions.ca
+          key: "{{ secret_hc_projects['Stechsolutions'].api_key }}"
+    - Uptime-Kuma:
+        href: https://uptime.stechsolutions.ca
+        description: Uptime-Kuma
+        icon: uptime-kuma.png
+        widget:
+          type: uptimekuma
+          url: https://uptime.stechsolutions.ca
+          slug: all-services
+- Proxy:
+    - Traefik Remote:
+        href: https://docker-cloud-01.stechsolutions.ca/dashboard/
+        description: Remote Reverse Proxy
+        icon: traefik.png
 - Network:
     - Unifi OS:
         href: https://unifi.home.stechsolutions.ca
