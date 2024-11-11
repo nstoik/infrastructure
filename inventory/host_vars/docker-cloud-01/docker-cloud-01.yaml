@@ -79,8 +79,10 @@ docker_compose:
         environment:
           - CONTAINERS=1 # Allow access to viewing containers
           - POST=0 # Disallow any POST operations (effectively read-only)
+        ports:
+          - 127.0.0.1:2375:2375
         volumes:
-          - "/var/run/docker.sock:/var/run/docker.sock"
+          - "/var/run/docker.sock:/var/run/docker.sock:ro"
         restart: unless-stopped
   - compose_name: monitoring
     state: present
