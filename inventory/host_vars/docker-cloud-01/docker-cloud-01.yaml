@@ -3,8 +3,11 @@
 
 # tailscale
 tailscale_setup: true
-tailscale_auth: "{{ secret_ts_client_secret }}?ephemeral=false&preauthorized=true"
-tailscale_args: "--advertise-tags='tag:server'"
+tailscale_authkey: "{{ secret_ts_client_secret }}?ephemeral=false&preauthorized=true"
+tailscale_args: |
+  --advertise-tags='tag:server'
+  --accept-routes
+  --accept-dns
 
 fileserver_setup: true
 fileserver_setup_swap_file: true
@@ -72,6 +75,19 @@ docker_compose:
           - "traefik.http.middlewares.auth.basicauth.users={{ default_user }}:{{ secret_traefik_dashboard_password_hash }}"
           - "traefik.http.routers.dashboard.entrypoints=websecure"
           - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+          - "homepage.group=Proxy"
+          - "homepage.name=Traefik Remote"
+          - "homepage.description=Remote Reverse Proxy"
+          - "homepage.icon=traefik.png"
+          - "homepage.href=https://docker-cloud-01.stechsolutions.ca/dashboard/#/"
+          - "homepage.siteMonitor=https://docker-cloud-01.stechsolutions.ca/dashboard/#/"
+          - "homepage.widget.type=traefik"
+          - "homepage.widget.url=https://docker-cloud-01.stechsolutions.ca"
+          - "homepage.widget.username={{ default_user }}"
+          - "homepage.widget.password={{ secret_traefik_dashboard_password }}"
+          - "homepage.widget.routers="
+          - "homepage.widget.services="
+          - "homepage.widget.middleware="
       - container_name: docker-socket-proxy
         image: tecnativa/docker-socket-proxy:0.2.0
         networks:
@@ -80,7 +96,8 @@ docker_compose:
           - CONTAINERS=1 # Allow access to viewing containers
           - POST=0 # Disallow any POST operations (effectively read-only)
         ports:
-          - 127.0.0.1:2375:2375
+          # Only expose on the tailscale interface
+          - 100.83.135.110:2375:2375
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock:ro"
         restart: unless-stopped
@@ -114,6 +131,12 @@ docker_compose:
           - "traefik.http.services.ntfy.loadbalancer.server.port=80"
           - "traefik.http.routers.ntfy.entrypoints=websecure"
           - "traefik.http.routers.ntfy.tls.certresolver=letsencrypt"
+          - "homepage.group=Monitoring"
+          - "homepage.name=Ntfy"
+          - "homepage.description=Ntfy Messaging"
+          - "homepage.icon=ntfy.png"
+          - "homepage.href=https://ntfy.stechsolutions.ca"
+          - "homepage.siteMonitor=https://ntfy.stechsolutions.ca"
       - container_name: postgres_hc_db
         image: postgres:17
         user: 1000:1000
@@ -169,3 +192,12 @@ docker_compose:
           - "traefik.http.services.hc.loadbalancer.server.port=8000"
           - "traefik.http.routers.hc.entrypoints=websecure"
           - "traefik.http.routers.hc.tls.certresolver=letsencrypt"
+          - "homepage.group=Monitoring"
+          - "homepage.name=Healthchecks"
+          - "homepage.description=Self-hosted Healthchecks"
+          - "homepage.icon=healthchecks-v2.png"
+          - "homepage.href=https://hc.stechsolutions.ca"
+          - "homepage.siteMonitor=https://hc.stechsolutions.ca"
+          - "homepage.widget.type=healthchecks"
+          - "homepage.widget.url=https://hc.stechsolutions.ca"
+          - "homepage.widget.key={{ secret_hc_projects['Stechsolutions'].api_key }}"
