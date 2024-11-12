@@ -84,7 +84,7 @@ services:
 {% if container.labels is defined %}
     labels:
 {% for label in container.labels %}
-      - "{{ label }}"
+      - "{{ label | replace('\\', '\\\\') }}"
 {% endfor %}
 {% endif %}
 {% endfor %}
