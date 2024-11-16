@@ -108,7 +108,7 @@ docker_compose:
         name: docker-proxy
     containers:
       - container_name: traefik
-        image: traefik:v3.1
+        image: traefik:v3.2.0
         networks:
           - traefik
           - docker-proxy
@@ -148,7 +148,7 @@ docker_compose:
           - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
           - "wud.link.template=https://github.com/traefik/traefik/releases"
       - container_name: docker-socket-proxy
-        image: tecnativa/docker-socket-proxy:0.2.0
+        image: tecnativa/docker-socket-proxy:0.3.0
         networks:
           - docker-proxy
         environment:
@@ -162,7 +162,7 @@ docker_compose:
           - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
           - "wud.link.template=https://github.com/Tecnativa/docker-socket-proxy/releases"
       - container_name: homepage
-        image: ghcr.io/gethomepage/homepage:v0.9.11
+        image: ghcr.io/gethomepage/homepage:v0.9.12
         networks:
           - traefik
           - docker-proxy
@@ -191,7 +191,7 @@ docker_compose:
         external: true
     containers:
       - container_name: tdarr
-        image: haveagitgat/tdarr:2.23.01
+        image: haveagitgat/tdarr:2.27.02
         networks:
           - traefik
         environment:
@@ -262,7 +262,7 @@ docker_compose:
           - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
           - "wud.link.template=https://www.postgresql.org/docs/release/"
       - container_name: lubelogger
-        image: hargata/lubelogger:v1.3.9
+        image: hargata/lubelogger:v1.4.0
         user: 1000:1000
         networks:
           - traefik
