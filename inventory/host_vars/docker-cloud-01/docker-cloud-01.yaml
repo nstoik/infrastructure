@@ -54,7 +54,7 @@ docker_compose:
         name: docker-proxy
     containers:
       - container_name: traefik
-        image: traefik:v3.1
+        image: traefik:v3.2.0
         networks:
           - traefik
           - docker-proxy
@@ -98,8 +98,10 @@ docker_compose:
           - "homepage.widget.routers="
           - "homepage.widget.services="
           - "homepage.widget.middleware="
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/traefik/traefik/releases"
       - container_name: docker-socket-proxy
-        image: tecnativa/docker-socket-proxy:0.2.0
+        image: tecnativa/docker-socket-proxy:0.3.0
         networks:
           - docker-proxy
         healthcheck:
@@ -110,6 +112,7 @@ docker_compose:
           start_period: 40s
         environment:
           - CONTAINERS=1 # Allow access to viewing containers
+          - IMAGES=1 # Allow access to viewing images
           - POST=0 # Disallow any POST operations (effectively read-only)
         ports:
           # Only expose on the tailscale interface
@@ -117,6 +120,9 @@ docker_compose:
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock:ro"
         restart: unless-stopped
+        labels:
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/Tecnativa/docker-socket-proxy/releases"
   - compose_name: monitoring
     state: present
     networks:
@@ -153,8 +159,10 @@ docker_compose:
           - "homepage.icon=ntfy.png"
           - "homepage.href=https://ntfy.stechsolutions.ca"
           - "homepage.siteMonitor=https://ntfy.stechsolutions.ca"
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/binwiederhier/ntfy/releases"
       - container_name: postgres_hc_db
-        image: postgres:17
+        image: postgres:17.1
         user: 1000:1000
         networks:
           - hc_postgres
@@ -172,6 +180,9 @@ docker_compose:
           - "/home/{{ default_user }}/docker_mounts/monitoring/postgres:/var/lib/postgresql/data"
           - "/etc/passwd:/etc/passwd:ro"
         restart: unless-stopped
+        labels:
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://www.postgresql.org/docs/release/"
       - container_name: healthchecks
         image: healthchecks/healthchecks:v3.7
         networks:
@@ -217,6 +228,8 @@ docker_compose:
           - "homepage.widget.type=healthchecks"
           - "homepage.widget.url=https://hc.stechsolutions.ca"
           - "homepage.widget.key={{ secret_hc_projects['Stechsolutions'].api_key }}"
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/healthchecks/healthchecks/releases"
       - container_name: uptime-kuma
         image: louislam/uptime-kuma:2.0.0-beta.0
         networks:
@@ -242,3 +255,5 @@ docker_compose:
           - "homepage.widget.type=uptimekuma"
           - "homepage.widget.url=https://uptime.stechsolutions.ca"
           - "homepage.widget.slug=all-services"
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/louislam/uptime-kuma/releases"

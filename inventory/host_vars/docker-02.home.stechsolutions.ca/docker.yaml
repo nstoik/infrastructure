@@ -10,6 +10,13 @@ vehicle_db_user: vehicle_user
 vehicle_db_password: vehicle_password
 vehicle_connection_string: "Host=postgres_vehicle_db:5432;Database={{ vehicle_db_name }};Username={{ vehicle_db_user }};Password={{ vehicle_db_password }}"
 
+# wud configuration
+wud_trigger_ntfy_sh_url: https://ntfy.stechsolutions.ca
+wud_trigger_ntfy_sh_topic: wud
+wud_trigger_ntfy_sh_priority: 2
+wud_trigger_ntfy_sh_auth_user: "{{ default_user }}"
+wud_trigger_ntfy_sh_auth_password: "{{ secret_ntfy_password }}"
+
 # docker container configuration files
 docker_configuration_files:
   - name: traefik.yaml
@@ -101,7 +108,7 @@ docker_compose:
         name: docker-proxy
     containers:
       - container_name: traefik
-        image: traefik:v3.1
+        image: traefik:v3.2.0
         networks:
           - traefik
           - docker-proxy
@@ -138,18 +145,24 @@ docker_compose:
           - "homepage.widget.routers="
           - "homepage.widget.services="
           - "homepage.widget.middleware="
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/traefik/traefik/releases"
       - container_name: docker-socket-proxy
-        image: tecnativa/docker-socket-proxy:0.2.0
+        image: tecnativa/docker-socket-proxy:0.3.0
         networks:
           - docker-proxy
         environment:
           - CONTAINERS=1 # Allow access to viewing containers
+          - IMAGES=1 # Allow access to viewing images
           - POST=0 # Disallow any POST operations (effectively read-only)
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
         restart: unless-stopped
+        labels:
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/Tecnativa/docker-socket-proxy/releases"
       - container_name: homepage
-        image: ghcr.io/gethomepage/homepage:v0.9.11
+        image: ghcr.io/gethomepage/homepage:v0.9.12
         networks:
           - traefik
           - docker-proxy
@@ -168,6 +181,8 @@ docker_compose:
           - "traefik.http.services.homepage.loadbalancer.server.port=3000"
           - "traefik.http.routers.homepage.entrypoints=websecure"
           - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/gethomepage/homepage/releases"
   - compose_name: tdarr
     state: present
     networks:
@@ -176,7 +191,7 @@ docker_compose:
         external: true
     containers:
       - container_name: tdarr
-        image: ghcr.io/haveagitgat/tdarr:2.23.01
+        image: haveagitgat/tdarr:2.27.02
         networks:
           - traefik
         environment:
@@ -213,6 +228,8 @@ docker_compose:
           - "homepage.siteMonitor=https://tdarr.home.stechsolutions.ca"
           - "homepage.widget.type=tdarr"
           - "homepage.widget.url=https://tdarr.home.stechsolutions.ca"
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://home.tdarr.io/download"
   - compose_name: vehicle
     state: present
     networks:
@@ -223,7 +240,7 @@ docker_compose:
         name: vehicle_postgres
     containers:
       - container_name: postgres_vehicle_db
-        image: postgres:17
+        image: postgres:17.1
         user: 1000:1000
         networks:
           - vehicle_postgres
@@ -241,8 +258,11 @@ docker_compose:
           - "/home/{{ default_user }}/docker_mounts/vehicle/postgres:/var/lib/postgresql/data"
           - "/etc/passwd:/etc/passwd:ro"
         restart: unless-stopped
+        labels:
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://www.postgresql.org/docs/release/"
       - container_name: lubelogger
-        image: hargata/lubelogger:v1.3.9
+        image: hargata/lubelogger:v1.4.0
         user: 1000:1000
         networks:
           - traefik
@@ -278,3 +298,53 @@ docker_compose:
           - "homepage.siteMonitor=https://lubelogger.home.stechsolutions.ca"
           - "homepage.widget.type=lubelogger"
           - "homepage.widget.url=https://lubelogger.home.stechsolutions.ca"
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/hargata/lubelog/releases"
+  - compose_name: wud
+    state: present
+    networks:
+      traefik:
+        name: traefik
+        external: true
+      docker-proxy:
+        name: docker-proxy
+        external: true
+    containers:
+      - container_name: wud
+        image: getwud/wud:7.1.1
+        networks:
+          - traefik
+          - docker-proxy
+        environment:
+          - WUD_TRIGGER_NTFY_SELFHOSTED_URL={{ wud_trigger_ntfy_sh_url }}
+          - WUD_TRIGGER_NTFY_SELFHOSTED_TOPIC={{ wud_trigger_ntfy_sh_topic }}
+          - WUD_TRIGGER_NTFY_SELFHOSTED_PRIORITY={{ wud_trigger_ntfy_sh_priority }}
+          - WUD_TRIGGER_NTFY_SELFHOSTED_AUTH_USER={{ wud_trigger_ntfy_sh_auth_user }}
+          - WUD_TRIGGER_NTFY_SELFHOSTED_AUTH_PASSWORD={{ wud_trigger_ntfy_sh_auth_password }}
+          - WUD_TRIGGER_NTFY_SELFHOSTED_MODE=batch
+          - WUD_TRIGGER_NTFY_SELFHOSTED_ONCE=true
+          - WUD_WATCHER_LOCAL_HOST=docker-socket-proxy
+          - WUD_WATCHER_LOCAL_WATCHEVENTS=false
+          - WUD_WATCHER_LOCAL_WATCHATSTART=false
+          - WUD_WATCHER_LOCAL_CRON=0 */6 * * *
+          - WUD_WATCHER_DOCKERCLOUD01_HOST=docker-cloud-01.tailfacdb.ts.net
+          - WUD_WATCHER_DOCKERCLOUD01_WATCHEVENTS=false
+          - WUD_WATCHER_DOCKERCLOUD01_WATCHATSTART=false
+          - WUD_WATCHER_DOCKERCLOUD01_CRON=0 */6 * * *
+        restart: unless-stopped
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.wud.rule=Host(`wud.home.stechsolutions.ca`)"
+          - "traefik.http.services.wud.loadbalancer.server.port=3000"
+          - "traefik.http.routers.wud.entrypoints=websecure"
+          - "traefik.http.routers.wud.tls.certresolver=letsencrypt"
+          - "homepage.group=Monitoring"
+          - "homepage.name=WUD"
+          - "homepage.description=What's Up Docker"
+          - "homepage.icon=wud.png"
+          - "homepage.href=https://wud.home.stechsolutions.ca"
+          - "homepage.siteMonitor=https://wud.home.stechsolutions.ca"
+          - "homepage.widget.type=whatsupdocker"
+          - "homepage.widget.url=https://wud.home.stechsolutions.ca"
+          - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+          - "wud.link.template=https://github.com/getwud/wud/releases"

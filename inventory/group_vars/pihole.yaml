@@ -66,6 +66,9 @@ pihole_cname_entries:
   - domain: "unifi.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
+  - domain: "wud.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
   - domain: "downloader.home.stechsolutions.ca"
     target: "docker.home.stechsolutions.ca"
     add_hostname: true

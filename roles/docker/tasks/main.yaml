@@ -28,12 +28,10 @@
     - docker.compose
 
 # prune the docker system
-- name: Prune everything (including non-dangling images)
+- name: Prune everything
   community.docker.docker_prune:
     containers: true
     images: true
-    images_filters:
-      dangling: true
     networks: true
     volumes: true
     builder_cache: true
