@@ -1,9 +1,28 @@
 ---
+# Define the cloud droplets to be created or managed.
 
 # if a cloud volume is added, a volume section is also required
-# for the droplet. See Netmaker Droplet for an example.
+# for the droplet.
+
+# Example of a cloud volume definition:
 # cloud_volumes:
-#   -
+#   - volume_name: 'docker-cloud-01-data'
+#     state: 'present'
+#     block_size: 5
+
+# Then add the volume to the droplet definition:
+# cloud_droplets:
+#   - name: 'docker-cloud-01'
+#     ...
+#     volumes:
+#       - name: 'docker-cloud-01-data'
+#         partition_label: 'data'
+#         mount_point: '/data'
+#         group: 'root'
+#         owner: 'root'
+#         filesystem_type: 'ext4'
+#         options: 'defaults,errors=remount-ro'
+#         state: 'mounted'
 
 cloud_droplets:
   # docker-cloud-01 Droplet
