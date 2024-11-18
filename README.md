@@ -69,7 +69,6 @@ The playbooks are:
 - [dotfiles_update.yaml](playbooks/dotfiles_update.yaml) - Update the dotfiles on all hosts
 - [hosts_configure.yaml](playbooks/hosts_configure.yaml) - Configure the hosts. This defaults to all hosts but can be limited to specific hosts.
     - eg. `ansible-playbook playbooks/hosts_configure.yaml --limit=docker-02.home.stechsolutions.ca`
-- [netmaker.yaml](playbooks/netmaker.yaml) - The playbook to set up the Netmaker VPN server and clients
 - [pihole.yaml](playbooks/pihole.yaml) - Configure pihole server
 
 ## Roles
@@ -82,7 +81,6 @@ The roles are:
 - [docker](roles/docker/)
 - [fileserver](roles/fileserver/)
 - [healthchecks](roles/healthchecks/)
-- [netmaker](roles/netmaker/)
 - [ntfy](roles/ntfy/)
 - [pihole](roles/pihole/)
 - [proxmox](roles/proxmox/)
@@ -93,7 +91,6 @@ The services directory contains the subfolders and playbooks for the various ser
 
 The services are:
 - [Cloud Hosts](services/cloud_hosts/README.md)
-- [Netmaker](services/netmaker/README.md)
 - [Proxmox](services/proxmox/README.md)
 
 ## Files
@@ -147,17 +144,6 @@ The following ansible tags are available to specify specific tasks to run.
     - fileserver.nfs-client - Configure an NFS client
     - fileserver.swap - Configure swap file
 - healthchecks - Configure healthchecks
-- netmaker - Configure a Netmaker server
-    - netmaker.full_setup - Complete the full setup of a Netmaker server
-    - netmaker.nmctl - Install the nmctl command line tool
-    - netmaker.network - Configure the Netmaker networks
-    - netmaker.enrollment - Configure the Netmaker enrollment keys
-    - netmaker.netclient - Configure the Netmaker netclient
-        - netmaker.netclient.docker - Configure the Netmaker netclient using docker
-        - netmaker.netclient.systemd - Configure the Netmaker netclient using systemd
-        - netmaker.netclient.join - Join the Netmaker netclient to the network
-    - netmaker.ext_client - Configure external clients
-    - netmaker.acl - Configure the Netmaker ACLs
 - pihole - Configure a pihole server
 - proxmox - Configure the proxmox nodes and vms
     - proxmox.cloud_images - Download cloud images
@@ -177,7 +163,6 @@ Inventory files are as follows in the [inventory](inventory) directory:
     - [all.yaml](inventory/group_vars/all.yaml) - Inventory for all hosts
     - [do_ansible.yaml](inventory/group_vars/do_ansible.yaml) - Inventory for the DigitalOcean VMs that are managed by Ansible
     - [do_docker.yaml](inventory/group_vars/do_docker.yaml) - Inventory for the DigitalOcean VMs that are used for Docker
-    - [do_netmaker.yaml](inventory/group_vars/do_netmaker.yaml) - Inventory for the DigitalOcean VMs that are used for Netmaker
     - [netclients_manual.yaml](inventory/group_vars/netclients_manual.yaml) - Inventory for the netclients that have to be installed manually
     - [netclients.yaml](inventory/group_vars/netclients.yaml) - Inventory for the netclients
     - [pihole.yaml](inventory/group_vars/pihole.yaml) - Inventory for the pihole servers
@@ -201,9 +186,6 @@ Inventory files are as follows in the [inventory](inventory) directory:
 
 # Manual Configuration
 While the purpose of this repository is to automate the configuration of the infrastructure, there are some manual configurations that need to be done.
-
-## Netmaker
-Some netclient hosts are split into a seperate inventory file [netclients_manual.yaml](inventory/netclients_manual.yaml). These hosts have a netclient that needs to be manually installed with at least one network first so that they are on the network and accessible by ansible. Then the hosts can be configured with ansible the rest of the way.
 
 ## Ntfy
 The subscribed topics need to be added manually in the Ntfy clients (web or iOS app). The list of topics to subscribe to are:
