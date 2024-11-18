@@ -1,8 +1,0 @@
----
-# Variables for the netclients_manual group.
-
-# These hosts need to use a ssh jump host to proxy their connections
-ansible_ssh_common_args: >
-  -o StrictHostKeyChecking=no
-  -o ProxyCommand='ssh
-  -W %h:%p nelson@vpn.home.stechsolutions.ca'

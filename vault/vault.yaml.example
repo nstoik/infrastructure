@@ -18,9 +18,7 @@ secret_cf_token: change_me
 secret_user_password: change_me
 secret_user_password_prehashed: hashed version of 'secret_user_password'
 secret_become_pass: change_me
-
-# Netclient_manual become password
-secret_become_pass_netclient_arnie: change_me
+secret_become_pass_arnie: change_me
 
 # Healthchecks.io secrets
 secret_hc_ping_key: change_me
