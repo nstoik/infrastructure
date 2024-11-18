@@ -89,7 +89,3 @@
         hostvars[inventory_hostname].hc_container_setup is true
       tags:
         - healthchecks
-
-# Run the netmaker netclient playbook
-# - name: Import netmaker netclient playbook
-#   import_playbook: ../services/netmaker/netclients.yaml
