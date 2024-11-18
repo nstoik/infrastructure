@@ -61,7 +61,7 @@ all:
                 scsi: "scsi6"
                 device: "/dev/disk/by-id/ata-WDC_WD120EFBX-68B0EN0_5QJRU8GB"
                 backup: 0
-      vpn.home.stechsolutions.ca:
+        vpn.home.stechsolutions.ca:
           docker_install: false
           dotfiles:
             install: true
