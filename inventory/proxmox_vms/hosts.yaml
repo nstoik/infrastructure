@@ -61,3 +61,25 @@ all:
                 scsi: "scsi6"
                 device: "/dev/disk/by-id/ata-WDC_WD120EFBX-68B0EN0_5QJRU8GB"
                 backup: 0
+      vpn.home.stechsolutions.ca:
+          docker_install: false
+          dotfiles:
+            install: true
+            dotbot_skip_ssh_authorized_file: false
+          network:
+            ip: "10.10.5.28"
+            gateway: "10.10.5.1"
+          proxmox_vm:
+            proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
+            template_id: 9001
+            state: "present"
+            id: 355
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            name_fqdn: "{{ inventory_hostname }}"
+            start_onboot: true
+            disk_size: 20G
+            net0: virtio,bridge=vmbr0
+            ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
+            cores: 2
+            memory: 2048
+            balloon: 1024
