@@ -30,6 +30,8 @@ pihole_dns_entries:
     ip: 10.10.5.26
   - domain: "docker-02.home.stechsolutions.ca"
     ip: 10.10.5.27
+  - domain: "vpn.home.stechsolutions.ca"
+    ip: 10.10.5.28
   - domain: "prometheus.home.stechsolutions.ca"
     ip: 10.10.5.76
   - domain: "youtube-dl.home.stechsolutions.ca"
@@ -38,8 +40,6 @@ pihole_dns_entries:
     ip: 10.10.5.142
   - domain: "w10-testing.home.stechsolutions.ca"
     ip: 10.10.5.182
-  - domain: "vpn.home.stechsolutions.ca"
-    ip: 10.10.5.223
   - domain: "docker.home.stechsolutions.ca"
     ip: 10.10.5.237
 
