@@ -163,8 +163,6 @@ Inventory files are as follows in the [inventory](inventory) directory:
     - [all.yaml](inventory/group_vars/all.yaml) - Inventory for all hosts
     - [do_ansible.yaml](inventory/group_vars/do_ansible.yaml) - Inventory for the DigitalOcean VMs that are managed by Ansible
     - [do_docker.yaml](inventory/group_vars/do_docker.yaml) - Inventory for the DigitalOcean VMs that are used for Docker
-    - [netclients_manual.yaml](inventory/group_vars/netclients_manual.yaml) - Inventory for the netclients that have to be installed manually
-    - [netclients.yaml](inventory/group_vars/netclients.yaml) - Inventory for the netclients
     - [pihole.yaml](inventory/group_vars/pihole.yaml) - Inventory for the pihole servers
     - [proxmox_nodes.yaml](inventory/group_vars/proxmox_nodes.yaml) - Inventory for the proxmox nodes
     - [proxmox_vms.yaml](inventory/group_vars/proxmox_vms.yaml) - Inventory for the proxmox vms
@@ -179,9 +177,6 @@ Inventory files are as follows in the [inventory](inventory) directory:
     - When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
 - [inventory.yaml](inventory/inventory.yaml) - Main inventory file
     - This file includes the main inventory hosts and groups
-- [netclients_manual.yaml](inventory/netclients_manual.yaml) - Inventory for the netclients
-    - This inventory is used for hosts that have to first have netclient installed manually so they can be reached by Ansible.
-- [netclients.yaml](inventory/netclients.yaml) - Inventory for the netclients
 
 
 # Manual Configuration
