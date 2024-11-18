@@ -15,10 +15,6 @@ digitalocean_tags:
     state: "present"
   - name: "Ansible"
     state: "present"
-  # lowercase as it was orignally created as a lowercase and DigitalOcean
-  # does not allow it to be recreated as uppercase.
-  - name: "netmaker"
-    state: "present"
   - name: "VPN"
     state: "present"
   - name: "HTTPS"
@@ -79,7 +75,7 @@ digitalocean_firewall:
           addresses: ["0.0.0.0/0", "::/0"]
   - name: "StechSolutions-HTTPS"
     state: "present"
-    tags: ["HTTPS", "Netmaker"]
+    tags: ["HTTPS"]
     inbound_rules:
       - ports: "443"
         protocol: "tcp"
