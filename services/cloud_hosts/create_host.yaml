@@ -31,7 +31,7 @@
         - digitalocean
         - digitalocean.droplet
 
-- name: Initial Setup of Netmaker Droplet
+- name: Initial Setup of Droplet
   hosts: do_ansible
   gather_facts: false
   vars_files:
