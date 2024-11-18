@@ -22,14 +22,6 @@ secret_become_pass: change_me
 # Netclient_manual become password
 secret_become_pass_netclient_arnie: change_me
 
-# Netmaker secrets
-secret_nm_master_key: change_me
-secret_nm_mq_password: change_me
-secret_nm_license_key: change_me
-secret_nm_tenant_id: change_me
-secret_nm_admin_account: change_me
-secret_nm_admin_password: change_me
-
 # Healthchecks.io secrets
 secret_hc_ping_key: change_me
 secret_hc_snapraid_uuid: change_me
