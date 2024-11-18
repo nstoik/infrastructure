@@ -12,13 +12,6 @@ all:
     vpn.home.stechsolutions.ca:
 
   children:
-    netclients:
-      hosts:
-        vpn.home.stechsolutions.ca:
-        prometheus.home.stechsolutions.ca:
-    netclients_manual:
-      hosts:
-        vpn.arnie-karen:
     pihole:
       hosts:
         pihole-2.home.stechsolutions.ca:
