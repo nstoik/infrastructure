@@ -147,6 +147,7 @@ The following ansible tags are available to specify specific tasks to run.
 - pihole - Configure a pihole server
 - proxmox - Configure the proxmox nodes and vms
     - proxmox.cloud_images - Download cloud images
+    - proxmox.container_images - Download container images
     - proxmox.template - Configure the proxmox template
     - proxmox.vm - Clone and configure VMs on the proxmox nodes
         - proxmox.vm.create - Create a VM on the proxmox node
