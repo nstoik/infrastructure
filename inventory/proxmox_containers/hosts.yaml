@@ -1,0 +1,7 @@
+---
+# Hosts that are proxmox containers and their configuration
+
+all:
+  children:
+    proxmox_containers:
+      hosts:

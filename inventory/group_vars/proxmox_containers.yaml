@@ -1,0 +1,6 @@
+---
+# group vars for the proxmox_containers group
+
+ansible_become_password: "{{ secret_become_pass }}"
+
+ansible_ssh_pass: "{{ secret_become_pass }}"
