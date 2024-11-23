@@ -23,6 +23,8 @@
     - proxmox
     - proxmox.vm
     - proxmox.vm.create
+    - proxmox.container
+    - proxmox.container.create
 
   tasks:
     # This creates the VMs
@@ -44,3 +46,41 @@
         proxmox_vm: "{{ hostvars[item].proxmox_vm }}"
         proxmox_ip: "{{ hostvars[item].network.ip }}"
       loop: "{{ groups['proxmox_vms'] }}"
+
+    # Create the containers
+    - name: Run the proxmox role to create containers
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: create_container
+      vars:
+        proxmox_container: "{{ hostvars[item].proxmox_container }}"
+        proxmox_container_img: "{{ hostvars[item].proxmox_container_img }}"
+      loop: "{{ groups['proxmox_containers'] }}"
+
+    # Start the containers and wait for them to be ready
+    - name: Run the proxmox role to start containers
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: start_container
+      vars:
+        proxmox_container: "{{ hostvars[item].proxmox_container }}"
+        proxmox_ip: "{{ hostvars[item].network.ip }}"
+      loop: "{{ groups['proxmox_containers'] }}"
+
+
+# Initial setup of proxmox containers
+- name: Initial setup of proxmox containers
+  hosts: proxmox_containers
+  gather_facts: false
+  vars_files:
+    - ../../vault/vault.yaml
+
+  tasks:
+    - name: Import create_container_user role from proxmox
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: create_container_user
+      tags:
+        - proxmox
+        - proxmox.container
+        - proxmox.container.user

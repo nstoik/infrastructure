@@ -1,0 +1,85 @@
+---
+# Start the container if it is not running and wait for it to be ready
+
+# Required inputs:
+#  proxmox_container: The container to start
+#  proxmox_ip: The IP address of the container
+
+# Check if the container is running
+- name: Check if the container is running
+  ansible.builtin.command:
+    cmd: >
+      pct status {{ proxmox_container.id }}
+  register: proxmox_container_status
+  become: true
+  changed_when: false
+  when: proxmox_container.state == 'present' and
+        proxmox_container.proxmox_node == inventory_hostname
+  tags:
+    - proxmox
+    - proxmox.container
+    - proxmox.container.create
+
+# Set the 'proxmox_container_status' variable if previous task was skipped
+- name: Set the 'proxmox_container_status' variable if previous task was skipped
+  ansible.builtin.set_fact:
+    proxmox_container_status:
+      stdout: "N/A"
+  when: proxmox_container_status.skipped | default('false') | bool
+
+# Start the container
+- name: Start the container
+  when:
+    "proxmox_container_status.stdout.find('status: stopped') != -1 and
+    proxmox_container.state == 'present' and
+    proxmox_container.proxmox_node == inventory_hostname"
+  tags:
+    - proxmox
+    - proxmox.container
+    - proxmox.container.create
+  block:
+
+    # Start the container
+    - name: Start the container
+      ansible.builtin.command:
+        cmd: >
+          pct start {{ proxmox_container.id }}
+      become: true
+      changed_when: false
+
+    # Run a ping command from the container to ensure it is ready
+    - name: Run a ping command from the container
+      ansible.builtin.command:
+        cmd: >
+          pct exec {{ proxmox_container.id }}
+          -- ping 10.10.5.1 -c 4
+      delay: 5
+      become: true
+      changed_when: false
+
+    # Wait for the container to be ready
+    - name: Wait for the container to be ready
+      ansible.builtin.wait_for:
+        host: "{{ proxmox_ip }}"
+        port: 22
+        timeout: 120
+      delegate_to: localhost
+      changed_when: false
+
+    # Update the known_hosts file
+    - name: Update the known_hosts file for {{ known_hosts_item }}
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ known_hosts_item }}"
+        base_state: "{{ proxmox_container.state }}"
+        base_comment: "Proxmox Container: {{ proxmox_container.name }}"
+      loop:
+        - "{{ proxmox_ip }}"
+        - "{{ proxmox_container.name }}"
+        - "{{ proxmox_container.name_fqdn }}"
+      loop_control:
+        loop_var: known_hosts_item
+      tags:
+        - base.known_hosts
