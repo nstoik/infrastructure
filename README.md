@@ -148,7 +148,11 @@ The following ansible tags are available to specify specific tasks to run.
 - proxmox - Configure the proxmox nodes and vms
     - proxmox.cloud_images - Download cloud images
     - proxmox.container_images - Download container images
-    - proxmox.template - Configure the proxmox template
+    - proxmox.container - Configure containers on the proxmox nodes
+        - proxmox.container.create - Create a container on the proxmox node
+        - proxmox.container.delete - Delete a container on the proxmox node
+        - proxmox.container.user - Configure a user on a container
+    - proxmox.template - Configure the proxmox templates
     - proxmox.vm - Clone and configure VMs on the proxmox nodes
         - proxmox.vm.create - Create a VM on the proxmox node
         - proxmox.vm.delete - Delete a VM on the proxmox node
@@ -170,6 +174,8 @@ Inventory files are as follows in the [inventory](inventory) directory:
 - [host_vars](inventory/host_vars/) - Inventory for each host
     - [docker-02.home.stechsolutions.ca](inventory/host_vars/docker-02.home.stechsolutions.ca) - Folder for multiple inventory files for the docker-02 host
     - [docker-cloud-01](inventory/host_vars/docker-cloud-01) - Folder for multiple inventory files for the docker-cloud-01 host
+- [proxmox_containers](inventory/proxmox_containers) - Inventory for the proxmox containers
+    - [hosts.yaml](inventory/proxmox_containers/hosts.yaml) - Inventory for the proxmox containers
 - [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
     - [docker_hosts.yaml](inventory/proxmox_vms/docker_hosts.yaml) - Inventory for the docker hosts running on proxmox
     - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms
@@ -188,6 +194,7 @@ The subscribed topics need to be added manually in the Ntfy clients (web or iOS 
 - Healthchecks
 - SnapRAID
 - Uptime-Kuma
+- wud
 
 ## Proxmox
 The proxmox hosts need to be bootstrapped to a point where they can be managed by ansible. See the [Proxmox Hosts Manual Configuration](services/proxmox/README.md) for more information.
