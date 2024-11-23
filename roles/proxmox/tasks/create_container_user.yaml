@@ -1,0 +1,75 @@
+---
+# create a user on an lxc container
+#
+# This creates the user using the root user and copies the authorized_keys file.
+# As such, there is additional logic to check if the root user can login to the
+# droplet, since afterwards root login is disabled. If the root user can login,
+# the new user probably needs to be created.
+
+# specify a block to add tags to all tasks in this file
+- name: Create a user on the lxc container
+  tags:
+    - proxmox
+    - proxmox.container
+    - proxmox.container.user
+  block:
+    # Wait for the host to become reachable.
+    - name: Wait for host to become reachable
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host }}"
+        port: 22
+        timeout: 30
+      delegate_to: localhost
+
+    # Check if the user already exisits
+    - name: Check if the user already exists
+      ansible.builtin.command:
+        cmd: "getent passwd {{ default_user }}"
+      register: user_exists
+      changed_when: false
+      failed_when: false
+      ignore_unreachable: true
+      remote_user: root
+
+    # create a new user using the root user
+    - name: Create a new user on the lxc container
+      remote_user: root
+      ansible.builtin.user:
+        name: "{{ default_user }}"
+        password: "{{ secret_user_password_prehashed }}"
+        update_password: on_create
+        createhome: true
+        home: "/home/{{ default_user }}"
+        groups: sudo
+        append: true
+        state: present
+        generate_ssh_key: true
+        ssh_key_type: ed25519
+      when: user_exists.rc is defined and user_exists.rc != 0
+
+    # create the user's ssh directory
+    - name: Create the user's ssh directory
+      remote_user: root
+      ansible.builtin.file:
+        path: /home/{{ default_user }}/.ssh
+        state: directory
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: "0700"
+      when: user_exists.rc is defined and user_exists.rc != 0
+
+    # set the authorized_keys file for the new user
+    - name: Set the authorized_keys file for the new user
+      remote_user: root
+      ansible.builtin.lineinfile:
+        path: /home/{{ default_user }}/.ssh/authorized_keys
+        line: "{{ authorized_keys.keys }}"
+        state: present
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: "0600"
+      loop: "{{ secret_ssh_keys }}"
+      loop_control:
+        loop_var: authorized_keys
+        label: "{{ authorized_keys.name }}"
+      when: user_exists.rc is defined and user_exists.rc != 0
