@@ -1,0 +1,55 @@
+---
+# Delete a container
+# Will delete a container if it exists and state is absent.
+
+# Required inputs:
+#  proxmox_container: The container to delete
+
+# Check if the container config file exists (does the container exist)
+- name: Check if the container exists
+  ansible.builtin.stat:
+    path: /etc/pve/lxc/{{ proxmox_container.id }}.conf
+  register: proxmox_container_config
+  become: true
+  tags:
+    - proxmox
+    - proxmox.container
+    - proxmox.container.delete
+
+# Delete the container if it exists and the state is absent
+- name: Delete the container
+  when:
+    proxmox_container_config.stat.exists and
+    proxmox_container.state == "absent" and
+    proxmox_container.proxmox_node == inventory_hostname
+  tags:
+    - proxmox
+    - proxmox.container
+    - proxmox.container.delete
+  block:
+
+    # Stop the container
+    - name: Stop the container
+      ansible.builtin.command:
+        cmd: pct stop {{ proxmox_container.id }}
+      become: true
+      changed_when: false
+
+    # Delete the container
+    - name: Delete the container
+      ansible.builtin.command:
+        cmd: pct destroy {{ proxmox_container.id }}
+        removes: /etc/pve/lxc/{{ proxmox_container.id }}.conf
+      become: true
+
+    # Update the known_hosts file
+    - name: Update the known_hosts file for {{ proxmox_container.name }}
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ proxmox_container.name_fqdn }}"
+        base_state: "{{ proxmox_container.state }}"
+        base_comment: "Proxmox Container: {{ proxmox_container.name }}"
+      tags:
+        - base.known_hosts

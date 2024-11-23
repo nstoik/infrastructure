@@ -21,3 +21,16 @@
         - proxmox
         - proxmox.vm
         - proxmox.vm.delete
+
+    # Run the proxmox role to delete the containers
+    - name: Run the proxmox role to delete the containers
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: delete_container
+      vars:
+        proxmox_container: "{{ hostvars[item].proxmox_container }}"
+      loop: "{{ groups['proxmox_containers'] }}"
+      tags:
+        - proxmox
+        - proxmox.container
+        - proxmox.container.delete

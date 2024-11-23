@@ -1,0 +1,18 @@
+---
+# Download container template images.
+
+# block for download container template images tasks
+- name: Block for download container template images tasks
+  tags:
+    - proxmox
+    - proxmox.container_images
+  block:
+    # Download the container template images
+    - name: Download the container template images
+      ansible.builtin.command:
+        cmd: >
+          pveam download {{ proxmox_template_storage }} {{ item.image }}
+      loop: "{{ proxmox_container_imgs }}"
+      become: true
+      when: inventory_hostname in item.proxmox_nodes
+      changed_when: false

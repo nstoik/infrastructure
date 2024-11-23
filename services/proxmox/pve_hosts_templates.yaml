@@ -17,4 +17,5 @@
       tags:
         - proxmox
         - proxmox.cloud_images
+        - proxmox.container_images
         - proxmox.template

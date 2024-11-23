@@ -19,3 +19,11 @@
   tags:
     - proxmox
     - proxmox.template
+
+# Download container template images
+- name: Download container template images
+  ansible.builtin.include_tasks: download_container_images.yaml
+  when: proxmox_container_imgs is defined
+  tags:
+    - proxmox
+    - proxmox.container_images

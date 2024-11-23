@@ -54,6 +54,11 @@ proxmox_cloud_imgs:
     # List of proxmox nodes to download the cloud image to
     proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
 
+# Proxmox container images
+proxmox_container_imgs:
+  - image: "ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
+    proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
+
 # Proxmox Permissions and ACLs
 proxmox_groups:
   - name: "Admins"

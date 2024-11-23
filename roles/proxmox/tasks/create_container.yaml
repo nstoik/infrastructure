@@ -1,0 +1,55 @@
+---
+# Create an LXC container
+#
+# Required inputs:
+#  proxmox_container_img: The container image to use for the container
+#  proxmox_container: The container to create
+
+# Create the container block
+- name: Create the container block
+  when:
+    proxmox_container.state == "present" and
+    proxmox_container.proxmox_node == inventory_hostname
+  tags:
+    - proxmox
+    - proxmox.container
+    - proxmox.container.create
+  block:
+
+    # Create a temporary file for the SSH public key
+    - name: Create a temporary file for the SSH public key
+      ansible.builtin.tempfile:
+        state: file
+        suffix: .pub
+      register: ssh_key_tempfile
+
+    # Set the SSH public key content
+    - name: Set the SSH public key content
+      ansible.builtin.copy:
+        content: "{{ secret_ssh_keys[0].key }}"
+        dest: "{{ ssh_key_tempfile.path }}"
+        mode: '0600'
+
+    # Create the container only if it does not exist
+    - name: Create the container
+      ansible.builtin.command:
+        cmd: >
+          pct create {{ proxmox_container.id }}
+          {{ proxmox_template_storage }}:vztmpl/{{ proxmox_container.container_img }}
+          --cores {{ proxmox_container.cores }}
+          --hostname {{ proxmox_container.name }}
+          --memory {{ proxmox_container.memory }}
+          --net0 {{ proxmox_container.net0 }},"{{ proxmox_container.ipconfig0 }}"
+          --onboot {{ proxmox_container.start_onboot }}
+          --password {{ secret_user_password }}
+          --rootfs data:{{ proxmox_container.disk_size }}
+          --unprivileged 1
+          --ssh-public-keys {{ ssh_key_tempfile.path }}
+        creates: /etc/pve/lxc/{{ proxmox_container.id }}.conf
+      become: true
+
+    # Remove the temporary file
+    - name: Remove the temporary file
+      ansible.builtin.file:
+        path: "{{ ssh_key_tempfile.path }}"
+        state: absent
