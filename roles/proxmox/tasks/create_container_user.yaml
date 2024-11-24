@@ -58,6 +58,17 @@
         mode: "0700"
       when: user_exists.rc is defined and user_exists.rc != 0
 
+    # create the authorized_keys file for the new user
+    - name: Create the authorized_keys file for the new user
+      remote_user: root
+      ansible.builtin.file:
+        path: /home/{{ default_user }}/.ssh/authorized_keys
+        state: touch
+        owner: "{{ default_user }}"
+        group: "{{ default_user }}"
+        mode: "0600"
+      when: user_exists.rc is defined and user_exists.rc != 0
+
     # set the authorized_keys file for the new user
     - name: Set the authorized_keys file for the new user
       remote_user: root
