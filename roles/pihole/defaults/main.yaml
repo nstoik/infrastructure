@@ -5,3 +5,6 @@ pihole_dnsmasq_dir: /etc/dnsmasq.d
 pihole_dnsmasq_file: 05-pihole-custom-cname.conf
 
 pihole_config_dir: /etc/pihole
+
+pihole_installer_url: https://install.pi-hole.net
+pihole_installer_path: /tmp/pihole-install.sh

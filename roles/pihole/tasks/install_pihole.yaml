@@ -1,0 +1,67 @@
+---
+# Install Pi-hole
+
+# Ensure the required directories exist
+- name: Ensure that the required directories exist
+  ansible.builtin.file:
+    path: "{{ pihole_config_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+  tags:
+    - pihole
+
+# Write the setupVars.conf file
+- name: Write the setupVars.conf file
+  ansible.builtin.template:
+    src: setupVars.conf.j2
+    dest: "{{ pihole_config_dir }}/setupVars.conf"
+    mode: "0644"
+  vars:
+    pihole_server_target: "{{ pihole_config_server_target }}"
+    pihole_server_cidr: "{{ pihole_config_server_cidr }}"
+    pihole_ipv4_address: "{{ pihole_config_ipv4_address }}"
+  become: true
+  tags:
+    - pihole
+
+# Download the Pi-hole installer
+- name: Download the Pi-hole installer
+  ansible.builtin.get_url:
+    url: "{{ pihole_installer_url }}"
+    dest: "{{ pihole_installer_path }}"
+    mode: "0755"
+  tags:
+    - pihole
+
+# Run the Pi-hole installer
+- name: Run the Pi-hole installer
+  ansible.builtin.command:
+    cmd: "{{ pihole_installer_path }} --unattended"
+  become: true
+  changed_when: false
+  tags:
+    - pihole
+
+# Set the Pi-hole password
+- name: Set the Pi-hole password
+  ansible.builtin.command:
+    cmd: "pihole -a -p '{{ secret_pihole_password }}'"
+  become: true
+  changed_when: false
+  tags:
+    - pihole
+
+# Update DNS entries to Pi-hole
+- name: Update DNS entries to Pi-hole
+  ansible.builtin.include_tasks: update_dns.yaml
+  tags:
+    - pihole
+    - pihole.dns
+
+# Update CNAME entries to Pi-hole
+- name: Update CNAME entries to Pi-hole
+  ansible.builtin.include_tasks: update_cname.yaml
+  tags:
+    - pihole
+    - pihole.cname

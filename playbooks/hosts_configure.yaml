@@ -16,6 +16,17 @@
     - tailscale.install
 
   tasks:
+    # Run the pihole role
+    - name: Import pihole role
+      ansible.builtin.import_role:
+        name: pihole
+        tasks_from: install_pihole
+      when:
+        hostvars[inventory_hostname].pihole_setup is defined and
+        hostvars[inventory_hostname].pihole_setup is true
+      tags:
+        - pihole
+
     # Run the fileserver role
     - name: Import fileserver role
       ansible.builtin.import_role:
