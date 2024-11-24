@@ -1,0 +1,20 @@
+---
+# Update the Pi-hole installation and blocklists
+
+# Update the Pi-hole installation
+- name: Update the Pi-hole installation
+  ansible.builtin.command:
+    cmd: "pihole -up"
+  become: true
+  changed_when: false
+  tags:
+    - pihole
+
+# Update the Pi-hole blocklists
+- name: Update the Pi-hole blocklists
+  ansible.builtin.command:
+    cmd: "pihole -g"
+  become: true
+  changed_when: false
+  tags:
+    - pihole
