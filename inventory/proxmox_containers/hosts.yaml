@@ -5,3 +5,47 @@ all:
   children:
     proxmox_containers:
       hosts:
+        pihole-1.home.stechsolutions.ca:
+          dotfiles:
+            install: true
+            dotbot_skip_ssh_authorized_file: false
+          network:
+            ip: "10.10.1.11"
+            gateway: "10.10.1.1"
+          proxmox_container:
+            proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
+            container_img: "ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
+            state: "present"
+            id: 100
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            name_fqdn: "{{ inventory_hostname }}"
+            start_onboot: 1
+            disk_size: 10
+            # It is important to set the bridge to the correct network
+            net0: name=eth0,bridge=vmbr1
+            ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
+            cores: 2
+            memory: 2048
+            balloon: 1024
+        pihole-2.home.stechsolutions.ca:
+          dotfiles:
+            install: true
+            dotbot_skip_ssh_authorized_file: false
+          network:
+            ip: "10.10.5.11"
+            gateway: "10.10.5.1"
+          proxmox_container:
+            proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
+            container_img: "ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
+            state: "present"
+            id: 101
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            name_fqdn: "{{ inventory_hostname }}"
+            start_onboot: 1
+            disk_size: 10
+            # It is important to set the bridge to the correct network
+            net0: name=eth0,bridge=vmbr0
+            ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
+            cores: 2
+            memory: 2048
+            balloon: 1024

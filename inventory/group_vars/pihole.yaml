@@ -9,7 +9,7 @@ ansible_ssh_pass: "{{ secret_become_pass }}"
 # The domain name and the hostname are added
 # to the Pi-hole DNS entries.
 pihole_dns_entries:
-  - domain: "pihole-2.home.stechsolutions.ca"
+  - domain: "pihole-1.home.stechsolutions.ca"
     ip: 10.10.1.11
   - domain: "hassio.home.stechsolutions.ca"
     ip: 10.10.1.51
@@ -22,7 +22,7 @@ pihole_dns_entries:
     # host is down. IP and domain is reserved for future backup host
   - domain: "proxmox.home.stechsolutions.ca"
     ip: 10.10.5.9
-  - domain: "pihole-3.home.stechsolutions.ca"
+  - domain: "pihole-2.home.stechsolutions.ca"
     ip: 10.10.5.11
   - domain: "docker-testing.home.stechsolutions.ca"
     ip: 10.10.5.25

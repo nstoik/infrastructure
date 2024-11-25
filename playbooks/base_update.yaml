@@ -11,3 +11,12 @@
     - base
     - base.apt
     - base.services
+
+  tasks:
+    # update pihole
+    - name: Update pihole
+      ansible.builtin.include_role:
+        name: pihole
+        tasks_from: update_pihole.yaml
+      tags:
+        - pihole

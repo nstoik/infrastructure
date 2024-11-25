@@ -1,7 +1,7 @@
 ---
-# Host variables for pihole-2.home.stechsolutions.ca
+# Host variables for pihole-1.home.stechsolutions.ca
 
-ansible_host: 10.10.5.11
+ansible_host: 10.10.1.11
 
 pihole_setup: true
 pihole_config_server_target: 10.10.5.1
