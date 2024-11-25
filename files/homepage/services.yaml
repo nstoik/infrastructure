@@ -13,7 +13,7 @@
           blocked:
           gravity:
     - PiHole-2:
-        href: http://pihole-2.home.stechsolutions.ca
+        href: http://pihole-2.home.stechsolutions.ca/admin
         description: PiHole-2
         icon: pi-hole.png
         widget:
