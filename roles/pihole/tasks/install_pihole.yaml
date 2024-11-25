@@ -7,6 +7,7 @@
     path: "{{ pihole_config_dir }}"
     state: directory
     mode: "0755"
+  register: pihole_config_dir_created
   become: true
   tags:
     - pihole
@@ -25,43 +26,52 @@
   tags:
     - pihole
 
-# Download the Pi-hole installer
-- name: Download the Pi-hole installer
-  ansible.builtin.get_url:
-    url: "{{ pihole_installer_url }}"
-    dest: "{{ pihole_installer_path }}"
-    mode: "0755"
+# block to install Pi-hole
+- name: Block to install pihole
+  when:
+    pihole_setup is defined and
+    pihole_setup is true and
+    pihole_config_dir_created.changed
   tags:
     - pihole
+  block:
 
-# Run the Pi-hole installer
-- name: Run the Pi-hole installer
-  ansible.builtin.command:
-    cmd: "{{ pihole_installer_path }} --unattended"
-  become: true
-  changed_when: false
-  tags:
-    - pihole
+    # Temporarily set DNS to Google (for bootstrapping the DNS server installation)
+    - name: Temporarily set DNS to Google
+      ansible.builtin.command:
+        cmd: sudo sh -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+      become: true
+      changed_when: false
 
-# Set the Pi-hole password
-- name: Set the Pi-hole password
-  ansible.builtin.command:
-    cmd: "pihole -a -p '{{ secret_pihole_password }}'"
-  become: true
-  changed_when: false
-  tags:
-    - pihole
+    # Download the Pi-hole installer
+    - name: Download the Pi-hole installer
+      ansible.builtin.get_url:
+        url: "{{ pihole_installer_url }}"
+        dest: "{{ pihole_installer_path }}"
+        mode: "0755"
 
-# Update DNS entries to Pi-hole
-- name: Update DNS entries to Pi-hole
-  ansible.builtin.include_tasks: update_dns.yaml
-  tags:
-    - pihole
-    - pihole.dns
+    # Run the Pi-hole installer
+    - name: Run the Pi-hole installer
+      ansible.builtin.command:
+        cmd: "{{ pihole_installer_path }} --unattended"
+      become: true
+      changed_when: false
 
-# Update CNAME entries to Pi-hole
-- name: Update CNAME entries to Pi-hole
-  ansible.builtin.include_tasks: update_cname.yaml
-  tags:
-    - pihole
-    - pihole.cname
+    # Set the Pi-hole password
+    - name: Set the Pi-hole password
+      ansible.builtin.command:
+        cmd: "pihole -a -p '{{ secret_pihole_password }}'"
+      become: true
+      changed_when: false
+
+    # Update DNS entries to Pi-hole
+    - name: Update DNS entries to Pi-hole
+      ansible.builtin.include_tasks: update_dns.yaml
+      tags:
+        - pihole.dns
+
+    # Update CNAME entries to Pi-hole
+    - name: Update CNAME entries to Pi-hole
+      ansible.builtin.include_tasks: update_cname.yaml
+      tags:
+        - pihole.cname
