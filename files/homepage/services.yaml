@@ -1,4 +1,17 @@
 ---
+- 3DPrinting:
+    - OctoPrint:
+        href: http://octoprint.home.stechsolutions.ca
+        description: OctoPrint
+        icon: octoprint.png
+        widget:
+          type: octoprint
+          url: http://octoprint.home.stechsolutions.ca
+          key: "{{ secret_octoprint_key }}"
+          printer_state:
+          temp_tool:
+          temp_bed:
+          job_completion:
 - Network:
     - PiHole-1:
         href: http://pihole-1.home.stechsolutions.ca/admin
