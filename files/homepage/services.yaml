@@ -1,17 +1,16 @@
 ---
 - 3DPrinting:
-    - OctoPrint:
-        href: http://octoprint.home.stechsolutions.ca
-        description: OctoPrint
-        icon: octoprint.png
+    - Mainsail:
+        href: http://mainsail.home.stechsolutions.ca
+        description: Mainsail
+        icon: mainsail.png
         widget:
-          type: octoprint
-          url: http://octoprint.home.stechsolutions.ca
-          key: "{{ secret_octoprint_key }}"
+          type: moonraker
+          url: http://mainsail.home.stechsolutions.ca
           printer_state:
-          temp_tool:
-          temp_bed:
-          job_completion:
+          print_status:
+          print_progress:
+          layers:
 - Network:
     - PiHole-1:
         href: http://pihole-1.home.stechsolutions.ca/admin
