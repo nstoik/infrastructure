@@ -162,7 +162,7 @@ docker_compose:
           - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
           - "wud.link.template=https://github.com/Tecnativa/docker-socket-proxy/releases"
       - container_name: homepage
-        image: ghcr.io/gethomepage/homepage:v0.9.12
+        image: ghcr.io/gethomepage/homepage:v0.10.6
         networks:
           - traefik
           - docker-proxy

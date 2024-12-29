@@ -11,6 +11,13 @@
           print_status:
           print_progress:
           layers:
+    - Spoolman:
+        href: http://10.10.1.136:7912
+        description: Spoolman
+        icon: spoolman.png
+        widget:
+          type: spoolman
+          url: http://10.10.1.136:7912
 - Network:
     - PiHole-1:
         href: http://pihole-1.home.stechsolutions.ca/admin
