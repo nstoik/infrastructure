@@ -7,10 +7,6 @@
         widget:
           type: moonraker
           url: http://mainsail.home.stechsolutions.ca
-          printer_state:
-          print_status:
-          print_progress:
-          layers:
     - Spoolman:
         href: http://10.10.1.136:7912
         description: Spoolman
@@ -28,9 +24,6 @@
           url: http://pihole-1.home.stechsolutions.ca
           version: 5
           key: "{{ secret_pihole_password_hash }}"
-          queries:
-          blocked:
-          gravity:
     - PiHole-2:
         href: http://pihole-2.home.stechsolutions.ca/admin
         description: PiHole-2
@@ -40,9 +33,6 @@
           url: http://pihole-2.home.stechsolutions.ca
           version: 5
           key: "{{ secret_pihole_password_hash }}"
-          queries:
-          blocked:
-          gravity:
     - Unifi OS:
         href: https://unifi.home.stechsolutions.ca
         description: Unifi OS
@@ -56,9 +46,6 @@
           url: https://unifi.home.stechsolutions.ca
           username: HomepageUser
           password: "{{  secret_unifi_username_password}}"
-          uptime:
-          wan:
-          lan:
     - Unifi Protect:
         href: https://unifi.home.stechsolutions.ca/protect/dashboard
         description: Unifi Protect
