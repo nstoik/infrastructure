@@ -13,6 +13,8 @@ layout:
   Media:
     style: column
     useEqualHeights: true
+  3DPrinting:
+    style: column
   Monitoring:
     style: column
   Proxy:
