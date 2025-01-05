@@ -202,6 +202,14 @@ The proxmox hosts need to be bootstrapped to a point where they can be managed b
 ## Uptime-Kuma
 Uptime-Kuma is installed as a docker container by Ansible. Currently, the configuration is not automated and needs to be done manually (until an API for uptime-kuma is available).
 
+## 3D Printer
+The 3D printer is not managed by Ansible. The configuration is done manually. The 3D printer is a Creality Ender 3 S1 Pro with a Raspberry Pi 3 B+ running MainsailOS.
+
+The [3D Printer Repo](https://github.com/nstoik/3D-printer) stores the configuration backups of the 3D printer powered by Klipper-Backup.
+
+- The `main` branch of the repo is the Klipper configuation.
+- The `orcaslicer-backup` branch of the repo is the Orcaslicer configuration.
+
 # Testing and linting
 Linting can be done with the following commands
 

@@ -142,9 +142,6 @@ docker_compose:
           - "homepage.widget.url=https://docker-02.home.stechsolutions.ca"
           - "homepage.widget.username={{ default_user }}"
           - "homepage.widget.password={{ secret_traefik_dashboard_password }}"
-          - "homepage.widget.routers="
-          - "homepage.widget.services="
-          - "homepage.widget.middleware="
           - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
           - "wud.link.template=https://github.com/traefik/traefik/releases"
       - container_name: docker-socket-proxy
@@ -162,7 +159,7 @@ docker_compose:
           - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
           - "wud.link.template=https://github.com/Tecnativa/docker-socket-proxy/releases"
       - container_name: homepage
-        image: ghcr.io/gethomepage/homepage:v0.9.12
+        image: ghcr.io/gethomepage/homepage:v0.10.6
         networks:
           - traefik
           - docker-proxy

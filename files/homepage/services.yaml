@@ -1,17 +1,19 @@
 ---
 - 3DPrinting:
-    - OctoPrint:
-        href: http://octoprint.home.stechsolutions.ca
-        description: OctoPrint
-        icon: octoprint.png
+    - Mainsail:
+        href: http://mainsail.home.stechsolutions.ca
+        description: Mainsail
+        icon: mainsail.png
         widget:
-          type: octoprint
-          url: http://octoprint.home.stechsolutions.ca
-          key: "{{ secret_octoprint_key }}"
-          printer_state:
-          temp_tool:
-          temp_bed:
-          job_completion:
+          type: moonraker
+          url: http://mainsail.home.stechsolutions.ca
+    - Spoolman:
+        href: http://10.10.1.136:7912
+        description: Spoolman
+        icon: spoolman.png
+        widget:
+          type: spoolman
+          url: http://10.10.1.136:7912
 - Network:
     - PiHole-1:
         href: http://pihole-1.home.stechsolutions.ca/admin
@@ -22,9 +24,6 @@
           url: http://pihole-1.home.stechsolutions.ca
           version: 5
           key: "{{ secret_pihole_password_hash }}"
-          queries:
-          blocked:
-          gravity:
     - PiHole-2:
         href: http://pihole-2.home.stechsolutions.ca/admin
         description: PiHole-2
@@ -34,9 +33,6 @@
           url: http://pihole-2.home.stechsolutions.ca
           version: 5
           key: "{{ secret_pihole_password_hash }}"
-          queries:
-          blocked:
-          gravity:
     - Unifi OS:
         href: https://unifi.home.stechsolutions.ca
         description: Unifi OS
@@ -50,9 +46,6 @@
           url: https://unifi.home.stechsolutions.ca
           username: HomepageUser
           password: "{{  secret_unifi_username_password}}"
-          uptime:
-          wan:
-          lan:
     - Unifi Protect:
         href: https://unifi.home.stechsolutions.ca/protect/dashboard
         description: Unifi Protect
