@@ -2,7 +2,7 @@
 # tasks file for base
 #
 # inputs:
-#   - base_additonal_packages: list of additional packages to install
+#   - base_additional_packages: list of additional packages to install
 #   - base_additional_services: list of additional services to enable and start
 #   - base_reboot_host_if_required: boolean to reboot the host if required
 #   - base_apt_upgrade_packages: if or how to upgrade apt packages
