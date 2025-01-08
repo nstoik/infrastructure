@@ -2,8 +2,18 @@ global:
   scrape_interval: 1m
   evaluation_interval: 1m
 
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - '/etc/prometheus/rules/alerts.yaml'
+  - '/etc/prometheus/rules/test.yaml'
+
 scrape_configs:
   - job_name: 'prometheus'
     scrape_interval: 1m
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['localhost:9090', 'localhost:9093'] # prometheus, alertmanager
+
+  - job_name: 'node'
+    file_sd_configs:
+      - files:
+          - '/etc/prometheus/targets/nodes.yaml'
