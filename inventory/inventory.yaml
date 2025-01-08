@@ -4,9 +4,8 @@ all:
     docker-02.home.stechsolutions.ca:
     docker-testing.home.stechsolutions.ca:
     storage.home.stechsolutions.ca:
+    pihole-1.home.stechsolutions.ca:
     pihole-2.home.stechsolutions.ca:
-    pihole-3.home.stechsolutions.ca:
-    prometheus.home.stechsolutions.ca:
     pve3.home.stechsolutions.ca:
     vpn.arnie-karen:
     vpn.home.stechsolutions.ca:
@@ -27,3 +26,8 @@ all:
         docker-02.home.stechsolutions.ca:
       children:
         do_docker:
+    nodes_remote:
+      hosts:
+        vpn.arnie-karen:
+      children:
+        do_ansible:
