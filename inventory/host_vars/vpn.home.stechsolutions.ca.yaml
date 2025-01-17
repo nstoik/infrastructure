@@ -7,6 +7,9 @@ ansible_host: vpn.home.stechsolutions.ca
 tailscale_setup: true
 tailscale_subnet_router: true
 tailscale_authkey: "{{ secret_ts_client_secret }}?ephemeral=false&preauthorized=true"
+# for --advertise-tags, the tag is tied to the tailscale_authkey. The authkey must
+# have the tags associated with it when it is created in the tailscale admin console.
 tailscale_args: |
-  --advertise-tags='tag:server'
+  --advertise-tags=tag:server
   --advertise-routes=10.10.1.0/24,10.10.5.0/24
+  --advertise-exit-node
