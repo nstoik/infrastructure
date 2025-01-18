@@ -18,5 +18,13 @@
       ansible.builtin.include_role:
         name: pihole
         tasks_from: update_pihole.yaml
+      when: inventory_hostname in groups['pihole']
       tags:
         - pihole
+
+    # Configure the Proxmox repos
+    - name: Configure the Proxmox repos
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pve_repos
+      when: inventory_hostname in groups['proxmox_nodes']
