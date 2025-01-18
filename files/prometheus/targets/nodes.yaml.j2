@@ -3,6 +3,6 @@
     job: node
     location: 'home'
   targets:
-{% for node in prometheus_nodes %}
-    - {{ node }}:9100
+{% for host in groups['all'] | difference(groups['nodes_remote']) %}
+    - {{ host }}:9100
 {% endfor %}
