@@ -34,7 +34,7 @@ compose:
   #   selectattr('type','eq','public') |
   #   map(attribute='ip_address') |
   #   first
-  # 
+  #
   # add the droplet size to the inventory
   # class: do_size.description | lower
   # add the droplet distribution to the inventory

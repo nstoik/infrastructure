@@ -1,16 +1,16 @@
 ---
 groups:
-- name: Monitoring
-  rules:
-  - alert: InstanceDown
-    # Condition for alerting
-    expr: up{job="node"} == 0
-    for: 5m
-    # Annotation - additional informational labels to store more information
-    annotations:
-      title: 'Instance "{{ $labels.instance }}" is down'
-      summary: '"{{ $labels.instance }}" is down'
-      description: '{{ $labels.instance }} located at {{ $labels.location }} has been down for more than 5 minutes.'
-    # Labels - additional labels to be attached to the alert
-    labels:
-      severity: 'critical'
+  - name: Monitoring
+    rules:
+      - alert: InstanceDown
+        # Condition for alerting
+        expr: up{job="node"} == 0
+        for: 5m
+        # Annotation - additional informational labels to store more information
+        annotations:
+          title: 'Instance "{{ $labels.instance }}" is down'
+          summary: '"{{ $labels.instance }}" is down'
+          description: '{{ $labels.instance }} located at {{ $labels.location }} has been down for more than 5 minutes.'
+        # Labels - additional labels to be attached to the alert
+        labels:
+          severity: 'critical'

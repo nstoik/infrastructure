@@ -1,16 +1,16 @@
 ---
 groups:
-- name: TESTING
-  rules:
-  - alert: TEST ALERT FROM PROMETHEUS PLEASE ACKNOWLEDGE
-    # Condition for alerting
-    expr: prometheus_build_info{instance="localhost:9090"} == 1
-    for: 10s
-    # Annotation - additional informational labels to store more information
-    annotations:
-      title: TESTING RULE
-      summary: TESTING PLEASE ACKNOWLEDGE, NO FURTHER ACTION REQUIRED ONLY A TEST
-      description: TEST ALERT FROM {{ $labels.instance }}
-    # Labels - additional labels to be attached to the alert
-    labels:
-      severity: 'critical'
+  - name: TESTING
+    rules:
+      - alert: TEST ALERT FROM PROMETHEUS PLEASE ACKNOWLEDGE
+        # Condition for alerting
+        expr: prometheus_build_info{instance="localhost:9090"} == 1
+        for: 10s
+        # Annotation - additional informational labels to store more information
+        annotations:
+          title: TESTING RULE
+          summary: TESTING PLEASE ACKNOWLEDGE, NO FURTHER ACTION REQUIRED ONLY A TEST
+          description: TEST ALERT FROM {{ $labels.instance }}
+        # Labels - additional labels to be attached to the alert
+        labels:
+          severity: 'critical'
