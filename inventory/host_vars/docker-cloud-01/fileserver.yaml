@@ -1,0 +1,9 @@
+---
+# fileserver vars for docker-cloud-01
+
+fileserver_setup: true
+fileserver_setup_swap_file: true
+
+fileserver_swap_file:
+  path: /swapfile
+  size: 2G

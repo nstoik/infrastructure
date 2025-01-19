@@ -1,0 +1,10 @@
+---
+# tailscale variables for docker-cloud-01 host
+
+# tailscale
+tailscale_setup: true
+tailscale_authkey: "{{ secret_ts_client_secret }}?ephemeral=false&preauthorized=true"
+tailscale_args: |
+  --advertise-tags='tag:server'
+  --accept-routes
+  --accept-dns
