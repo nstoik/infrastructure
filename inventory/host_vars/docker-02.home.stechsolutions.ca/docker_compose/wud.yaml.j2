@@ -1,0 +1,51 @@
+---
+name: wud
+
+services:
+  wud:
+    image: getwud/wud:7.1.1
+    networks:
+      - traefik
+      - docker-proxy
+    container_name: wud
+    environment:
+        - WUD_TRIGGER_NTFY_SELFHOSTED_URL={{ wud_trigger_ntfy_sh_url }}}
+        - WUD_TRIGGER_NTFY_SELFHOSTED_TOPIC={{ wud_trigger_ntfy_sh_topic }}
+        - WUD_TRIGGER_NTFY_SELFHOSTED_PRIORITY={{ wud_trigger_ntfy_sh_priority }}
+        - WUD_TRIGGER_NTFY_SELFHOSTED_AUTH_USER={{ wud_trigger_ntfy_sh_auth_user }}
+        - WUD_TRIGGER_NTFY_SELFHOSTED_AUTH_PASSWORD={{ wud_trigger_ntfy_sh_auth_password }}
+        - WUD_TRIGGER_NTFY_SELFHOSTED_MODE=batch
+        - WUD_TRIGGER_NTFY_SELFHOSTED_ONCE=true
+        - WUD_WATCHER_LOCAL_HOST=docker-socket-proxy
+        - WUD_WATCHER_LOCAL_WATCHEVENTS=false
+        - WUD_WATCHER_LOCAL_WATCHATSTART=false
+        - WUD_WATCHER_LOCAL_CRON=0 */6 * * *
+        - WUD_WATCHER_DOCKERCLOUD01_HOST=docker-cloud-01.tailfacdb.ts.net
+        - WUD_WATCHER_DOCKERCLOUD01_WATCHEVENTS=false
+        - WUD_WATCHER_DOCKERCLOUD01_WATCHATSTART=false
+        - WUD_WATCHER_DOCKERCLOUD01_CRON=0 */6 * * *
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wud.rule=Host(`wud.home.stechsolutions.ca`)"
+      - "traefik.http.services.wud.loadbalancer.server.port=3000"
+      - "traefik.http.routers.wud.entrypoints=websecure"
+      - "traefik.http.routers.wud.tls.certresolver=letsencrypt"
+      - "homepage.group=Monitoring"
+      - "homepage.name=WUD"
+      - "homepage.description=What's Up Docker"
+      - "homepage.icon=wud.png"
+      - "homepage.href=https://wud.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://wud.home.stechsolutions.ca"
+      - "homepage.widget.type=whatsupdocker"
+      - "homepage.widget.url=https://wud.home.stechsolutions.ca"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/getwud/wud/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+  docker-proxy:
+    name: docker-proxy
+    external: true

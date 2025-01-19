@@ -1,0 +1,77 @@
+---
+name: vehicle
+
+services:
+  postgres_vehicle_db:
+    image: postgres:17.1
+    user: 1000:1000
+    networks:
+      - vehicle_postgres
+    container_name: postgres_vehicle_db
+    environment:
+        - POSTGRES_DB={{ vehicle_db_name }}
+        - POSTGRES_USER={{ vehicle_db_user }}
+        - POSTGRES_PASSWORD={{ vehicle_db_password }}
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/vehicle/postgres:/var/lib/postgresql/data
+        - /etc/passwd:/etc/passwd:ro
+    healthcheck:
+        test: [
+            "CMD-SHELL",
+            "pg_isready -U {{ vehicle_db_user }} -d {{ vehicle_db_name }}"
+        ]
+        interval: 60s
+        timeout: 10s
+        retries: 3
+        start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://www.postgresql.org/docs/release/"
+  lubelogger:
+    image: hargata/lubelogger:v1.4.0
+    user: 1000:1000
+    networks:
+      - traefik
+      - vehicle_postgres
+    container_name: lubelogger
+    environment:
+        - LC_ALL=en_US.UTF-8
+        - LANG=en_US.UTF-8
+        - POSTGRES_CONNECTION=Host=postgres_vehicle_db:5432;Database=vehicle;Username=vehicle_user;Password=vehicle_password
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/config:/App/config
+        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/data:/App/data
+        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/translations:/App/wwwroot/translations
+        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/documents:/App/wwwroot/documents
+        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/images:/App/wwwroot/images
+        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/temp:/App/wwwroot/temp
+        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/log:/App/log
+        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/keys:/root/.aspnet/DataProtection-Keys
+    depends_on:
+        - postgres_vehicle_db
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lubelogger.rule=Host(`lubelogger.home.stechsolutions.ca`)"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.services.lubelogger.loadbalancer.server.port=8080"
+      - "traefik.http.routers.lubelogger.entrypoints=websecure"
+      - "traefik.http.routers.lubelogger.tls.certresolver=letsencrypt"
+      - "homepage.group=Vehicle"
+      - "homepage.name=Lubelogger"
+      - "homepage.description=Vehicle Logging"
+      - "homepage.icon=lubelogger.png"
+      - "homepage.href=https://lubelogger.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://lubelogger.home.stechsolutions.ca"
+      - "homepage.widget.type=lubelogger"
+      - "homepage.widget.url=https://lubelogger.home.stechsolutions.ca"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/hargata/lubelog/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+  vehicle_postgres:
+    name: vehicle_postgres
