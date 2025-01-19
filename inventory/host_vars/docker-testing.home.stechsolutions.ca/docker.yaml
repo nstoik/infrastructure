@@ -69,77 +69,17 @@ docker_mounts_subfolders:
     mode: '0775'
     container_name: prometheus
 
-# docker compose
-docker_compose:
-  - compose_name: proxy
+docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-testing.home.stechsolutions.ca/docker_compose"
+
+# docker compose template files
+docker_compose_files:
+  - name: monitoring-docker-compose.yaml
+    compose_name: monitoring
     state: present
-    networks:
-      traefik:
-        name: traefik
-      docker-proxy:
-        name: docker-proxy
-    containers:
-      - container_name: traefik
-        image: traefik:v3.1
-        networks:
-          - traefik
-          - docker-proxy
-        environment:
-          - TZ=America/Edmonton
-          - "CF_API_EMAIL={{ default_user_email }}"
-          - "CF_DNS_API_TOKEN={{ secret_cf_token }}"
-        ports:
-          - 80:80
-          - 443:443
-          - 8080:8080
-        depends_on:
-          - docker-socket-proxy
-        volumes:
-          - "/home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik"
-        restart: unless-stopped
-        labels:
-          - "homepage.group=Proxy"
-          - "homepage.name=Traefik"
-          - "homepage.description=Reverse Proxy"
-          - "homepage.icon=traefik.png"
-          - "homepage.href=http://docker-testing.home.stechsolutions.ca:8080/dashboard/#/"
-          - "homepage.siteMonitor=http://docker-testing.home.stechsolutions.ca:8080"
-          - "homepage.widget.type=traefik"
-          - "homepage.widget.url=http://docker-testing.home.stechsolutions.ca:8080"
-          - "homepage.widget.routers="
-          - "homepage.widget.services="
-          - "homepage.widget.middleware="
-      - container_name: docker-socket-proxy
-        image: tecnativa/docker-socket-proxy:0.2.0
-        networks:
-          - docker-proxy
-        environment:
-          - CONTAINERS=1 # Allow access to viewing containers
-          - POST=0 # Disallow any POST operations (effectively read-only)
-        volumes:
-          - "/var/run/docker.sock:/var/run/docker.sock"
-        restart: unless-stopped
-      - container_name: homepage
-        image: ghcr.io/gethomepage/homepage:v0.9.11
-        networks:
-          - traefik
-          - docker-proxy
-        depends_on:
-          - docker-socket-proxy
-        environment:
-          - TZ=America/Edmonton
-          - PUID=1000
-          - PGID=1000
-        volumes:
-          - "/home/{{ default_user }}/docker_mounts/proxy/homepage:/app/config"
-        restart: unless-stopped
-        labels:
-          - "traefik.enable=true"
-          - "traefik.http.routers.homepage.rule=Host(`homepage-testing.home.stechsolutions.ca`)"
-          - "traefik.http.services.homepage.loadbalancer.server.port=3000"
-          - "traefik.http.routers.homepage.entrypoints=websecure"
-          - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
   - compose_name: monitoring
+    src: "{{ docker_compose_subpath }}/monitoring.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/monitoring-docker-compose.yaml
+    mode: '0664'
     state: present
     networks:
       traefik:
