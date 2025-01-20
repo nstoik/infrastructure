@@ -33,3 +33,11 @@
       loop: "{{ proxmox_users }}"
       when: item.userid not in proxmox_user_list_results.stdout
       changed_when: item.userid not in proxmox_user_list_results.stdout
+    # Apply the permissions to the proxmox user
+    - name: Apply the permissions to the proxmox user
+      ansible.builtin.include_tasks: pve_acl.yaml
+      vars:
+        node_acl_permissions: "{{ item.permissions }}"
+      loop: "{{ proxmox_users }}"
+      when: item.userid not in proxmox_user_list_results.stdout and
+            item.permissions is defined
