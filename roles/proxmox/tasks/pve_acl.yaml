@@ -2,20 +2,20 @@
 # Tasks to apply the permissions to a proxmox group
 
 # Required Inputs:
-#   node_acl_permissions: The permissions to apply to the group
-#   node_acl_group: The group to apply the permissions to
+#   node_acl_permissions: The permissions to apply (list of dictionaries with path, role, entity, and identifier).
 
 # Apply the permissions to the proxmox group
-- name: Apply the permissions to the group {{ node_acl_group }}
+- name: Apply the permissions to the specified entity (group, user, or token)
   ansible.builtin.command:
     cmd: >
       pveum acl modify {{ acl_item.path }}
-      -group {{ node_acl_group }}
+      -{{ acl_item.entity }} {{ acl_item.identifier }}
       -role {{ acl_item.role }}
   become: true
   loop: "{{ node_acl_permissions }}"
   loop_control:
     loop_var: acl_item
+  when: acl_item.entity in ['group', 'user', 'token']
   changed_when: false
   tags:
     - proxmox

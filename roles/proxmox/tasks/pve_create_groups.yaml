@@ -33,6 +33,6 @@
       ansible.builtin.include_tasks: pve_acl.yaml
       vars:
         node_acl_permissions: "{{ item.permissions }}"
-        node_acl_group: "{{ item.name }}"
       loop: "{{ proxmox_groups }}"
-      when: item.name not in proxmox_group_list_results.stdout
+      when: item.name not in proxmox_group_list_results.stdout and
+            item.permissions is defined

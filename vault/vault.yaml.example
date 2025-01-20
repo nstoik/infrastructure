@@ -60,3 +60,6 @@ secret_ts_client_secret: change_me
 secret_pihole_password: change_me
 # Hash genereated with the following command: echo -n "COPY PASSWORD HERE" | sha256sum
 secret_pihole_password_hash: hashed version of 'secret_pihole_password'
+
+# Proxmox or PVE secrets
+secret_pve_prometheus_user_password: change_me
