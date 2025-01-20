@@ -1,10 +1,8 @@
 ---
 # Tasks to create users on a proxmox node
 #
-# This assumes that all users will be using the '@pam' realm.
-# Modification of this role and the proxmox_users variable will be required if
-# you want to use a different realm. i.e if using a realm that requires a
-# password, you will need to add the password
+# This assumes that all users can be either using the '@pam' realm or '@pve' realm.
+# Password management will be included for users in the '@pve' realm.
 
 - name: Block to create users on a proxmox node
   tags:
@@ -21,7 +19,7 @@
       become: true
       changed_when: false
 
-    # Create the proxmox user
+    # Create the proxmox user (handle both @pam and @pve realms)
     - name: Create the proxmox user
       ansible.builtin.command:
         cmd: >
@@ -33,3 +31,26 @@
       loop: "{{ proxmox_users }}"
       when: item.userid not in proxmox_user_list_results.stdout
       changed_when: item.userid not in proxmox_user_list_results.stdout
+
+    # Set the password for @pve users if the password is defined
+    - name: Set password for @pve users
+      ansible.builtin.command:
+        cmd: >
+          pveum passwd {{ item.userid }} --password "{{ item.password }}"
+      become: true
+      loop: "{{ proxmox_users }}"
+      when: item.userid not in proxmox_user_list_results.stdout and
+            item.password is defined and
+            item.userid | regex_search('@pve')
+      changed_when: item.userid not in proxmox_user_list_results.stdout and
+                   item.password is defined and
+                   item.userid | regex_search('@pve')
+
+    # Apply the permissions to the proxmox user
+    - name: Apply the permissions to the proxmox user
+      ansible.builtin.include_tasks: pve_acl.yaml
+      vars:
+        node_acl_permissions: "{{ item.permissions }}"
+      loop: "{{ proxmox_users }}"
+      when: item.userid not in proxmox_user_list_results.stdout and
+            item.permissions is defined

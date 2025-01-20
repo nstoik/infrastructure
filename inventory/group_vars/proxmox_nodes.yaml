@@ -67,6 +67,8 @@ proxmox_groups:
     permissions:
       - path: "/"
         role: "Administrator"
+        entity: "group"
+        identifier: "Admins"
 
 proxmox_users:
   - userid: "{{ default_user }}@pam"
@@ -74,3 +76,14 @@ proxmox_users:
     email: "{{ default_user_email }}"
     groups: "Admins"
     state: "present"
+  - userid: "prometheus@pve"
+    comment: "Prometheus user"
+    email: "noemmail@noemail.com"
+    groups: ""
+    state: "present"
+    password: "{{ secret_pve_prometheus_user_password }}"
+    permissions:
+      - path: "/"
+        role: "PVEAuditor"
+        entity: "user"
+        identifier: "prometheus@pve"
