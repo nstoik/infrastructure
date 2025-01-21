@@ -1,0 +1,40 @@
+---
+name: monitoring
+
+services:
+  prometheus:
+    image: prom/prometheus:v3.0.1
+    user: 1000:1000
+    networks:
+      - traefik
+      - prometheus_exporter
+    container_name: prometheus
+    command: ['--config.file=/etc/prometheus/prometheus.yml', '--web.external-url=http://prometheus-testing.home.stechsolutions.ca']
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/monitoring/prometheus:/etc/prometheus
+        - /home/{{ default_user }}/docker_mounts/monitoring/prometheus/data:/prometheus
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus-testing.home.stechsolutions.ca`)"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+      - "traefik.http.routers.prometheus.entrypoints=websecure"
+      - "traefik.http.routers.prometheus.tls.certresolver=letsencrypt"
+  prometheus-pve-exporter:
+    image: prompve/prometheus-pve-exporter:3.5.0
+    networks:
+      - prometheus_exporter
+    container_name: prometheus-pve-exporter
+    environment:
+      - PVE_USER=prometheus@pve
+      - PVE_PASSWORD={{ secret_pve_prometheus_user_password }}
+      # remove this when proxmox is proxied via traefik
+      - PVE_VERIFY_SSL=false
+    restart: unless-stopped
+networks:
+  traefik:
+    name: traefik
+    external: true
+  prometheus_exporter:
+    name: prometheus_exporter

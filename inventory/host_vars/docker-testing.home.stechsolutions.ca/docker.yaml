@@ -61,6 +61,16 @@ docker_template_files:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/targets/nodes.yaml
     mode: '0664'
     container_name: prometheus
+  - name: prometheus_node_remote_target.yaml
+    src: "{{ inventory_dir }}/../files/prometheus/targets/nodes_remote.yaml.j2"
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/targets/nodes_remote.yaml
+    mode: '0664'
+    container_name: prometheus
+  - name: prometheus_pve_target.yaml
+    src: "{{ inventory_dir }}/../files/prometheus/targets/pve.yaml.j2"
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/targets/pve.yaml
+    mode: '0664'
+    container_name: prometheus
 
 # docker mounts subfolders
 docker_mounts_subfolders:
@@ -73,39 +83,15 @@ docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-testing.home.stech
 
 # docker compose template files
 docker_compose_files:
+  - name: proxy-docker-compose.yaml
+    compose_name: proxy
+    state: present
+    src: "{{ docker_compose_subpath }}/proxy.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/proxy-docker-compose.yaml
+    mode: '0664'
   - name: monitoring-docker-compose.yaml
     compose_name: monitoring
     state: present
-  - compose_name: monitoring
     src: "{{ docker_compose_subpath }}/monitoring.yaml.j2"
     dest: /home/{{ default_user }}/docker_compose/monitoring-docker-compose.yaml
     mode: '0664'
-    state: present
-    networks:
-      traefik:
-        name: traefik
-        external: true
-    containers:
-      - container_name: prometheus
-        image: prom/prometheus:v3.0.1
-        command:
-          - "--config.file=/etc/prometheus/prometheus.yml"
-          - "--web.external-url=http://prometheus-testing.home.stechsolutions.ca"
-        user: "1000:1000"
-        networks:
-          - traefik
-        healthcheck:
-          test: ["CMD", "promtool", "check", "healthy"]
-          interval: 30s
-          timeout: 10s
-          retries: 3
-        volumes:
-          - "/home/{{ default_user }}/docker_mounts/monitoring/prometheus:/etc/prometheus"
-          - "/home/{{ default_user }}/docker_mounts/monitoring/prometheus/data:/prometheus"
-        restart: unless-stopped
-        labels:
-          - "traefik.enable=true"
-          - "traefik.http.routers.prometheus.rule=Host(`prometheus-testing.home.stechsolutions.ca`)"
-          - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
-          - "traefik.http.routers.prometheus.entrypoints=websecure"
-          - "traefik.http.routers.prometheus.tls.certresolver=letsencrypt"
