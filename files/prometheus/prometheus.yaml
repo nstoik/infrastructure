@@ -17,3 +17,8 @@ scrape_configs:
     file_sd_configs:
       - files:
           - '/etc/prometheus/targets/nodes.yaml'
+
+  - job_name: 'node_remote'
+    file_sd_configs:
+      - files:
+          - '/etc/prometheus/targets/nodes_remote.yaml'

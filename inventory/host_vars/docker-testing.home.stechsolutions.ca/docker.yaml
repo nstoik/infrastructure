@@ -56,7 +56,7 @@ docker_template_files:
     dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/services.yaml
     mode: '0664'
     container_name: homepage
-  - name: prometheus_targets.yaml
+  - name: prometheus_node_target.yaml
     src: "{{ inventory_dir }}/../files/prometheus/targets/nodes.yaml.j2"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/targets/nodes.yaml
     mode: '0664'
