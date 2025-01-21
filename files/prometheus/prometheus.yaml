@@ -39,3 +39,8 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: prometheus-pve-exporter:9221  # PVE exporter
+
+  - job_name: 'pihole'
+    static_configs:
+      - targets:
+          - 'prometheus-pihole-exporter:9617'

@@ -32,6 +32,18 @@ services:
       # remove this when proxmox is proxied via traefik
       - PVE_VERIFY_SSL=false
     restart: unless-stopped
+  prometheus-pihole-exporter:
+    image: ekofr/pihole-exporter:latest
+    networks:
+      - prometheus_exporter
+    container_name: prometheus-pihole-exporter
+    environment:
+      - PIHOLE-PROTOCOL=http
+      - PIHOLE_HOSTNAME=pihole-1.home.stechsolutions.ca,pihole-2.home.stechsolutions.ca
+      - PIHOLE_PASSWORD={{ secret_pihole_password_hash }}
+      - PORT=9617
+    restart: unless-stopped
+
 networks:
   traefik:
     name: traefik
