@@ -44,3 +44,14 @@ scrape_configs:
     static_configs:
       - targets:
           - 'prometheus-pihole-exporter:9617'
+
+  - job_name: 'docker'
+    # Use static hosts as we need to use the tailscale hostname to access the remote
+    # docker hosts
+    static_configs:
+      - targets:
+          - 'docker-testing.home.stechsolutions.ca'
+    metrics_path: '/dockermetrics'
+    tls_config:
+      insecure_skip_verify: true
+

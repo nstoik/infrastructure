@@ -21,6 +21,27 @@ services:
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
       - "traefik.http.routers.prometheus.entrypoints=websecure"
       - "traefik.http.routers.prometheus.tls.certresolver=letsencrypt"
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.2
+    networks:
+      - traefik
+    container_name: cadvisor
+    command: ['--logtostderr', '--docker_only=true']
+    volumes:
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - {{ docker_data_dir }}:{{ docker_data_dir }}:ro
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cadvisor.rule=Host(`docker-testing.home.stechsolutions.ca`) && PathPrefix(`/dockermetrics`)"
+      - "traefik.http.middlewares.cadvisor-replace-path.replacepath.path=/metrics"
+      - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
+      - "traefik.http.routers.cadvisor.entrypoints=websecure"
+      - "traefik.http.routers.cadvisor.tls.certresolver=letsencrypt"
+      # Whitelist IPs for Tailscale, Docker, and local network
+      - "traefik.http.middlewares.cadvisor-ipwhitelist.ipwhitelist.sourcerange=100.64.0.0/10,10.0.0.0/8,172.18.0.0/16"
+      - "traefik.http.routers.cadvisor.middlewares=cadvisor-ipwhitelist,cadvisor-replace-path"
   prometheus-pve-exporter:
     image: prompve/prometheus-pve-exporter:3.5.0
     networks:
