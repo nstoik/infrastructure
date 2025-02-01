@@ -32,6 +32,8 @@ secret_unifi_username_password: change_me
 
 # Ntfy secrets
 secret_ntfy_password: change_me
+# Base64 encoded version of 'ntfy_user':'secret_ntfy_password'
+secret_ntfy_password_base64: change_me
 
 # Traefik secrets
 secret_traefik_dashboard_password: change_me

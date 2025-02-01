@@ -10,10 +10,6 @@ fileserver_setup_snapraid: true
 fileserver_setup_nfs_server: true
 fileserver_setup_zfs: true
 
-ntfy_base_url: "https://ntfy.stechsolutions.ca"
-ntfy_user: "{{ default_user }}"
-
-
 fileserver_zfs_pool:
   pool_name: storage1
   raid_type: mirror
