@@ -141,6 +141,11 @@ fileserver_nfs_exports:
         options: rw,sync,no_subtree_check,no_root_squash,fsid=18
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=19
+  - path: /mnt/storage/other
+    mode: '0755'
+    machines:
+      - name: 10.10.1.100/32  # nelsons desktop
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=25
   - path: /mnt/zfs/pictures
     machines:
       - name: 10.10.1.0/24  # home network
