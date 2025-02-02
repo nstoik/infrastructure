@@ -11,6 +11,7 @@
 #   - fileserver_setup_swap_file: boolean
 
 # Setup attached disks with ext4 filesystem
+# These are typically the virtual disks attached to the VM
 - name: Setup attached disks with ext4 filesystem
   ansible.builtin.include_tasks: setup_disks.yaml
   tags:
@@ -27,6 +28,7 @@
   when: fileserver_setup_swap_file is true
 
 # Setup mergerfs
+# This would typically be real disks passed through to the VM
 - name: Block for mergerfs tasks
   tags:
     - fileserver
@@ -60,6 +62,7 @@
       ansible.builtin.include_tasks: setup_snapraid_aio.yaml
 
 # Setup ZFS
+# This would typically be real disks passed through to the VM
 - name: Setup ZFS pool
   tags:
     - fileserver
