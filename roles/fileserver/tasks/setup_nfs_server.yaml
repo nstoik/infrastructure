@@ -15,12 +15,12 @@
         state: present
       become: true
 
-    # create some sample directories for nfs exports to test
+    # create directories for nfs exports
     - name: Create directories for nfs exports
       ansible.builtin.file:
         path: "{{ item.path }}"
         state: directory
-        mode: '0755'
+        mode: "{{ item.mode | default('0755') }}"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
       loop: "{{ fileserver_nfs_exports }}"
