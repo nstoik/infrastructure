@@ -3,6 +3,7 @@
 
 # docker container configuration files
 docker_configuration_files:
+  # traefik configuration file
   - name: traefik.yaml
     src: "{{ inventory_dir }}/../files/traefik/traefik-dev.yaml"
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
@@ -13,6 +14,7 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/dynamic/unifi.yaml
     mode: '0664'
     container_name: traefik
+  # homepage configuration files
   - name: homepage_settings.yaml
     src: "{{ inventory_dir }}/../files/homepage/settings.yaml"
     dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/settings.yaml
@@ -28,6 +30,7 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/docker.yaml
     mode: '0664'
     container_name: homepage
+  # prometheus configuration files
   - name: prometheus_config.yaml
     src: "{{ inventory_dir }}/../files/prometheus/prometheus.yaml"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/prometheus.yml
@@ -46,6 +49,7 @@ docker_configuration_files:
 
 # docker container template files
 docker_template_files:
+  # homepage configuration files
   - name: homepage_widgets.yaml
     src: "{{ inventory_dir }}/../files/homepage/widgets.yaml.j2"
     dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/widgets.yaml
@@ -56,6 +60,7 @@ docker_template_files:
     dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/services.yaml
     mode: '0664'
     container_name: homepage
+  # prometheus configuration files
   - name: prometheus_node_target.yaml
     src: "{{ inventory_dir }}/../files/prometheus/targets/nodes.yaml.j2"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/targets/nodes.yaml
