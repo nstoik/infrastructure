@@ -109,43 +109,48 @@ fileserver_snapraid_aio:
 fileserver_nfs_exports:
   - path: /mnt/storage/movies
     machines:
-      - name: 10.10.1.1/24  # home network
+      - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=10
-      - name: 10.10.5.1/24  # trusted network
+      - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=11
   - path: /mnt/storage/tv
     machines:
-      - name: 10.10.1.1/24  # home network
+      - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=12
-      - name: 10.10.5.1/24  # trusted network
+      - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=13
   - path: /mnt/storage/music
     machines:
-      - name: 10.10.1.1/24  # home network
+      - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=14
-      - name: 10.10.5.1/24  # trusted network
+      - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=15
   - path: /mnt/storage/audiobooks
     machines:
-      - name: 10.10.1.1/24  # home network
+      - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=16
-      - name: 10.10.5.1/24  # trusted network
+      - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=17
   - path: /mnt/storage/sport
     machines:
-      - name: 10.10.1.1/24  # home network
+      - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=18
-      - name: 10.10.5.1/24  # trusted network
+      - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=19
+  - path: /mnt/storage/other
+    mode: '0755'
+    machines:
+      - name: 10.10.1.100/32  # nelsons desktop
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=25
   - path: /mnt/zfs/pictures
     machines:
-      - name: 10.10.1.1/24  # home network
+      - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=20
-      - name: 10.10.5.1/24  # trusted network
+      - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=21
   - path: /mnt/zfs/stechsolutions
     machines:
-      - name: 10.10.1.1/24  # home network
+      - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=22
-      - name: 10.10.5.1/24  # trusted network
+      - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=23
