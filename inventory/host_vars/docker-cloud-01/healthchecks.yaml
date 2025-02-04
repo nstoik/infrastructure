@@ -12,7 +12,7 @@ hc_db_password: "{{ secret_hc_db_password }}"
 hc_db_port: 5432
 hc_debug: false
 hc_default_from_email: "{{ default_user_email }}"
-hc_email_host: smtp.mailgun.org
+hc_email_host: {{ smtp_host }}
 hc_email_host_password: "{{ secret_hc_mg_password }}"
 hc_email_host_user: hc@mg.stechsolutions.ca
 hc_email_port: 587
