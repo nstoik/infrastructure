@@ -13,7 +13,7 @@ base-url https://ntfy-alertmanager-testing.home.stechsolutions.ca
 
 # http listen address
 # Default: 127.0.0.1:8080
-http-address :8080
+http-address 127.0.0.1:8080
 
 # Log level
 # Options: debug, info, warning, error
@@ -45,13 +45,19 @@ labels {
     order "severity,instance"
 
     severity "critical" {
-        priority 5
+        priority 4
         tags "rotating_light"
         # icon "https://example.com/critical.png"
         # Forward messages which severity "critical" to the specified email address.
         email-address {{ default_user_email }}
         # Call the specified number. Use `yes` to pick the first of your verified numbers.
         # call yes
+    }
+
+    severity "warning" {
+        priority 3
+        tags "warning"
+        # icon "https://example.com/warning.png"
     }
 
     severity "info" {
@@ -127,7 +133,7 @@ alertmanager {
     # When it is "multi" common labels between all the alerts will be used. WARNING: This
     # could silence unwanted alerts.
     # Default: ""
-    silence-duration 24h
+    silence-duration 72h
 
     # Basic authentication (https://prometheus.io/docs/alerting/latest/https/)
     # Default: ""
