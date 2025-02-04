@@ -13,4 +13,5 @@ groups:
           description: TEST ALERT FROM {{ $labels.instance }}
         # Labels - additional labels to be attached to the alert
         labels:
-          severity: 'critical'
+          severity: 'warning'
+          type: 'testing'

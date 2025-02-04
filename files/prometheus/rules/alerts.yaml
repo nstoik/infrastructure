@@ -14,3 +14,4 @@ groups:
         # Labels - additional labels to be attached to the alert
         labels:
           severity: 'critical'
+          type: 'production'

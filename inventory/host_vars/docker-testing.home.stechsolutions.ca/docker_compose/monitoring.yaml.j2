@@ -21,6 +21,42 @@ services:
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
       - "traefik.http.routers.prometheus.entrypoints=websecure"
       - "traefik.http.routers.prometheus.tls.certresolver=letsencrypt"
+  alertmanager:
+    image: prom/alertmanager:v0.28.0
+    networks:
+      - traefik
+      - prometheus_exporter
+    container_name: alertmanager
+    command: 
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/etc/alertmanager'
+      - '--web.external-url=http://alertmanager-testing.home.stechsolutions.ca'
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/monitoring/alertmanager:/etc/alertmanager
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.alertmanager.rule=Host(`alertmanager-testing.home.stechsolutions.ca`)"
+      - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
+      - "traefik.http.routers.alertmanager.entrypoints=websecure"
+      - "traefik.http.routers.alertmanager.tls.certresolver=letsencrypt"
+  ntfy-alertmanager:
+    image: xenrox/ntfy-alertmanager:0.4.0
+    networks:
+      - traefik
+      - prometheus_exporter
+    container_name: ntfy-alertmanager
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/monitoring/ntfy-alertmanager:/etc/ntfy-alertmanager
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.ntfy-alertmanager.rule=Host(`ntfy-alertmanager-testing.home.stechsolutions.ca`)"
+      - "traefik.http.services.ntfy-alertmanager.loadbalancer.server.port=8080"
+      - "traefik.http.routers.ntfy-alertmanager.entrypoints=websecure"
+      - "traefik.http.routers.ntfy-alertmanager.tls.certresolver=letsencrypt"
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.2
     networks:
