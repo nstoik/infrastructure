@@ -62,3 +62,10 @@ scrape_configs:
     tls_config:
       insecure_skip_verify: true
 
+  - job_name: 'traefik'
+    static_configs:
+      - targets:
+          - 'docker-testing.home.stechsolutions.ca:8080'
+    metrics_path: '/metrics'
+    tls_config:
+      insecure_skip_verify: true
