@@ -12,17 +12,23 @@ route:
   receiver: 'ntfy-alerts'
 
   routes:
-    - receiver: 'ntfy-alerts'
+    # Special route for the underutilized memory alert
+    - match:
+        alertname: HostMemoryIsUnderutilized
+      repeat_interval: 1w
+      receiver: 'ntfy-alerts'
 
 receivers:
   - name: 'ntfy-alerts'
     webhook_configs:
-      - url: 'http://ntfy-alertmanager:8080'
+      - url: 'https://ntfy-alertmanager-testing.home.stechsolutions.ca'
         send_resolved: true
         http_config:
           basic_auth:
             username: '{{ ntfy_user }}'
             password: '{{ secret_ntfy_password }}'
+          tls_config:
+            insecure_skip_verify: true
 
 inhibit_rules:
   - source_match:

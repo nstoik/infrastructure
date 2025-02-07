@@ -1,17 +1,16 @@
 ---
 groups:
-  - name: TESTING
+  - name: E2EDeadManSwitch
     rules:
-      - alert: TEST ALERT FROM PROMETHEUS PLEASE ACKNOWLEDGE
-        # Condition for alerting
-        expr: prometheus_build_info{instance="localhost:9090"} == 1
-        for: 10s
-        # Annotation - additional informational labels to store more information
-        annotations:
-          title: TESTING RULE
-          summary: TESTING PLEASE ACKNOWLEDGE, NO FURTHER ACTION REQUIRED ONLY A TEST
-          description: TEST ALERT FROM {{ $labels.instance }}
-        # Labels - additional labels to be attached to the alert
+      - alert: PrometheusAlertmanagerE2EDeadManSwitch
+        expr: vector(1)
+        for: 0m
         labels:
-          severity: 'warning'
-          type: 'testing'
+          severity: critical
+        annotations:
+          summary: |
+            Prometheus AlertManager E2E dead man switch (instance {{ $labels.instance }})
+          description: |
+            Prometheus DeadManSwitch is an always-firing alert. It's used as an end-to-end test of Prometheus through the Alertmanager.
+            VALUE = {{ $value }}
+            LABELS = {{ $labels }}
