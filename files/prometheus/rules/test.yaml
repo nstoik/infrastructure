@@ -1,4 +1,6 @@
 ---
+# Rule from https://samber.github.io/awesome-prometheus-alerts/rules#rule-prometheus-self-monitoring-1-10
+
 groups:
   - name: E2EDeadManSwitch
     rules:
