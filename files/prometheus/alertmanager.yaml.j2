@@ -12,9 +12,9 @@ route:
   receiver: 'ntfy-alerts'
 
   routes:
-    # Special route for the underutilized memory alert
-    - match:
-        alertname: HostMemoryIsUnderutilized
+    # Special route for the underutilized memory or CPU alerts
+    - match_re:
+        alertname: 'Host(Memory|Cpu)IsUnderutilized'
       repeat_interval: 1w
       receiver: 'ntfy-alerts'
 
