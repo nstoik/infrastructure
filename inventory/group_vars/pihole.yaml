@@ -69,6 +69,15 @@ pihole_cname_entries:
   - domain: "wud.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
+  - domain: "prometheus.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "alertmanager.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "ntfy-alertmanager.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
   - domain: "downloader.home.stechsolutions.ca"
     target: "docker.home.stechsolutions.ca"
     add_hostname: true

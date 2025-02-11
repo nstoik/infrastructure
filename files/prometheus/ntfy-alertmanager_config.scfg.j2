@@ -8,8 +8,7 @@
 # Public facing base URL of the service (e.g. https://ntfy-alertmanager.example.com)
 # This setting is required for the "Silence" feature.
 # Default: ""
-# base-url {{ ntfy_alertmanager_base_url }}
-base-url https://ntfy-alertmanager-testing.home.stechsolutions.ca
+base-url {{ ntfy_alertmanager_base_url }}
 
 # http listen address
 # Default: 127.0.0.1:8080
@@ -143,8 +142,7 @@ alertmanager {
 
     # By default the Alertmanager URL gets parsed from the webhook. In case that
     # Alertmanger is not reachable under that URL, it can be overwritten here.
-    # url {{ alertmanager_base_url }}
-    url https://alertmanager-testing.home.stechsolutions.ca
+    url {{ alertmanager_base_url }}
 }
 
 # When the alert-mode is set to single, ntfy-alertmanager will cache each single alert

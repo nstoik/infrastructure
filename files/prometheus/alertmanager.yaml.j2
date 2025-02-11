@@ -21,7 +21,7 @@ route:
 receivers:
   - name: 'ntfy-alerts'
     webhook_configs:
-      - url: 'https://ntfy-alertmanager-testing.home.stechsolutions.ca'
+      - url: '{{ ntfy_alertmanager_base_url }}'
         send_resolved: true
         http_config:
           basic_auth:
