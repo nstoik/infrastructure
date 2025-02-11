@@ -46,7 +46,7 @@ docker_template_files:
     container_name: homepage
 
 # docker mounts subfolders
-docker_mounts_subfolders:
+# docker_mounts_subfolders:
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-testing.home.stechsolutions.ca/docker_compose"
 
