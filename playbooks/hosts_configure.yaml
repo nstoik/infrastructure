@@ -49,8 +49,8 @@
       ansible.builtin.import_role:
         name: base
       vars:
-        base_additional_packages: "{{ hostvars[inventory_hostname].proxmox_vm_additonal_packages }}"
-        base_additional_services: "{{ hostvars[inventory_hostname].proxmox_vm_additional_services }}"
+        base_additional_packages: "{{ hostvars[inventory_hostname].host_additional_packages }}"
+        base_additional_services: "{{ hostvars[inventory_hostname].host_additional_services }}"
         base_docker_install: "{{ hostvars[inventory_hostname].docker_install }}"
         base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
         base_postfix: "{{ hostvars[inventory_hostname].postfix }}"
