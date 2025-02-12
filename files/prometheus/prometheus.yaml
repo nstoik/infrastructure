@@ -1,0 +1,73 @@
+global:
+  scrape_interval: 1m
+  evaluation_interval: 1m
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - 'alertmanager:9093'
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - '/etc/prometheus/rules/alerts.yaml'
+  - '/etc/prometheus/rules/node_alerts.yaml'
+  - '/etc/prometheus/rules/test.yaml'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 1m
+    static_configs:
+      - targets: ['localhost:9090', 'alertmanager:9093'] # prometheus, alertmanager
+
+  - job_name: 'node'
+    file_sd_configs:
+      - files:
+          - '/etc/prometheus/targets/nodes.yaml'
+
+  - job_name: 'node_remote'
+    file_sd_configs:
+      - files:
+          - '/etc/prometheus/targets/nodes_remote.yaml'
+
+  - job_name: 'pve'
+    file_sd_configs:
+      - files:
+          - '/etc/prometheus/targets/pve.yaml'
+    metrics_path: /pve
+    params:
+      module: [default]
+      cluster: ['1']
+      node: ['1']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: prometheus-pve-exporter:9221  # PVE exporter
+
+  - job_name: 'pihole'
+    static_configs:
+      - targets:
+          - 'prometheus-pihole-exporter:9617'
+
+  - job_name: 'docker'
+    # Use static hosts as we need to use the tailscale hostname to access the remote
+    # docker hosts
+    static_configs:
+      - targets:
+          - 'docker-02.home.stechsolutions.ca'
+          - 'docker-cloud-01.tailfacdb.ts.net'
+    scheme: https
+    metrics_path: '/dockermetrics'
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: 'traefik'
+    static_configs:
+      - targets:
+          - 'docker-02.home.stechsolutions.ca:8081'
+          - 'docker-cloud-01.tailfacdb.ts.net:8081'
+    metrics_path: '/metrics'

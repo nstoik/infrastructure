@@ -35,4 +35,5 @@
         regexp: 'res[\s\n]*\.data\.status\.toLowerCase\(\) !== .active.'
         replace: "false"
         backup: true
+      become: true
       notify: Restart pveproxy

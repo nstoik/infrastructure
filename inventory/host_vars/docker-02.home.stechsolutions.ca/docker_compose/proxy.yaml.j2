@@ -1,0 +1,87 @@
+---
+name: proxy
+
+services:
+  traefik:
+    image: traefik:v3.2.0
+    networks:
+      - traefik
+      - docker-proxy
+    container_name: traefik
+    environment:
+        - TZ=America/Edmonton
+        - CF_API_EMAIL={{ default_user_email }}
+        - CF_DNS_API_TOKEN={{ secret_cf_token }}
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik
+    ports:
+        - "80:80"
+        - "443:443"
+        - "8081:8081"
+    depends_on:
+        - docker-socket-proxy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`docker-02.home.stechsolutions.ca`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users={{ default_user }}:{{ secret_traefik_dashboard_password_hash }}"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "homepage.group=Proxy"
+      - "homepage.name=Traefik"
+      - "homepage.description=Reverse Proxy"
+      - "homepage.icon=traefik.png"
+      - "homepage.href=https://docker-02.home.stechsolutions.ca/dashboard/#/"
+      - "homepage.siteMonitor=https://docker-02.home.stechsolutions.ca/dashboard/#/"
+      - "homepage.widget.type=traefik"
+      - "homepage.widget.url=https://docker-02.home.stechsolutions.ca"
+      - "homepage.widget.username={{ default_user }}"
+      - "homepage.widget.password={{ secret_traefik_dashboard_password }}"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/traefik/traefik/releases"
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:0.3.0
+    networks:
+      - docker-proxy
+    container_name: docker-socket-proxy
+    environment:
+        - CONTAINERS=1
+        - IMAGES=1
+        - POST=0
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/Tecnativa/docker-socket-proxy/releases"
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v0.10.6
+    networks:
+      - traefik
+      - docker-proxy
+    container_name: homepage
+    environment:
+        - TZ=America/Edmonton
+        - PUID=1000
+        - PGID=1000
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/proxy/homepage:/app/config
+    depends_on:
+        - docker-socket-proxy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage.rule=Host(`homepage.home.stechsolutions.ca`)"
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+      - "traefik.http.routers.homepage.entrypoints=websecure"
+      - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/gethomepage/homepage/releases"
+
+networks:
+  traefik:
+    name: traefik
+  docker-proxy:
+    name: docker-proxy

@@ -1,0 +1,74 @@
+---
+
+name: proxy
+
+services:
+  traefik:
+    image: traefik:v3.1
+    networks:
+      - traefik
+      - docker-proxy
+    container_name: traefik
+    environment:
+        - TZ=America/Edmonton
+        - CF_API_EMAIL={{ default_user_email }}
+        - CF_DNS_API_TOKEN={{ secret_cf_token }}
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/proxy/traefik:/etc/traefik
+    ports:
+        - "80:80"
+        - "443:443"
+        - "8080:8080"
+    depends_on:
+        - docker-socket-proxy
+    restart: unless-stopped
+    labels:
+      - "homepage.group=Proxy"
+      - "homepage.name=Traefik"
+      - "homepage.description=Reverse Proxy"
+      - "homepage.icon=traefik.png"
+      - "homepage.href=http://docker-testing.home.stechsolutions.ca:8080/dashboard/#/"
+      - "homepage.siteMonitor=http://docker-testing.home.stechsolutions.ca:8080"
+      - "homepage.widget.type=traefik"
+      - "homepage.widget.url=http://docker-testing.home.stechsolutions.ca:8080"
+      - "homepage.widget.routers="
+      - "homepage.widget.services="
+      - "homepage.widget.middleware="
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:0.2.0
+    networks:
+      - docker-proxy
+    container_name: docker-socket-proxy
+    environment:
+        - CONTAINERS=1
+        - POST=0
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v0.10.9
+    networks:
+      - traefik
+      - docker-proxy
+    container_name: homepage
+    environment:
+        - TZ=America/Edmonton
+        - PUID=1000
+        - PGID=1000
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/proxy/homepage:/app/config
+    depends_on:
+        - docker-socket-proxy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage.rule=Host(`homepage-testing.home.stechsolutions.ca`)"
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+      - "traefik.http.routers.homepage.entrypoints=websecure"
+      - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
+
+networks:
+  traefik:
+    name: traefik
+  docker-proxy:
+    name: docker-proxy

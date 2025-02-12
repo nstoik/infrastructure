@@ -1,0 +1,18 @@
+---
+# Rule from https://samber.github.io/awesome-prometheus-alerts/rules#rule-prometheus-self-monitoring-1-10
+
+groups:
+  - name: E2EDeadManSwitch
+    rules:
+      - alert: PrometheusAlertmanagerE2EDeadManSwitch
+        expr: vector(1)
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: |
+            Prometheus AlertManager E2E dead man switch (instance {{ $labels.instance }})
+          description: |
+            Prometheus DeadManSwitch is an always-firing alert. It's used as an end-to-end test of Prometheus through the Alertmanager.
+            VALUE = {{ $value }}
+            LABELS = {{ $labels }}

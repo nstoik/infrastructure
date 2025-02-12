@@ -12,6 +12,27 @@ base_timezone: "America/Edmonton"
 
 known_hosts_ansible_file: "/home/{{ default_user }}/.ssh/known_hosts_ansible"
 
+# smtp variables
+smtp_host: "smtp.mailgun.org"
+smtp_port: 587
+
+# ntfy variables
+ntfy_base_url: "https://ntfy.stechsolutions.ca"
+ntfy_user: "{{ default_user }}"
+ntfy_email_user: "ntfy@mg.stechsolutions.ca"
+
+# prometheus variables
+prometheus_domain: "prometheus.home.stechsolutions.ca"
+prometheus_base_url: "https://{{ prometheus_domain }}"
+
+# alertmanager variables
+alertmanager_domain: "alertmanager.home.stechsolutions.ca"
+alertmanager_base_url: "https://{{ alertmanager_domain }}"
+
+# ntfy-alertmanager variables
+ntfy_alertmanager_domain: "ntfy-alertmanager.home.stechsolutions.ca"
+ntfy_alertmanager_base_url: "https://{{ ntfy_alertmanager_domain }}"
+
 # geerlingguy.security role variables
 # https://galaxy.ansible.com/geerlingguy/security
 security_ssh_port: 22

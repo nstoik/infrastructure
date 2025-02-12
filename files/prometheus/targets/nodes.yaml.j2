@@ -1,0 +1,8 @@
+---
+- labels:
+    job: node
+    location: 'home'
+  targets:
+{% for host in (groups['all'] | difference(groups['nodes_remote'] + groups['proxmox_containers']) | sort) %}
+  - {{ host }}:9100
+{% endfor %}

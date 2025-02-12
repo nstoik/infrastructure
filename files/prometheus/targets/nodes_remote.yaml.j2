@@ -1,0 +1,16 @@
+---
+- labels:
+    job: node_remote
+    location: 'digitalocean'
+  targets:
+{% for host in groups['do_ansible'] | sort %}
+  - {{ host }}:9100
+{% endfor %}
+
+{# - labels:
+    job: node_remote
+    location: 'momanddad'
+  targets:
+{% for host in (groups['nodes_remote'] | difference(groups['do_ansible']) | sort) %}
+  - {{ host }}:9100
+{% endfor %} #}

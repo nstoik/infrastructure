@@ -1,0 +1,8 @@
+---
+- labels:
+    job: pve
+    location: 'home'
+  targets:
+{% for host in groups['proxmox_nodes'] | sort %}
+    - {{ host }}
+{% endfor %}

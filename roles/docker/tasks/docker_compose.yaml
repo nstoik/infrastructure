@@ -6,18 +6,18 @@
   tags:
     - docker
     - docker.compose
-  when: docker_config is true
+  when: docker_config is true and docker_compose_files is defined
   block:
-    # create the docker_compose files
-    - name: Create the docker_compose files
+    # copy the docker compose template files
+    - name: Process and copy the docker compose template files
       ansible.builtin.template:
-        src: docker_compose.yaml.j2
-        dest: "{{ docker_compose_dir }}/{{ compose.compose_name }}-docker-compose.yaml"
-        mode: '0664'
-      loop: "{{ docker_compose }}"
+        src: "{{ file.src }}"
+        dest: "{{ file.dest }}"
+        mode: "{{ file.mode }}"
+      loop: "{{ docker_compose_files }}"
       loop_control:
-        loop_var: compose
-        label: "{{ compose.compose_name }}"
+        loop_var: file
+        label: "{{ file.compose_name }}"
 
     # bring up the docker compose services
     - name: Bring up the docker compose services
@@ -29,7 +29,7 @@
         state: "{{ compose.state }}"
         # wait: true
         # wait_timeout: 60
-      loop: "{{ docker_compose }}"
+      loop: "{{ docker_compose_files }}"
       loop_control:
         loop_var: compose
         label: "{{ compose.compose_name }}"

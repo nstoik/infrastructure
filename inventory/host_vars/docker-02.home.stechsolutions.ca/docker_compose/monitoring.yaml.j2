@@ -1,0 +1,164 @@
+---
+name: monitoring
+
+services:
+  prometheus:
+    image: prom/prometheus:v3.1.0
+    user: 1000:1000
+    networks:
+      - traefik
+      - prometheus_exporter
+    container_name: prometheus
+    command: ['--config.file=/etc/prometheus/prometheus.yml', '--web.external-url={{ prometheus_base_url }}']
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/monitoring/prometheus:/etc/prometheus
+        - /home/{{ default_user }}/docker_mounts/monitoring/prometheus/data:/prometheus
+    healthcheck:
+        test: [
+            "CMD-SHELL",
+            "promtool check healthy"
+        ]
+        interval: 60s
+        timeout: 10s
+        retries: 3
+        start_period: 30s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.prometheus.rule=Host(`{{ prometheus_domain }}`)"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+      - "traefik.http.routers.prometheus.entrypoints=websecure"
+      - "traefik.http.routers.prometheus.tls.certresolver=letsencrypt"
+      - "homepage.group=Monitoring"
+      - "homepage.name=Prometheus"
+      - "homepage.description=Prometheus Monitoring"
+      - "homepage.icon=prometheus.png"
+      - "homepage.href={{ prometheus_base_url }}"
+      - "homepage.siteMonitor={{ prometheus_base_url }}"
+      - "homepage.widget.type=prometheus"
+      - "homepage.widget.url={{ prometheus_base_url }}"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/prometheus/prometheus/releases"
+  alertmanager:
+    image: prom/alertmanager:v0.28.0
+    networks:
+      - traefik
+      - prometheus_exporter
+    container_name: alertmanager
+    command: 
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/etc/alertmanager'
+      - '--web.external-url={{ alertmanager_base_url }}'
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/monitoring/alertmanager:/etc/alertmanager
+    healthcheck:
+        test: [
+            "CMD-SHELL",
+            "wget -q --tries=1 http://localhost:9093/-/ready -O - | grep -q 'OK' || exit 1"
+        ]
+        interval: 60s
+        timeout: 10s
+        retries: 3
+        start_period: 30s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.alertmanager.rule=Host(`{{ alertmanager_domain }}`)"
+      - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
+      - "traefik.http.routers.alertmanager.entrypoints=websecure"
+      - "traefik.http.routers.alertmanager.tls.certresolver=letsencrypt"
+      - "homepage.group=Monitoring"
+      - "homepage.name=Alertmanager"
+      - "homepage.description=Alertmanager Notifications"
+      - "homepage.icon=alertmanager.png"
+      - "homepage.href={{ alertmanager_base_url }}"
+      - "homepage.siteMonitor={{ alertmanager_base_url }}"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/prometheus/alertmanager/releases"
+  ntfy-alertmanager:
+    image: xenrox/ntfy-alertmanager:0.4.0
+    networks:
+      - traefik
+      - prometheus_exporter
+    container_name: ntfy-alertmanager
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/monitoring/ntfy-alertmanager:/etc/ntfy-alertmanager
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.ntfy-alertmanager.rule=Host(`{{ ntfy_alertmanager_domain}}`)"
+      - "traefik.http.services.ntfy-alertmanager.loadbalancer.server.port=8080"
+      - "traefik.http.routers.ntfy-alertmanager.entrypoints=websecure"
+      - "traefik.http.routers.ntfy-alertmanager.tls.certresolver=letsencrypt"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://hub.xenrox.net/~xenrox/ntfy-alertmanager/"
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.2
+    networks:
+      - traefik
+    container_name: cadvisor
+    command: ['--logtostderr', '--docker_only=true']
+    volumes:
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - {{ docker_data_dir }}:{{ docker_data_dir }}:ro
+    healthcheck:
+      test: [
+          "CMD-SHELL",
+          "wget -q --tries=1 http://localhost:8080/healthz -O - | grep -q 'ok' || exit 1"
+      ]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cadvisor.rule=Host(`docker-02.home.stechsolutions.ca`) && PathPrefix(`/dockermetrics`)"
+      - "traefik.http.middlewares.cadvisor-replace-path.replacepath.path=/metrics"
+      - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
+      - "traefik.http.routers.cadvisor.entrypoints=websecure"
+      - "traefik.http.routers.cadvisor.tls.certresolver=letsencrypt"
+      # Whitelist IPs for Tailscale, Docker, and local network
+      - "traefik.http.middlewares.cadvisor-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+      - "traefik.http.routers.cadvisor.middlewares=cadvisor-IPAllowList,cadvisor-replace-path"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/google/cadvisor/releases"
+  prometheus-pve-exporter:
+    image: prompve/prometheus-pve-exporter:3.5.1
+    networks:
+      - prometheus_exporter
+    container_name: prometheus-pve-exporter
+    environment:
+      - PVE_USER=prometheus@pve
+      - PVE_PASSWORD={{ secret_pve_prometheus_user_password }}
+      # remove this when proxmox is proxied via traefik
+      - PVE_VERIFY_SSL=false
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
+  prometheus-pihole-exporter:
+    image: ekofr/pihole-exporter:v0.4.0
+    networks:
+      - prometheus_exporter
+    container_name: prometheus-pihole-exporter
+    environment:
+      - PIHOLE-PROTOCOL=http
+      - PIHOLE_HOSTNAME=pihole-1.home.stechsolutions.ca,pihole-2.home.stechsolutions.ca
+      - PIHOLE_PASSWORD={{ secret_pihole_password_hash }}
+      - PORT=9617
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/eko/pihole-exporter/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+  prometheus_exporter:
+    name: prometheus_exporter

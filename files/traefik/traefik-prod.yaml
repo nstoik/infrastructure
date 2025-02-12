@@ -13,13 +13,28 @@ entryPoints:
           scheme: https
   websecure:
     address: ":443"
+  metrics:
+    address: ":8081"
 
-accessLog: {}
+accessLog:
+  filepath: /etc/traefik/access.log
+  format: json
+  fields:
+    defaultMode: keep
+    names:
+      StartUTC: drop
 
 ping: {}
 
 api:
   dashboard: true
+
+metrics:
+  prometheus:
+    entryPoint: metrics
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    addServicesLabels: true
 
 providers:
   docker:

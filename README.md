@@ -104,6 +104,18 @@ The files directory contains files that are used by certain roles or hosts.
     - [widgets.yaml](files/homepage/widgets.yaml) - Widgets for the homepage
 - [ntfy](files/ntfy) - Ntfy configuration files
     - [server.yaml](files/ntfy/server.yaml) - Ntfy server configuration
+- [prometheus](files/prometheus) - Prometheus configuration files
+    - [rules](files/prometheus/rules) - Prometheus alerting rules
+        - [alerts.yaml](files/prometheus/rules/alerts.yaml) - Prometheus alerting rules
+        - [node_alerts.yaml](files/prometheus/rules/node_alerts.yaml) - Prometheus node alerting rules  
+        - [test.yaml](files/prometheus/rules/test.yaml) - Prometheus E2E test alert
+    - [targets](files/prometheus/targets) - Prometheus scrape targets
+        - [node_remote.yaml.j2](files/prometheus/targets/node_remote.yaml.j2) - Jinja2 template for Prometheus node remote scrape targets
+        - [nodes.yaml.j2](files/prometheus/targets/nodes.yaml.j2) - Jinja2 template for Prometheus node scrape targets
+        - [pve.yaml.j2](files/prometheus/targets/pve.yaml.j2) - Jinja2 template for Prometheus pve scrape targets
+    - [alertmanager.yaml.j2](files/prometheus/alertmanager.yaml.j2) - Jinja2 template for Alertmanager configuration
+    - [ntfy-alertmanager_config.yaml.j2](files/prometheus/ntfy-alertmanager_config.yaml.j2) - Jinja2 template for Ntfy Alertmanager configuration
+    - [prometheus.yaml](files/prometheus/prometheus.yaml) - Prometheus configuration
 - [traefik](files/traefik) - Traefik configuration files
     - [dynamic.yaml](files/traefik/dynamic.yaml) - Traefik dynamic configuration for https proxy
         - [unifi.yaml](files/traefik/dynamic/unifi.yaml) - Unifi router file
@@ -169,11 +181,41 @@ Inventory files are as follows in the [inventory](inventory) directory:
     - [do_ansible.yaml](inventory/group_vars/do_ansible.yaml) - Inventory for the DigitalOcean VMs that are managed by Ansible
     - [do_docker.yaml](inventory/group_vars/do_docker.yaml) - Inventory for the DigitalOcean VMs that are used for Docker
     - [pihole.yaml](inventory/group_vars/pihole.yaml) - Inventory for the pihole servers
+    - [proxmox_containers.yaml](inventory/group_vars/proxmox_containers.yaml) - Inventory for the proxmox containers
     - [proxmox_nodes.yaml](inventory/group_vars/proxmox_nodes.yaml) - Inventory for the proxmox nodes
     - [proxmox_vms.yaml](inventory/group_vars/proxmox_vms.yaml) - Inventory for the proxmox vms
 - [host_vars](inventory/host_vars/) - Inventory for each host
     - [docker-02.home.stechsolutions.ca](inventory/host_vars/docker-02.home.stechsolutions.ca) - Folder for multiple inventory files for the docker-02 host
+        - [docker_compose](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose) - Folder for docker-compose files for the docker-02 host
+            - [proxy.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/proxy.yaml.j2) - Jinja2 template for the proxy docker-compose file
+            - [tdarr.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/tdarr.yaml.j2) - Jinja2 template for the tdarr docker-compose file
+            - [vehicle.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/vehicle.yaml.j2) - Jinja2 template for the vehicle docker-compose file
+            - [wud.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/wud.yaml.j2) - Jinja2 template for the wud docker-compose file
+        - [docker.yaml](inventory/host_vars/docker-02.home.stechsolutions.ca/docker.yaml) - Docker configuration for the docker-02 host
+        - [fileserver.yaml](inventory/host_vars/docker-02.home.stechsolutions.ca/fileserver.yaml) - Fileserver configuration for the docker-02 host
+        - [tailscale.yaml](inventory/host_vars/docker-02.home.stechsolutions.ca/tailscale.yaml) - Tailscale configuration for the docker-02 host
     - [docker-cloud-01](inventory/host_vars/docker-cloud-01) - Folder for multiple inventory files for the docker-cloud-01 host
+        - [docker-compose](inventory/host_vars/docker-cloud-01/docker-compose) - Folder for docker-compose files for the docker-cloud-01 host
+            - [monitoring.yaml.j2](inventory/host_vars/docker-cloud-01/docker-compose/monitoring.yaml.j2) - Jinja2 template for the monitoring docker-compose file
+            - [proxy.yaml.j2](inventory/host_vars/docker-cloud-01/docker-compose/proxy.yaml.j2) - Jinja2 template for the proxy docker-compose file
+        - [docker.yaml](inventory/host_vars/docker-cloud-01/docker.yaml) - Docker configuration for the docker-cloud-01 host
+        - [fileserver.yaml](inventory/host_vars/docker-cloud-01/fileserver.yaml) - Fileserver configuration for the docker-cloud-01 host
+        - [healthchecks.yaml](inventory/host_vars/docker-cloud-01/healthchecks.yaml) - Healthchecks configuration for the docker-cloud-01 host
+        - [ntfy.yaml](inventory/host_vars/docker-cloud-01/ntfy.yaml) - Ntfy configuration for the docker-cloud-01 host
+        - [tailscale.yaml](inventory/host_vars/docker-cloud-01/tailscale.yaml) - Tailscale configuration for the docker-cloud-01 host
+    - [docker-testing.home.stechsolutions.ca](inventory/host_vars/docker-testing.home.stechsolutions.ca) - Folder for multiple inventory files for the docker-testing host
+        - [docker-compose](inventory/host_vars/docker-testing.home.stechsolutions.ca/docker-compose) - Folder for docker-compose files for the docker-testing host
+            - [monitoring.yaml.j2](inventory/host_vars/docker-testing.home.stechsolutions.ca/docker-compose/monitoring.yaml.j2) - Jinja2 template for the monitoring docker-compose file
+            - [proxy.yaml.j2](inventory/host_vars/docker-testing.home.stechsolutions.ca/docker-compose/proxy.yaml.j2) - Jinja2 template for the proxy docker-compose file
+        - [docker.yaml](inventory/host_vars/docker-testing.home.stechsolutions.ca/docker.yaml) - Docker configuration for the docker-testing host
+        - [fileserver.yaml](inventory/host_vars/docker-testing.home.stechsolutions.ca/fileserver.yaml) - Fileserver configuration for the docker-testing host
+        - [tailscale.yaml](inventory/host_vars/docker-testing.home.stechsolutions.ca/tailscale.yaml) - Tailscale configuration for the docker-testing host
+    - [pihole-1.home.stechsolutions.ca.yaml](inventory/host_vars/pihole-1.home.stechsolutions.ca.yaml) - Yaml configuration for the pihole-1 host
+    - [pihole-2.home.stechsolutions.ca.yaml](inventory/host_vars/pihole-2.home.stechsolutions.ca.yaml) - Yaml configuration for the pihole-2 host
+    - [pve3.home.stechsolutions.ca.yaml](inventory/host_vars/pve3.home.stechsolutions.ca.yaml) - Yaml configuration for the pve3 host
+    - [storage.home.stechsolutions.ca.yaml](inventory/host_vars/storage.home.stechsolutions.ca.yaml) - Yaml configuration for the storage host
+    - [vpn.arnie-karen.yaml](inventory/host_vars/vpn.arnie-karen.yaml) - Yaml configuration for the vpn.arnie-karen host
+    - [vpn.home.stechsolutions.ca.yaml](inventory/host_vars/vpn.home.stechsolutions.ca.yaml) - Yaml configuration for the vpn.home.stechsolutions.ca host
 - [proxmox_containers](inventory/proxmox_containers) - Inventory for the proxmox containers
     - [hosts.yaml](inventory/proxmox_containers/hosts.yaml) - Inventory for the proxmox containers
 - [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
@@ -191,6 +233,7 @@ While the purpose of this repository is to automate the configuration of the inf
 
 ## Ntfy
 The subscribed topics need to be added manually in the Ntfy clients (web or iOS app). The list of topics to subscribe to are:
+- AlertManager
 - Healthchecks
 - SnapRAID
 - Uptime-Kuma
@@ -218,3 +261,15 @@ yamllint .
 ansible-lint
 ansible-playbook site.yaml --syntax-check
 ```
+# General Services Documentation
+## Prometheus
+
+Prometheus has been added to monitor the infrastructure. Prometheus is set up via docker and is configured to scrape the various services running on the infrastructure. The Prometheus configuration is located at [files/prometheus/](files/prometheus/).
+
+### Configuration
+
+The main configuration file for Prometheus is located at [files/prometheus/prometheus.yaml](files/prometheus/prometheus.yaml). This file contains the scrape configurations and alerting rules.
+
+### Alertmanager
+
+Prometheus is configured to use Alertmanager for alerting. The Alertmanager configuration is located at [files/prometheus/alertmanager.yaml.j2](files/prometheus/alertmanager.yaml.j2). This file contains the configuration for the alert receivers.

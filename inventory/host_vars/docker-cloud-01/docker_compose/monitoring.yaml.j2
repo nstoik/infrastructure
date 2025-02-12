@@ -1,0 +1,178 @@
+---
+name: monitoring
+
+services:
+  ntfy:
+    image: binwiederhier/ntfy:v2.11.0
+    networks:
+      - traefik
+    container_name: ntfy
+    command: serve
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/monitoring/ntfy:/var/lib/ntfy
+        - /home/{{ default_user }}/docker_mounts/monitoring/ntfy/server.yaml:/etc/ntfy/server.yml
+    healthcheck:
+        test: [
+            "CMD-SHELL",
+            "wget -q --tries=1 http://localhost:80/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"
+        ]
+        interval: 60s
+        timeout: 10s
+        retries: 3
+        start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ntfy.rule=Host(`ntfy.stechsolutions.ca`)"
+      - "traefik.http.services.ntfy.loadbalancer.server.port=80"
+      - "traefik.http.routers.ntfy.entrypoints=websecure"
+      - "traefik.http.routers.ntfy.tls.certresolver=letsencrypt"
+      - "homepage.group=Monitoring"
+      - "homepage.name=Ntfy"
+      - "homepage.description=Ntfy Messaging"
+      - "homepage.icon=ntfy.png"
+      - "homepage.href=https://ntfy.stechsolutions.ca"
+      - "homepage.siteMonitor=https://ntfy.stechsolutions.ca"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/binwiederhier/ntfy/releases"
+  postgres_hc_db:
+    image: postgres:17.1
+    user: 1000:1000
+    networks:
+      - hc_postgres
+    container_name: postgres_hc_db
+    environment:
+        - POSTGRES_DB={{ hc_db_name }}
+        - POSTGRES_USER={{ hc_db_user }}
+        - POSTGRES_PASSWORD={{ secret_hc_db_password }}
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/monitoring/postgres:/var/lib/postgresql/data
+        - /etc/passwd:/etc/passwd:ro
+    healthcheck:
+        test: [
+            "CMD-SHELL",
+            "pg_isready -U {{ hc_db_user }} -d {{ hc_db_name }}"
+        ]
+        interval: 60s
+        timeout: 10s
+        retries: 3
+        start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://www.postgresql.org/docs/release/"
+  healthchecks:
+    image: healthchecks/healthchecks:v3.7
+    networks:
+      - traefik
+      - hc_postgres
+    container_name: healthchecks
+    environment:
+        - ALLOWED_HOSTS={{ hc_allowed_hosts }}
+        - DB={{ hc_db }}
+        - DB_HOST={{ hc_db_host }}
+        - DB_NAME={{ hc_db_name }}
+        - DB_USER={{ hc_db_user }}
+        - DB_PASSWORD={{ secret_hc_db_password }}
+        - DB_PORT={{ hc_db_port }}
+        - DEBUG={{ hc_debug }}
+        - DEFAULT_FROM_EMAIL={{ hc_default_from_email }}
+        - EMAIL_HOST={{ hc_email_host }}
+        - EMAIL_HOST_PASSWORD={{ hc_email_host_password }}
+        - EMAIL_HOST_USER={{ hc_email_host_user }}
+        - EMAIL_PORT={{ hc_email_port }}
+        - REGISTRATION_OPEN={{ hc_registration_open }}
+        - SECRET_KEY={{ hc_secret_key }}
+        - SITE_NAME={{ hc_site_name }}
+        - SITE_LOGO_URL={{ hc_site_logo_url }}
+        - SITE_ROOT={{ hc_site_root }}
+        # Reduce the number of worker processes to 1
+        - UWSGI_PROCESSES=1
+    depends_on:
+        - postgres_hc_db
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hc.rule=Host(`{{ hc_allowed_hosts }}`)"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.services.hc.loadbalancer.server.port=8000"
+      - "traefik.http.routers.hc.entrypoints=websecure"
+      - "traefik.http.routers.hc.tls.certresolver=letsencrypt"
+      - "homepage.group=Monitoring"
+      - "homepage.name=Healthchecks"
+      - "homepage.description=Self-hosted Healthchecks"
+      - "homepage.icon=healthchecks-v2.png"
+      - "homepage.href=https://hc.stechsolutions.ca"
+      - "homepage.siteMonitor=https://hc.stechsolutions.ca"
+      - "homepage.widget.type=healthchecks"
+      - "homepage.widget.url=https://hc.stechsolutions.ca"
+      - "homepage.widget.key={{ secret_hc_projects['Stechsolutions'].api_key }}"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/healthchecks/healthchecks/releases"
+  uptime-kuma:
+    image: louislam/uptime-kuma:2.0.0-beta.0
+    networks:
+      - traefik
+    container_name: uptime-kuma
+    environment:
+        - PUID=1000
+        - PGID=1000
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/monitoring/uptime-kuma:/app/data
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.uptime-kuma.rule=Host(`uptime.stechsolutions.ca`)"
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+      - "traefik.http.routers.uptime-kuma.entrypoints=websecure"
+      - "traefik.http.routers.uptime-kuma.tls.certresolver=letsencrypt"
+      - "homepage.group=Monitoring"
+      - "homepage.name=Uptime Kuma"
+      - "homepage.description=Uptime Monitoring"
+      - "homepage.icon=uptime-kuma.png"
+      - "homepage.href=https://uptime.stechsolutions.ca"
+      - "homepage.siteMonitor=https://uptime.stechsolutions.ca"
+      - "homepage.widget.type=uptimekuma"
+      - "homepage.widget.url=https://uptime.stechsolutions.ca"
+      - "homepage.widget.slug=all-services"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/louislam/uptime-kuma/releases"
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.2
+    networks:
+      - traefik
+    container_name: cadvisor
+    command: ['--logtostderr', '--docker_only=true']
+    volumes:
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - {{ docker_data_dir }}:{{ docker_data_dir }}:ro
+    healthcheck:
+      test: [
+          "CMD-SHELL",
+          "wget -q --tries=1 http://localhost:8080/healthz -O - | grep -q 'ok' || exit 1"
+      ]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cadvisor.rule=PathPrefix(`/dockermetrics`)"
+      - "traefik.http.middlewares.cadvisor-replace-path.replacepath.path=/metrics"
+      - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
+      - "traefik.http.routers.cadvisor.entrypoints=websecure"
+      - "traefik.http.routers.cadvisor.tls.certresolver=letsencrypt"
+      # Whitelist IPs for Tailscale, Docker, and local network
+      - "traefik.http.middlewares.cadvisor-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+      - "traefik.http.routers.cadvisor.middlewares=cadvisor-IPAllowList,cadvisor-replace-path"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/google/cadvisor/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+  hc_postgres:
+    name: hc_postgres

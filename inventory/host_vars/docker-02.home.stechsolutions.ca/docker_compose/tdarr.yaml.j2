@@ -1,0 +1,50 @@
+---
+name: tdarr
+
+services:
+  tdarr:
+    image: haveagitgat/tdarr:2.27.02
+    networks:
+      - traefik
+    container_name: tdarr
+    environment:
+        - TZ=America/Edmonton
+        - PUID=1000
+        - PGID=1000
+        - UMASK_SET=022
+        - serverIP=0.0.0.0
+        - serverPort=8266
+        - webUIPort=8265
+        - internalNode=true
+        - inContainer=true
+        - ffmpegVersion=6
+        - nodeName=MyInternalNode
+    volumes:
+        - /mnt/scratch/tdarr:/temp
+        - /mnt/nfs/movies:/movies
+        - /mnt/nfs/tv:/tv
+        - /home/{{ default_user }}/docker_mounts/tdarr/server:/app/server
+        - /home/{{ default_user }}/docker_mounts/tdarr/configs:/app/configs
+        - /home/{{ default_user }}/docker_mounts/tdarr/logs:/app/logs
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tdarr.rule=Host(`tdarr.home.stechsolutions.ca`)"
+      - "traefik.http.services.tdarr.loadbalancer.server.port=8265"
+      - "traefik.http.routers.tdarr.entrypoints=websecure"
+      - "traefik.http.routers.tdarr.tls.certresolver=letsencrypt"
+      - "homepage.group=Media"
+      - "homepage.name=Tdarr"
+      - "homepage.description=Transcoding System"
+      - "homepage.icon=tdarr.png"
+      - "homepage.href=https://tdarr.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://tdarr.home.stechsolutions.ca"
+      - "homepage.widget.type=tdarr"
+      - "homepage.widget.url=https://tdarr.home.stechsolutions.ca"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://home.tdarr.io/download"
+
+networks:
+  traefik:
+    name: traefik
+    external: true

@@ -1,0 +1,46 @@
+---
+# Host variables for docker-cloud-01 host.
+
+# docker container configuration files
+docker_configuration_files:
+  - name: traefik.yaml
+    src: "{{ inventory_dir }}/../files/traefik/traefik-prod-no-file-provider.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
+    mode: '0664'
+    container_name: traefik
+
+# docker container template files
+docker_template_files:
+  - name: server.yaml
+    src: "{{ inventory_dir }}/../files/ntfy/server.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy/server.yaml
+    mode: '0664'
+    container_name: ntfy
+
+# docker mounts subfolders
+docker_mounts_subfolders:
+  - name: postgres_hc
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/postgres
+    mode: '0775'
+    container_name: postgres_hc_db
+  - name: uptime-kuma
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/uptime-kuma
+    mode: '0775'
+    container_name: uptime-kuma
+
+docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-cloud-01/docker_compose"
+
+# docker compose template files
+docker_compose_files:
+  - name: proxy-docker-compose.yaml
+    compose_name: proxy
+    state: present
+    src: "{{ docker_compose_subpath }}/proxy.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/proxy-docker-compose.yaml
+    mode: '0664'
+  - name: monitoring-docker-compose.yaml
+    compose_name: monitoring
+    state: present
+    src: "{{ docker_compose_subpath }}/monitoring.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/monitoring-docker-compose.yaml
+    mode: '0664'
