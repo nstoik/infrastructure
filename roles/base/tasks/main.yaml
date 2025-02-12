@@ -96,12 +96,16 @@
 # set specified systemd services to enabled and started
 - name: Set specified systemd services to enabled and started
   ansible.builtin.service:
-    name: "{{ item }}"
-    state: started
-    enabled: true
+    name: "{{ service.name }}"
+    state: "{{ service.state }}"
+    enabled: "{{ service.enabled | default(true) }}"
   loop: "{{ base_services + (base_additional_services | default([])) }}"
+  loop_control:
+    loop_var: service
+    label: "{{ service.name }}"
   become: true
   when: ansible_os_family == "Debian"
+  notify: Systemctl reset-failed
   tags:
     - base
     - base.services
