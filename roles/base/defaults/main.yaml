@@ -22,6 +22,14 @@ base_packages:
   - wireguard-tools
 
 # the base services to enable and start
+# eg format will include the service name, state, and optional enabled state
+# base_services:
+#   - name: "service_name"
+#     state: "started"
+#     enabled: true
+#   - name: "service_name"
+#     state: "stopped"
+#     enabled: false
 base_services: []
 
 # the base settings for user setup

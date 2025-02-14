@@ -7,3 +7,9 @@
     name: postfix
     state: restarted
   become: true
+
+# Systemctl reset-failed
+- name: Systemctl reset-failed
+  ansible.builtin.command: systemctl reset-failed
+  changed_when: true
+  become: true

@@ -2,7 +2,12 @@
 # group_vars for the proxmox_vms group
 ansible_become_password: "{{ secret_become_pass }}"
 
-proxmox_vm_additonal_packages:
+host_additional_packages:
   - "qemu-guest-agent"
-proxmox_vm_additional_services:
-  - "qemu-guest-agent.service"
+host_additional_services:
+  - name: "qemu-guest-agent.service"
+    state: "started"
+    enabled: true
+  - name: "openipmi.service"
+    state: "stopped"
+    enabled: false

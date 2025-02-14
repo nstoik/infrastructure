@@ -24,14 +24,15 @@ groups:
           description: "{{ $labels.instance }} of job {{ $labels.job }} is under memory pressure. High rate of page faults\n VALUE = {{ $value }}"
 
       # You may want to increase the alert manager 'repeat_interval' for this type of alert to daily or weekly
+      # Original threshold was 20%. Set to 10% on 2025-02-13
       - alert: HostMemoryIsUnderutilized
-        expr: (100 - (avg_over_time(node_memory_MemAvailable_bytes[30m]) / node_memory_MemTotal_bytes * 100) < 20) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+        expr: (100 - (avg_over_time(node_memory_MemAvailable_bytes[30m]) / node_memory_MemTotal_bytes * 100) < 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
         for: 1w
         labels:
           severity: info
         annotations:
           summary: Host Memory is underutilized (instance {{ $labels.instance }})
-          description: "Node memory is < 20% for 1 week. Consider reducing memory space. (instance {{ $labels.instance }})\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          description: "Node memory is < 10% for 1 week. Consider reducing memory space. (instance {{ $labels.instance }})\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
       - alert: HostUnusualNetworkThroughputIn
         expr: (sum by (instance) (rate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
@@ -211,14 +212,15 @@ groups:
       # x2 context switches is an arbitrary number.
       # The alert threshold depends on the nature of the application.
       # Please read: https://github.com/samber/awesome-prometheus-alerts/issues/58
+      # Initial threshold was 2. Set to 2.5 on 2025-02-13
       - alert: HostContextSwitchingHigh
-        expr: (rate(node_context_switches_total[15m])/count without(mode,cpu) (node_cpu_seconds_total{mode="idle"})) / (rate(node_context_switches_total[1d])/count without(mode,cpu) (node_cpu_seconds_total{mode="idle"})) > 2
+        expr: (rate(node_context_switches_total[15m])/count without(mode,cpu) (node_cpu_seconds_total{mode="idle"})) / (rate(node_context_switches_total[1d])/count without(mode,cpu) (node_cpu_seconds_total{mode="idle"})) > 2.5
         for: 0m
         labels:
           severity: warning
         annotations:
           summary: Host context switching high (instance {{ $labels.instance }})
-          description: "Context switching is growing on the node (twice the daily average during the last 15m)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          description: "Context switching is growing on the node (2.5 the daily average during the last 15m)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
       - alert: HostSwapIsFillingUp
         expr: ((1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100 > 80) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
