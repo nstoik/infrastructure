@@ -115,32 +115,8 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/vehicle/postgres
     mode: '0775'
     container_name: postgres_vehicle_db
-  - name: lubelogger_config
-    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/config
-    mode: '0775'
-    container_name: lubelogger
   - name: lubelogger_data
     dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/data
-    mode: '0775'
-    container_name: lubelogger
-  - name: lubelogger_documents
-    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/documents
-    mode: '0775'
-    container_name: lubelogger
-  - name: lubelogger_images
-    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/images
-    mode: '0775'
-    container_name: lubelogger
-  - name: lubelogger_log
-    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/log
-    mode: '0775'
-    container_name: lubelogger
-  - name: lubelogger_temp
-    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/temp
-    mode: '0775'
-    container_name: lubelogger
-  - name: lubelogger_translations
-    dest: /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/translations
     mode: '0775'
     container_name: lubelogger
   - name: lubelogger_keys
