@@ -63,3 +63,19 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
       become: true
+
+    # Set the permissions for the docker mounts parent directory
+    - name: Set the permissions for the docker mounts parent directory
+      ansible.builtin.file:
+        path: "{{ docker_mounts_dir | dirname }}"
+        state: directory
+        mode: "0755"
+      become: true
+
+    # Set the permissions for the docker mounts parents parent directory
+    - name: Set the permissions for the docker mounts parents parent directory
+      ansible.builtin.file:
+        path: "{{ docker_mounts_dir | dirname | dirname }}"
+        state: directory
+        mode: "0755"
+      become: true
