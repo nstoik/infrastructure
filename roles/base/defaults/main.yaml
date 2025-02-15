@@ -16,7 +16,6 @@ base_reboot_host_if_required: true
 base_packages:
   - git
   - neofetch
-  - prometheus-node-exporter
   - vnstat
   - wireguard
   - wireguard-tools

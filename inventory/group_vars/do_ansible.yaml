@@ -18,6 +18,10 @@ digitalocean_droplet_image: ubuntu-24-04-x64
 # timezone is set to UTC for cloud servers
 base_timezone: "UTC"
 
+# additional packages to install on the host
+host_additional_packages:
+  - prometheus-node-exporter
+
 # additional services to configure on the host
 host_additional_services:
   - name: "openipmi.service"
