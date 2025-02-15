@@ -60,8 +60,7 @@
       ansible.builtin.include_role:
         name: base
       vars:
-        # yamllint disable-line rule:line-length
-        base_additional_packages: "{{ hostvars[inventory_hostname].proxmox_node_additional_packages }}"
+        base_additional_packages: "{{ hostvars[inventory_hostname].host_additional_packages }}"
         base_user_add_ssh_keys: true
         base_user_default: "{{ default_user }}"
         base_user_password_prehashed: "{{ secret_user_password_prehashed }}"
