@@ -155,6 +155,38 @@ services:
     labels:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/eko/pihole-exporter/releases"
+  grafana:
+    image: grafana/grafana:11.5.1
+    networks:
+      - traefik
+      - prometheus_exporter
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER={{ default_user }}
+      - GF_SECURITY_ADMIN_PASSWORD={{ secret_grafana_password }}
+    user: 1000:1000
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/monitoring/grafana:/var/lib/grafana
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.grafana.rule=Host(`{{ grafana_domain }}`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+      - "homepage.group=Monitoring"
+      - "homepage.name=Grafana"
+      - "homepage.description=Grafana Dashboards"
+      - "homepage.icon=grafana.png"
+      - "homepage.href={{ grafana_base_url }}"
+      - "homepage.siteMonitor={{ grafana_base_url }}"
+      - "homepage.widget.type=grafana"
+      - "homepage.widget.url={{ grafana_base_url }}"
+      - "homepage.widget.username={{ default_user }}"
+      - "homepage.widget.password={{ secret_grafana_password }}"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://grafana.com/docs/grafana/latest/whatsnew/"
 
 networks:
   traefik:
