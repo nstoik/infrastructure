@@ -4,6 +4,8 @@ ansible_become_password: "{{ secret_become_pass }}"
 
 host_additional_packages:
   - "qemu-guest-agent"
+  - prometheus-node-exporter
+
 host_additional_services:
   - name: "qemu-guest-agent.service"
     state: "started"

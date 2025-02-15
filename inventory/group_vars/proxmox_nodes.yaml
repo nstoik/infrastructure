@@ -6,6 +6,7 @@ ansible_become_password: "{{ secret_become_pass }}"
 host_additional_packages:
   - "sudo"
   - "lshw"
+  - "prometheus-node-exporter"
 
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
