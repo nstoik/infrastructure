@@ -4,3 +4,5 @@ roles/galaxy/*
 vault_pass.txt
 
 .env
+
+.ansbile/.lock
