@@ -62,7 +62,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://www.postgresql.org/docs/release/"
   healthchecks:
-    image: healthchecks/healthchecks:v3.7
+    image: healthchecks/healthchecks:v3.9
     networks:
       - traefik
       - hc_postgres
@@ -101,7 +101,7 @@ services:
       - "homepage.group=Monitoring"
       - "homepage.name=Healthchecks"
       - "homepage.description=Self-hosted Healthchecks"
-      - "homepage.icon=healthchecks-v2.png"
+      - "homepage.icon=healthchecks.png"
       - "homepage.href=https://hc.stechsolutions.ca"
       - "homepage.siteMonitor=https://hc.stechsolutions.ca"
       - "homepage.widget.type=healthchecks"

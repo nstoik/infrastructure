@@ -3,7 +3,7 @@ name: wud
 
 services:
   wud:
-    image: getwud/wud:7.1.1
+    image: getwud/wud:8.0.1
     networks:
       - traefik
       - docker-proxy
@@ -34,7 +34,7 @@ services:
       - "homepage.group=Monitoring"
       - "homepage.name=WUD"
       - "homepage.description=What's Up Docker"
-      - "homepage.icon=wud.png"
+      - "homepage.icon=whats-up-docker.png"
       - "homepage.href=https://wud.home.stechsolutions.ca"
       - "homepage.siteMonitor=https://wud.home.stechsolutions.ca"
       - "homepage.widget.type=whatsupdocker"

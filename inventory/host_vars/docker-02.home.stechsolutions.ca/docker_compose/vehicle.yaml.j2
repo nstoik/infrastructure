@@ -29,7 +29,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://www.postgresql.org/docs/release/"
   lubelogger:
-    image: hargata/lubelogger:v1.4.0
+    image: hargata/lubelogger:v1.4.4
     user: 1000:1000
     networks:
       - traefik
@@ -38,15 +38,9 @@ services:
     environment:
         - LC_ALL=en_US.UTF-8
         - LANG=en_US.UTF-8
-        - POSTGRES_CONNECTION=Host=postgres_vehicle_db:5432;Database=vehicle;Username=vehicle_user;Password=vehicle_password
+        - POSTGRES_CONNECTION={{ vehicle_connection_string }}
     volumes:
-        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/config:/App/config
         - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/data:/App/data
-        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/translations:/App/wwwroot/translations
-        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/documents:/App/wwwroot/documents
-        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/images:/App/wwwroot/images
-        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/temp:/App/wwwroot/temp
-        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/log:/App/log
         - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/keys:/root/.aspnet/DataProtection-Keys
     depends_on:
         - postgres_vehicle_db
