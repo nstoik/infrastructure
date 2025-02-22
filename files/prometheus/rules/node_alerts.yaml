@@ -63,6 +63,7 @@ groups:
 
       # Original threshold was 50 MB/s. Set to 75 MB/s on 2025-02-14
       # Original duration was 2m. Set to 5m on 2025-02-14
+      # Original rate was 50 MB/s. Set to 75 MB/s on 2025-02-14
       - alert: HostUnusualDiskWriteRate
         expr: (sum by (instance) (rate(node_disk_written_bytes_total[2m])) / 1024 / 1024 > 75) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
         for: 5m
