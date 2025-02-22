@@ -98,7 +98,7 @@ docker_template_files:
     mode: '0664'
     container_name: prometheus
   - name: prometheus_alertmanager_config.yaml
-    src: "{{ inventory_dir }}/../files/prometheus/alertmanager.yaml.j2"
+    src: "{{ inventory_dir }}/../files/alertmanager/alertmanager.yaml.j2"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/alertmanager/alertmanager.yml
     mode: '0664'
     container_name: alertmanager
