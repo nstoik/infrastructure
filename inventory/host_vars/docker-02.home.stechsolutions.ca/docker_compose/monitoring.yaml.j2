@@ -166,7 +166,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD={{ secret_grafana_password }}
     user: 1000:1000
     volumes:
-      - /home/{{ default_user }}/docker_mounts/monitoring/grafana:/var/lib/grafana
+      - /home/{{ default_user }}/docker_mounts/monitoring/grafana/data:/var/lib/grafana
+      - /home/{{ default_user }}/docker_mounts/monitoring/grafana/provisioning:/etc/grafana/provisioning
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
