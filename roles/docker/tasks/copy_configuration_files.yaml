@@ -37,7 +37,7 @@
     - name: Find all the files in the path
       ansible.builtin.find:
         paths: "{{ path.src }}"
-        recurse: yes
+        recurse: true
         file_type: file
       loop: "{{ docker_configuration_paths }}"
       loop_control:
@@ -49,7 +49,7 @@
     # Extract the list of file paths
     - name: Extract the list of file paths
       ansible.builtin.set_fact:
-        paths_file_extracted:  >-
+        paths_file_extracted: >-
           {{
             paths_file_extracted | default([])
             + [path_results.files | map(attribute='path') | list]
@@ -62,9 +62,9 @@
     # Get the file path that is relative to the source directory
     - name: Get the file path that is relative to the source directory
       ansible.builtin.set_fact:
-        paths_relative:  >-
+        paths_relative: >-
               {{
-              paths_relative | default([]) 
+              paths_relative | default([])
               + [path.1 | map('regex_replace', '^' + path.0.src + '/', '') | list]
               }}
       loop: "{{ docker_configuration_paths | zip(paths_file_extracted) | list }}"
