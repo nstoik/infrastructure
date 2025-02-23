@@ -112,7 +112,7 @@
         name: docker
         tasks_from: copy_or_template
       vars:
-        file:
+        docker_file:
           name: "{{ docker_configuration_file.name }}"
           src: "{{ docker_configuration_file.src }}"
           dest: "{{ docker_configuration_file.dest }}"
