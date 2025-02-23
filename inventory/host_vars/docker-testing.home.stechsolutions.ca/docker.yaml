@@ -1,6 +1,14 @@
 ---
 # docker variables for docker-testing.home.stechsolutions.ca host
 
+# docker container paths. All found files will be processed and copied to the docker host
+docker_configuration_paths:
+  - name: homepage
+    src: /home/nelson/GitHub/infrastructure/files/homepage
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage
+    mode: '0664'
+    container_name: homepage
+
 # docker container configuration files
 docker_configuration_files:
   # traefik configuration file
@@ -14,36 +22,6 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/dynamic/unifi.yaml
     mode: '0664'
     container_name: traefik
-  # homepage configuration files
-  - name: homepage_settings.yaml
-    src: "{{ inventory_dir }}/../files/homepage/settings.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/settings.yaml
-    mode: '0664'
-    container_name: homepage
-  - name: homepage_bookmarks.yaml
-    src: "{{ inventory_dir }}/../files/homepage/bookmarks.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/bookmarks.yaml
-    mode: '0664'
-    container_name: homepage
-  - name: homepage_docker.yaml
-    src: "{{ inventory_dir }}/../files/homepage/docker.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/docker.yaml
-    mode: '0664'
-    container_name: homepage
-
-# docker container template files
-docker_template_files:
-  # homepage configuration files
-  - name: homepage_widgets.yaml
-    src: "{{ inventory_dir }}/../files/homepage/widgets.yaml.j2"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/widgets.yaml
-    mode: '0664'
-    container_name: homepage
-  - name: homepage_services.yaml
-    src: "{{ inventory_dir }}/../files/homepage/services.yaml.j2"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/services.yaml
-    mode: '0664'
-    container_name: homepage
 
 # docker mounts subfolders
 # docker_mounts_subfolders:
