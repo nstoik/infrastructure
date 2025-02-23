@@ -17,6 +17,24 @@ wud_trigger_ntfy_sh_priority: 2
 wud_trigger_ntfy_sh_auth_user: "{{ default_user }}"
 wud_trigger_ntfy_sh_auth_password: "{{ secret_ntfy_password }}"
 
+# docker container paths. All found files will be processed and copied to the docker host
+docker_configuration_paths:
+  - name: homepage
+    src: /home/nelson/GitHub/infrastructure/files/homepage
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage
+    mode: '0664'
+    container_name: homepage
+  - name: prometheus
+    src: /home/nelson/GitHub/infrastructure/files/prometheus
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus
+    mode: '0664'
+    container_name: prometheus
+  - name: grafana
+    src: /home/nelson/GitHub/infrastructure/files/grafana
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/grafana
+    mode: '0664'
+    container_name: grafana
+
 # docker container configuration files
 docker_configuration_files:
   # traefik configuration file
@@ -30,73 +48,7 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/dynamic/unifi.yaml
     mode: '0664'
     container_name: traefik
-  # homepage configuration files
-  - name: homepage_settings.yaml
-    src: "{{ inventory_dir }}/../files/homepage/settings.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/settings.yaml
-    mode: '0664'
-    container_name: homepage
-  - name: homepage_bookmarks.yaml
-    src: "{{ inventory_dir }}/../files/homepage/bookmarks.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/bookmarks.yaml
-    mode: '0664'
-    container_name: homepage
-  - name: homepage_docker.yaml
-    src: "{{ inventory_dir }}/../files/homepage/docker.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/docker.yaml
-    mode: '0664'
-    container_name: homepage
   # prometheus configuration files
-  - name: prometheus_config.yaml
-    src: "{{ inventory_dir }}/../files/prometheus/prometheus.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/prometheus.yml
-    mode: '0664'
-    container_name: prometheus
-  - name: prometheus_rules_alerts.yaml
-    src: "{{ inventory_dir }}/../files/prometheus/rules/alerts.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/rules/alerts.yaml
-    mode: '0664'
-    container_name: prometheus
-  - name: prometheus_rules_node_alerts.yaml
-    src: "{{ inventory_dir }}/../files/prometheus/rules/node_alerts.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/rules/node_alerts.yaml
-    mode: '0664'
-    container_name: prometheus
-  - name: prometheus_rules_test.yaml
-    src: "{{ inventory_dir }}/../files/prometheus/rules/test.yaml"
-    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/rules/test.yaml
-    mode: '0664'
-    container_name: prometheus
-
-# docker container template files
-docker_template_files:
-  # homepage configuration files
-  - name: homepage_widgets.yaml
-    src: "{{ inventory_dir }}/../files/homepage/widgets.yaml.j2"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/widgets.yaml
-    mode: '0664'
-    container_name: homepage
-  - name: homepage_services.yaml
-    src: "{{ inventory_dir }}/../files/homepage/services.yaml.j2"
-    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage/services.yaml
-    mode: '0664'
-    container_name: homepage
-  # prometheus configuration files
-  - name: prometheus_node_target.yaml
-    src: "{{ inventory_dir }}/../files/prometheus/targets/nodes.yaml.j2"
-    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/targets/nodes.yaml
-    mode: '0664'
-    container_name: prometheus
-  - name: prometheus_node_remote_target.yaml
-    src: "{{ inventory_dir }}/../files/prometheus/targets/nodes_remote.yaml.j2"
-    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/targets/nodes_remote.yaml
-    mode: '0664'
-    container_name: prometheus
-  - name: prometheus_pve_target.yaml
-    src: "{{ inventory_dir }}/../files/prometheus/targets/pve.yaml.j2"
-    dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/targets/pve.yaml
-    mode: '0664'
-    container_name: prometheus
   - name: prometheus_alertmanager_config.yaml
     src: "{{ inventory_dir }}/../files/alertmanager/alertmanager.yaml.j2"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/alertmanager/alertmanager.yml
@@ -128,6 +80,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus/data
     mode: '0775'
     container_name: prometheus
+  # grafana docker mounts
+  - name: monitoring_grafana
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/grafana/data
+    mode: '0775'
+    container_name: grafana
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-02.home.stechsolutions.ca/docker_compose"
 

@@ -1,0 +1,29 @@
+---
+# These tasks will unpack a list of file paths given a src and dest folder
+#
+# The input variable is a dictionary with the following keys:
+# docker_configuration_path:
+#   - name: the name of the docker container
+#   - src: the source folder path
+#   - dest: the destination folder path
+#   - mode: the mode of the file
+#   - container_name: the name of the docker container to restart if the file changes
+#   - paths: a list of relative paths to the src that need to be copied or templated
+
+
+# Loop through the list of docker configuration paths
+- name: Loop through the list of docker configuration paths
+  ansible.builtin.include_role:
+    name: docker
+    tasks_from: copy_or_template
+  vars:
+    file:
+      name: "{{ docker_configuration_path.name }}"
+      src: "{{ docker_configuration_path.src }}/{{ path }}"
+      dest: "{{ docker_configuration_path.dest }}/{{ path }}"
+      mode: "{{ docker_configuration_path.mode }}"
+      container_name: "{{ docker_configuration_path.container_name }}"
+  loop: "{{ docker_configuration_path.paths }}"
+  loop_control:
+    loop_var: path
+    label: "{{ docker_configuration_path.container_name }} - {{ path }}"
