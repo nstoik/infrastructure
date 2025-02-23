@@ -9,7 +9,7 @@ services:
       - traefik
       - prometheus_exporter
     container_name: prometheus
-    command: ['--config.file=/etc/prometheus/prometheus.yml', '--web.external-url={{ prometheus_base_url }}']
+    command: ['--config.file=/etc/prometheus/prometheus.yaml', '--web.external-url={{ prometheus_base_url }}']
     volumes:
         - /home/{{ default_user }}/docker_mounts/monitoring/prometheus:/etc/prometheus
         - /home/{{ default_user }}/docker_mounts/monitoring/prometheus/data:/prometheus
