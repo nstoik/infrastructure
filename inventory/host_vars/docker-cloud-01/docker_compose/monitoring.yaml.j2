@@ -139,6 +139,7 @@ services:
       - "wud.link.template=https://github.com/louislam/uptime-kuma/releases"
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.2
+    pid: host
     networks:
       - traefik
     container_name: cadvisor
@@ -146,6 +147,7 @@ services:
     volumes:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
+      - /etc/machine-id:/etc/machine-id:ro
       - {{ docker_data_dir }}:{{ docker_data_dir }}:ro
     healthcheck:
       test: [
