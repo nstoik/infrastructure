@@ -1,6 +1,9 @@
 ---
 # Host variables for docker-cloud-01 host.
 
+# docker container paths. All found files will be processed and copied to the docker host
+# docker_configuration_paths:
+
 # docker container configuration files
 docker_configuration_files:
   - name: traefik.yaml
@@ -8,11 +11,8 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
     mode: '0664'
     container_name: traefik
-
-# docker container template files
-docker_template_files:
   - name: server.yaml
-    src: "{{ inventory_dir }}/../files/ntfy/server.yaml"
+    src: "{{ inventory_dir }}/../files/ntfy/server.yaml.j2"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy/server.yaml
     mode: '0664'
     container_name: ntfy

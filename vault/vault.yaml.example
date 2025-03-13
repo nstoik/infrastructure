@@ -64,3 +64,6 @@ secret_pihole_password_hash: hashed version of 'secret_pihole_password'
 
 # Proxmox or PVE secrets
 secret_pve_prometheus_user_password: change_me
+
+# Grafana secrets
+secret_grafana_password: change_me

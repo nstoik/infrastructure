@@ -26,89 +26,102 @@
     - docker
     - docker.compose
 
+# block for copying configuration paths
+- name: Copy any required configuration files for the docker containers from a path
+  tags:
+    - docker
+    - docker.compose
+  when: docker_config is true and docker_configuration_paths is defined
+  block:
+    # find all the files in the path
+    - name: Find all the files in the path
+      ansible.builtin.find:
+        paths: "{{ path.src }}"
+        recurse: true
+        file_type: file
+      loop: "{{ docker_configuration_paths }}"
+      loop_control:
+        loop_var: path
+        label: "{{ path.name }}"
+      delegate_to: localhost
+      register: paths_file_list
+
+    # Extract the list of file paths
+    - name: Extract the list of file paths
+      ansible.builtin.set_fact:
+        paths_file_extracted: >-
+          {{
+            paths_file_extracted | default([])
+            + [path_results.files | map(attribute='path') | list]
+          }}
+      loop: "{{ paths_file_list.results }}"
+      loop_control:
+        loop_var: path_results
+        label: "{{ path_results.path.name }}"
+
+    # Get the file path that is relative to the source directory
+    - name: Get the file path that is relative to the source directory
+      ansible.builtin.set_fact:
+        paths_relative: >-
+              {{
+              paths_relative | default([])
+              + [path.1 | map('regex_replace', '^' + path.0.src + '/', '') | list]
+              }}
+      loop: "{{ docker_configuration_paths | zip(paths_file_extracted) | list }}"
+      loop_control:
+        loop_var: path
+        label: "{{ path.0.name }}"
+
+    # Build the updated list of files with the relative paths
+    - name: Build the updated list of files with the relative paths
+      ansible.builtin.set_fact:
+        docker_configuration_paths_updated: >-
+              {{
+                docker_configuration_paths_updated | default([]) |
+                rejectattr('name', 'equalto', path['name']) | list +
+                [ path | combine({ 'paths': paths_relative[path_index] }) ]
+              }}
+      loop: "{{ docker_configuration_paths }}"
+      loop_control:
+        loop_var: path
+        label: "{{ path.name }}"
+        index_var: path_index
+
+    # Call the copy_paths task to copy the files
+    - name: Call the copy_paths task to copy the files
+      ansible.builtin.include_role:
+        name: docker
+        tasks_from: copy_paths
+      vars:
+        docker_configuration_path: "{{ config }}"
+      loop: "{{ docker_configuration_paths_updated }}"
+      loop_control:
+        loop_var: config
+        label: "{{ config.name }}"
+
 # block for copying configuration files
-- name: Copy any required configuration files for the docker containers
+- name: Copy any required configuration files for the docker containers from a list
   tags:
     - docker
     - docker.compose
   when: docker_config is true and docker_configuration_files is defined
   block:
-    # make sure the directory exists
-    - name: Ensure the directory exists
-      ansible.builtin.file:
-        path: "{{ file.dest | dirname }}"
-        state: directory
-        mode: '0755'
+    # loop through the list of docker configuration files
+    - name: Loop through the list of docker configuration files
+      ansible.builtin.include_role:
+        name: docker
+        tasks_from: copy_or_template
+      vars:
+        docker_file:
+          name: "{{ docker_configuration_file.name }}"
+          src: "{{ docker_configuration_file.src }}"
+          dest: "{{ docker_configuration_file.dest }}"
+          mode: "{{ docker_configuration_file.mode }}"
+          container_name: "{{ docker_configuration_file.container_name }}"
       loop: "{{ docker_configuration_files }}"
       loop_control:
-        loop_var: file
-        label: "{{ file.name }}"
-
-    # copy the docker configuration files
-    - name: Copy the configuration files for docker containers
-      ansible.builtin.copy:
-        src: "{{ file.src }}"
-        dest: "{{ file.dest }}"
-        mode: "{{ file.mode }}"
-      loop: "{{ docker_configuration_files }}"
-      loop_control:
-        loop_var: file
-        label: "{{ file.name }}"
-      register: docker_configuration_files_copy_result
-      notify: Restart docker container
-
-    # Build a list of docker container names to restart
-    - name: Build a list of docker container names to restart
-      ansible.builtin.set_fact:
-        docker_containers_to_restart: "{{ docker_containers_to_restart + [result.file.container_name] }}"
-      loop: "{{ docker_configuration_files_copy_result.results }}"
-      loop_control:
-        loop_var: result
-        label: "{{ result.file.name }}"
-      when: result.changed is true  # noqa: no-handler
-      changed_when: false
-
-# block for copying template files
-- name: Copy any required template files for the docker containers
-  tags:
-    - docker
-    - docker.compose
-  when: docker_config is true and docker_template_files is defined
-  block:
-    # make sure the directory exists
-    - name: Ensure the directory exists
-      ansible.builtin.file:
-        path: "{{ file.dest | dirname }}"
-        state: directory
-        mode: '0755'
-      loop: "{{ docker_template_files }}"
-      loop_control:
-        loop_var: file
-        label: "{{ file.name }}"
-
-    # process the template files
-    - name: Process the template files for docker containers
-      ansible.builtin.template:
-        src: "{{ file.src }}"
-        dest: "{{ file.dest }}"
-        mode: "{{ file.mode }}"
-      loop: "{{ docker_template_files }}"
-      loop_control:
-        loop_var: file
-        label: "{{ file.name }}"
-      register: docker_template_files_copy_result
-      notify: Restart docker container
-
-    # Build a list of docker container names to restart
-    - name: Build a list of docker container names to restart
-      ansible.builtin.set_fact:
-        docker_containers_to_restart: "{{ docker_containers_to_restart + [result.file.container_name] }}"
-      loop: "{{ docker_template_files_copy_result.results }}"
-      loop_control:
-        loop_var: result
-        label: "{{ result.file.name }}"
-      when: result.changed is true  # noqa: no-handler
-      changed_when: false
+        loop_var: docker_configuration_file
+        label: "{{ docker_configuration_file.container_name }} - {{ docker_configuration_file.name }}"
 
 # remove any duplicates from the list of docker containers to restart
 - name: Remove any duplicates from the list of docker containers to restart

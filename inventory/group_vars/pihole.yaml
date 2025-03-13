@@ -32,12 +32,8 @@ pihole_dns_entries:
     ip: 10.10.5.27
   - domain: "vpn.home.stechsolutions.ca"
     ip: 10.10.5.28
-  - domain: "prometheus.home.stechsolutions.ca"
-    ip: 10.10.5.76
   - domain: "youtube-dl.home.stechsolutions.ca"
     ip: 10.10.5.120
-  - domain: "grafana.home.stechsolutions.ca"
-    ip: 10.10.5.142
   - domain: "w10-testing.home.stechsolutions.ca"
     ip: 10.10.5.182
   - domain: "docker.home.stechsolutions.ca"
@@ -76,6 +72,9 @@ pihole_cname_entries:
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
   - domain: "ntfy-alertmanager.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "grafana.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
   - domain: "downloader.home.stechsolutions.ca"

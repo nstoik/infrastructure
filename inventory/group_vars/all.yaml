@@ -33,6 +33,10 @@ alertmanager_base_url: "https://{{ alertmanager_domain }}"
 ntfy_alertmanager_domain: "ntfy-alertmanager.home.stechsolutions.ca"
 ntfy_alertmanager_base_url: "https://{{ ntfy_alertmanager_domain }}"
 
+# grafana variables
+grafana_domain: "grafana.home.stechsolutions.ca"
+grafana_base_url: "https://{{ grafana_domain }}"
+
 # geerlingguy.security role variables
 # https://galaxy.ansible.com/geerlingguy/security
 security_ssh_port: 22
