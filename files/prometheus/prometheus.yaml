@@ -14,6 +14,7 @@ rule_files:
   - '/etc/prometheus/rules/alerts.yaml'
   - '/etc/prometheus/rules/node_alerts.yaml'
   - '/etc/prometheus/rules/test.yaml'
+  - '/etc/prometheus/rules/traefik_alerts.yaml'
 
 scrape_configs:
   - job_name: 'prometheus'
