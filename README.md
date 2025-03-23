@@ -95,7 +95,19 @@ The services are:
 
 ## Files
 The files directory contains files that are used by certain roles or hosts.
-
+- [alertmanager](files/alertmanager) - Alertmanager configuration files
+    - [alertmanager.yaml.j2](files/alertmanager/alertmanager.yaml.j2) - Alertmanager configuration
+- [grafana/provisioning](files/grafana/provisioning) - Grafana configuration files
+    - [dashboards](files/grafana/provisioning/dashboards) - Grafana dashboard configuration files
+        - [dashboard_config.yaml](files/grafana/provisioning/dashboards/dashboard_config.yaml) - Grafana dashboard config
+    - [dashboards_json/prometheus](files/grafana/provisioning/dashboards/dashboards_json/prometheus) - Grafana dashboards in JSON format
+        - [cadvisor_docker.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/cadvisor_docker.json) - Cadvisor docker dashboard
+        - [node_exporter.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/node_exporter.json) - Node exporter dashboard
+        - [pihole.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/pihole.json) - Pihole dashboard
+        - [pve.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/pve.json) - Proxmox dashboard
+        - [traefik.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/traefik.json) - Traefik dashboard
+    - [datasources](files/grafana/provisioning/datasources) - Grafana datasource configuration files
+        - [prometheus.yaml](files/grafana/provisioning/datasources/prometheus.yaml) - Prometheus datasource configuration
 - [homepage](files/homepage) - Homepage files
     - [bookmarks.yaml](files/homepage/bookmarks.yaml) - Bookmarks for the homepage
     - [docker.yaml](files/homepage/docker.yaml) - Docker configuration for the homepage
@@ -187,6 +199,8 @@ Inventory files are as follows in the [inventory](inventory) directory:
 - [host_vars](inventory/host_vars/) - Inventory for each host
     - [docker-02.home.stechsolutions.ca](inventory/host_vars/docker-02.home.stechsolutions.ca) - Folder for multiple inventory files for the docker-02 host
         - [docker_compose](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose) - Folder for docker-compose files for the docker-02 host
+            - [files.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/files.yaml.j2) - Jinja2 template for the files docker-compose file
+            - [monitoring.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/monitoring.yaml.j2) - Jinja2 template for the monitoring docker-compose file
             - [proxy.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/proxy.yaml.j2) - Jinja2 template for the proxy docker-compose file
             - [tdarr.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/tdarr.yaml.j2) - Jinja2 template for the tdarr docker-compose file
             - [vehicle.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/vehicle.yaml.j2) - Jinja2 template for the vehicle docker-compose file
@@ -231,6 +245,21 @@ Inventory files are as follows in the [inventory](inventory) directory:
 # Manual Configuration
 While the purpose of this repository is to automate the configuration of the infrastructure, there are some manual configurations that need to be done.
 
+## 3D Printer
+The 3D printer is not managed by Ansible. The configuration is done manually. The 3D printer is a Creality Ender 3 S1 Pro with a Raspberry Pi 3 B+ running MainsailOS.
+
+The [3D Printer Repo](https://github.com/nstoik/3D-printer) stores the configuration backups of the 3D printer powered by Klipper-Backup.
+
+- The `main` branch of the repo is the Klipper configuration.
+- The `orcaslicer-config-folder` branch of the repo is the Orcaslicer configuration folder backed up to GitHub.
+
+## FileStash
+Once the FileStash docker container is running, the configuration needs to be done manually.
+- Navigate to the [web interface](https://filestash.home.stechsolutions.ca) and set the admin password that is saved in Bitwarden.
+- Navigate to the [Admin Console](https://filestash.home.stechsolutions.ca/admin/backend).
+- Add two `SFTP` backends and configure them to connect to `storage.home.stechsolutions.ca/mnt/storage` and `storage.home.stechsolutions.ca/mnt/zfs`.
+- The username is {{ default user }} and the password is the private key for the user (I used the private key from Nelson's Desktop as the storage server was already configured to accept that key).
+
 ## Ntfy
 The subscribed topics need to be added manually in the Ntfy clients (web or iOS app). The list of topics to subscribe to are:
 - AlertManager
@@ -244,14 +273,6 @@ The proxmox hosts need to be bootstrapped to a point where they can be managed b
 
 ## Uptime-Kuma
 Uptime-Kuma is installed as a docker container by Ansible. Currently, the configuration is not automated and needs to be done manually (until an API for uptime-kuma is available).
-
-## 3D Printer
-The 3D printer is not managed by Ansible. The configuration is done manually. The 3D printer is a Creality Ender 3 S1 Pro with a Raspberry Pi 3 B+ running MainsailOS.
-
-The [3D Printer Repo](https://github.com/nstoik/3D-printer) stores the configuration backups of the 3D printer powered by Klipper-Backup.
-
-- The `main` branch of the repo is the Klipper configuation.
-- The `orcaslicer-backup` branch of the repo is the Orcaslicer configuration.
 
 # Testing and linting
 Linting can be done with the following commands
