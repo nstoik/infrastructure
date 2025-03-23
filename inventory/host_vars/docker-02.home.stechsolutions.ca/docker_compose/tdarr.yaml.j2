@@ -3,7 +3,7 @@ name: tdarr
 
 services:
   tdarr:
-    image: haveagitgat/tdarr:2.32.01
+    image: haveagitgat/tdarr:2.35.02
     networks:
       - traefik
     container_name: tdarr
@@ -17,7 +17,7 @@ services:
         - webUIPort=8265
         - internalNode=true
         - inContainer=true
-        - ffmpegVersion=6
+        - ffmpegVersion=7
         - nodeName=MyInternalNode
     volumes:
         - /mnt/scratch/tdarr:/temp
