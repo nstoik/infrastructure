@@ -85,6 +85,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/grafana/data
     mode: '0775'
     container_name: grafana
+  # filestash docker mounts
+  - name: files_filestash
+    dest: /home/{{ default_user }}/docker_mounts/files/filestash
+    mode: '0775'
+    container_name: filestash
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-02.home.stechsolutions.ca/docker_compose"
 
