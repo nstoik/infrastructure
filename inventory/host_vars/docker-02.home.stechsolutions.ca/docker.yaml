@@ -85,6 +85,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/grafana/data
     mode: '0775'
     container_name: grafana
+  # filestash docker mounts
+  - name: files_filestash
+    dest: /home/{{ default_user }}/docker_mounts/files/filestash
+    mode: '0775'
+    container_name: filestash
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-02.home.stechsolutions.ca/docker_compose"
 
@@ -119,4 +124,10 @@ docker_compose_files:
     state: present
     src: "{{ docker_compose_subpath }}/wud.yaml.j2"
     dest: /home/{{ default_user }}/docker_compose/wud-docker-compose.yaml
+    mode: '0664'
+  - name: files-docker-compose.yaml
+    compose_name: files
+    state: present
+    src: "{{ docker_compose_subpath }}/files.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/files-docker-compose.yaml
     mode: '0664'
