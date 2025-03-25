@@ -41,7 +41,8 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/prometheus/releases"
   alertmanager:
-    image: prom/alertmanager:v0.28.0
+    image: prom/alertmanager:v0.28.1
+    user: 1000:1000
     networks:
       - traefik
       - prometheus_exporter
@@ -50,6 +51,7 @@ services:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
       - '--storage.path=/etc/alertmanager'
       - '--web.external-url={{ alertmanager_base_url }}'
+      - '--data.retention=336h'
     volumes:
         - /home/{{ default_user }}/docker_mounts/monitoring/alertmanager:/etc/alertmanager
     healthcheck:
