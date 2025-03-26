@@ -74,7 +74,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Tecnativa/docker-socket-proxy/releases"
   homepage:
-    image: ghcr.io/gethomepage/homepage:v0.10.9
+    image: ghcr.io/gethomepage/homepage:v1.0.4
     networks:
       - traefik
       - docker-proxy
@@ -83,6 +83,7 @@ services:
         - TZ=America/Edmonton
         - PUID=1000
         - PGID=1000
+        - HOMEPAGE_ALLOWED_HOSTS=homepage.home.stechsolutions.ca
     volumes:
         - /home/{{ default_user }}/docker_mounts/proxy/homepage:/app/config
     depends_on:
