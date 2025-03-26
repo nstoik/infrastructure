@@ -3,7 +3,7 @@ name: vehicle
 
 services:
   postgres_vehicle_db:
-    image: postgres:17.1
+    image: postgres:17.4
     user: 1000:1000
     networks:
       - vehicle_postgres
@@ -29,7 +29,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+(\\.\\d+)?$"
       - "wud.link.template=https://www.postgresql.org/docs/release/"
   lubelogger:
-    image: hargata/lubelogger:v1.4.4
+    image: hargata/lubelogger:v1.4.5
     user: 1000:1000
     networks:
       - traefik
