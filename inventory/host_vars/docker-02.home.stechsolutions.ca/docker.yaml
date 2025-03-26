@@ -11,6 +11,8 @@ vehicle_db_password: vehicle_password
 vehicle_connection_string: "Host=postgres_vehicle_db:5432;Database={{ vehicle_db_name }};Username={{ vehicle_db_user }};Password={{ vehicle_db_password }}"
 
 # wud configuration
+wud_registry_hub_public_login: nstoik
+wud_registry_hub_public_password: "{{ secret_docker_hub_wud_access_token }}"
 wud_trigger_ntfy_sh_url: https://ntfy.stechsolutions.ca
 wud_trigger_ntfy_sh_topic: wud
 wud_trigger_ntfy_sh_priority: 2

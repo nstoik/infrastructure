@@ -9,7 +9,9 @@ services:
       - docker-proxy
     container_name: wud
     environment:
-        - WUD_TRIGGER_NTFY_SELFHOSTED_URL={{ wud_trigger_ntfy_sh_url }}}
+        - WUD_REGISTRY_HUB_PUBLIC_LOGIN={{ wud_registry_hub_public_login }}
+        - WUD_REGISTRY_HUB_PUBLIC_PASSWORD={{ wud_registry_hub_public_password }}
+        - WUD_TRIGGER_NTFY_SELFHOSTED_URL={{ wud_trigger_ntfy_sh_url }}
         - WUD_TRIGGER_NTFY_SELFHOSTED_TOPIC={{ wud_trigger_ntfy_sh_topic }}
         - WUD_TRIGGER_NTFY_SELFHOSTED_PRIORITY={{ wud_trigger_ntfy_sh_priority }}
         - WUD_TRIGGER_NTFY_SELFHOSTED_AUTH_USER={{ wud_trigger_ntfy_sh_auth_user }}
@@ -19,11 +21,11 @@ services:
         - WUD_WATCHER_LOCAL_HOST=docker-socket-proxy
         - WUD_WATCHER_LOCAL_WATCHEVENTS=false
         - WUD_WATCHER_LOCAL_WATCHATSTART=false
-        - WUD_WATCHER_LOCAL_CRON=0 */6 * * *
+        - WUD_WATCHER_LOCAL_CRON=0 2 * * *   # Runs at 2:00 AM daily
         - WUD_WATCHER_DOCKERCLOUD01_HOST=docker-cloud-01.tailfacdb.ts.net
         - WUD_WATCHER_DOCKERCLOUD01_WATCHEVENTS=false
         - WUD_WATCHER_DOCKERCLOUD01_WATCHATSTART=false
-        - WUD_WATCHER_DOCKERCLOUD01_CRON=0 */6 * * *
+        - WUD_WATCHER_DOCKERCLOUD01_CRON=0 5 * * *   # Runs at 5:00 AM daily
     restart: unless-stopped
     labels:
       - "traefik.enable=true"

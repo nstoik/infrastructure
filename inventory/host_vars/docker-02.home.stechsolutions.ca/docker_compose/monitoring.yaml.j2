@@ -3,7 +3,7 @@ name: monitoring
 
 services:
   prometheus:
-    image: prom/prometheus:v3.1.0
+    image: prom/prometheus:v3.2.1
     user: 1000:1000
     networks:
       - traefik
@@ -41,7 +41,8 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/prometheus/releases"
   alertmanager:
-    image: prom/alertmanager:v0.28.0
+    image: prom/alertmanager:v0.28.1
+    user: 1000:1000
     networks:
       - traefik
       - prometheus_exporter
@@ -50,6 +51,7 @@ services:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
       - '--storage.path=/etc/alertmanager'
       - '--web.external-url={{ alertmanager_base_url }}'
+      - '--data.retention=336h'
     volumes:
         - /home/{{ default_user }}/docker_mounts/monitoring/alertmanager:/etc/alertmanager
     healthcheck:
@@ -96,8 +98,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.xenrox.net/~xenrox/ntfy-alertmanager/"
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.49.2
-    pid: host
+    image: gcr.io/cadvisor/cadvisor:v0.52.1
     networks:
       - traefik
     container_name: cadvisor
@@ -130,7 +131,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/google/cadvisor/releases"
   prometheus-pve-exporter:
-    image: prompve/prometheus-pve-exporter:3.5.1
+    image: prompve/prometheus-pve-exporter:3.5.2
     networks:
       - prometheus_exporter
     container_name: prometheus-pve-exporter
@@ -158,7 +159,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/eko/pihole-exporter/releases"
   grafana:
-    image: grafana/grafana:11.5.1
+    image: grafana/grafana:11.6.0
     networks:
       - traefik
       - prometheus_exporter
