@@ -161,7 +161,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.cadvisor.rule=PathPrefix(`/dockermetrics`)"
+      - "traefik.http.routers.cadvisor.rule=Host(`docker-cloud-01.tailscale.stechsolutions.ca`) && PathPrefix(`/dockermetrics`)"
       - "traefik.http.middlewares.cadvisor-replace-path.replacepath.path=/metrics"
       - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
       - "traefik.http.routers.cadvisor.entrypoints=websecure"
