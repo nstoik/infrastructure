@@ -1,0 +1,7 @@
+---
+
+- name: Restart NUT
+  ansible.builtin.systemd:
+    name: nut-server
+    state: restarted
+  become: true
