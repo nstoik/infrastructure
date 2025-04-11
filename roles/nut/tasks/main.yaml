@@ -10,6 +10,8 @@
       - nut-server
     state: present
     update_cache: true
+  tags:
+    - nut
   become: true
 
 # Configure NUT ups.conf
@@ -20,6 +22,8 @@
     owner: root
     group: nut
     mode: '0640'
+  tags:
+    - nut
   become: true
   notify: Restart NUT
 
@@ -31,6 +35,8 @@
     owner: root
     group: nut
     mode: '0640'
+  tags:
+    - nut
   become: true
   notify: Restart NUT
 
@@ -42,6 +48,8 @@
     owner: root
     group: nut
     mode: '0640'
+  tags:
+    - nut
   become: true
   notify: Restart NUT
 
@@ -53,6 +61,8 @@
     owner: root
     group: nut
     mode: '0640'
+  tags:
+    - nut
   become: true
   notify: Restart NUT
 
@@ -64,6 +74,8 @@
     owner: root
     group: nut
     mode: '0640'
+  tags:
+    - nut
   become: true
   notify: Restart NUT
 
@@ -76,4 +88,6 @@
   loop:
     - nut-server
     - nut-monitor
+  tags:
+    - nut
   become: true
