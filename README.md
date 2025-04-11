@@ -207,7 +207,6 @@ Inventory files are as follows in the [inventory](inventory) directory:
             - [wud.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/wud.yaml.j2) - Jinja2 template for the wud docker-compose file
         - [docker.yaml](inventory/host_vars/docker-02.home.stechsolutions.ca/docker.yaml) - Docker configuration for the docker-02 host
         - [fileserver.yaml](inventory/host_vars/docker-02.home.stechsolutions.ca/fileserver.yaml) - Fileserver configuration for the docker-02 host
-        - [tailscale.yaml](inventory/host_vars/docker-02.home.stechsolutions.ca/tailscale.yaml) - Tailscale configuration for the docker-02 host
     - [docker-cloud-01](inventory/host_vars/docker-cloud-01) - Folder for multiple inventory files for the docker-cloud-01 host
         - [docker-compose](inventory/host_vars/docker-cloud-01/docker-compose) - Folder for docker-compose files for the docker-cloud-01 host
             - [monitoring.yaml.j2](inventory/host_vars/docker-cloud-01/docker-compose/monitoring.yaml.j2) - Jinja2 template for the monitoring docker-compose file
@@ -270,6 +269,20 @@ The subscribed topics need to be added manually in the Ntfy clients (web or iOS 
 
 ## Proxmox
 The proxmox hosts need to be bootstrapped to a point where they can be managed by ansible. See the [Proxmox Hosts Manual Configuration](services/proxmox/README.md) for more information.
+
+## TailScale
+Some Tailscale configuration is done manually via the Tailscale admin console. The Tailscale admin console is located at [Tailscale Admin Console](https://login.tailscale.com/admin).
+
+### Access Control
+A backup of the Tailscale Access Control file is stored in the [files/tailscale](files/tailscale) directory. The Access Control file is configured to allow access to the various hosts and services on the network with a default deny policy.
+
+### Shared Exit Nodes
+Any users that need to be added to the shared exit nodes need to be done manually. The shared exit nodes are shared via the Tailscale admin console. The users also need to be added to the Access Control file.
+
+### DNS
+The split DNS settings for `home.stechsolutions.ca` need to be added via the Tailscale admin console.
+
+The IP addresses of remote tailscale nodes need to be manually added to the Cloudflare DNS settings for `tailscale.stechsolutions.ca`. This is done via the Cloudflare admin console.
 
 ## Uptime-Kuma
 Uptime-Kuma is installed as a docker container by Ansible. Currently, the configuration is not automated and needs to be done manually (until an API for uptime-kuma is available).
