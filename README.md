@@ -282,6 +282,8 @@ Any users that need to be added to the shared exit nodes need to be done manuall
 ### DNS
 The split DNS settings for `home.stechsolutions.ca` need to be added via the Tailscale admin console.
 
+The IP addresses of remote tailscale nodes need to be manually added to the Cloudflare DNS settings for `tailscale.stechsolutions.ca`. This is done via the Cloudflare admin console.
+
 ## Uptime-Kuma
 Uptime-Kuma is installed as a docker container by Ansible. Currently, the configuration is not automated and needs to be done manually (until an API for uptime-kuma is available).
 
