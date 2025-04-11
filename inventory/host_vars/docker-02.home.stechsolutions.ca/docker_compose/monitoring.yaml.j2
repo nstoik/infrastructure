@@ -158,6 +158,19 @@ services:
     labels:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/eko/pihole-exporter/releases"
+  prometheus-nut-exporter:
+    image: ghcr.io/druggeri/nut_exporter:3.2.0
+    networks:
+      - prometheus_exporter
+    container_name: prometheus-nut-exporter
+    environment:
+      - NUT_EXPORTER_SERVER=pve3.home.stechsolutions.ca
+      - NUT_EXPORTER_USERNAME=monuser
+      - NUT_EXPORTER_PASSWORD={{ secret_nut_mon_password }}
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/druggeri/nut_exporter/releases"
   grafana:
     image: grafana/grafana:11.6.0
     networks:
