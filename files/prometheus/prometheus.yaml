@@ -59,7 +59,7 @@ scrape_configs:
     static_configs:
       - targets:
           - 'docker-02.home.stechsolutions.ca'
-          - 'docker-cloud-01.tailfacdb.ts.net'
+          - 'docker-cloud-01.tailscale.stechsolutions.ca'
     scheme: https
     metrics_path: '/dockermetrics'
     tls_config:
@@ -69,5 +69,5 @@ scrape_configs:
     static_configs:
       - targets:
           - 'docker-02.home.stechsolutions.ca:8081'
-          - 'docker-cloud-01.tailfacdb.ts.net:8081'
+          - 'docker-cloud-01.tailscale.stechsolutions.ca:8081'
     metrics_path: '/metrics'

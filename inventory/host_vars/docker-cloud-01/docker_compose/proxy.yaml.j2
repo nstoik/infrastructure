@@ -68,7 +68,7 @@ services:
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
-        - "100.83.135.110:2375:2375"
+        - "100.96.76.78:2375:2375"
     healthcheck:
         test: "wget --spider http://docker-socket-proxy:2375/version || exit 1"
         interval: 60s
