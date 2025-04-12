@@ -36,6 +36,11 @@ docker_configuration_paths:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/grafana
     mode: '0664'
     container_name: grafana
+  - name: peanut
+    src: /home/nelson/GitHub/infrastructure/files/peanut
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/peanut
+    mode: '0664'
+    container_name: peanut
 
 # docker container configuration files
 docker_configuration_files:

@@ -172,6 +172,35 @@ services:
     labels:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/druggeri/nut_exporter/releases"
+  peanut:
+    image: brandawg93/peanut:5.7.1
+    networks:
+      - traefik
+      - prometheus_exporter
+    container_name: peanut
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/monitoring/peanut:/config
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.peanut.rule=Host(`peanut.home.stechsolutions.ca`)"
+      - "traefik.http.services.peanut.loadbalancer.server.port=8080"
+      - "traefik.http.routers.peanut.entrypoints=websecure"
+      - "traefik.http.routers.peanut.tls.certresolver=letsencrypt"
+      - "homepage.group=Monitoring"
+      - "homepage.name=MyUPS"
+      - "homepage.description=NUT Monitoring"
+      - "homepage.icon=peanut.png"
+      - "homepage.href=https://peanut.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://peanut.home.stechsolutions.ca"
+      - "homepage.widget.type=peanut"
+      - "homepage.widget.url=https://peanut.home.stechsolutions.ca"
+      - "homepage.widget.key=myups"
+      - "homepage.widget.username=monuser"
+      - "homepage.widget.password={{ secret_nut_mon_password }}"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/brandawg93/peanut/releases"
   grafana:
     image: grafana/grafana:11.6.0
     networks:
