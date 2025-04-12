@@ -327,4 +327,4 @@ upscmd -u admin -p REPLACE_PASSWORD myups@localhost test.battery.start.quick
 upscmd -u admin -p REPLACE_PASSWORD myups@localhost test.battery.start.deep
 ```
 
-You can alternatively visit [peanut.home.stechsolutions.ca](https://peanut.home.stechsolutions.ca) to view a web interface for the NUT devicecs.
+You can alternatively visit [peanut.home.stechsolutions.ca](https://peanut.home.stechsolutions.ca) to view a web interface for the NUT devices.
