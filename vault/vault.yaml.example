@@ -70,3 +70,7 @@ secret_grafana_password: change_me
 
 # WUD Docker Hub secrets
 secret_docker_hub_wud_access_token: get_from_docker_hub
+
+# Nut secrets
+secret_nut_admin_password: change_me
+secret_nut_mon_password: change_me
