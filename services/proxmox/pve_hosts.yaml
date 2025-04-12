@@ -133,3 +133,10 @@
       become: true
       tags:
         - base.geerlingguy.security
+
+    # Run the NUT role
+    - name: Run the NUT role
+      ansible.builtin.include_role:
+        name: nut
+      tags:
+        - nut

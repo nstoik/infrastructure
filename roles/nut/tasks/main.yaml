@@ -1,0 +1,93 @@
+---
+# The main task file for the nut role
+
+# Install the nut packages
+- name: Install the nut packages
+  ansible.builtin.apt:
+    name:
+      - nut
+      - nut-client
+      - nut-server
+    state: present
+    update_cache: true
+  tags:
+    - nut
+  become: true
+
+# Configure NUT ups.conf
+- name: Configure NUT ups.conf
+  ansible.builtin.template:
+    src: ups.conf.j2
+    dest: /etc/nut/ups.conf
+    owner: root
+    group: nut
+    mode: '0640'
+  tags:
+    - nut
+  become: true
+  notify: Restart NUT
+
+# Configure NUT upsd.conf
+- name: Configure NUT upsd.conf
+  ansible.builtin.template:
+    src: upsd.conf.j2
+    dest: /etc/nut/upsd.conf
+    owner: root
+    group: nut
+    mode: '0640'
+  tags:
+    - nut
+  become: true
+  notify: Restart NUT
+
+# Configure NUT upsd.users
+- name: Configure NUT upsd.users
+  ansible.builtin.template:
+    src: upsd.users.j2
+    dest: /etc/nut/upsd.users
+    owner: root
+    group: nut
+    mode: '0640'
+  tags:
+    - nut
+  become: true
+  notify: Restart NUT
+
+# Configure NUT upsmon.conf
+- name: Configure NUT upsmon.conf
+  ansible.builtin.template:
+    src: upsmon.conf.j2
+    dest: /etc/nut/upsmon.conf
+    owner: root
+    group: nut
+    mode: '0640'
+  tags:
+    - nut
+  become: true
+  notify: Restart NUT
+
+# Configure NUT nut.conf
+- name: Configure NUT nut.conf
+  ansible.builtin.template:
+    src: nut.conf.j2
+    dest: /etc/nut/nut.conf
+    owner: root
+    group: nut
+    mode: '0640'
+  tags:
+    - nut
+  become: true
+  notify: Restart NUT
+
+# Ensure NUT services are enabled and started
+- name: Ensure NUT services are enabled and started
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - nut-server
+    - nut-monitor
+  tags:
+    - nut
+  become: true

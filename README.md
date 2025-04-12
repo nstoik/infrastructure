@@ -82,9 +82,10 @@ The roles are:
 - [fileserver](roles/fileserver/)
 - [healthchecks](roles/healthchecks/)
 - [ntfy](roles/ntfy/)
+- [nut](roles/nut/)
 - [pihole](roles/pihole/)
 - [proxmox](roles/proxmox/)
-
+- [tailscale](roles/tailscale/)
 
 ## Services
 The services directory contains the subfolders and playbooks for the various services I run on my infrastructure.
@@ -168,6 +169,7 @@ The following ansible tags are available to specify specific tasks to run.
     - fileserver.nfs-client - Configure an NFS client
     - fileserver.swap - Configure swap file
 - healthchecks - Configure healthchecks
+- nut - Install and configure NUT (Network UPS Tools)
 - pihole - Configure a pihole server
 - proxmox - Configure the proxmox nodes and vms
     - proxmox.cloud_images - Download cloud images
@@ -307,3 +309,22 @@ The main configuration file for Prometheus is located at [files/prometheus/prome
 ### Alertmanager
 
 Prometheus is configured to use Alertmanager for alerting. The Alertmanager configuration is located at [files/prometheus/alertmanager.yaml.j2](files/prometheus/alertmanager.yaml.j2). This file contains the configuration for the alert receivers.
+
+## NUT
+NUT is installed and configured to monitor the UPS device of the PVE3 proxmox host. Once configured, here are some commands to monitor and test the UPS from the command line of the PVE3 host.
+
+```bash
+# Check the status of the UPS
+upsc myups@localhost
+
+# List all commands available for the UPS
+upscmd -l myups@localhost
+
+# Run a quick test of the UPS
+upscmd -u admin -p REPLACE_PASSWORD myups@localhost test.battery.start.quick
+
+# Run a long test of the UPS
+upscmd -u admin -p REPLACE_PASSWORD myups@localhost test.battery.start.deep
+```
+
+You can alternatively visit [peanut.home.stechsolutions.ca](https://peanut.home.stechsolutions.ca) to view a web interface for the NUT devices.

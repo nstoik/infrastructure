@@ -80,6 +80,9 @@ pihole_cname_entries:
   - domain: "filestash.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
+  - domain: "peanut.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
   - domain: "downloader.home.stechsolutions.ca"
     target: "docker.home.stechsolutions.ca"
     add_hostname: true

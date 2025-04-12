@@ -1,0 +1,8 @@
+MONITOR myups@localhost 1 monuser {{ secret_nut_mon_password }} master
+SHUTDOWNCMD "/sbin/shutdown -h now"
+NOTIFYCMD /usr/sbin/upssched
+POLLFREQ 5
+POLLFREQALERT 5
+HOSTSYNC 15
+DEADTIME 15
+POWERDOWNFLAG /etc/killpower
