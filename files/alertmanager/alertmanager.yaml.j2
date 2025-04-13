@@ -36,3 +36,10 @@ inhibit_rules:
     target_match:
       severity: 'warning'
     equal: ['alertname', 'instance']
+
+  # Don't send an individual alert for a missing target if the entire job is missing
+  - source_match:
+      alertname: PrometheusAllTargetsMissing
+    target_match:
+      alertname: PrometheusTargetMissing
+    equal: ['job']
