@@ -13,18 +13,20 @@ groups:
           summary: Prometheus job missing (instance {{ $labels.instance }})
           description: "A Prometheus job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
+      # Adjust for duration to 2m to avoid alerts when docker containers are restarted.
       - alert: PrometheusTargetMissing
         expr: up == 0
-        for: 0m
+        for: 2m
         labels:
           severity: warning
         annotations:
           summary: Prometheus target missing (instance {{ $labels.instance }})
           description: "A Prometheus target has disappeared. An exporter might be crashed.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
+      # Adjust for duration to 2m to avoid alerts when docker containers are restarted.
       - alert: PrometheusAllTargetsMissing
         expr: sum by (job) (up) == 0
-        for: 0m
+        for: 2m
         labels:
           severity: critical
         annotations:
