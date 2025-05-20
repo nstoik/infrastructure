@@ -90,6 +90,7 @@
       ansible.builtin.include_role:
         name: proxmox
         tasks_from: pve_storage
+      when: proxmox_storage is defined
       tags:
         - proxmox.pve.storage
 
@@ -138,5 +139,6 @@
     - name: Run the NUT role
       ansible.builtin.include_role:
         name: nut
+      when: proxmox_nut_configure
       tags:
         - nut

@@ -33,7 +33,7 @@ Run the following command to configure the proxmox hosts. By default this will r
 
 Template cloud images and template container images are downloaded. The template cloud images can have the `state` variable of `present`, `absent`, or `recreate`. The `recreate` state will delete the template and recreate it. Container templates are just downloaded. 
 
-To setup the cloud images and templates on the proxmox hosts, run the following command.
+To setup the cloud images and templates on the proxmox hosts, run the following command. By default this will run against all Proxmox hosts
 ```bash
     ansible-playbook services/proxmox/pve_hosts_templates.yaml
 ```

@@ -4,7 +4,7 @@
 
 # Run the proxmox role
 - name: Run the proxmox role
-  hosts: proxmox_nodes:!proxmox_backup_nodes
+  hosts: proxmox_nodes
   vars_files:
     - ../../vault/vault.yaml
 

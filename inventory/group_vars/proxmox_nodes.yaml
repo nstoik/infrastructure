@@ -1,5 +1,9 @@
 ---
-# group_vars for the proxmox group
+# group_vars for the proxmox_nodes group
+#
+# There are some variables that are specific to each node (eg. UPS),
+# and those are defined in the host_vars files for each node.
+
 ansible_become_password: "{{ secret_become_pass }}"
 
 # The proxmox nodes need sudo to be installed
@@ -16,7 +20,7 @@ base_apt_upgrade_packages: "dist"
 # either explicitly or manually.
 base_reboot_host_if_required: false
 
-# override the default geerlingguy.security role variables
+# override some default geerlingguy.security role variables
 # for proxmox nodes
 security_autoupdate_enabled: false
 security_autoupdate_reboot: false
@@ -26,16 +30,9 @@ security_ssh_allowed_users:
   - "{{ default_user }}"
   - "root"
 
-# Proxmox nfs storage
-proxmox_storage:
-  # Synology backup weekly NFS storage
-  - storage: "syno_bw"
-    type: "nfs"
-    state: "present"
-    server: "10.10.1.200"
-    export: "/volume2/backup/pve_backup_weekly"
-    content: "backup"
-    prune_backups: "keep-last=5,keep-monthly=2,keep-yearly=1"
+# Whether to configure the NUT role for the Proxmox nodes
+# Default to false, but set to true on the host_vars files of the hosts that have a UPS
+proxmox_nut_configure: false
 
 # Proxmox cloud images
 # state: present, absent, recreate
