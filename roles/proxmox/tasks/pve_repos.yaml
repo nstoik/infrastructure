@@ -18,6 +18,7 @@
       loop:
         - /etc/apt/sources.list.d/pve-enterprise.list
         - /etc/apt/sources.list.d/ceph.list
+        - /etc/apt/sources.list.d/pbs-enterprise.list
 
     - name: Add No Subscription Repository
       ansible.builtin.apt_repository:
