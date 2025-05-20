@@ -16,6 +16,8 @@ The following steps are required to setup a new proxmox host manually.
 - Login and configure the following so that the host can be managed by ansible.
     - Make sure it is accessible via SSH as root (other user is added by ansible)
     - Configure the network interfaces as required.
+        - [Example for Proxmox](files/proxmox_interfaces.example) network configuration
+        - [Example for PBS](files/pbs_interfaces.example) network configuration
     - Configure the required storage (ZFS pools)
     - Configure the backup schedule
         - The backup storage is added by ansible
