@@ -1,5 +1,16 @@
 ---
 # Tasks to setup ZFS pool on a host.
+#
+# Input variables:
+#   fileserver_zfs_pool:
+#     pool_name: <name of the ZFS pool>
+#     raid_type: <RAID type for the pool>
+#     mount_point: <mount point for the pool>
+#     vdevs:
+#       - raid_type: <RAID type for the vdev>
+#         disks:
+#           - name: <disk name>
+#     datasets: not used in this task
 
 # block for ZFS pool tasks
 - name: Block for ZFS pool tasks

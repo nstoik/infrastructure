@@ -72,10 +72,20 @@
     # Setup ZFS pool
     - name: Setup ZFS pool
       ansible.builtin.include_tasks: setup_zfs_pool.yaml
+      vars:
+        fileserver_zfs_pool: "{{ item }}"
+      loop: "{{ fileserver_zfs_pools }}"
+      loop_control:
+        label: "{{ item.pool_name }}"
 
     # Setup ZFS datasets
     - name: Setup ZFS datasets
       ansible.builtin.include_tasks: setup_zfs_datasets.yaml
+      vars:
+        fileserver_zfs_pool: "{{ item }}"
+      loop: "{{ fileserver_zfs_pools }}"
+      loop_control:
+        label: "{{ item.pool_name }}"
 
 # Setup the NFS server
 - name: Setup the NFS server
