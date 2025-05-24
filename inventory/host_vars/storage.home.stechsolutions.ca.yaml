@@ -12,7 +12,6 @@ fileserver_setup_zfs: true
 
 fileserver_zfs_pools:
   - pool_name: storage1
-    raid_type: mirror
     # don't mount the pool, mount the datasets
     mount_point: none
     vdevs:

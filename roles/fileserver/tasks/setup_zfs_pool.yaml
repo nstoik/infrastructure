@@ -4,7 +4,6 @@
 # Input variables:
 #   fileserver_zfs_pool:
 #     pool_name: <name of the ZFS pool>
-#     raid_type: <RAID type for the pool>
 #     mount_point: <mount point for the pool>
 #     vdevs:
 #       - raid_type: <RAID type for the vdev>
