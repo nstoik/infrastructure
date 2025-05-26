@@ -86,6 +86,7 @@
       loop: "{{ fileserver_zfs_pools }}"
       loop_control:
         label: "{{ item.pool_name }}"
+      when: item.datasets is defined and item.datasets | length > 0
 
 # Setup the NFS server
 - name: Setup the NFS server
