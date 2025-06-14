@@ -6,7 +6,7 @@ The following steps are required to setup a new proxmox host manually.
 
 - Install proxmox on the host.
     - Download the ISO and run through the installation process.
-    - Install the OS as a ZFS mirror (two disks required)
+    - For Proxmox, install the OS as a ZFS mirror (two disks required). For PBS, the OS can be installed on a single disk.
     - Set the hostname
     - Set the IP address
     - Set the DNS servers
@@ -28,6 +28,13 @@ The following steps are required to setup a new proxmox host manually.
         - TODO: Backup configuration needs to be added to ansible when setting up the Proxmox Backup Server (PBS)
 
 ## Proxmox Hosts Ansible Configuration
+
+Run the following command to configure the PBS hosts. By default, this will run against all the hosts in the `proxmox_pbs` group.
+
+```bash
+    ansible-playbook services/proxmox/pbs_hosts.yaml
+```
+
 
 Run the following command to configure the proxmox hosts. By default this will run against all the hosts in the `proxmox_nodes` group.
 

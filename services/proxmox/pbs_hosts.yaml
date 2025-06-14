@@ -1,5 +1,5 @@
 ---
-# This playbook will configure the Proxmox host.
+# This playbook is ued to configure the Proxmox Backup Server (PBS) hosts.
 
 # Run the pihole playbook to make sure the DNS records are correct
 - name: Run the pihole role
@@ -10,30 +10,30 @@
     - proxmox.pve
     - base.known_hosts
 
-# Get the pbs fingerprints to use later in the playbook for adding PBS storage.
-- name: Get the pbs fingerprints
-  hosts: proxmox_pbs
+# Get the ntfy tokens to use later in the playbook for notifications.
+- name: Get the ntfy tokens
+  hosts: docker-cloud-01
   gather_facts: false
   vars_files:
     - ../../vault/vault.yaml
   tasks:
-    - name: Get the pbs fingerprints
+    - name: Get the ntfy tokens
       ansible.builtin.include_role:
-        name: proxmox
-        tasks_from: pbs_get_cert_fingerprint.yaml
+        name: ntfy
+        tasks_from: tokens.yaml
 
-    # Make the fingerprints available to the proxmox_nodes hosts
-    - name: Make the fingerprints available to the proxmox_nodes hosts
+    # Make the ntfy_tokens_extracted variable available to the proxmox_pbs hosts
+    - name: Make the ntfy_tokens_extracted variable available to the proxmox_pbs hosts
       ansible.builtin.add_host:
         name: "{{ item }}"
-        pbs_cert_fingerprint_info: "{{ pbs_cert_fingerprint_info }}"
-      loop: "{{ groups['proxmox_nodes'] }}"
+        ntfy_tokens_extracted: "{{ ntfy_tokens_extracted }}"
+      loop: "{{ groups['proxmox_pbs'] }}"
       delegate_to: localhost
 
 # These first tasks are run as the root user since it includes
 # setting up the new user with the ssh keys.
-- name: Make sure the Proxmox host is setup
-  hosts: proxmox_nodes
+- name: Make sure the PBS host is setup
+  hosts: proxmox_pbs
   vars_files:
     - ../../vault/vault.yaml
   vars:
@@ -43,7 +43,7 @@
     ansible_ssh_pass: "{{ secret_user_password }}"
   tags:
     - proxmox
-    - proxmox.pve
+    - proxmox.pbs
     - base.known_hosts
 
   tasks:
@@ -55,7 +55,7 @@
       vars:
         base_hostname: "{{ item }}"
         base_state: present
-        base_comment: "Proxmox Host: {{ ansible_hostname }}"
+        base_comment: "PBS Host: {{ ansible_hostname }}"
       loop:
         - "{{ ansible_default_ipv4.address }}"
         - "{{ ansible_hostname }}"
@@ -86,41 +86,23 @@
         - base.user
         - base.timezone
 
-    # Update the proxmox permissions
-    - name: Update the proxmox permissions
+    # Update the PBS users
+    - name: Update the PBS users
       ansible.builtin.include_role:
         name: proxmox
-        tasks_from: pve_create_groups
+        tasks_from: pbs_create_users
       tags:
-        - proxmox.pve.permissions
-
-    # Update the proxmox users
-    - name: Update the proxmox users
-      ansible.builtin.include_role:
-        name: proxmox
-        tasks_from: pve_create_users
-      tags:
-        - proxmox.pve.users
-
-    # Update the proxmox storage
-    - name: Update the proxmox storage
-      ansible.builtin.include_role:
-        name: proxmox
-        tasks_from: pve_storage
-      when: proxmox_storage is defined
-      tags:
-        - proxmox.pve.storage
+        - proxmox.pbs.users
 
 # These tasks can be run as the new user
 - name: Continue setting up the Proxmox host as the new user
-  hosts: proxmox_nodes
+  hosts: proxmox_pbs
   vars_files:
     - ../../vault/vault.yaml
   tags:
     - proxmox
     - proxmox.pve
   tasks:
-
     # This is required to explicitly get the ansible facts for the
     # base.geerlingguy.security role if running only that role via tags.
     - name: Do ansible setup
@@ -128,6 +110,44 @@
       tags:
         - never
         - base.geerlingguy.security
+
+    # Run the fileserver role
+    - name: Import fileserver role
+      ansible.builtin.import_role:
+        name: fileserver
+      when:
+        hostvars[inventory_hostname].fileserver_setup is defined and
+        hostvars[inventory_hostname].fileserver_setup is true
+      tags:
+        - fileserver
+        - fileserver.zfs
+
+    # Setup PBS datastores
+    - name: Setup PBS datastores
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pbs_datastores
+      tags:
+        - proxmox
+        - proxmox.pbs
+
+    # Setup PBS verify schedules
+    - name: Setup PBS verify schedules
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pbs_verify_schedules
+      tags:
+        - proxmox
+        - proxmox.pbs
+
+    # Setup PBS notifications
+    - name: Setup PBS notifications
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pbs_notifications
+      tags:
+        - proxmox
+        - proxmox.pbs
 
     # Run the base role
     - name: Run the base role
