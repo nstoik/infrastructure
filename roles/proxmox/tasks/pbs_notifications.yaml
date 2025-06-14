@@ -1,0 +1,64 @@
+---
+# Tasks to create the notification settings on a PBS server
+#
+# This works for webook notifications, such as ntfy.
+# It assumes that the ntfy tokens are already set up in the ntfy role.
+# It also assumes that the ntfy tokens are available in the `ntfy_tokens_extracted` variable.
+
+# Check if the notification targets already exist
+- name: Check if the notification targets already exist
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager notification endpoint webhook list
+  register: proxmox_pbs_notification_list_results
+  become: true
+  changed_when: false
+
+# Create the notification targets if they don't exist
+- name: Create the notification targets if they don't exist
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager notification endpoint webhook create {{ target.name }}
+      --url "{{ target.url }}"
+      --method {{ target.method }}
+      --body {{ "{{ message }}" | b64encode }}
+      --comment "{{ target.comment }}"
+      --origin user-created
+      --header name=Authorization,value={{ 'Bearer {{ secrets.token }}' | b64encode }}
+      --header name=Priority,value={{ target.priority | b64encode }}
+      --header name=Title,value={{ '{{ title }}' | b64encode }}
+      --secret name=token,value={{ ntfy_tokens_extracted[target.token_name] | b64encode }}
+  become: true
+  loop: "{{ proxmox_pbs_notification_targets }}"
+  loop_control:
+    label: "{{ target.name }}"
+    loop_var: target
+  when: target.name not in proxmox_pbs_notification_list_results.stdout
+  changed_when: target.name not in proxmox_pbs_notification_list_results.stdout
+
+# Check if the notification matchers already exist
+- name: Check if the notification matchers already exist
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager notification matcher list
+  register: proxmox_pbs_notification_matcher_list_results
+  become: true
+  changed_when: false
+
+# Create the notification matchers if they don't exist
+- name: Create the notification matchers if they don't exist
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager notification matcher create {{ matcher.name }}
+      --comment "{{ matcher.comment }}"
+      --match-severity "{{ matcher['match-severity'] }}"
+      --mode {{ matcher.mode }}
+      --origin user-created
+      --target {{ matcher.target }}
+  become: true
+  loop: "{{ proxmox_pbs_notification_matchers }}"
+  loop_control:
+    label: "{{ matcher.name }}"
+    loop_var: matcher
+  when: matcher.name not in proxmox_pbs_notification_matcher_list_results.stdout
+  changed_when: matcher.name not in proxmox_pbs_notification_matcher_list_results.stdout

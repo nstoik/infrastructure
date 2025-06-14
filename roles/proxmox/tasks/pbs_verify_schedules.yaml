@@ -1,0 +1,29 @@
+---
+# Tasks to create verify schedules on a Proxmox Backup Server
+
+# Check if the PBS verify schedules already exist
+- name: Check if the PBS verify schedules already exist
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager verify-job list
+  register: proxmox_pbs_verify_schedules_list_results
+  become: true
+  changed_when: false
+
+# Create the PBS verify schedules if they don't exist
+- name: Create the PBS verify schedules if they don't exist
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager verify-job create {{ schedule.id }}
+      --store {{ schedule.store }}
+      --comment "{{ schedule.comment }}"
+      --outdated-after {{ schedule['outdated-after'] }}
+      --ignore-verified {{ schedule['ignore-verified'] | ternary('true', 'false') }}
+      --schedule "{{ schedule.schedule }}"
+  loop: "{{ proxmox_pbs_verify_schedules }}"
+  loop_control:
+    label: "{{ schedule.id }}-{{ schedule.comment }}"
+    loop_var: schedule
+  when: schedule.id not in proxmox_pbs_verify_schedules_list_results.stdout
+  changed_when: schedule.id not in proxmox_pbs_verify_schedules_list_results.stdout
+  become: true
