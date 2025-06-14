@@ -37,4 +37,4 @@
         replace: "false"
         backup: true
       become: true
-      notify: Restart pveproxy
+      notify: Restart PVE or PBS proxy service
