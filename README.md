@@ -265,6 +265,7 @@ Once the FileStash docker container is running, the configuration needs to be do
 The subscribed topics need to be added manually in the Ntfy clients (web or iOS app). The list of topics to subscribe to are:
 - AlertManager
 - Healthchecks
+- Proxmox
 - SnapRAID
 - Uptime-Kuma
 - wud

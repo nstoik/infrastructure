@@ -19,6 +19,10 @@ The following steps are required to setup a new proxmox host manually.
         - [Example for Proxmox](files/proxmox_interfaces.example) network configuration
         - [Example for PBS](files/pbs_interfaces.example) network configuration
     - Configure the required storage (ZFS pools)
+    - For PVE hosts, configure the Notifications manually in the Proxmox GUI. (for PBS, this is done by ansible playbook)
+        - Go to Datacenter -> Notifications
+        - Add two webhook notification targets for the ntfy server (use the 'proxmox' topic and the 'Proxmox' access token created on the ntfy server). One for the `info` level and one for all other levels.
+        - Add two notification matchers to send notifications to the ntfy server. One for the `info` level and one for all other levels.
     - Configure the backup schedule
         - The backup storage is added by ansible
         - TODO: Backup configuration needs to be added to ansible when setting up the Proxmox Backup Server (PBS)
