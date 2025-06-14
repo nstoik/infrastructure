@@ -1,0 +1,62 @@
+---
+# Host variables for pbs.home.stechsolutions.ca host
+
+ansible_host: pbs.home.stechsolutions.ca
+
+base_user_additional_groups:
+  - backup
+
+fileserver_setup: true
+fileserver_setup_zfs: true
+
+fileserver_zfs_pools:
+  - pool_name: pbs
+    # don't mount the pool, mount the datasets
+    mount_point: none
+    vdevs:
+      # for a single disk, no raid type needs to be specified
+      - raid_type: ""
+        disks:
+          - name: "/dev/disk/by-id/ata-ST1000LM024_HN-M101MBB_S30YJ9DGA19386"
+    datasets:
+      - name: pbs/backup
+        mount_point: /mnt/zfs/pbs
+        quota: 800G
+  - pool_name: backup
+    mount_point: none
+    vdevs:
+      - raid_type: mirror
+        disks:
+          - name: "/dev/disk/by-id/ata-WDC_WD10PURX-64D85Y0_WD-WCC4J7DA623L"
+          - name: "/dev/disk/by-id/ata-WDC_WD10PURX-64D85Y0_WD-WCC4J7DA678L"
+    datasets:
+      - name: backup/backup
+        mount_point: /mnt/zfs/backup
+        quota: 500G
+
+# Proxmox Backup Server configuration
+proxmox_pbs_datastores:
+  - name: pbs
+    path: /mnt/zfs/pbs
+    comment: "Proxmox Backup Server datastore"
+    keep-daily: 7
+    keep-hourly: 5
+    keep-last: 5
+    keep-monthly: 3
+    keep-yearly: 1
+    prune-schedule: "02:00"  # Every day at 2 AM
+    gc-schedule: "sat 04:00"  # Every Saturday at 4 AM
+
+proxmox_pbs_verify_schedules:
+  - id: "12345"
+    store: pbs
+    comment: "Daily verification"
+    outdated-after: 30
+    ignore-verified: true
+    schedule: "03:00"  # Every day at 3 AM
+  - id: "67890"
+    store: pbs
+    comment: "Monthly verification"
+    outdated-after: 0
+    ignore-verified: false
+    schedule: "Sat *-1..7 05:00"  # First Saturday of the month at 5 AM
