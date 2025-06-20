@@ -21,5 +21,6 @@ proxmox_storage:
     state: "present"
     server: "pbs.home.stechsolutions.ca"
     datastore: "pbs"
+    namespace: "proxmox-vms"
     username: "backup@pbs"
     password: "{{ secret_user_password }}"

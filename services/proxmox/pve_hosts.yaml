@@ -111,6 +111,14 @@
       tags:
         - proxmox.pve.storage
 
+    # Update the proxmox backups
+    - name: Update the proxmox backups
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pve_create_backup
+      tags:
+        - proxmox.pve.backup
+
 # These tasks can be run as the new user
 - name: Continue setting up the Proxmox host as the new user
   hosts: proxmox_nodes

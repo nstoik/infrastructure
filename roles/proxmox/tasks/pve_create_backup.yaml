@@ -1,0 +1,39 @@
+---
+# Tasks to create a backup config on a proxmox node
+
+- name: Block to create a backup config on a proxmox node
+  tags:
+    - proxmox
+    - proxmox.pve
+    - proxmox.pve.backup
+
+  block:
+
+    # Get all the current backup configs
+    - name: Get all the current backup configs
+      ansible.builtin.command:
+        cmd: >
+          pvesh get cluster/backup --noborder --noheader
+      register: proxmox_backup_list_results
+      become: true
+      changed_when: false
+
+    # Create the backup config
+    - name: Create the backup config
+      ansible.builtin.command:
+        cmd: >
+          pvesh create cluster/backup
+          --id "{{ backup.id }}"
+          --comment "{{ backup.comment }}"
+          --notes-template "{% raw %}{{vmid}}/{{guestname}} on {{node}}{% endraw %}"
+          --storage "{{ backup.storage }}"
+          --schedule "{{ backup.schedule }}"
+          --repeat-missed "{{ backup['repeat-missed'] }}"
+          --all "{{ backup.all }}"
+      become: true
+      loop: "{{ proxmox_backups }}"
+      loop_control:
+        loop_var: backup
+        label: "{{ backup.comment }}"
+      when: backup.id not in proxmox_backup_list_results.stdout_lines
+      changed_when: backup.id not in proxmox_backup_list_results.stdout_lines

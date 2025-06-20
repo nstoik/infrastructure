@@ -85,3 +85,12 @@ proxmox_users:
         role: "PVEAuditor"
         entity: "user"
         identifier: "prometheus@pve"
+
+# Proxmox backup configs
+proxmox_backups:
+  - id: "backup-daily"
+    comment: "Daily backup of all VMs"
+    storage: "pbs"
+    schedule: "04:30"
+    repeat-missed: true
+    all: true
