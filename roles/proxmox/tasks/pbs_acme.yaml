@@ -1,0 +1,96 @@
+---
+# Tasks to setup ACME certificates on a PBS node
+
+# Check if the ACME account already exists
+- name: Check if the ACME account already exists
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager acme account list
+  register: proxmox_pbs_acme_account_list_results
+  become: true
+  changed_when: false
+
+- name: Block for setting up the ACME account and config
+  when: proxmox_pbs_acme.account.name not in proxmox_pbs_acme_account_list_results.stdout
+  block:
+
+    # Register the ACME account
+    - name: Register the ACME account
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          expect << 'EOF'
+          spawn proxmox-backup-manager acme account register default \
+            "{{ proxmox_pbs_acme.account.contact }}" \
+            --directory "{{ proxmox_pbs_acme.account.directory }}"
+          expect {Do you agree to the above terms? [y|N]: }
+          send "y\r"
+          expect {Do you want to use external account binding? [y|N]: }
+          send "n\r"
+          expect eof
+          EOF
+        executable: /bin/bash
+      become: true
+      changed_when: true
+
+    # Create a temp file for the ACME plugin authentication
+    - name: Create a temp file for the ACME plugin authentication
+      ansible.builtin.tempfile:
+        state: file
+        suffix: '.tmp'
+      register: proxmox_pbs_acme_temp_file
+
+    # Write the ACME plugin authentication to the temp file
+    - name: Write the ACME plugin authentication to the temp file
+      ansible.builtin.copy:
+        content: |
+          CF_Email={{ proxmox_pbs_acme.plugin.cf_api_email }}
+          CF_Token={{ proxmox_pbs_acme.plugin.cf_api_key }}
+        dest: "{{ proxmox_pbs_acme_temp_file.path }}"
+        mode: '0600'
+      changed_when: true
+
+    # Enable the ACME plugin
+    - name: Enable the ACME plugin
+      ansible.builtin.command:
+        cmd: >
+          proxmox-backup-manager acme plugin add dns cf_dns
+          --api {{ proxmox_pbs_acme.plugin.id_name }}
+          --data "{{ proxmox_pbs_acme_temp_file.path }}"
+      become: true
+      changed_when: true
+
+    # Remove the temp file
+    - name: Remove the temp file
+      ansible.builtin.file:
+        path: "{{ proxmox_pbs_acme_temp_file.path }}"
+        state: absent
+
+    # Set the ACME domains
+    - name: Set the ACME domains
+      ansible.builtin.command:
+        cmd: >
+          proxmox-backup-manager node update
+          --acmedomain0 "{{ proxmox_pbs_acme.domains[0] }}",plugin=cf_dns
+      become: true
+      changed_when: true
+
+    # Order the ACME certificate
+    - name: Order the ACME certificate
+      ansible.builtin.command:
+        cmd: >
+          proxmox-backup-manager acme cert order --force
+      become: true
+      changed_when: true
+      register: proxmox_pbs_acme_order_results
+
+    # Debug the ACME order results
+    - name: Debug the ACME order results
+      ansible.builtin.debug:
+        msg: "ACME order results: {{ proxmox_pbs_acme_order_results.stdout }}"
+
+    # Check if the ACME certificate was ordered successfully
+    - name: Check if the ACME certificate was ordered successfully
+      ansible.builtin.fail:
+        msg: "Failed to order ACME certificate: {{ proxmox_pbs_acme_order_results.stderr }}"
+      when: proxmox_pbs_acme_order_results.rc != 0

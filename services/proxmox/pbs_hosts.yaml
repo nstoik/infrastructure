@@ -94,6 +94,14 @@
       tags:
         - proxmox.pbs.users
 
+    # Update the PBS ACME certificates
+    - name: Update the PBS ACME certificates
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pbs_acme
+      tags:
+        - proxmox.pbs.acme
+
 # These tasks can be run as the new user
 - name: Continue setting up the Proxmox host as the new user
   hosts: proxmox_pbs

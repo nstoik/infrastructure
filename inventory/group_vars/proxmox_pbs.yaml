@@ -13,6 +13,7 @@ host_additional_packages:
   - "sudo"
   - "lshw"
   - "prometheus-node-exporter"
+  - "expect"  # For PBS CLI commands that require user interaction
 
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
@@ -74,3 +75,21 @@ proxmox_pbs_notification_matchers:
     mode: all
     target: ntfy-error
     match-severity: "notice,warning,error,unknown"
+
+proxmox_pbs_acme:
+  # PBS ACME account
+  account:
+    name: "default"
+    contact: "{{ default_user_email }}"
+    directory: "https://acme-v02.api.letsencrypt.org/directory"
+
+  # Domains for the PBS ACME account
+  domains:
+    - "pbs.home.stechsolutions.ca"
+
+  # PBS ACME plugin
+  plugin:
+    type: "dns"
+    id_name: "cf"
+    cf_api_email: "{{ default_user_email }}"
+    cf_api_key: "{{ secret_cf_token }}"

@@ -10,26 +10,6 @@
     - proxmox.pve
     - base.known_hosts
 
-# Get the pbs fingerprints to use later in the playbook for adding PBS storage.
-- name: Get the pbs fingerprints
-  hosts: proxmox_pbs
-  gather_facts: false
-  vars_files:
-    - ../../vault/vault.yaml
-  tasks:
-    - name: Get the pbs fingerprints
-      ansible.builtin.include_role:
-        name: proxmox
-        tasks_from: pbs_get_cert_fingerprint.yaml
-
-    # Make the fingerprints available to the proxmox_nodes hosts
-    - name: Make the fingerprints available to the proxmox_nodes hosts
-      ansible.builtin.add_host:
-        name: "{{ item }}"
-        pbs_cert_fingerprint_info: "{{ pbs_cert_fingerprint_info }}"
-      loop: "{{ groups['proxmox_nodes'] }}"
-      delegate_to: localhost
-
 # These first tasks are run as the root user since it includes
 # setting up the new user with the ssh keys.
 - name: Make sure the Proxmox host is setup
@@ -110,6 +90,14 @@
       when: proxmox_storage is defined
       tags:
         - proxmox.pve.storage
+
+    # Update the proxmox ACME certificates
+    - name: Update the proxmox ACME certificates
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: pve_acme
+      tags:
+        - proxmox.pve.acme
 
     # Update the proxmox backups
     - name: Update the proxmox backups
