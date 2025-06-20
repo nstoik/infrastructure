@@ -40,9 +40,9 @@
           pvesm add {{ item.type }} {{ item.storage }}
           --server {{ item.server }}
           --datastore {{ item.datastore }}
+          --namespace {{ item.namespace }}
           --username {{ item.username }}
           --password {{ item.password }}
-          --fingerprint {{ pbs_cert_fingerprint_info.fingerprint }}
       loop: "{{ proxmox_storage }}"
       when:
         item.storage not in proxmox_storage_status.stdout
