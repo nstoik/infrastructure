@@ -1,0 +1,109 @@
+---
+# group_vars for the proxmox_pbs group
+#
+# This file is used to set the variables for the Proxmox Backup Server (PBS) group.
+
+ansible_become_password: "{{ secret_become_pass }}"
+
+base_user_additional_groups:
+  - "backup"
+
+# The proxmox nodes need sudo to be installed
+host_additional_packages:
+  - "sudo"
+  - "lshw"
+  - "prometheus-node-exporter"
+  - "expect"  # For PBS CLI commands that require user interaction
+
+host_additional_services:
+  - name: "openipmi.service"
+    state: "stopped"
+    enabled: false
+
+# Use apt dist-upgrade on proxmox nodes
+# see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
+base_apt_upgrade_packages: "dist"
+
+# override some default geerlingguy.security role variables
+# for proxmox nodes
+security_ssh_permit_root_login: "yes"
+security_ssh_password_authentication: "yes"
+security_ssh_allowed_users:
+  - "{{ default_user }}"
+  - "root"
+
+# Whether to configure the NUT role for the Proxmox nodes
+# Default to false, but set to true on the host_vars files of the hosts that have a UPS
+proxmox_nut_configure: false
+
+proxmox_pbs_users:
+  - userid: "{{ default_user }}@pam"
+    comment: "Proxmox Backup Server admin user"
+    email: "{{ default_user_email }}"
+    state: "present"
+    permissions:
+      - path: "/"
+        role: "Admin"
+        auth_id: "{{ default_user }}@pam"
+  - userid: "homepage@pbs"
+    comment: "Proxmox Backup Server homepage user"
+    email: "noemail@noemail.com"
+    password: "{{ secret_pbs_homepage_user_password }}"
+    state: "present"
+    permissions:
+      - path: "/"
+        role: "Audit"
+        auth_id: "homepage@pbs"
+  - userid: "backup@pbs"
+    comment: "Proxmox Backup Server backup user"
+    email: "{{ default_user_email }}"
+    password: "{{ secret_user_password }}"
+    state: "present"
+    permissions:
+      - path: "/datastore"
+        role: "DatastoreAdmin"
+        auth_id: "backup@pbs"
+
+proxmox_pbs_notification_targets:
+  - name: ntfy-info
+    method: get
+    url: "https://ntfy.stechsolutions.ca/Proxmox/trigger"
+    priority: 2
+    comment: "PBS info notifications"
+    token_name: Proxmox
+  - name: ntfy-error
+    method: get
+    url: "https://ntfy.stechsolutions.ca/Proxmox/trigger"
+    priority: 5
+    comment: "PBS error notifications"
+    token_name: Proxmox
+
+proxmox_pbs_notification_matchers:
+  - name: ntfy-info-match
+    comment: "PBS info notifications matcher"
+    mode: all
+    target: ntfy-info
+    match-severity: "info"
+  - name: ntfy-error-match
+    comment: "PBS error notifications matcher"
+    mode: all
+    target: ntfy-error
+    match-severity: "notice,warning,error,unknown"
+
+proxmox_pbs_acme:
+  # PBS ACME account
+  account:
+    name: "default"
+    contact: "{{ default_user_email }}"
+    directory: "https://acme-v02.api.letsencrypt.org/directory"
+
+  # Domains for the PBS ACME account
+  domains:
+    - "pbs.home.stechsolutions.ca"
+
+  # PBS ACME plugin
+  plugin:
+    type: "dns"
+    id_name: "cf"
+    cf_api_email: "{{ default_user_email }}"
+    cf_api_key: "{{ secret_cf_token }}"

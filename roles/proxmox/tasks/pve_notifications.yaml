@@ -1,0 +1,64 @@
+---
+# Tasks to create the notification settings on a PVE server
+#
+# This works for webook notifications, such as ntfy.
+# It assumes that the ntfy tokens are already set up in the ntfy role.
+# It also assumes that the ntfy tokens are available in the `ntfy_tokens_extracted
+
+# Check if the notification targets already exist
+- name: Check if the notification targets already exist
+  ansible.builtin.command:
+    cmd: >
+      pvesh get /cluster/notifications/endpoints/webhook
+  register: proxmox_pve_notification_list_results
+  become: true
+  changed_when: false
+
+# Create the notification targets if they don't exist
+- name: Create the notification targets if they don't exist
+  ansible.builtin.command:
+    cmd: >
+      pvesh create /cluster/notifications/endpoints/webhook
+      --method post
+      --name "{{ target.name }}"
+      --url "{{ target.url }}"
+      --body {{ "{{ message }}" | b64encode }}
+      --comment "{{ target.comment }}"
+      --header name=Authorization,value={{ 'Bearer {{ secrets.token }}' | b64encode }}
+      --header name=Priority,value={{ target.priority | b64encode }}
+      --header name=Title,value={{ '{{ title }}' | b64encode }}
+      --secret name=token,value="{{ ntfy_tokens_extracted[target.token_name] | b64encode }}"
+  become: true
+  loop: "{{ proxmox_notification_targets }}"
+  loop_control:
+    label: "{{ target.name }}"
+    loop_var: target
+  when: target.name not in proxmox_pve_notification_list_results.stdout
+  changed_when: target.name not in proxmox_pve_notification_list_results.stdout
+
+# Check if the notification matchers already exist
+- name: Check if the notification matchers already exist
+  ansible.builtin.command:
+    cmd: >
+      pvesh get /cluster/notifications/matchers
+  register: proxmox_pve_notification_matcher_list_results
+  become: true
+  changed_when: false
+
+# Create the notification matchers if they don't exist
+- name: Create the notification matchers if they don't exist
+  ansible.builtin.command:
+    cmd: >
+      pvesh create /cluster/notifications/matchers
+      --name "{{ matcher.name }}"
+      --comment "{{ matcher.comment }}"
+      --match-severity "{{ matcher['match-severity'] }}"
+      --mode {{ matcher.mode }}
+      --target {{ matcher.target }}
+  become: true
+  loop: "{{ proxmox_notification_matchers }}"
+  loop_control:
+    label: "{{ matcher.name }}"
+    loop_var: matcher
+  when: matcher.name not in proxmox_pve_notification_matcher_list_results.stdout
+  changed_when: matcher.name not in proxmox_pve_notification_matcher_list_results.stdout

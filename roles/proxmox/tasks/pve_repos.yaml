@@ -18,14 +18,18 @@
       loop:
         - /etc/apt/sources.list.d/pve-enterprise.list
         - /etc/apt/sources.list.d/ceph.list
+        - /etc/apt/sources.list.d/pbs-enterprise.list
 
     - name: Add No Subscription Repository
       ansible.builtin.apt_repository:
         # yamllint disable-line rule:line-length
-        repo: deb http://download.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-no-subscription
-        filename: pve-no-subscription
+        repo: deb http://download.proxmox.com/debian/{{ item }} {{ ansible_distribution_release }} {{ item }}-no-subscription
+        filename: "{{ item }}-no-subscription"
         update_cache: false
         state: present
+      loop:
+        - pbs
+        - pve
 
     # credit: https://johnscs.com/remove-proxmox51-subscription-notice/
     # credit https://github.com/foundObjects/pve-nag-buster
@@ -36,4 +40,4 @@
         replace: "false"
         backup: true
       become: true
-      notify: Restart pveproxy
+      notify: Restart PVE or PBS proxy service

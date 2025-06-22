@@ -1,5 +1,15 @@
 ---
 # Tasks to setup ZFS pool on a host.
+#
+# Input variables:
+#   fileserver_zfs_pool:
+#     pool_name: <name of the ZFS pool>
+#     mount_point: <mount point for the pool>
+#     vdevs:
+#       - raid_type: <RAID type for the vdev>
+#         disks:
+#           - name: <disk name>
+#     datasets: not used in this task
 
 # block for ZFS pool tasks
 - name: Block for ZFS pool tasks
@@ -38,16 +48,18 @@
     - name: Create the ZFS pool if it does not exist
       ansible.builtin.command: >
         zpool create
-        -m "{{ fileserver_zfs_pool.mount_point }}"
+        -m {{ fileserver_zfs_pool.mount_point }}
         -o ashift=12
         -O compression=lz4
         -O xattr=sa
         -O normalization=formD
-        "{{ fileserver_zfs_pool.pool_name }}"
+        {{ fileserver_zfs_pool.pool_name }}
         {% for vdev in fileserver_zfs_pool.vdevs %}
-        "{{ vdev.raid_type }}"
+        {% if vdev.raid_type | default('') | length > 0 %}
+        {{ vdev.raid_type }}
+        {% endif %}
         {% for disk in vdev.disks %}
-        "{{ disk.name }}"
+        {{ disk.name }}
         {% endfor %}
         {% endfor %}
       when: zpool_check.rc != 0

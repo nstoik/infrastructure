@@ -1,5 +1,9 @@
 ---
-# group_vars for the proxmox group
+# group_vars for the proxmox_nodes group
+#
+# There are some variables that are specific to each node (eg. UPS),
+# and those are defined in the host_vars files for each node.
+
 ansible_become_password: "{{ secret_become_pass }}"
 
 # The proxmox nodes need sudo to be installed
@@ -16,7 +20,7 @@ base_apt_upgrade_packages: "dist"
 # either explicitly or manually.
 base_reboot_host_if_required: false
 
-# override the default geerlingguy.security role variables
+# override some default geerlingguy.security role variables
 # for proxmox nodes
 security_autoupdate_enabled: false
 security_autoupdate_reboot: false
@@ -26,16 +30,9 @@ security_ssh_allowed_users:
   - "{{ default_user }}"
   - "root"
 
-# Proxmox nfs storage
-proxmox_storage:
-  # Synology backup weekly NFS storage
-  - storage: "syno_bw"
-    type: "nfs"
-    state: "present"
-    server: "10.10.1.200"
-    export: "/volume2/backup/pve_backup_weekly"
-    content: "backup"
-    prune_backups: "keep-last=5,keep-monthly=2,keep-yearly=1"
+# Whether to configure the NUT role for the Proxmox nodes
+# Default to false, but set to true on the host_vars files of the hosts that have a UPS
+proxmox_nut_configure: false
 
 # Proxmox cloud images
 # state: present, absent, recreate
@@ -70,6 +67,14 @@ proxmox_groups:
         role: "Administrator"
         entity: "group"
         identifier: "Admins"
+  - name: "API_RO_Users"
+    comment: "API Read-Only Users group"
+    state: "present"
+    permissions:
+      - path: "/"
+        role: "PVEAuditor"
+        entity: "group"
+        identifier: "API_RO_Users"
 
 proxmox_users:
   - userid: "{{ default_user }}@pam"
@@ -80,11 +85,67 @@ proxmox_users:
   - userid: "prometheus@pve"
     comment: "Prometheus user"
     email: "noemmail@noemail.com"
-    groups: ""
+    groups: "API RO Users"
     state: "present"
     password: "{{ secret_pve_prometheus_user_password }}"
-    permissions:
-      - path: "/"
-        role: "PVEAuditor"
-        entity: "user"
-        identifier: "prometheus@pve"
+  - userid: "homepage@pve"
+    comment: "Homepage user"
+    email: "noemail@noemail.com"
+    groups: "API_RO_Users"
+    state: "present"
+    password: "{{ secret_pve_homepage_user_password }}"
+
+proxmox_notification_targets:
+  - name: ntfy-info
+    method: get
+    url: "https://ntfy.stechsolutions.ca/Proxmox/trigger"
+    priority: 2
+    comment: "Proxmox info notifications"
+    token_name: Proxmox
+  - name: ntfy-error
+    method: get
+    url: "https://ntfy.stechsolutions.ca/Proxmox/trigger"
+    priority: 5
+    comment: "Proxmox error notifications"
+    token_name: Proxmox
+
+proxmox_notification_matchers:
+  - name: ntfy-info-match
+    comment: "Proxmox info notifications matcher"
+    mode: all
+    target: ntfy-info
+    match-severity: "info"
+  - name: ntfy-error-match
+    comment: "Proxmox error notifications matcher"
+    mode: all
+    target: ntfy-error
+    match-severity: "notice,warning,error,unknown"
+
+# Proxmox backup configs
+proxmox_backups:
+  - id: "backup-daily"
+    comment: "Daily backup of all VMs"
+    storage: "pbs"
+    schedule: "04:30"
+    repeat-missed: true
+    script: "/usr/local/bin/vzdump-hook-script.py"
+    all: true
+
+# Proxmox ACME configuration
+proxmox_acme:
+  # Proxmox ACME account
+  account:
+    name: "default"
+    contact: "{{ default_user_email }}"
+    directory: "https://acme-v02.api.letsencrypt.org/directory"
+
+  # Domain names for the ACME account
+  domains:
+    - "pve3.home.stechsolutions.ca"
+
+  # Proxmox ACME plugin
+  plugin:
+    type: "dns"
+    id_name: "cf"
+    cf_api_email: "{{ default_user_email }}"
+    cf_api_key: "{{ secret_cf_token }}"

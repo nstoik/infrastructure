@@ -6,7 +6,7 @@ The following steps are required to setup a new proxmox host manually.
 
 - Install proxmox on the host.
     - Download the ISO and run through the installation process.
-    - Install the OS as a ZFS mirror (two disks required)
+    - For Proxmox, install the OS as a ZFS mirror (two disks required). For PBS, the OS can be installed on a single disk.
     - Set the hostname
     - Set the IP address
     - Set the DNS servers
@@ -16,12 +16,25 @@ The following steps are required to setup a new proxmox host manually.
 - Login and configure the following so that the host can be managed by ansible.
     - Make sure it is accessible via SSH as root (other user is added by ansible)
     - Configure the network interfaces as required.
+        - [Example for Proxmox](files/proxmox_interfaces.example) network configuration
+        - [Example for PBS](files/pbs_interfaces.example) network configuration
     - Configure the required storage (ZFS pools)
-    - Configure the backup schedule
-        - The backup storage is added by ansible
-        - TODO: Backup configuration needs to be added to ansible when setting up the Proxmox Backup Server (PBS)
+- After the ansible configuration is run, the following steps are required to complete the setup.
+    - For Homepage configuration, on both Proxmox and PBS, create an API token for the `homepage` user. 
+    - Enter that token into the `vault/vault.yaml` file under the appropriate ssection.
+    - Then add the required permission to the token.
+        - For Proxmox, it needs to have the `PVEAuditor` role on the `/` path.
+        - For PBS, it needs to have the `Audit` role on the `/` path.
+    - Then rerun the ansible playbook to apply the token to the HomePage docker container.
 
 ## Proxmox Hosts Ansible Configuration
+
+Run the following command to configure the PBS hosts. By default, this will run against all the hosts in the `proxmox_pbs` group.
+
+```bash
+    ansible-playbook services/proxmox/pbs_hosts.yaml
+```
+
 
 Run the following command to configure the proxmox hosts. By default this will run against all the hosts in the `proxmox_nodes` group.
 
@@ -31,7 +44,7 @@ Run the following command to configure the proxmox hosts. By default this will r
 
 Template cloud images and template container images are downloaded. The template cloud images can have the `state` variable of `present`, `absent`, or `recreate`. The `recreate` state will delete the template and recreate it. Container templates are just downloaded. 
 
-To setup the cloud images and templates on the proxmox hosts, run the following command.
+To setup the cloud images and templates on the proxmox hosts, run the following command. By default this will run against all Proxmox hosts
 ```bash
     ansible-playbook services/proxmox/pve_hosts_templates.yaml
 ```

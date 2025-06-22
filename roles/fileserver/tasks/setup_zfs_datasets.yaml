@@ -1,5 +1,14 @@
 ---
 # Tasks to setup ZFS datasets on a host.
+#
+# Input variables:
+#   fileserver_zfs_pool:
+#     pool_name: <name of the ZFS pool>
+#     datasets:
+#       - name: <name of the ZFS dataset>
+#         mount_point: <mount point for the dataset>
+#         quota: <quota for the dataset>
+#     # other ZFS dataset properties not used in this task
 
 # block for ZFS datasets tasks
 - name: Block for ZFS datasets tasks
@@ -11,9 +20,11 @@
     # Check if the ZFS dataset exists
     - name: Check if the ZFS dataset exists
       ansible.builtin.command: >
-        zfs list -H "{{ item.name }}"
+        zfs list -H "{{ dataset.name }}"
       register: zfs_dataset_check
       loop: "{{ fileserver_zfs_pool.datasets }}"
+      loop_control:
+        loop_var: dataset
       changed_when: false
       failed_when: false
 
@@ -21,28 +32,30 @@
     - name: Create the ZFS dataset if it does not exist
       ansible.builtin.command: >
         zfs create
-        -o mountpoint="{{ item.item.mount_point }}"
+        -o mountpoint="{{ result.dataset.mount_point }}"
         -o compression=lz4
         -o xattr=sa
         -o normalization=formD
-        -o quota="{{ item.item.quota }}"
-        "{{ item.item.name }}"
+        -o quota="{{ result.dataset.quota }}"
+        "{{ result.dataset.name }}"
       loop: "{{ zfs_dataset_check.results }}"
       loop_control:
-        label: "{{ item.item.name }}"
-      when: item.rc != 0
-      changed_when: item.rc != 0
+        loop_var: result
+        label: "{{ result.dataset.name }}"
+      when: result.rc != 0
+      changed_when: result.rc != 0
       become: true
 
     # Set the dataset mount permissions
     - name: Set the dataset mount permissions
       ansible.builtin.file:
-        path: "{{ item.mount_point }}"
+        path: "{{ dataset.mount_point }}"
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         state: directory
         mode: "0755"
       loop: "{{ fileserver_zfs_pool.datasets }}"
       loop_control:
-        label: "{{ item.name }}"
+        loop_var: dataset
+        label: "{{ dataset.name }}"
       become: true

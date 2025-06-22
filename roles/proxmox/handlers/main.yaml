@@ -1,9 +1,15 @@
 ---
 # Handlers for the proxmox role
 
-# Restart the pveproxy service
-- name: Restart pveproxy
+# Restart web proxy (PVE or PBS, depending on host)
+- name: Restart PVE or PBS proxy service
   ansible.builtin.service:
-    name: pveproxy
+    name: "{{ item }}"
     state: restarted
+  loop:
+    - pveproxy
+    - proxmox-backup-proxy
   become: true
+  failed_when: false
+  ignore_errors: true
+  register: proxmox_restart_proxy_results

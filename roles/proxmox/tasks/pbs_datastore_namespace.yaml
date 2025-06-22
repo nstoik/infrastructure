@@ -1,0 +1,55 @@
+---
+# Tasks to create namespaces and prune schedules on a Proxmox Backup Server datastore
+#
+# This task block is called from the playbook that creates the datastore, so
+# it is assumed that the namespaces and prune schedules are not already created.
+#
+# Input is a a list of namespaces defined in the `proxmox_pbs_datastores` variable,
+# and the datastore name
+# namespaces and datastore_name
+
+# Create the namespaces on the PBS datastore
+- name: Create the namespaces on the PBS datastore
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      expect << 'EOF'
+      spawn proxmox-backup-client namespace create {{ namespace.ns }}
+      expect {
+        "Are you sure you want to continue connecting? (y/n):" {
+          send "y\r"
+          exp_continue
+        }
+        eof
+      }
+      EOF
+    executable: /bin/bash
+  environment:
+    PBS_PASSWORD: "{{ secret_user_password }}"
+    PBS_REPOSITORY: backup@pbs@pbs.home.stechsolutions.ca:{{ datastore_name }}
+  loop: "{{ namespaces }}"
+  loop_control:
+    label: "{{ namespace.ns }}"
+    loop_var: namespace
+  changed_when: true
+
+# Create the prune schedules on the PBS datastore for each namespace
+- name: Create the prune schedules on the PBS datastore for each namespace
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager prune-job create {{ namespace.id }}
+      --schedule "{{ namespace.schedule }}"
+      --store {{ datastore_name }}
+      --ns "{{ namespace.ns }}"
+      --comment "{{ namespace.comment }}"
+      --keep-daily {{ namespace['keep-daily'] }}
+      --keep-last {{ namespace['keep-last'] }}
+      --keep-monthly {{ namespace['keep-monthly'] }}
+      --keep-yearly {{ namespace['keep-yearly'] }}
+      --max-depth {{ namespace['max-depth'] | default(0) }}
+  become: true
+  loop: "{{ namespaces }}"
+  loop_control:
+    label: "{{ namespace.ns }}"
+    loop_var: namespace
+  changed_when: true

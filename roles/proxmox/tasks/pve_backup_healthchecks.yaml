@@ -1,0 +1,52 @@
+---
+# Tasks to add healthchecks.io checks for Proxmox backups
+# See https://github.com/cmbcbe/proxmox_backup_healthchecks
+#
+# The backup script hook is specified in the Proxmox backup job configurations.
+
+# Install dependencies
+- name: Install dependencies for proxmox_backup_healthchecks
+  ansible.builtin.apt:
+    name: "{{ proxmox_backup_healthchecks_deps }}"
+    state: present
+  become: true
+
+# Clone the proxmox_backup_healthchecks repository
+- name: Clone proxmox_backup_healthchecks repository
+  ansible.builtin.git:  # noqa: latest
+    repo: "{{ proxmox_backup_healthchecks_repo }}"
+    dest: "{{ proxmox_backup_healthchecks_dest }}"
+    update: true
+
+# Ensure the directory for healthchecks is created
+- name: Ensure the directory for healthchecks is created
+  ansible.builtin.file:
+    path: /etc/pve/healthchecks
+    state: directory
+    mode: '0755'
+
+# Copy the healthchecks script and make it executable
+- name: Copy the healthchecks script and make it executable
+  ansible.builtin.copy:
+    src: "{{ proxmox_backup_healthchecks_dest }}/proxmox/usr/local/bin/vzdump-hook-script.py"
+    dest: /usr/local/bin/vzdump-hook-script.py
+    mode: '+x'
+    remote_src: true
+  become: true
+
+# Create the healthchecks configuration file from template
+- name: Create the healthchecks configuration file from template in tmp
+  ansible.builtin.template:
+    src: variables.env.j2
+    dest: /tmp/variables.env
+    mode: '0644'
+  vars:
+    pve_backup_healthchecks_api_key: "{{ secret_hc_projects['Proxmox Backups'].api_key }}"
+    pve_backups_healthchecks_ping_key: "{{ secret_hc_projects['Proxmox Backups'].ping_key }}"
+
+- name: Move the healthchecks configuration file to the correct location
+  ansible.builtin.command:
+    cmd: >
+      mv /tmp/variables.env /etc/pve/healthchecks/variables.env
+  changed_when: false
+  become: true

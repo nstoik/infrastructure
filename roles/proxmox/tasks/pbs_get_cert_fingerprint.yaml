@@ -1,0 +1,25 @@
+---
+# Tasks to get the certificate fingerprint from a Proxmox Backup Server (PBS)
+#
+# Saves the certificate fingerprint along with the PBS host name to a variable
+
+# Get the certificate fingerprint from the PBS host
+- name: Get the certificate fingerprint from the PBS host
+  ansible.builtin.shell:
+    cmd: set -o pipefail && proxmox-backup-manager cert info | grep -i Fingerprint
+    executable: /bin/bash
+  register: pbs_cert_fingerprint_results
+  become: true
+  changed_when: false
+
+# Extract the fingerprint
+- name: Extract the fingerprint from the command output
+  ansible.builtin.set_fact:
+    pbs_cert_fingerprint: "{{ pbs_cert_fingerprint_results.stdout.split(':', 1)[1].strip() }}"
+
+# Save hostname and fingerprint to a variable
+- name: Save hostname and fingerprint to a variable
+  ansible.builtin.set_fact:
+    pbs_cert_fingerprint_info:
+      host: "{{ inventory_hostname }}"
+      fingerprint: "{{ pbs_cert_fingerprint }}"

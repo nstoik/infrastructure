@@ -93,8 +93,8 @@
     - base
     - base.dotfiles
 
-# set specified systemd services to enabled and started
-- name: Set specified systemd services to enabled and started
+# set specified systemd services to the specified state and status
+- name: Set specified systemd services to the specified state and status
   ansible.builtin.service:
     name: "{{ service.name }}"
     state: "{{ service.state }}"
