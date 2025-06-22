@@ -67,6 +67,14 @@ proxmox_groups:
         role: "Administrator"
         entity: "group"
         identifier: "Admins"
+  - name: "API_RO_Users"
+    comment: "API Read-Only Users group"
+    state: "present"
+    permissions:
+      - path: "/"
+        role: "PVEAuditor"
+        entity: "group"
+        identifier: "API_RO_Users"
 
 proxmox_users:
   - userid: "{{ default_user }}@pam"
@@ -77,14 +85,15 @@ proxmox_users:
   - userid: "prometheus@pve"
     comment: "Prometheus user"
     email: "noemmail@noemail.com"
-    groups: ""
+    groups: "API RO Users"
     state: "present"
     password: "{{ secret_pve_prometheus_user_password }}"
-    permissions:
-      - path: "/"
-        role: "PVEAuditor"
-        entity: "user"
-        identifier: "prometheus@pve"
+  - userid: "homepage@pve"
+    comment: "Homepage user"
+    email: "noemail@noemail.com"
+    groups: "API_RO_Users"
+    state: "present"
+    password: "{{ secret_pve_homepage_user_password }}"
 
 proxmox_notification_targets:
   - name: ntfy-info
