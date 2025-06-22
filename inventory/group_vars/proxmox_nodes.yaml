@@ -86,6 +86,32 @@ proxmox_users:
         entity: "user"
         identifier: "prometheus@pve"
 
+proxmox_notification_targets:
+  - name: ntfy-info
+    method: get
+    url: "https://ntfy.stechsolutions.ca/Proxmox/trigger"
+    priority: 2
+    comment: "Proxmox info notifications"
+    token_name: Proxmox
+  - name: ntfy-error
+    method: get
+    url: "https://ntfy.stechsolutions.ca/Proxmox/trigger"
+    priority: 5
+    comment: "Proxmox error notifications"
+    token_name: Proxmox
+
+proxmox_notification_matchers:
+  - name: ntfy-info-match
+    comment: "Proxmox info notifications matcher"
+    mode: all
+    target: ntfy-info
+    match-severity: "info"
+  - name: ntfy-error-match
+    comment: "Proxmox error notifications matcher"
+    mode: all
+    target: ntfy-error
+    match-severity: "notice,warning,error,unknown"
+
 # Proxmox backup configs
 proxmox_backups:
   - id: "backup-daily"
