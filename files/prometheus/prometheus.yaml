@@ -15,6 +15,7 @@ rule_files:
   - '/etc/prometheus/rules/node_alerts.yaml'
   - '/etc/prometheus/rules/test.yaml'
   - '/etc/prometheus/rules/traefik_alerts.yaml'
+  - '/etc/prometheus/rules/ups_alerts.yaml'
 
 scrape_configs:
   - job_name: 'prometheus'
@@ -73,6 +74,7 @@ scrape_configs:
     metrics_path: '/metrics'
 
   - job_name: nut-ups
+    scrape_interval: 20s
     static_configs:
       - targets:
           - 'myups@prometheus-nut-exporter:9199'

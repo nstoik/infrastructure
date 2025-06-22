@@ -1,0 +1,31 @@
+---
+
+groups:
+  - name: UPS NUT alerts
+    rules:
+      - alert: UPSOnBattery
+        expr: network_ups_tools_ups_status{flag="OB"} == 1
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: UPS {{ $labels.instance }} is on battery
+          description: The UPS {{ $labels.ups }} went on battery power.
+
+      - alert: UPSLowBattery
+        expr: network_ups_tools_ups_status{flag="LB"} == 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: UPS {{ $labels.instance }} has low battery
+          description: The UPS {{ $labels.ups }} has low battery power.
+
+      - alert: UPSLessThan5Min
+        expr: network_ups_tools_ups_status{flag="LB"} == 1 and network_ups_tools_battery_runtime < 300
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: UPS {{ $labels.instance }} has less than 5 minutes of runtime
+          description: The UPS {{ $labels.ups }} has less than 5 minutes of runtime.
