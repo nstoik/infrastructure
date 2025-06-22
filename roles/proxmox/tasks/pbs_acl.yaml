@@ -1,0 +1,21 @@
+---
+# Tasks to apply the permissions to a PBS user
+#
+# Required Inputs:
+#   node_acl_permissions: The permissions to apply (list of dictionaries with path, role, and auth_id).
+
+# Apply the permissions to the PBS user
+- name: Apply the permissions to the specified user
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager acl update {{ acl_item.path }} {{ acl_item.role }}
+      --auth-id {{ acl_item.auth_id }}
+  become: true
+  loop: "{{ node_acl_permissions }}"
+  loop_control:
+    loop_var: acl_item
+  changed_when: false
+  tags:
+    - proxmox
+    - proxmox.pbs
+    - proxmox.pbs.permissions

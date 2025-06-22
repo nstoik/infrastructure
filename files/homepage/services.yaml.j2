@@ -55,3 +55,24 @@
         href: https://unifi.home.stechsolutions.ca/protect/dashboard
         description: Unifi Protect
         icon: unifi-protect.png
+- Proxmox:
+    - Proxmox VE:
+        href: https://pve3.home.stechsolutions.ca:8006
+        description: Proxmox VE
+        siteMonitor: https://pve3.home.stechsolutions.ca:8006
+        icon: proxmox.png
+        widget:
+          type: proxmox
+          url: https://pve3.home.stechsolutions.ca:8006
+          username: homepage@pve!homepage
+          password: "{{ secret_pve_homepage_token }}"
+    - Proxmox Backup Server:
+        href: https://pbs.home.stechsolutions.ca:8007
+        description: Proxmox Backup Server
+        siteMonitor: https://pbs.home.stechsolutions.ca:8007
+        icon: proxmox.png
+        widget:
+          type: proxmoxbackupserver
+          url: https://pbs.home.stechsolutions.ca:8007
+          username: homepage@pbs!homepage
+          password: "{{ secret_pbs_homepage_token }}"

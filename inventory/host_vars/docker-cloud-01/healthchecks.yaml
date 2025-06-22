@@ -33,12 +33,14 @@ hc_superuser_password: "{{ secret_hc_superuser_password }}"
 # Note: name has to be unique
 hc_projects:
   - name: Stechsolutions
+  - name: Proxmox Backups
 
 # Healthchecks channels
 # Note: name has to be unique
 # Values are unique for each kind (email, ntfy). See the Healthchecks API for more information.
 # Values are transformed into JSON format using the Jinja2 template engine in the Ansible playbook.
 hc_channels:
+  # Email and Ntfy channels for Stechsolutions project
   - project: "{{ hc_projects[0].name }}"
     name: Email Notification
     kind: email
@@ -47,6 +49,21 @@ hc_channels:
     value_value: "{{ default_user_email }}"
   - project: "{{ hc_projects[0].name }}"
     name: Ntfy Notification
+    kind: ntfy
+    token_name: Healthchecks
+    value_topic: Healthchecks
+    value_url: "{{ ntfy_base_url }}"
+    value_priority: 3
+    value_priority_up: 3
+  # Email and Ntfy channels for Proxmox Backups project
+  - project: "{{ hc_projects[1].name }}"
+    name: Email Notification for Proxmox Backups
+    kind: email
+    value_up: true
+    value_down: true
+    value_value: "{{ default_user_email }}"
+  - project: "{{ hc_projects[1].name }}"
+    name: Ntfy Notification for Proxmox Backups
     kind: ntfy
     token_name: Healthchecks
     value_topic: Healthchecks

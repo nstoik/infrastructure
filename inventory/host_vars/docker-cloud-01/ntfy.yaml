@@ -10,4 +10,5 @@ ntfy_password: "{{ secret_ntfy_password }}"
 
 ntfy_tokens:
   - label: Healthchecks
+  - label: Proxmox
   - label: Test

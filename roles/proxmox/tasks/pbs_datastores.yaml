@@ -1,0 +1,38 @@
+---
+# Tasks to create a Proxmox Backup Server Datastore
+
+# Check if the PBS datastore already exists
+- name: Check if the PBS datastore already exists
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager datastore list
+  register: proxmox_pbs_datastore_list_results
+  become: true
+  changed_when: false
+
+# Create the PBS datastore if it doesn't exist
+- name: Create the PBS datastore if it doesn't exist
+  ansible.builtin.command:
+    cmd: >
+      proxmox-backup-manager datastore create {{ datastore.name }} {{ datastore.path }}
+      --comment "{{ datastore.comment }}"
+      --gc-schedule "{{ datastore['gc-schedule'] }}"
+  become: true
+  loop: "{{ proxmox_pbs_datastores }}"
+  loop_control:
+    label: "{{ datastore.name }}"
+    loop_var: datastore
+  when: datastore.name not in proxmox_pbs_datastore_list_results.stdout
+  changed_when: datastore.name not in proxmox_pbs_datastore_list_results.stdout
+
+# Create the namespaces and prune schedules on the PBS datastore
+- name: Create the namespaces and prune schedules on the PBS datastore
+  ansible.builtin.include_tasks: pbs_datastore_namespace.yaml
+  vars:
+    namespaces: "{{ datastore.namespaces }}"
+    datastore_name: "{{ datastore.name }}"
+  loop: "{{ proxmox_pbs_datastores }}"
+  loop_control:
+    label: "{{ datastore.name }}"
+    loop_var: datastore
+  when: datastore.name not in proxmox_pbs_datastore_list_results.stdout

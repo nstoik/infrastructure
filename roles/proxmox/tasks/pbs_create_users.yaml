@@ -1,0 +1,56 @@
+---
+# Tasks to create users on the Proxmox Backup Server
+
+- name: Block to create users on a PBS node.
+  tags:
+    - proxmox
+    - proxmox.pbs
+    - proxmox.pbs.users
+  block:
+
+    - name: Get all the current users
+      ansible.builtin.command:
+        cmd: >
+          proxmox-backup-manager user list
+      register: proxmox_pbs_user_list_results
+      become: true
+      changed_when: false
+
+    # Create the PBS user for @pam realms
+    - name: Create the PBS user for @pam realms
+      ansible.builtin.command:
+        cmd: >
+          proxmox-backup-manager user create {{ item.userid }}
+          --comment "{{ item.comment }}"
+          --email "{{ item.email }}"
+      become: true
+      loop: "{{ proxmox_pbs_users }}"
+      when: item.userid not in proxmox_pbs_user_list_results.stdout and
+            item.userid | regex_search('@pam')
+      changed_when: item.userid not in proxmox_pbs_user_list_results.stdout and
+                    item.userid | regex_search('@pam')
+
+    # Create the PBS user for @pbs realms
+    - name: Create the PBS user for @pbs realms
+      ansible.builtin.command:
+        cmd: >
+          proxmox-backup-manager user create {{ item.userid }}
+          --comment "{{ item.comment }}"
+          --email "{{ item.email }}"
+          --password "{{ item.password }}"
+      become: true
+      loop: "{{ proxmox_pbs_users }}"
+      when: item.userid not in proxmox_pbs_user_list_results.stdout and
+            item.password is defined and
+            item.userid | regex_search('@pbs')
+      changed_when: item.userid not in proxmox_pbs_user_list_results.stdout and
+                    item.userid | regex_search('@pbs')
+
+    # Apply the permissions to the PBS user
+    - name: Apply the permissions to the PBS user
+      ansible.builtin.include_tasks: pbs_acl.yaml
+      vars:
+        node_acl_permissions: "{{ item.permissions }}"
+      loop: "{{ proxmox_pbs_users }}"
+      when: item.userid not in proxmox_pbs_user_list_results.stdout and
+            item.permissions is defined
