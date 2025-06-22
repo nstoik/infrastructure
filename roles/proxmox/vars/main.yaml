@@ -1,6 +1,13 @@
 ---
 # vars file
 
+proxmox_backup_healthchecks_repo: https://github.com/cmbcbe/proxmox_backup_healthchecks
+proxmox_backup_healthchecks_dest: /home/{{ default_user }}/proxmox_backup_healthchecks
+proxmox_backup_healthchecks_base_domain: "https://hc.stechsolutions.ca"
+proxmox_backup_healthchecks_deps:
+  - jq
+  - python3-requests
+
 # Where to store ISOs
 proxmox_iso_path: /var/lib/vz/template/iso
 

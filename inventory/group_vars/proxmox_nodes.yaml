@@ -128,6 +128,7 @@ proxmox_backups:
     storage: "pbs"
     schedule: "04:30"
     repeat-missed: true
+    script: "/usr/local/bin/vzdump-hook-script.py"
     all: true
 
 # Proxmox ACME configuration

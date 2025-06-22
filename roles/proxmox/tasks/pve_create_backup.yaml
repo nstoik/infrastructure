@@ -29,6 +29,7 @@
           --storage "{{ backup.storage }}"
           --schedule "{{ backup.schedule }}"
           --repeat-missed "{{ backup['repeat-missed'] }}"
+          --script "{{ backup.script | default('') }}"
           --all "{{ backup.all }}"
       become: true
       loop: "{{ proxmox_backups }}"
