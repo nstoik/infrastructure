@@ -131,6 +131,16 @@
         - fileserver
         - fileserver.zfs
 
+    # Run the sanoid role
+    - name: Import sanoid role
+      ansible.builtin.import_role:
+        name: sanoid
+      when:
+        hostvars[inventory_hostname].sanoid_setup is defined and
+        hostvars[inventory_hostname].sanoid_setup is true
+      tags:
+        - sanoid
+
     # Setup PBS datastores
     - name: Setup PBS datastores
       ansible.builtin.include_role:

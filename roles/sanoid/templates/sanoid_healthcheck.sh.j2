@@ -1,0 +1,57 @@
+#!/bin/bash
+#This is based on the work of slowhawkeclipse on the ZFS Discord.
+#User: https://discourse.practicalzfs.com/u/slowhawkeclipse/summary
+#Thread: https://discourse.practicalzfs.com/t/sanoid-monitoring-bash-script-advice/1849
+
+# Define Variables
+LOGFILE="/tmp/sanoid_healthcheck_$(date '+%Y-%m-%d').log"
+HEALTHCHECK="{{ sanoid_hc_url }}{{ sanoid_hc_uuid }}"
+FAIL_URL="${HEALTHCHECK}/fail"
+START_URL="${HEALTHCHECK}/start"
+
+# Function to log the outputs with a timestamp, purging old log first
+log_output() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOGFILE"
+}
+
+# Handle pre-run separately
+if [[ "$SANOID_SCRIPT" == "pre" ]]; then
+  log_output "Pre-run script detected. Sending /start signal to healthcheck."
+  curl -m 10 --retry 5 $START_URL
+  exit 0
+fi
+
+# Only run the rest if we're in post or prune
+log_output "Initial Check of Snapshots"
+/usr/sbin/sanoid --monitor-snapshots > /dev/null
+log_output "Allow Snapshots DB to be built if needed"
+sleep 30
+
+# Run the commands and store their outputs
+output_snapshots=$(/usr/sbin/sanoid --monitor-snapshots)
+output_capacity=$(/usr/sbin/sanoid --monitor-capacity)
+output_health=$(/usr/sbin/sanoid --monitor-health)
+
+# Log the outputs with timestamps
+log_output "Current Status:"
+log_output "Snapshot Check: $output_snapshots"
+log_output "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+log_output "Capacity Check: $output_capacity"
+log_output "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+log_output "Health Check: $output_health"
+log_output "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
+# Concatenate outputs
+output_all="$output_snapshots $output_capacity $output_health"
+
+# Check if all outputs start with "OK"
+if [[ $output_snapshots == OK* ]] && [[ $output_capacity == OK* ]] && [[ $output_health == OK* ]]; then
+# If all checks are OK, ping healthchecks
+curl -m 10 --retry 5 --data-raw "$output_all" $HEALTHCHECK
+log_output "All checks are OK. Healthcheck pinged successfully."
+else
+echo "One or more checks did not return OK."
+curl -fsS -m 10 --retry 5 --data-raw "$output_all" $FAIL_URL
+
+log_output "One or more checks did not return OK. Failure ping sent."
+fi

@@ -10,6 +10,31 @@ fileserver_setup_snapraid: true
 fileserver_setup_nfs_server: true
 fileserver_setup_zfs: true
 
+sanoid_setup: true
+sanoid_healthcheck_script_path: /home/{{ default_user }}/sanoid_healthcheck.sh
+sanoid_hc_url: "https://hc.stechsolutions.ca/ping/"
+sanoid_hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/sanoid-fileserver"
+
+sanoid_datasets:
+  - name: storage1/pictures
+    template: production
+    pre_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
+    post_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
+  - name: storage1/stechsolutions
+    pre_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
+    post_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
+    template: production
+
+sanoid_templates:
+  - name: production
+    frequently: 0
+    hourly: 36
+    daily: 30
+    monthly: 3
+    yearly: 0
+    autosnap: "yes"
+    autoprune: "yes"
+
 fileserver_zfs_pools:
   - pool_name: storage1
     # don't mount the pool, mount the datasets
