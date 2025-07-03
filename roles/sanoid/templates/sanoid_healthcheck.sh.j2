@@ -11,7 +11,6 @@ START_URL="${HEALTHCHECK}/start"
 
 # Function to log the outputs with a timestamp, purging old log first
 log_output() {
-  echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOGFILE"
 }
 
 # Handle pre-run separately
@@ -42,16 +41,15 @@ log_output "Health Check: $output_health"
 log_output "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
 # Concatenate outputs
-output_all="$output_snapshots $output_capacity $output_health"
+output_all="$(printf "%s\n%s\n%s" "$output_snapshots" "$output_capacity" "$output_health")"
 
 # Check if all outputs start with "OK"
 if [[ $output_snapshots == OK* ]] && [[ $output_capacity == OK* ]] && [[ $output_health == OK* ]]; then
 # If all checks are OK, ping healthchecks
-curl -m 10 --retry 5 --data-raw "$output_all" $HEALTHCHECK
 log_output "All checks are OK. Healthcheck pinged successfully."
 else
 echo "One or more checks did not return OK."
-curl -fsS -m 10 --retry 5 --data-raw "$output_all" $FAIL_URL
+curl -fsS -m 10 --retry 5 --data-raw "$output_all" "$FAIL_URL"
 
 log_output "One or more checks did not return OK. Failure ping sent."
 fi
