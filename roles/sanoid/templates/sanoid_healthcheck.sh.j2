@@ -1,23 +1,38 @@
 #!/bin/bash
+# https://github.com/Topslakr/Bash_Scripts/blob/main/sanoid_healthcheck
 #This is based on the work of slowhawkeclipse on the ZFS Discord.
 #User: https://discourse.practicalzfs.com/u/slowhawkeclipse/summary
 #Thread: https://discourse.practicalzfs.com/t/sanoid-monitoring-bash-script-advice/1849
 
 # Define Variables
 LOGFILE="/tmp/sanoid_healthcheck_$(date '+%Y-%m-%d').log"
+MARKER_FILE="/tmp/sanoid_start_sent_$(date +%Y-%m-%d)"
 HEALTHCHECK="{{ sanoid_hc_url }}{{ sanoid_hc_uuid }}"
 FAIL_URL="${HEALTHCHECK}/fail"
 START_URL="${HEALTHCHECK}/start"
 
 # Function to log the outputs with a timestamp, purging old log first
 log_output() {
+  printf "%s - %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$1" >> "$LOGFILE"
 }
 
 # Handle pre-run separately
 if [[ "$SANOID_SCRIPT" == "pre" ]]; then
-  log_output "Pre-run script detected. Sending /start signal to healthcheck."
-  curl -m 10 --retry 5 $START_URL
+  if [[ ! -f "$MARKER_FILE" ]]; then
+    # Create marker file to indicate pre-run has been executed
+    log_output "Pre-run script detected. Sending /start signal to healthcheck."
+    curl -m 10 --retry 5 $START_URL
+    touch "$MARKER_FILE"
+  else
+    log_output "Pre-run script already executed today. Skipping /start signal."
+  fi
   exit 0
+fi
+
+# remove the marker file if it exists
+if [[ -f "$MARKER_FILE" ]]; then
+  log_output "Removing marker file for sanoid start."
+  rm -f "$MARKER_FILE"
 fi
 
 # Only run the rest if we're in post or prune
@@ -46,6 +61,7 @@ output_all="$(printf "%s\n%s\n%s" "$output_snapshots" "$output_capacity" "$outpu
 # Check if all outputs start with "OK"
 if [[ $output_snapshots == OK* ]] && [[ $output_capacity == OK* ]] && [[ $output_health == OK* ]]; then
 # If all checks are OK, ping healthchecks
+curl -m 10 --retry 5 --data-raw "$output_all" "$HEALTHCHECK"
 log_output "All checks are OK. Healthcheck pinged successfully."
 else
 echo "One or more checks did not return OK."
