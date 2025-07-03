@@ -85,6 +85,6 @@ hc_checks:
     name: Sanoid Fileserver
     slug: sanoid-fileserver
     desc: Sanoid fileserver update
-    timeout: 86400
-    grace: 86400
+    timeout: 3600
+    grace: 43200
     channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"
