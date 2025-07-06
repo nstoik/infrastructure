@@ -82,3 +82,10 @@ secret_docker_hub_wud_access_token: get_from_docker_hub
 # Nut secrets
 secret_nut_admin_password: change_me
 secret_nut_mon_password: change_me
+
+# ZFS datasets encryption secrets
+secret_zfs_datasets_encryption:
+  "Dataset Name 1":
+    passphrase: change_me
+  "Dataset Name 2":
+    passphrase: change_me

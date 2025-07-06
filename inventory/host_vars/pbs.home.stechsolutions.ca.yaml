@@ -21,7 +21,9 @@ fileserver_zfs_pools:
     datasets:
       - name: pbs/backup
         mount_point: /mnt/zfs/pbs
-        quota: 800G
+        quota: 850G
+        canmount: "on"
+        encryption: false
   - pool_name: backup
     mount_point: none
     vdevs:
@@ -33,6 +35,10 @@ fileserver_zfs_pools:
       - name: backup/backup
         mount_point: /mnt/zfs/backup
         quota: 500G
+        canmount: "on"
+        encryption: true
+        encryption_passphrase: "{{ secret_zfs_datasets_encryption['backup/backup'].passphrase }}"
+        encryption_keylocation: "file:///home/{{ default_user }}/.zfs_backup.key"
 
 # Proxmox Backup Server configuration
 proxmox_pbs_datastores:

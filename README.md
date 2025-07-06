@@ -299,18 +299,6 @@ ansible-lint
 ansible-playbook site.yaml --syntax-check
 ```
 # General Services Documentation
-## Prometheus
-
-Prometheus has been added to monitor the infrastructure. Prometheus is set up via docker and is configured to scrape the various services running on the infrastructure. The Prometheus configuration is located at [files/prometheus/](files/prometheus/).
-
-### Configuration
-
-The main configuration file for Prometheus is located at [files/prometheus/prometheus.yaml](files/prometheus/prometheus.yaml). This file contains the scrape configurations and alerting rules.
-
-### Alertmanager
-
-Prometheus is configured to use Alertmanager for alerting. The Alertmanager configuration is located at [files/prometheus/alertmanager.yaml.j2](files/prometheus/alertmanager.yaml.j2). This file contains the configuration for the alert receivers.
-
 ## NUT
 NUT is installed and configured to monitor the UPS device of the PVE3 proxmox host. Once configured, here are some commands to monitor and test the UPS from the command line of the PVE3 host.
 
@@ -329,3 +317,35 @@ upscmd -u admin -p REPLACE_PASSWORD myups@localhost test.battery.start.deep
 ```
 
 You can alternatively visit [peanut.home.stechsolutions.ca](https://peanut.home.stechsolutions.ca) to view a web interface for the NUT devices.
+
+## Prometheus
+
+Prometheus has been added to monitor the infrastructure. Prometheus is set up via docker and is configured to scrape the various services running on the infrastructure. The Prometheus configuration is located at [files/prometheus/](files/prometheus/).
+
+### Configuration
+
+The main configuration file for Prometheus is located at [files/prometheus/prometheus.yaml](files/prometheus/prometheus.yaml). This file contains the scrape configurations and alerting rules.
+
+### Alertmanager
+
+Prometheus is configured to use Alertmanager for alerting. The Alertmanager configuration is located at [files/prometheus/alertmanager.yaml.j2](files/prometheus/alertmanager.yaml.j2). This file contains the configuration for the alert receivers.
+
+## ZFS
+ZFS is used for the fileserver and proxmox/pbs hosts. It can be configured to use encrypted datasets. The ZFS datasets are configured in the [setup_zfs_pool.yaml](roles/fileserver/tasks/setup_zfs_pool.yaml) and [setup_zfs_datasets.yaml](roles/fileserver/tasks/setup_zfs_datasets.yaml) files.
+
+### Encryption and manual loading of keys
+For the most part, encrypted datasets are configured to use a passphrase and they are automatically loaded when the system boots.
+
+A scenario where you don't want the dataset to be automatically loaded could be a remote host where you don't want the passphrase to be stored on the host. In this case, set the following in the zfs dataset configuration:
+```yaml
+canmount: noauto
+encryption: true
+encryption_passphrase: "location in the vault"
+encryption_keylocation: "none"
+```
+
+This will configure the dataset to not be automatically mounted and the encryption key will not be stored on the host. Then to manually load the key, you can run the following command (prompting for the passphrase):
+```bash
+sudo zfs load-key <dataset_name>
+sudo zfs mount <dataset_name>
+```
