@@ -88,3 +88,11 @@ hc_checks:
     timeout: 3600
     grace: 43200
     channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"
+  # Check for Proxmox Backups sanoid slug
+  - project: "{{ hc_projects[0].name }}"
+    name: Sanoid PBS
+    slug: sanoid-pbs
+    desc: Sanoid Proxmox Backups update
+    timeout: 3600
+    grace: 43200
+    channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"
