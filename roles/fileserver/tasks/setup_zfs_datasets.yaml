@@ -161,4 +161,5 @@
       loop_control:
         loop_var: dataset
         label: "{{ dataset.name }}"
+      when: dataset.mount_point is defined and dataset.mount_point != 'none'
       become: true

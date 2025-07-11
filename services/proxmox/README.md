@@ -20,12 +20,13 @@ The following steps are required to setup a new proxmox host manually.
         - [Example for PBS](files/pbs_interfaces.example) network configuration
     - Configure the required storage (ZFS pools)
 - After the ansible configuration is run, the following steps are required to complete the setup.
-    - For Homepage configuration, on both Proxmox and PBS, create an API token for the `homepage` user. 
-    - Enter that token into the `vault/vault.yaml` file under the appropriate ssection.
-    - Then add the required permission to the token.
-        - For Proxmox, it needs to have the `PVEAuditor` role on the `/` path.
-        - For PBS, it needs to have the `Audit` role on the `/` path.
-    - Then rerun the ansible playbook to apply the token to the HomePage docker container.
+    - For Homepage configuration, on both Proxmox and PBS, create an API token for the `homepage` user.
+        - Enter that token into the `vault/vault.yaml` file under the appropriate section.
+        - Then add the required permission to the token.
+            - For Proxmox, it needs to have the `PVEAuditor` role on the `/` path.
+            - For PBS, it needs to have the `Audit` role on the `/` path.
+        - Then rerun the ansible playbook to apply the token to the HomePage docker container.
+    - Add the PBS public key for the default user to the `authorized_keys` file in the `dotfiles` repository. This is then synced to the other hosts via the `base` role so the PBS host can pull backups as required.
 
 ## Proxmox Hosts Ansible Configuration
 

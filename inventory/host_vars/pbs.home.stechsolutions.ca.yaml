@@ -74,12 +74,18 @@ fileserver_zfs_pools:
           - name: "/dev/disk/by-id/ata-WDC_WD10PURX-64D85Y0_WD-WCC4J7DA678L"
     datasets:
       - name: backup/backup
-        mount_point: /mnt/zfs/backup
+        mount_point: none # This dataset is not mounted directly, but used for backups
         quota: 500G
-        canmount: "on"
+        canmount: "noauto"
         encryption: true
         encryption_passphrase: "{{ secret_zfs_datasets_encryption['backup/backup'].passphrase }}"
         encryption_keylocation: "file:///home/{{ default_user }}/.zfs_backup.key"
+      # This is a small dataset to allow the healthcheck script to run on the pbs host
+      - name: backup/scratch
+        mount_point: /mnt/zfs/scratch
+        quota: 5G
+        canmount: "on"
+        encryption: false
 
 # Proxmox Backup Server configuration
 proxmox_pbs_datastores:
