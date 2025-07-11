@@ -35,14 +35,14 @@ syncoid_setup: true
 syncoid_datasets:
   - name: backup/backup/pictures
     schedule_minute: "0"
-    # sync at 10 PM every day since sanoid creates new backups at 12 AM UTC
-    schedule_hour: "22"
+    # sync at 8 PM every day since sanoid creates new backups at 12 AM UTC
+    schedule_hour: "20"
     source: nelson@storage.home.stechsolutions.ca:storage1/pictures
     destination: backup/backup/pictures
   - name: backup/backup/stechsolutions
     schedule_minute: "10"
-    # sync at 10 PM every day since sanoid creates new backups at 12 AM UTC
-    schedule_hour: "22"
+    # sync at 8 PM every day since sanoid creates new backups at 12 AM UTC
+    schedule_hour: "20"
     source: nelson@storage.home.stechsolutions.ca:storage1/stechsolutions
     destination: backup/backup/stechsolutions
 
