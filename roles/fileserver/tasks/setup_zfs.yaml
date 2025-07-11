@@ -28,15 +28,3 @@
         state: present
         validation: required
       become: true
-
-      # Ensure sanoid and syncoid commands are allowed without password for {{ fileserver_zfs_syncoid_user }}
-    - name: Ensure sanoid and syncoid commands are allowed without password for {{ fileserver_zfs_syncoid_user }}
-      community.general.sudoers:
-        name: "81_{{ default_user }}_sanoid_commands"
-        user: "{{ default_user }}"
-        commands: "{{ fileserver_zfs_sanoid_commands }}"
-        nopassword: true
-        runas: root
-        state: present
-        validation: required
-      become: true
