@@ -1,5 +1,25 @@
 ---
 
+# Install prerequisites for Sanoid and Syncoid
+- name: Install Sanoid and Syncoid prerequisites
+  ansible.builtin.apt:
+    pkg:
+      - sanoid
+    state: present
+  become: true
+
+# Ensure the sanoid and syncoid commands are allowed without password for the default user
+- name: Ensure sanoid and syncoid commands are allowed without password for {{ fileserver_zfs_syncoid_user }}
+  community.general.sudoers:
+    name: "81_{{ default_user }}_sanoid_commands"
+    user: "{{ default_user }}"
+    commands: "{{ sanoid_commands }}"
+    nopassword: true
+    runas: root
+    state: present
+    validation: required
+  become: true
+
 # Ensure the required directories exist
 - name: Ensure Sanoid directories exist
   ansible.builtin.file:
@@ -29,3 +49,38 @@
   when: sanoid_hc_url is defined and sanoid_hc_uuid is defined
   tags:
     - sanoid
+
+# Apply appropriate zfs permissions for Sanoid and Syncoid
+- name: Apply appropriate zfs permissions for Sanoid and Syncoid
+  ansible.builtin.command: >
+    zfs allow {{ dataset.zfs_permission_user }} {{ dataset.zfs_permissions }} {{ dataset.zfs_permission_dataset }}
+  loop: "{{ sanoid_datasets }}"
+  loop_control:
+    loop_var: dataset
+    label: "{{ dataset.name }}"
+  when: sanoid_datasets is defined and
+        dataset.zfs_permission_user is defined and
+        dataset.zfs_permissions is defined
+  changed_when: false
+  become: true
+  tags:
+    - sanoid
+    - sanoid.syncoid
+
+# Set the Syncoid commands to run if required
+- name: Set the Syncoid commands to run if required
+  ansible.builtin.cron:
+    name: "Run Syncoid for {{ dataset.name }}"
+    minute: "{{ dataset.schedule_minute }}"
+    hour: "{{ dataset.schedule_hour }}"
+    user: "{{ default_user }}"
+    job: syncoid --no-privilege-elevation --exclude='autosnap_.*_hourly$' {{ dataset.source }} {{ dataset.destination }}
+    state: present
+  loop: "{{ syncoid_datasets }}"
+  loop_control:
+    loop_var: dataset
+    label: "{{ dataset.name }}"
+  when: syncoid_setup is defined and syncoid_setup is true
+  tags:
+    - sanoid
+    - sanoid.syncoid
