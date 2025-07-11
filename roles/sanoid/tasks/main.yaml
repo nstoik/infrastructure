@@ -53,14 +53,14 @@
 # Apply appropriate zfs permissions for Sanoid and Syncoid
 - name: Apply appropriate zfs permissions for Sanoid and Syncoid
   ansible.builtin.command: >
-    zfs allow {{ dataset.zfs_permission_user }} {{ dataset.zfs_permissions }} {{ dataset.zfs_permission_dataset }}
-  loop: "{{ sanoid_datasets }}"
+    zfs allow {{ permission.user }} {{ permission.permissions }} {{ permission.dataset }}
+  loop: "{{ sanoid_zfs_permissions }}"
   loop_control:
-    loop_var: dataset
-    label: "{{ dataset.name }}"
-  when: sanoid_datasets is defined and
-        dataset.zfs_permission_user is defined and
-        dataset.zfs_permissions is defined
+    loop_var: permission
+    label: "{{ permission.dataset }}"
+  when: sanoid_zfs_permissions is defined and
+        permission.user is defined and
+        permission.permissions is defined
   changed_when: false
   become: true
   tags:

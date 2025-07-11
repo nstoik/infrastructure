@@ -20,16 +20,21 @@ sanoid_datasets:
     template: production
     pre_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
     post_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
-    zfs_permission_user: "{{ default_user }}"
-    zfs_permissions: snapshot,send,hold,destroy
-    zfs_permission_dataset: storage1/pictures
   - name: storage1/stechsolutions
     pre_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
     post_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
     template: production
-    zfs_permission_user: "{{ default_user }}"
-    zfs_permissions: snapshot,send,hold,destroy
-    zfs_permission_dataset: storage1/stechsolutions
+
+sanoid_zfs_permissions:
+  - user: "{{ default_user }}"
+    permissions: snapshot,send,hold,destroy
+    dataset: storage1/pictures
+  - user: "{{ default_user }}"
+    permissions: snapshot,send,hold,destroy
+    dataset: storage1/stechsolutions
+  - user: "{{ default_user }}"
+    permissions: create,mount,send,snapshot
+    dataset: storage1
 
 fileserver_zfs_pools:
   - pool_name: storage1
