@@ -18,11 +18,10 @@ sanoid_hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/sanoid-file
 sanoid_datasets:
   - name: storage1/pictures
     template: production
+    # Only set the pre and post snapshot scripts once per host
     pre_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
     post_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
   - name: storage1/stechsolutions
-    pre_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
-    post_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
     template: production
   - name: storage1/safekeep
     template: safekeep
