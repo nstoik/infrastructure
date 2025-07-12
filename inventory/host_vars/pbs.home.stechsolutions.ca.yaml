@@ -19,6 +19,8 @@ sanoid_datasets:
     template: backup
   - name: backup/backup/stechsolutions
     template: backup
+  - name: backup/backup/safekeep
+    template: backup_safekeep
     # This is a small dataset to allow the healthcheck script to run on the pbs host
   - name: backup/scratch
     template: production
@@ -45,6 +47,12 @@ syncoid_datasets:
     schedule_hour: "20"
     source: nelson@storage.home.stechsolutions.ca:storage1/stechsolutions
     destination: backup/backup/stechsolutions
+  - name: backup/backup/safekeep
+    schedule_minute: "20"
+    # sync at 8 PM every day since sanoid creates new backups at 12 AM UTC
+    schedule_hour: "20"
+    source: nelson@storage.home.stechsolutions.ca:storage1/safekeep
+    destination: backup/backup/safekeep
 
 fileserver_zfs_pools:
   - pool_name: pbs

@@ -24,6 +24,8 @@ sanoid_datasets:
     pre_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
     post_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
     template: production
+  - name: storage1/safekeep
+    template: safekeep
 
 sanoid_zfs_permissions:
   - user: "{{ default_user }}"
@@ -32,6 +34,9 @@ sanoid_zfs_permissions:
   - user: "{{ default_user }}"
     permissions: snapshot,send,hold,destroy
     dataset: storage1/stechsolutions
+  - user: "{{ default_user }}"
+    permissions: snapshot,send,hold,destroy
+    dataset: storage1/safekeep
   - user: "{{ default_user }}"
     permissions: create,mount,send,snapshot
     dataset: storage1
@@ -53,6 +58,11 @@ fileserver_zfs_pools:
         encryption: false
       - name: storage1/stechsolutions
         mount_point: /mnt/zfs/stechsolutions
+        quota: 200G
+        canmount: "on"
+        encryption: false
+      - name: storage1/safekeep
+        mount_point: /mnt/zfs/safekeep
         quota: 200G
         canmount: "on"
         encryption: false
@@ -170,7 +180,7 @@ fileserver_nfs_exports:
     mode: '0755'
     machines:
       - name: 10.10.1.100/32  # nelsons desktop
-        options: rw,sync,no_subtree_check,no_root_squash,fsid=25
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=26
   - path: /mnt/zfs/pictures
     machines:
       - name: 10.10.1.0/24  # home network
@@ -183,3 +193,9 @@ fileserver_nfs_exports:
         options: rw,sync,no_subtree_check,no_root_squash,fsid=22
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=23
+  - path: /mnt/zfs/safekeep
+    machines:
+      - name: 10.10.1.0/24  # home network
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=24
+      - name: 10.10.5.0/24  # trusted network
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=25
