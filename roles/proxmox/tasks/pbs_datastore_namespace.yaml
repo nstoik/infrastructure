@@ -42,10 +42,10 @@
       --store {{ datastore_name }}
       --ns "{{ namespace.ns }}"
       --comment "{{ namespace.comment }}"
-      --keep-daily {{ namespace['keep-daily'] }}
-      --keep-last {{ namespace['keep-last'] }}
-      --keep-monthly {{ namespace['keep-monthly'] }}
-      --keep-yearly {{ namespace['keep-yearly'] }}
+      {% if namespace['keep-last'] | int > 0 %}--keep-last {{ namespace['keep-last'] }}{% endif %}
+      {% if namespace['keep-daily'] | int > 0 %}--keep-daily {{ namespace['keep-daily'] }}{% endif %}
+      {% if namespace['keep-monthly'] | int > 0 %}--keep-monthly {{ namespace['keep-monthly'] }}{% endif %}
+      {% if namespace['keep-yearly'] | int > 0 %}--keep-yearly {{ namespace['keep-yearly'] }}{% endif %}
       --max-depth {{ namespace['max-depth'] | default(0) }}
   become: true
   loop: "{{ namespaces }}"

@@ -96,24 +96,24 @@ proxmox_pbs_datastores:
   - name: pbs
     path: /mnt/zfs/pbs
     comment: "Proxmox Backup Server datastore"
-    gc-schedule: "sun 04:00"  # Every Sunday at 4 AM
+    gc-schedule: "sun,wed 04:00"  # Every Sunday at 4 AM
     namespaces:
       - id: "111"
         ns: "proxmox-vms"
         comment: "Prune schedule for Proxmox VMs"
         schedule: "02:00"  # Every day at 2 AM
-        keep-last: 1
+        keep-last: 0
         keep-daily: 10
         keep-monthly: 6
-        keep-yearly: 1
+        keep-yearly: 0
       - id: "222"
         ns: "disks"
         comment: "Prune schedule for Proxmox Disks"
         schedule: "02:30"  # Every day at 2:30 AM
-        keep-last: 1
+        keep-last: 0
         keep-daily: 10
         keep-monthly: 6
-        keep-yearly: 1
+        keep-yearly: 0
 
 proxmox_pbs_verify_schedules:
   - id: "12345"
