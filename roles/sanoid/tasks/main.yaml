@@ -74,7 +74,7 @@
     minute: "{{ dataset.schedule_minute }}"
     hour: "{{ dataset.schedule_hour }}"
     user: "{{ default_user }}"
-    job: "{{ sanoid_syncoid_path }} --no-privilege-elevation --exclude='autosnap_.*_hourly$' {{ dataset.source }} {{ dataset.destination }}
+    job: "{{ sanoid_syncoid_path }} --no-privilege-elevation --exclude='autosnap_.*_hourly$' {{ dataset.source }} {{ dataset.destination }}"
     state: present
   loop: "{{ syncoid_datasets }}"
   loop_control:
