@@ -44,6 +44,16 @@
         - fileserver.zfs
         - fileserver.swap
 
+    # Run the sanoid role
+    - name: Import sanoid role
+      ansible.builtin.import_role:
+        name: sanoid
+      when:
+        hostvars[inventory_hostname].sanoid_setup is defined and
+        hostvars[inventory_hostname].sanoid_setup is true
+      tags:
+        - sanoid
+
     # Run the base role
     - name: Import base role
       ansible.builtin.import_role:

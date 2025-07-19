@@ -69,6 +69,10 @@
     - fileserver.zfs
   when: fileserver_setup_zfs is true
   block:
+    # Setup ZFS
+    - name: Setup ZFS
+      ansible.builtin.include_tasks: setup_zfs.yaml
+
     # Setup ZFS pool
     - name: Setup ZFS pool
       ansible.builtin.include_tasks: setup_zfs_pool.yaml

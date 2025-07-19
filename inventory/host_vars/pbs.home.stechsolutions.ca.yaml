@@ -9,6 +9,51 @@ base_user_additional_groups:
 fileserver_setup: true
 fileserver_setup_zfs: true
 
+sanoid_setup: true
+sanoid_healthcheck_script_path: /home/{{ default_user }}/sanoid_healthcheck.sh
+sanoid_hc_url: "https://hc.stechsolutions.ca/ping/"
+sanoid_hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/sanoid-pbs"
+
+sanoid_datasets:
+  - name: backup/backup/pictures
+    template: backup
+  - name: backup/backup/stechsolutions
+    template: backup
+  - name: backup/backup/safekeep
+    template: backup_safekeep
+    # This is a small dataset to allow the healthcheck script to run on the pbs host
+  - name: backup/scratch
+    template: production
+    pre_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
+    post_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
+
+sanoid_zfs_permissions:
+  - user: "{{ default_user }}"
+    permissions: receive,create,mount,rollback,destroy
+    dataset: backup/backup
+
+syncoid_setup: true
+
+syncoid_datasets:
+  - name: backup/backup/pictures
+    schedule_minute: "0"
+    # sync at 8 PM every day since sanoid creates new backups at 12 AM UTC
+    schedule_hour: "20"
+    source: nelson@storage.home.stechsolutions.ca:storage1/pictures
+    destination: backup/backup/pictures
+  - name: backup/backup/stechsolutions
+    schedule_minute: "10"
+    # sync at 8 PM every day since sanoid creates new backups at 12 AM UTC
+    schedule_hour: "20"
+    source: nelson@storage.home.stechsolutions.ca:storage1/stechsolutions
+    destination: backup/backup/stechsolutions
+  - name: backup/backup/safekeep
+    schedule_minute: "20"
+    # sync at 8 PM every day since sanoid creates new backups at 12 AM UTC
+    schedule_hour: "20"
+    source: nelson@storage.home.stechsolutions.ca:storage1/safekeep
+    destination: backup/backup/safekeep
+
 fileserver_zfs_pools:
   - pool_name: pbs
     # don't mount the pool, mount the datasets
@@ -21,7 +66,9 @@ fileserver_zfs_pools:
     datasets:
       - name: pbs/backup
         mount_point: /mnt/zfs/pbs
-        quota: 800G
+        quota: 850G
+        canmount: "on"
+        encryption: false
   - pool_name: backup
     mount_point: none
     vdevs:
@@ -31,32 +78,42 @@ fileserver_zfs_pools:
           - name: "/dev/disk/by-id/ata-WDC_WD10PURX-64D85Y0_WD-WCC4J7DA678L"
     datasets:
       - name: backup/backup
-        mount_point: /mnt/zfs/backup
+        mount_point: none # This dataset is not mounted directly, but used for backups
         quota: 500G
+        canmount: "noauto"
+        encryption: true
+        encryption_passphrase: "{{ secret_zfs_datasets_encryption['backup/backup'].passphrase }}"
+        encryption_keylocation: "file:///home/{{ default_user }}/.zfs_backup.key"
+      # This is a small dataset to allow the healthcheck script to run on the pbs host
+      - name: backup/scratch
+        mount_point: /mnt/zfs/scratch
+        quota: 5G
+        canmount: "on"
+        encryption: false
 
 # Proxmox Backup Server configuration
 proxmox_pbs_datastores:
   - name: pbs
     path: /mnt/zfs/pbs
     comment: "Proxmox Backup Server datastore"
-    gc-schedule: "sun 04:00"  # Every Sunday at 4 AM
+    gc-schedule: "sun,wed 04:00"  # Every Sunday at 4 AM
     namespaces:
       - id: "111"
         ns: "proxmox-vms"
         comment: "Prune schedule for Proxmox VMs"
         schedule: "02:00"  # Every day at 2 AM
-        keep-last: 1
+        keep-last: 0
         keep-daily: 10
         keep-monthly: 6
-        keep-yearly: 1
+        keep-yearly: 0
       - id: "222"
         ns: "disks"
         comment: "Prune schedule for Proxmox Disks"
         schedule: "02:30"  # Every day at 2:30 AM
-        keep-last: 1
+        keep-last: 0
         keep-daily: 10
         keep-monthly: 6
-        keep-yearly: 1
+        keep-yearly: 0
 
 proxmox_pbs_verify_schedules:
   - id: "12345"

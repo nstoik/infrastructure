@@ -8,7 +8,15 @@
 #       - name: <name of the ZFS dataset>
 #         mount_point: <mount point for the dataset>
 #         quota: <quota for the dataset>
+#         canmount: <on|noauto|off>  # whether the dataset should be mounted automatically
+#         encryption: <true|false>  # whether the dataset should be encrypted
+#         encryption_passphrase: <passphrase for the dataset encryption>
+#         encryption_keylocation: <key location for the dataset encryption>
 #     # other ZFS dataset properties not used in this task
+#
+# encryption_keylocation can be file://<path> for a file-based key location,
+# or 'none' for no key location (using the passphrase directly).
+# TODO: Add support for other key locations like 'https://<url>''
 
 # block for ZFS datasets tasks
 - name: Block for ZFS datasets tasks
@@ -16,6 +24,25 @@
     - fileserver
     - fileserver.zfs
   block:
+
+    # Create the ZFS-list.cache directory if it does not exist
+    - name: Create the ZFS-list.cache directory if it does not exist
+      ansible.builtin.file:
+        path: "/etc/zfs/zfs-list.cache"
+        state: directory
+        mode: "0755"
+      become: true
+
+    # Create the ZFS-list.cache pool files if they do not exist
+    - name: Create the ZFS-list.cache pool files if they do not exist
+      ansible.builtin.file:
+        path: "/etc/zfs/zfs-list.cache/{{ fileserver_zfs_pool.pool_name }}"
+        state: touch
+        mode: "0644"
+      loop: "{{ fileserver_zfs_pool.datasets }}"
+      loop_control:
+        loop_var: dataset
+      become: true
 
     # Check if the ZFS dataset exists
     - name: Check if the ZFS dataset exists
@@ -28,8 +55,25 @@
       changed_when: false
       failed_when: false
 
-    # Create the ZFS dataset if it does not exist
-    - name: Create the ZFS dataset if it does not exist
+    # Create the ZFS key files if encryption is enabled
+    - name: Create the ZFS key files if encryption is enabled
+      ansible.builtin.lineinfile:
+        path: "{{ result.dataset.encryption_keylocation | regex_replace('^file://', '') }}"
+        line: "{{ result.dataset.encryption_passphrase }}"
+        create: true
+        state: present
+        mode: "0600"
+      loop: "{{ zfs_dataset_check.results }}"
+      loop_control:
+        loop_var: result
+        label: "{{ result.dataset.name }}"
+      when: result.rc != 0 and
+            result.dataset.encryption is true and
+            result.dataset.encryption_keylocation is defined and
+            result.dataset.encryption_keylocation.startswith('file://')
+
+    # Create the unencrypted ZFS dataset if it does not exist
+    - name: Create the unencrypted ZFS dataset if it does not exist
       ansible.builtin.command: >
         zfs create
         -o mountpoint="{{ result.dataset.mount_point }}"
@@ -37,12 +81,71 @@
         -o xattr=sa
         -o normalization=formD
         -o quota="{{ result.dataset.quota }}"
+        -o canmount="{{ result.dataset.canmount }}"
         "{{ result.dataset.name }}"
       loop: "{{ zfs_dataset_check.results }}"
       loop_control:
         loop_var: result
         label: "{{ result.dataset.name }}"
-      when: result.rc != 0
+      when: result.rc != 0 and
+            not result.dataset.encryption
+      changed_when: result.rc != 0
+      become: true
+
+    # Create the encrypted ZFS dataset with keylocation if it does not exist
+    - name: Create the encrypted ZFS dataset with keylocation if it does not exist
+      ansible.builtin.command: >
+        zfs create
+        -o mountpoint="{{ result.dataset.mount_point }}"
+        -o compression=lz4
+        -o xattr=sa
+        -o normalization=formD
+        -o quota="{{ result.dataset.quota }}"
+        -o canmount="{{ result.dataset.canmount }}"
+        -o encryption=on
+        -o keyformat=passphrase
+        -o keylocation="{{ result.dataset.encryption_keylocation }}"
+        "{{ result.dataset.name }}"
+      loop: "{{ zfs_dataset_check.results }}"
+      loop_control:
+        loop_var: result
+        label: "{{ result.dataset.name }}"
+      when: result.rc != 0 and
+            result.dataset.encryption and
+            result.dataset.encryption_keylocation != 'none'
+      changed_when: result.rc != 0
+      become: true
+
+    # Create the encrypted ZFS dataset without keylocation if it does not exist
+    - name: Create the encrypted ZFS dataset without keylocation if it does not exist
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          expect << EOF
+          spawn zfs create \
+            -o mountpoint={{ result.dataset.mount_point }} \
+            -o compression=lz4 \
+            -o xattr=sa \
+            -o normalization=formD \
+            -o quota={{ result.dataset.quota }} \
+            -o canmount={{ result.dataset.canmount }} \
+            -o encryption=on \
+            -o keyformat=passphrase \
+            {{ result.dataset.name }}
+          expect {Enter passphrase for for {{ result.dataset.name }} }
+          send "{{ result.dataset.encryption_passphrase }}\r"
+          expect {Enter again }
+          send "{{ result.dataset.encryption_passphrase }}\r"
+          expect eof
+          EOF
+        executable: /bin/bash
+      loop: "{{ zfs_dataset_check.results }}"
+      loop_control:
+        loop_var: result
+        label: "{{ result.dataset.name }}"
+      when: result.rc != 0 and
+            result.dataset.encryption and
+            result.dataset.encryption_keylocation == 'none'
       changed_when: result.rc != 0
       become: true
 
@@ -58,4 +161,5 @@
       loop_control:
         loop_var: dataset
         label: "{{ dataset.name }}"
+      when: dataset.mount_point is defined and dataset.mount_point != 'none'
       become: true

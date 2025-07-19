@@ -1,0 +1,12 @@
+---
+# Default variables for fileserver role
+
+fileserver_zfs_path: "/usr/sbin/zfs"
+
+fileserver_zfs_commands:
+  - "{{ fileserver_zfs_path }} send *"
+  - "{{ fileserver_zfs_path }} receive *"
+  - "{{ fileserver_zfs_path }} list"
+  - "{{ fileserver_zfs_path }} list *"
+  - "{{ fileserver_zfs_path }} snapshot *"
+  - "{{ fileserver_zfs_path }} destroy *"

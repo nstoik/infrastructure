@@ -17,16 +17,6 @@
     - fileserver
     - fileserver.zfs
   block:
-
-    # Install ZFS utilities
-    - name: Install ZFS utilities
-      ansible.builtin.apt:
-        pkg:
-          - zfsutils-linux
-          - sanoid
-        state: present
-      become: true
-
     # Try to import the ZFS pool
     - name: Try to import the ZFS pool
       ansible.builtin.command: >

@@ -1,0 +1,22 @@
+{% for dataset in sanoid_datasets %}
+[{{ dataset.name }}]
+    pre_snapshot_script = {{ dataset.pre_snapshot_script | default('') }}
+    post_snapshot_script = {{ dataset.post_snapshot_script | default('') }}
+    script_timeout = 300
+    use_template = {{ dataset.template }}
+{% endfor %}
+
+#############################
+# Templates below this line #
+#############################
+
+{% for template in sanoid_templates %}
+[template_{{ template.name }}]
+    frequently = {{ template.frequently }}
+    hourly = {{ template.hourly }}
+    daily = {{ template.daily }}
+    monthly = {{ template.monthly }}
+    yearly = {{ template.yearly }}
+    autosnap = {{ template.autosnap }}
+    autoprune = {{ template.autoprune }}
+{% endfor %}

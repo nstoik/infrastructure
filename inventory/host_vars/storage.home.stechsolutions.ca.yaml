@@ -10,6 +10,36 @@ fileserver_setup_snapraid: true
 fileserver_setup_nfs_server: true
 fileserver_setup_zfs: true
 
+sanoid_setup: true
+sanoid_healthcheck_script_path: /home/{{ default_user }}/sanoid_healthcheck.sh
+sanoid_hc_url: "https://hc.stechsolutions.ca/ping/"
+sanoid_hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/sanoid-fileserver"
+
+sanoid_datasets:
+  - name: storage1/pictures
+    template: production
+    # Only set the pre and post snapshot scripts once per host
+    pre_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
+    post_snapshot_script: "{{ sanoid_healthcheck_script_path }}"
+  - name: storage1/stechsolutions
+    template: production
+  - name: storage1/safekeep
+    template: safekeep
+
+sanoid_zfs_permissions:
+  - user: "{{ default_user }}"
+    permissions: snapshot,send,hold,destroy
+    dataset: storage1/pictures
+  - user: "{{ default_user }}"
+    permissions: snapshot,send,hold,destroy
+    dataset: storage1/stechsolutions
+  - user: "{{ default_user }}"
+    permissions: snapshot,send,hold,destroy
+    dataset: storage1/safekeep
+  - user: "{{ default_user }}"
+    permissions: create,mount,send,snapshot
+    dataset: storage1
+
 fileserver_zfs_pools:
   - pool_name: storage1
     # don't mount the pool, mount the datasets
@@ -23,9 +53,18 @@ fileserver_zfs_pools:
       - name: storage1/pictures
         mount_point: /mnt/zfs/pictures
         quota: 2T
+        canmount: "on"
+        encryption: false
       - name: storage1/stechsolutions
         mount_point: /mnt/zfs/stechsolutions
         quota: 200G
+        canmount: "on"
+        encryption: false
+      - name: storage1/safekeep
+        mount_point: /mnt/zfs/safekeep
+        quota: 200G
+        canmount: "on"
+        encryption: false
 
 fileserver_mergerfs_disks:
   - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi3
@@ -140,7 +179,7 @@ fileserver_nfs_exports:
     mode: '0755'
     machines:
       - name: 10.10.1.100/32  # nelsons desktop
-        options: rw,sync,no_subtree_check,no_root_squash,fsid=25
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=26
   - path: /mnt/zfs/pictures
     machines:
       - name: 10.10.1.0/24  # home network
@@ -153,3 +192,9 @@ fileserver_nfs_exports:
         options: rw,sync,no_subtree_check,no_root_squash,fsid=22
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=23
+  - path: /mnt/zfs/safekeep
+    machines:
+      - name: 10.10.1.0/24  # home network
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=24
+      - name: 10.10.5.0/24  # trusted network
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=25

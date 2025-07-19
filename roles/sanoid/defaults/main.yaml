@@ -1,0 +1,42 @@
+---
+# Default variables for sanoid role
+sanoid_path: "/usr/sbin/sanoid"
+sanoid_syncoid_path: "/usr/sbin/syncoid"
+
+sanoid_commands:
+  - "{{ sanoid_path }}"
+  - "{{ sanoid_syncoid_path }}"
+
+sanoid_templates:
+  - name: production
+    frequently: 0
+    hourly: 36
+    daily: 30
+    monthly: 3
+    yearly: 0
+    autosnap: "yes"
+    autoprune: "yes"
+  - name: safekeep
+    frequently: 0
+    hourly: 0
+    daily: 10
+    monthly: 6
+    yearly: 1
+    autosnap: "yes"
+    autoprune: "yes"
+  - name: backup
+    frequently: 0
+    hourly: 0
+    daily: 90
+    monthly: 6
+    yearly: 0
+    autosnap: "no"
+    autoprune: "yes"
+  - name: backup_safekeep
+    frequently: 0
+    hourly: 0
+    daily: 0
+    monthly: 12
+    yearly: 3
+    autosnap: "no"
+    autoprune: "yes"

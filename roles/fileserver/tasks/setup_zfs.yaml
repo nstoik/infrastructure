@@ -1,0 +1,30 @@
+---
+# Tasks to setup ZFS and permissions on a host.
+
+# Block for ZFS tasks
+- name: Block for ZFS tasks
+  tags:
+    - fileserver
+    - fileserver.zfs
+  block:
+
+    # Install ZFS utilities
+    - name: Install ZFS utilities
+      ansible.builtin.apt:
+        pkg:
+          - zfsutils-linux
+          - expect
+        state: present
+      become: true
+
+    # Ensure specific ZFS commands are allowed without password for {{ fileserver_zfs_syncoid_user }}
+    - name: Ensure specific ZFS commands are allowed without password for {{ fileserver_zfs_syncoid_user }}
+      community.general.sudoers:
+        name: "80_{{ default_user }}_zfs_commands"
+        user: "{{ default_user }}"
+        commands: "{{ fileserver_zfs_commands }}"
+        nopassword: true
+        runas: root
+        state: present
+        validation: required
+      become: true
