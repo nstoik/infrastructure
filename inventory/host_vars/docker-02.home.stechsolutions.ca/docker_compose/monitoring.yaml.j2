@@ -202,7 +202,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/brandawg93/peanut/releases"
   grafana:
-    image: grafana/grafana:11.6.0
+    image: grafana/grafana:12.0.2
     networks:
       - traefik
       - prometheus_exporter
