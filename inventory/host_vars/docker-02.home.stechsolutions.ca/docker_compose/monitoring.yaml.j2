@@ -80,7 +80,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/alertmanager/releases"
   ntfy-alertmanager:
-    image: xenrox/ntfy-alertmanager:0.4.0
+    image: xenrox/ntfy-alertmanager:0.5.0
     networks:
       - traefik
       - prometheus_exporter
