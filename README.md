@@ -273,6 +273,22 @@ The subscribed topics need to be added manually in the Ntfy clients (web or iOS 
 ## Proxmox
 The proxmox hosts need to be bootstrapped to a point where they can be managed by ansible. See the [Proxmox Hosts Manual Configuration](services/proxmox/README.md) for more information.
 
+## Tdarr
+The docker container is configured to be deployed via Ansible. However, the Tdarr server needs to be configured manually after the container is running.
+- Navigate to the [web interface](https://tdarr.home.stechsolutions.ca)
+- Set up the libraries for the media files (mounted as /movies and /tv in the container).
+- Set the Transcode cache for each library to be /temp (mounted as /temp in the container).
+- Set up the Flow transcode plugin. Current flow logic is as follows:
+    - If the video is AV1, or 480p, or 57p, or Other, then ensure the audio stream has 2 channel AAC, remove data streams, and reorder data streams.
+    - Otherwise, do the same checksm but also set 10 bit video, set MKV as the container format, set the FFMPEG settings to hvec, slow preset, quality 20, hardware encoding, and force encoding.
+    - Then run the FFMpeg command
+    - Then compare the file size and file duration to the original file to make sure it didn't change too drastically.
+    - Then replace the original file.
+    - Then notifiy either Radarr or Sonarr that the file has been replaced.
+- Set the Cache Threshold to 25GB
+- Set the job history size limit to 3 GB
+
+
 ## TailScale
 Some Tailscale configuration is done manually via the Tailscale admin console. The Tailscale admin console is located at [Tailscale Admin Console](https://login.tailscale.com/admin).
 
