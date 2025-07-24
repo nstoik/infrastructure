@@ -4,6 +4,5 @@
 ansible_host: 10.10.5.11
 
 pihole_setup: true
-pihole_config_server_target: 10.10.5.1
-pihole_config_server_cidr: 10.10.5.0/24
-pihole_config_ipv4_address: 10.10.5.11/24
+
+pihole_webserver_domain: "pihole-2.home.stechsolutions.ca"
