@@ -1,0 +1,97 @@
+---
+# Install Pi-hole v6
+
+# Block to install Pi-hole v6
+- name: Block to install pihole v6
+  when:
+    pihole_setup is defined and
+    pihole_setup is true
+  tags:
+    - pihole
+  block:
+
+    # Create the pihole group
+    - name: Create the pihole group
+      ansible.builtin.group:
+        name: pihole
+        state: present
+      become: true
+
+    # Create the pihole user
+    - name: Create the pihole user
+      ansible.builtin.user:
+        name: pihole
+        group: pihole
+        home: "/home/pihole"
+        shell: "/usr/sbin/nologin"
+        comment: "Pi-hole user"
+        password: "*"
+        state: present
+        remove: true
+        force: true
+      become: true
+
+    # Create the config directory for Pi-hole
+    - name: Create the config directory for Pi-hole
+      ansible.builtin.file:
+        path: "{{ pihole_config_dir }}"
+        state: directory
+        owner: pihole
+        group: pihole
+        mode: "0755"
+      become: true
+
+    # Write the pihole.toml configuration file
+    - name: Write the pihole.toml configuration file
+      ansible.builtin.template:
+        src: pihole.toml.j2
+        dest: "{{ pihole_config_dir }}/pihole.toml"
+        mode: "0644"
+      vars:
+        pihole_server_target: "{{ pihole_config_server_target }}"
+        pihole_server_cidr: "{{ pihole_config_server_cidr }}"
+      become: true
+
+    # Temporarily set DNS to Google (for bootstrapping the DNS server installation)
+    - name: Temporarily set DNS to Google
+      ansible.builtin.lineinfile:
+        path: /etc/resolv.conf
+        line: "nameserver 8.8.8.8"
+        state: present
+      become: true
+
+    # Download the Pi-hole installer
+    - name: Download the Pi-hole installer
+      ansible.builtin.get_url:
+        url: "{{ pihole_installer_url }}"
+        dest: "{{ pihole_installer_path }}"
+        mode: "0755"
+
+    # Run the Pi-hole installer
+    - name: Run the Pi-hole installer
+      ansible.builtin.command:
+        cmd: "{{ pihole_installer_path }} --unattended"
+        creates: /etc/systemd/system/pihole-FTL.service
+      become: true
+
+    # Remove the temporary DNS setting
+    - name: Remove the temporary DNS setting
+      ansible.builtin.lineinfile:
+        path: /etc/resolv.conf
+        line: "nameserver 8.8.8.8"
+        state: absent
+      become: true
+
+    # Update gravity lists
+    - name: Update gravity lists
+      ansible.builtin.command:
+        cmd: "pihole -g"
+      become: true
+      changed_when: false
+
+    # Run the pihole-letsencrypt task
+    - name: Run the pihole-letsencrypt task
+      ansible.builtin.include_tasks: pihole_letsencrypt.yaml
+      tags:
+        - pihole
+        - pihole.letsencrypt

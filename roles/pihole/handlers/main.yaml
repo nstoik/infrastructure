@@ -3,6 +3,6 @@
 
 # Restart pihole
 - name: Restart pihole
-  ansible.builtin.command: pihole restartdns
+  ansible.builtin.command: pihole reloaddns
   changed_when: true
   become: true

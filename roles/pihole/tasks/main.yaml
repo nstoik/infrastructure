@@ -1,16 +1,19 @@
 ---
 # The main task file for the pihole role
 
-# Update DNS entries to Pi-hole
-- name: Update DNS entries to Pi-hole
-  ansible.builtin.include_tasks: update_dns.yaml
+# Update DNS and CNAME entries to Pi-hole by writing the configuration file.
+# Pi-hole v6 uses a pihole.toml configuration file and will set any variables
+# defined in the file. All others will be defaults
+- name: Write the pihole.toml configuration file
+  ansible.builtin.template:
+    src: pihole.toml.j2
+    dest: "{{ pihole_config_dir }}/pihole.toml"
+    mode: "0644"
+  vars:
+    pihole_server_target: "{{ pihole_config_server_target }}"
+    pihole_server_cidr: "{{ pihole_config_server_cidr }}"
+  become: true
+  notify:
+    - Restart pihole
   tags:
     - pihole
-    - pihole.dns
-
-# Update CNAME entries to Pi-hole
-- name: Update CNAME entries to Pi-hole
-  ansible.builtin.include_tasks: update_cname.yaml
-  tags:
-    - pihole
-    - pihole.cname

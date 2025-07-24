@@ -1,0 +1,35 @@
+[dns]
+  upstreams = [
+    "8.8.8.8",
+    "1.1.1.1",
+    "1.0.0.1"
+  ]
+  domaineNeeded = true
+  expandHosts = true
+  dnssec = true
+  listeningMode = "SINGLE"
+  revServers = [
+    "true,{{ pihole_1_server_cidr }},{{ pihole_1_server_target }},home.stechsolutions.ca",
+    "true,{{ pihole_2_server_cidr }},{{ pihole_2_server_target }},home.stechsolutions.ca"
+  ]
+  hosts = [
+{% for entry in pihole_dns_entries %}
+    "{{ entry.ip }} {{ entry.domain }}",
+    "{{ entry.ip }} {{ entry.domain.split('.')[0] }}"{% if not loop.last %},{% endif %}
+{% endfor %}
+  ]
+  cnameRecords = [
+{% for entry in pihole_cname_entries %}
+    "{{ entry.domain }},{{ entry.target }}",
+{% if entry.add_hostname %}
+    "{{ entry.domain.split('.')[0] }},{{ entry.target }}"{% if not loop.last %},{% endif %}
+{% endif %}
+{% endfor %}
+  ]
+
+[webserver]
+    domain = "{{ pihole_webserver_domain }}"
+
+[webserver.api]
+  pwhash = "{{ secret_pihole_password_hash}}"
+  app_pwhash = "{{ secret_pihole_app_password_hash }}"

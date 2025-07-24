@@ -20,7 +20,7 @@
     - name: Import pihole role
       ansible.builtin.import_role:
         name: pihole
-        tasks_from: install_pihole
+        tasks_from: install_pihole_v6
       when:
         hostvars[inventory_hostname].pihole_setup is defined and
         hostvars[inventory_hostname].pihole_setup is true
