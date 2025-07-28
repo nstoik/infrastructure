@@ -59,8 +59,12 @@ secret_ts_client_secret: change_me
 
 # Pihole secrets
 secret_pihole_password: change_me
-# Hash genereated with the following command: echo -n "COPY PASSWORD HERE" | sha256sum
-secret_pihole_password_hash: hashed version of 'secret_pihole_password'
+secret_pihole_password_hash: Get_from_pihole_toml_config_file_if_not_already_set_in_vault
+ Pihole application password
+secret_pihole_app_password: Get_from_web_interface_if_not_already_set_in_vault
+# Pihole application password hash
+secret_pihole_app_password_hash: Get_from_pihole_toml_config_file_if_not_already_set_in_vault
+
 
 # Proxmox or PVE secrets
 secret_pve_prometheus_user_password: change_me

@@ -4,10 +4,9 @@ providers:
   # Inspired by https://grafana.com/grafana/dashboards/1860-node-exporter-full/
   # Current revision is 37
   - name: dashboards
-    folder: ''
+    orgId: 1
     type: file
-    disableDeletion: true
-    editable: true
+    disableDeletion: false
     allowUiUpdates: true
     options:
       path: '/etc/grafana/provisioning/dashboards_json'

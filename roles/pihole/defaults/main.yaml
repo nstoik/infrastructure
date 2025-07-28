@@ -8,3 +8,14 @@ pihole_config_dir: /etc/pihole
 
 pihole_installer_url: https://install.pi-hole.net
 pihole_installer_path: /tmp/pihole-install.sh
+
+# For Pi-hole v6 pihole.toml configuration
+pihole_1_server_target: 10.10.1.1
+pihole_1_server_cidr: 10.10.1.0/24
+
+pihole_2_server_target: 10.10.5.1
+pihole_2_server_cidr: 10.10.5.0/24
+
+pihole_acme_repo: https://github.com/acmesh-official/acme.sh.git
+pihole_acme_repo_dest: /root/acme_sh_repo
+pihole_acme_home: /root/.acme.sh

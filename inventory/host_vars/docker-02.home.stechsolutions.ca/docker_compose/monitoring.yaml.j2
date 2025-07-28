@@ -3,7 +3,7 @@ name: monitoring
 
 services:
   prometheus:
-    image: prom/prometheus:v3.2.1
+    image: prom/prometheus:v3.5.0
     user: 1000:1000
     networks:
       - traefik
@@ -80,7 +80,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/alertmanager/releases"
   ntfy-alertmanager:
-    image: xenrox/ntfy-alertmanager:0.4.0
+    image: xenrox/ntfy-alertmanager:0.5.0
     networks:
       - traefik
       - prometheus_exporter
@@ -131,7 +131,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/google/cadvisor/releases"
   prometheus-pve-exporter:
-    image: prompve/prometheus-pve-exporter:3.5.2
+    image: prompve/prometheus-pve-exporter:3.5.5
     networks:
       - prometheus_exporter
     container_name: prometheus-pve-exporter
@@ -145,21 +145,29 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
   prometheus-pihole-exporter:
-    image: ekofr/pihole-exporter:v0.4.0
+    # Use the latest version to get the --skip_tls_verification option. Once a new version is released, update the image tag.
+    image: ekofr/pihole-exporter:latest
     networks:
       - prometheus_exporter
     container_name: prometheus-pihole-exporter
+    command: ["./pihole-exporter", "-skip_tls_verification", "true"]
+    healthcheck:
+      test: ["CMD", "wget", "--tries=1", "--spider", "http://localhost:9617/metrics"]
+      interval: 300s
+      retries: 5
+      timeout: 10s
     environment:
-      - PIHOLE-PROTOCOL=http
+      - PIHOLE_PROTOCOL=https,https
       - PIHOLE_HOSTNAME=pihole-1.home.stechsolutions.ca,pihole-2.home.stechsolutions.ca
-      - PIHOLE_PASSWORD={{ secret_pihole_password_hash }}
+      - PIHOLE_PASSWORD={{ secret_pihole_app_password }},{{ secret_pihole_app_password }}
+      - PIHOLE_PORT=443,443
       - PORT=9617
     restart: unless-stopped
     labels:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/eko/pihole-exporter/releases"
   prometheus-nut-exporter:
-    image: ghcr.io/druggeri/nut_exporter:3.2.0
+    image: ghcr.io/druggeri/nut_exporter:3.2.1
     networks:
       - prometheus_exporter
     container_name: prometheus-nut-exporter
@@ -173,7 +181,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/druggeri/nut_exporter/releases"
   peanut:
-    image: brandawg93/peanut:5.7.1
+    image: brandawg93/peanut:5.10.0
     networks:
       - traefik
       - prometheus_exporter
@@ -202,7 +210,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/brandawg93/peanut/releases"
   grafana:
-    image: grafana/grafana:11.6.0
+    image: grafana/grafana:12.1.0
     networks:
       - traefik
       - prometheus_exporter

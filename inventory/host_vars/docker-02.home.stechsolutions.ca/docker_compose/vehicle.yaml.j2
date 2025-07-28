@@ -3,7 +3,7 @@ name: vehicle
 
 services:
   postgres_vehicle_db:
-    image: postgres:17.4
+    image: postgres:17.5
     user: 1000:1000
     networks:
       - vehicle_postgres
@@ -29,7 +29,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+(\\.\\d+)?$"
       - "wud.link.template=https://www.postgresql.org/docs/release/"
   lubelogger:
-    image: hargata/lubelogger:v1.4.5
+    image: hargata/lubelogger:v1.4.9
     user: 1000:1000
     networks:
       - traefik
@@ -39,6 +39,7 @@ services:
         - LC_ALL=en_US.UTF-8
         - LANG=en_US.UTF-8
         - POSTGRES_CONNECTION={{ vehicle_connection_string }}
+        - LUBELOGGER_DOMAIN=lubelogger.home.stechsolutions.ca
     volumes:
         - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/data:/App/data
         - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/keys:/root/.aspnet/DataProtection-Keys

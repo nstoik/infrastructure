@@ -1,0 +1,79 @@
+---
+# Setup letsencrypt for Pi-hole
+
+# Clone the acme.sh repository
+- name: Clone the acme.sh repository
+  ansible.builtin.git:
+    repo: "{{ pihole_acme_repo }}"
+    dest: "{{ pihole_acme_repo_dest }}"
+    version: master
+  become: true
+  tags:
+    - pihole
+    - pihole.letsencrypt
+
+# Install acme.sh
+# Install as root so the installed cron job will run as root
+- name: Install acme.sh
+  ansible.builtin.command:
+    cmd: >
+      "{{ pihole_acme_repo_dest }}/acme.sh"
+      --install
+      --home "{{ pihole_acme_home }}"
+      -m "{{ default_user_email }}"
+  args:
+    chdir: "{{ pihole_acme_repo_dest }}"
+    creates: "{{ pihole_acme_home }}/acme.sh"
+  become: true
+  tags:
+    - pihole
+    - pihole.letsencrypt
+
+# Create the combined path for the certificates
+- name: Create the combined path for the certificates
+  ansible.builtin.set_fact:
+    pihole_acme_fullchain_path: "{{ pihole_acme_home }}/{{ pihole_webserver_domain }}_ecc/fullchain.cer"
+    pihole_acme_key_path: "{{ pihole_acme_home }}/{{ pihole_webserver_domain }}_ecc/{{ pihole_webserver_domain }}.key"
+  tags:
+    - pihole
+    - pihole.letsencrypt
+
+# Issue the certificate for Pi-hole
+- name: Issue the certificate for Pi-hole
+  ansible.builtin.shell: >
+      "{{ pihole_acme_home }}/acme.sh"
+      --issue
+      --dns dns_cf
+      -d "{{ pihole_webserver_domain }}"
+      --server letsencrypt
+  environment:
+    CF_Token: "{{ secret_cf_token }}"
+    CF_Email: "{{ default_user_email }}"
+  args:
+    creates: "{{ pihole_acme_fullchain_path }}"
+  become: true
+  tags:
+    - pihole
+    - pihole.letsencrypt
+
+# Install the certificate for Pi-hole
+- name: Install the certificate for Pi-hole
+  ansible.builtin.command:
+    argv:
+      - "{{ pihole_acme_home }}/acme.sh"
+      - "--install-cert"
+      - "-d"
+      - "{{ pihole_webserver_domain }}"
+      - "--reloadcmd"
+      - >
+        rm -f /etc/pihole/tls* &&
+        cat {{ pihole_acme_fullchain_path }} {{ pihole_acme_key_path }} |
+        tee /etc/pihole/tls.pem &&
+        systemctl restart pihole-FTL
+  args:
+    chdir: "{{ pihole_acme_home }}"
+  become: true
+  changed_when: true
+  tags:
+    - pihole
+    - pihole.letsencrypt
