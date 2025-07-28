@@ -4,7 +4,7 @@
     "1.1.1.1",
     "1.0.0.1"
   ]
-  domaineNeeded = true
+  domainNeeded = true
   expandHosts = true
   dnssec = true
   listeningMode = "SINGLE"
@@ -31,5 +31,5 @@
     domain = "{{ pihole_webserver_domain }}"
 
 [webserver.api]
-  pwhash = "{{ secret_pihole_password_hash}}"
+  pwhash = "{{ secret_pihole_password_hash }}"
   app_pwhash = "{{ secret_pihole_app_password_hash }}"
