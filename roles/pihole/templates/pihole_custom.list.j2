@@ -1,5 +1,0 @@
-# {{ ansible_managed }}
-{% for entry in pihole_dns_entries %}
-{{ entry.ip }} {{ entry.domain }}
-{{ entry.ip }} {{ entry.domain.split('.')[0] }}
-{% endfor %}
