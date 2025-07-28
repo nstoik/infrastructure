@@ -279,12 +279,12 @@ The docker container is configured to be deployed via Ansible. However, the Tdar
 - Set up the libraries for the media files (mounted as /movies and /tv in the container).
 - Set the Transcode cache for each library to be /temp (mounted as /temp in the container).
 - Set up the Flow transcode plugin. Current flow logic is as follows:
-    - If the video is AV1, or 480p, or 57p, or Other, then ensure the audio stream has 2 channel AAC, remove data streams, and reorder data streams.
-    - Otherwise, do the same checksm but also set 10 bit video, set MKV as the container format, set the FFMPEG settings to hvec, slow preset, quality 20, hardware encoding, and force encoding.
+    - If the video is AV1, or 480p, or 576p, or Other, then ensure the audio stream has 2 channel AAC, remove data streams, and reorder data streams.
+    - Otherwise, do the same checks but also set 10 bit video, set MKV as the container format, set the FFMPEG settings to HEVC, slow preset, quality 20, hardware encoding, and force encoding.
     - Then run the FFMpeg command
     - Then compare the file size and file duration to the original file to make sure it didn't change too drastically.
     - Then replace the original file.
-    - Then notifiy either Radarr or Sonarr that the file has been replaced.
+    - Then notify either Radarr or Sonarr that the file has been replaced.
 - Set the Cache Threshold to 25GB
 - Set the job history size limit to 3 GB
 
