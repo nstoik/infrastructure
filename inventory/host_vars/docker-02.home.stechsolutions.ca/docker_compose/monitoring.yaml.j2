@@ -145,14 +145,22 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
   prometheus-pihole-exporter:
-    image: ekofr/pihole-exporter:v0.4.0
+    # Use the latest version to get the --skip_tls_verification option. Once a new version is released, update the image tag.
+    image: ekofr/pihole-exporter:latest
     networks:
       - prometheus_exporter
     container_name: prometheus-pihole-exporter
+    command: ["./pihole-exporter", "-skip_tls_verification", "true"]
+    healthcheck:
+      test: ["CMD", "wget", "--tries=1", "--spider", "http://localhost:9617/metrics"]
+      interval: 300s
+      retries: 5
+      timeout: 10s
     environment:
-      - PIHOLE-PROTOCOL=http
+      - PIHOLE_PROTOCOL=https,http
       - PIHOLE_HOSTNAME=pihole-1.home.stechsolutions.ca,pihole-2.home.stechsolutions.ca
-      - PIHOLE_PASSWORD={{ secret_pihole_password_hash }}
+      - PIHOLE_PASSWORD={{ secret_pihole_app_password }},{{ secret_pihole_app_password }}
+      - PIHOLE_PORT=443,80
       - PORT=9617
     restart: unless-stopped
     labels:

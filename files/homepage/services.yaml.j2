@@ -21,7 +21,7 @@
         icon: filestash.png
 - Network:
     - PiHole-1:
-        href: http://pihole-1.home.stechsolutions.ca/admin
+        href: https://pihole-1.home.stechsolutions.ca/admin
         description: PiHole-1
         icon: pi-hole.png
         proxmoxNode: pve3
@@ -29,11 +29,11 @@
         proxmoxType: lxc
         widget:
           type: pihole
-          url: http://pihole-1.home.stechsolutions.ca
-          version: 5
-          key: "{{ secret_pihole_password_hash }}"
+          url: https://pihole-1.home.stechsolutions.ca
+          version: 6
+          key: "{{ secret_pihole_app_password }}"
     - PiHole-2:
-        href: http://pihole-2.home.stechsolutions.ca/admin
+        href: https://pihole-2.home.stechsolutions.ca/admin
         description: PiHole-2
         icon: pi-hole.png
         proxmoxNode: pve3
@@ -41,9 +41,9 @@
         proxmoxType: lxc
         widget:
           type: pihole
-          url: http://pihole-2.home.stechsolutions.ca
-          version: 5
-          key: "{{ secret_pihole_password_hash }}"
+          url: https://pihole-2.home.stechsolutions.ca
+          version: 6
+          key: "{{ secret_pihole_app_password }}"
     - Unifi OS:
         href: https://unifi.home.stechsolutions.ca
         description: Unifi OS
