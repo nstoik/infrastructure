@@ -157,10 +157,10 @@ services:
       retries: 5
       timeout: 10s
     environment:
-      - PIHOLE_PROTOCOL=https,http
+      - PIHOLE_PROTOCOL=https,https
       - PIHOLE_HOSTNAME=pihole-1.home.stechsolutions.ca,pihole-2.home.stechsolutions.ca
       - PIHOLE_PASSWORD={{ secret_pihole_app_password }},{{ secret_pihole_app_password }}
-      - PIHOLE_PORT=443,80
+      - PIHOLE_PORT=443,443
       - PORT=9617
     restart: unless-stopped
     labels:
