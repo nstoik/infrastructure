@@ -3,6 +3,8 @@
 
 fileserver_zfs_path: "/usr/sbin/zfs"
 
+fileserver_zfs_keylocation_path: "/etc/zfs/keys"
+
 fileserver_zfs_commands:
   - "{{ fileserver_zfs_path }} send *"
   - "{{ fileserver_zfs_path }} receive *"

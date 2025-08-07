@@ -78,12 +78,12 @@ fileserver_zfs_pools:
           - name: "/dev/disk/by-id/ata-WDC_WD10PURX-64D85Y0_WD-WCC4J7DA678L"
     datasets:
       - name: backup/backup
-        mount_point: none # This dataset is not mounted directly, but used for backups
+        mount_point: /mnt/zfs/backup  # Main backup dataset. Mounted so it auto loads encryption keys
         quota: 500G
-        canmount: "noauto"
+        canmount: "on"
         encryption: true
         encryption_passphrase: "{{ secret_zfs_datasets_encryption['backup/backup'].passphrase }}"
-        encryption_keylocation: "file:///home/{{ default_user }}/.zfs_backup.key"
+        encryption_keylocation: "file:///etc/zfs/keys/backup.key"
       # This is a small dataset to allow the healthcheck script to run on the pbs host
       - name: backup/scratch
         mount_point: /mnt/zfs/scratch
