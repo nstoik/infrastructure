@@ -25,7 +25,7 @@
     - name: Check if the user already exists
       ansible.builtin.command:
         cmd: "getent passwd {{ default_user }}"
-      register: user_exists
+      register: digitalocean_user_exists
       changed_when: false
       failed_when: false
       ignore_unreachable: true
@@ -45,7 +45,7 @@
         state: present
         generate_ssh_key: true
         ssh_key_type: ed25519
-      when: user_exists.rc is defined and user_exists.rc != 0
+      when: digitalocean_user_exists.rc is defined and digitalocean_user_exists.rc != 0
 
     # create the user's ssh directory
     - name: Create the user's ssh directory
@@ -56,7 +56,7 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: "0700"
-      when: user_exists.rc is defined and user_exists.rc != 0
+      when: digitalocean_user_exists.rc is defined and digitalocean_user_exists.rc != 0
 
     # copy the authorized_keys file from the root user to the new user
     - name: Copy the authorized_keys file from the root user to the new user
@@ -68,4 +68,4 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: preserve
-      when: user_exists.rc is defined and user_exists.rc != 0
+      when: digitalocean_user_exists.rc is defined and digitalocean_user_exists.rc != 0

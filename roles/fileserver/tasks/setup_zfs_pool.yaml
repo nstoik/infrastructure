@@ -21,7 +21,7 @@
     - name: Try to import the ZFS pool
       ansible.builtin.command: >
         zpool import -f "{{ fileserver_zfs_pool.pool_name }}"
-      register: zpool_import
+      register: fileserver_zpool_import
       changed_when: false
       failed_when: false
       become: true
@@ -30,7 +30,7 @@
     - name: Check if the ZFS pool exists
       ansible.builtin.command: >
         zpool list -H "{{ fileserver_zfs_pool.pool_name }}"
-      register: zpool_check
+      register: fileserver_zpool_check
       changed_when: false
       failed_when: false
 
@@ -52,6 +52,6 @@
         {{ disk.name }}
         {% endfor %}
         {% endfor %}
-      when: zpool_check.rc != 0
-      changed_when: zpool_check.rc != 0
+      when: fileserver_zpool_check.rc != 0
+      changed_when: fileserver_zpool_check.rc != 0
       become: true

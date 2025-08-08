@@ -6,6 +6,7 @@
 
 fileserver_setup: true
 fileserver_setup_nfs_client: true
+fileserver_setup_nfs_server: true
 fileserver_setup_attached_disks: true
 
 fileserver_attached_disks:
@@ -75,3 +76,9 @@ fileserver_nfs_mounts:
     nfs_export: /mnt/storage/tv
     options: defaults
     state: mounted
+
+fileserver_nfs_exports:
+  - path: /mnt/scratch/tdarr
+    machines:
+      - name: 10.10.1.100/32  # nelsons desktop
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=10
