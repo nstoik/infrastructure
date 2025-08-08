@@ -28,3 +28,13 @@
         state: present
         validation: required
       become: true
+
+    # Ensure the ZFS key location directory exists
+    - name: Ensure the ZFS key location directory exists
+      ansible.builtin.file:
+        path: "{{ fileserver_zfs_keylocation_path }}"
+        state: directory
+        mode: '0700'
+        owner: root
+        group: root
+      become: true
