@@ -48,7 +48,7 @@
     - name: Check if the ZFS dataset exists
       ansible.builtin.command: >
         zfs list -H "{{ dataset.name }}"
-      register: zfs_dataset_check
+      register: fileserver_zfs_dataset_check
       loop: "{{ fileserver_zfs_pool.datasets }}"
       loop_control:
         loop_var: dataset
@@ -63,7 +63,7 @@
         create: true
         state: present
         mode: "0600"
-      loop: "{{ zfs_dataset_check.results }}"
+      loop: "{{ fileserver_zfs_dataset_check.results }}"
       loop_control:
         loop_var: result
         label: "{{ result.dataset.name }}"
@@ -83,7 +83,7 @@
         -o quota="{{ result.dataset.quota }}"
         -o canmount="{{ result.dataset.canmount }}"
         "{{ result.dataset.name }}"
-      loop: "{{ zfs_dataset_check.results }}"
+      loop: "{{ fileserver_zfs_dataset_check.results }}"
       loop_control:
         loop_var: result
         label: "{{ result.dataset.name }}"
@@ -106,7 +106,7 @@
         -o keyformat=passphrase
         -o keylocation="{{ result.dataset.encryption_keylocation }}"
         "{{ result.dataset.name }}"
-      loop: "{{ zfs_dataset_check.results }}"
+      loop: "{{ fileserver_zfs_dataset_check.results }}"
       loop_control:
         loop_var: result
         label: "{{ result.dataset.name }}"
@@ -139,7 +139,7 @@
           expect eof
           EOF
         executable: /bin/bash
-      loop: "{{ zfs_dataset_check.results }}"
+      loop: "{{ fileserver_zfs_dataset_check.results }}"
       loop_control:
         loop_var: result
         label: "{{ result.dataset.name }}"

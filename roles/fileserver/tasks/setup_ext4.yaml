@@ -8,7 +8,7 @@
 - name: Check if the partition exists
   ansible.builtin.stat:
     path: "/dev/disk/by-id/{{ item.name }}-part1"
-  register: partition_check
+  register: fileserver_partition_check
   loop: "{{ fileserver_ext4_disks }}"
 
 # Create the partition if it does not exist
@@ -21,7 +21,7 @@
     part_start: 0%
     part_type: primary
   when: not item.stat.exists
-  loop: "{{ partition_check.results }}"
+  loop: "{{ fileserver_partition_check.results }}"
   loop_control:
     label: "{{ item.item.name }}"
   become: true
@@ -30,7 +30,7 @@
 - name: Check if the partition is already formatted
   ansible.builtin.command: >
     blkid -s TYPE -o value "/dev/disk/by-id/{{ item.name }}-part1"
-  register: blkid_result
+  register: fileserver_blkid_result
   loop: "{{ fileserver_ext4_disks }}"
   changed_when: false
   become: true
@@ -41,7 +41,7 @@
     fstype: ext4
     dev: "/dev/disk/by-id/{{ item.item.name }}-part1"
   when: item.stdout == ""
-  loop: "{{ blkid_result.results }}"
+  loop: "{{ fileserver_blkid_result.results }}"
   loop_control:
     label: "{{ item.item.name }}-part1"
   changed_when: item.stdout == ""
@@ -55,7 +55,7 @@
     e2label "/dev/disk/by-id/{{ item.item.name }}-part1"
     "{{ item.item.partition_label }}"
   when: item.stdout == ""
-  loop: "{{ blkid_result.results }}"
+  loop: "{{ fileserver_blkid_result.results }}"
   loop_control:
     label: "{{ item.item.name }}-part1"
   changed_when: item.stdout == ""
