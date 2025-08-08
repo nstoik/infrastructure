@@ -15,14 +15,14 @@
 # Initialize the list of ntfy channel values
 - name: Initialize the list of ntfy channel values
   ansible.builtin.set_fact:
-    ntfy_channel_values: {}
+    healthchecks_ntfy_channel_values: {}
   tags:
     - healthchecks
 
 # Loop through the healtcheck channels and fill in the token value.
 - name: Set the ntfy token value for the channels
   ansible.builtin.set_fact:
-    ntfy_channel_values: "{{ ntfy_channel_values | combine({hc_channel.name: lookup('template', 'ntfy_channel.j2')}) }}"
+    healthchecks_ntfy_channel_values: "{{ healthchecks_ntfy_channel_values | combine({hc_channel.name: lookup('template', 'ntfy_channel.j2')}) }}"
   vars:
     hc_channel_topic: "{{ hc_channel.value_topic }}"
     hc_channel_url: "{{ hc_channel.value_url }}"
@@ -47,7 +47,7 @@
     project = Project.objects.get(name='{{ channel.project }}')
     channel = Channel(project=project)
     channel.kind = '{{ channel.kind }}'
-    channel.value = json.dumps({{ ntfy_channel_values[channel.name] }})
+    channel.value = json.dumps({{ healthchecks_ntfy_channel_values[channel.name] }})
     channel.name = '{{ channel.name }}'
     channel.email_verified = True
     channel.save()"

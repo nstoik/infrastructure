@@ -21,13 +21,13 @@
       ansible.builtin.tempfile:
         state: file
         suffix: .pub
-      register: ssh_key_tempfile
+      register: proxmox_ssh_key_tempfile
 
     # Set the SSH public key content
     - name: Set the SSH public key content
       ansible.builtin.copy:
         content: "{{ secret_ssh_keys[0].key }}"
-        dest: "{{ ssh_key_tempfile.path }}"
+        dest: "{{ proxmox_ssh_key_tempfile.path }}"
         mode: '0600'
 
     # Create the container only if it does not exist
@@ -44,12 +44,12 @@
           --password {{ secret_user_password }}
           --rootfs data:{{ proxmox_container.disk_size }}
           --unprivileged 1
-          --ssh-public-keys {{ ssh_key_tempfile.path }}
+          --ssh-public-keys {{ proxmox_ssh_key_tempfile.path }}
         creates: /etc/pve/lxc/{{ proxmox_container.id }}.conf
       become: true
 
     # Remove the temporary file
     - name: Remove the temporary file
       ansible.builtin.file:
-        path: "{{ ssh_key_tempfile.path }}"
+        path: "{{ proxmox_ssh_key_tempfile.path }}"
         state: absent

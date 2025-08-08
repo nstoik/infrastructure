@@ -22,7 +22,7 @@
         url: "{{ fileserver_snapraid.url }}"
         dest: "/tmp/snapraid{{ fileserver_snapraid.version }}.tar.gz"
         mode: '0755'
-      register: snapraid_download
+      register: fileserver_snapraid_download
       become: true
 
     # Extract SnapRAID
@@ -31,7 +31,7 @@
         src: "/tmp/snapraid{{ fileserver_snapraid.version }}.tar.gz"
         dest: /tmp
         remote_src: true
-      when: snapraid_download.changed  # noqa: no-handler
+      when: fileserver_snapraid_download.changed  # noqa: no-handler
       become: true
 
     # Compile and install SnapRAID
@@ -42,8 +42,8 @@
         make
         make check
         make install
-      when: snapraid_download.changed  # noqa: no-handler
-      changed_when: snapraid_download.changed
+      when: fileserver_snapraid_download.changed  # noqa: no-handler
+      changed_when: fileserver_snapraid_download.changed
       become: true
 
     # Setup SnapRAID configuration
@@ -60,5 +60,5 @@
     - name: Manually run SnapRAID sync
       ansible.builtin.command: snapraid sync
       become: true
-      when: snapraid_download.changed  # noqa: no-handler
-      changed_when: snapraid_download.changed
+      when: fileserver_snapraid_download.changed  # noqa: no-handler
+      changed_when: fileserver_snapraid_download.changed

@@ -12,7 +12,7 @@
   ansible.builtin.command:
     cmd: >
       qm config {{ proxmox_vm_info.id }}
-  register: vm_config
+  register: proxmox_vm_config
   become: true
   changed_when: false
 
@@ -37,7 +37,7 @@
       loop_control:
         loop_var: item_disk
       when: proxmox_vm_info.passthrough_disks is defined and
-            vm_config.stdout.find(item_disk.scsi) == -1
+            proxmox_vm_config.stdout.find(item_disk.scsi) == -1
       become: true
       changed_when: false
 
@@ -52,6 +52,6 @@
       loop_control:
         loop_var: item_disk
       when: proxmox_vm_info.virtual_disks is defined and
-            vm_config.stdout.find(item_disk.scsi) == -1
+            proxmox_vm_config.stdout.find(item_disk.scsi) == -1
       become: true
       changed_when: false

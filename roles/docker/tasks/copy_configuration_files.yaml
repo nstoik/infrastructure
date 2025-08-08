@@ -44,17 +44,17 @@
         loop_var: path
         label: "{{ path.name }}"
       delegate_to: localhost
-      register: paths_file_list
+      register: docker_paths_file_list
 
     # Extract the list of file paths
     - name: Extract the list of file paths
       ansible.builtin.set_fact:
-        paths_file_extracted: >-
+        docker_paths_file_extracted: >-
           {{
-            paths_file_extracted | default([])
+            docker_paths_file_extracted | default([])
             + [path_results.files | map(attribute='path') | list]
           }}
-      loop: "{{ paths_file_list.results }}"
+      loop: "{{ docker_paths_file_list.results }}"
       loop_control:
         loop_var: path_results
         label: "{{ path_results.path.name }}"
@@ -62,12 +62,12 @@
     # Get the file path that is relative to the source directory
     - name: Get the file path that is relative to the source directory
       ansible.builtin.set_fact:
-        paths_relative: >-
+        docker_paths_relative: >-
               {{
-              paths_relative | default([])
+              docker_paths_relative | default([])
               + [path.1 | map('regex_replace', '^' + path.0.src + '/', '') | list]
               }}
-      loop: "{{ docker_configuration_paths | zip(paths_file_extracted) | list }}"
+      loop: "{{ docker_configuration_paths | zip(docker_paths_file_extracted) | list }}"
       loop_control:
         loop_var: path
         label: "{{ path.0.name }}"
@@ -79,7 +79,7 @@
               {{
                 docker_configuration_paths_updated | default([]) |
                 rejectattr('name', 'equalto', path['name']) | list +
-                [ path | combine({ 'paths': paths_relative[path_index] }) ]
+                [ path | combine({ 'paths': docker_paths_relative[path_index] }) ]
               }}
       loop: "{{ docker_configuration_paths }}"
       loop_control:
