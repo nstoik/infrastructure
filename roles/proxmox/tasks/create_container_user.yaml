@@ -25,7 +25,7 @@
     - name: Check if the user already exists
       ansible.builtin.command:
         cmd: "getent passwd {{ default_user }}"
-      register: user_exists
+      register: proxmox_user_exists
       changed_when: false
       failed_when: false
       ignore_unreachable: true
@@ -45,7 +45,7 @@
         state: present
         generate_ssh_key: true
         ssh_key_type: ed25519
-      when: user_exists.rc is defined and user_exists.rc != 0
+      when: proxmox_user_exists.rc is defined and proxmox_user_exists.rc != 0
 
     # create the user's ssh directory
     - name: Create the user's ssh directory
@@ -56,7 +56,7 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: "0700"
-      when: user_exists.rc is defined and user_exists.rc != 0
+      when: proxmox_user_exists.rc is defined and proxmox_user_exists.rc != 0
 
     # create the authorized_keys file for the new user
     - name: Create the authorized_keys file for the new user
@@ -67,7 +67,7 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: "0600"
-      when: user_exists.rc is defined and user_exists.rc != 0
+      when: proxmox_user_exists.rc is defined and proxmox_user_exists.rc != 0
 
     # set the authorized_keys file for the new user
     - name: Set the authorized_keys file for the new user
@@ -83,4 +83,4 @@
       loop_control:
         loop_var: authorized_keys
         label: "{{ authorized_keys.name }}"
-      when: user_exists.rc is defined and user_exists.rc != 0
+      when: proxmox_user_exists.rc is defined and proxmox_user_exists.rc != 0
