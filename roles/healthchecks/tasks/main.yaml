@@ -28,7 +28,7 @@
         "unique": ["name"]
       }
     status_code: [200, 201]
-  register: hc_check_result
+  register: healthchecks_check_result
   loop: "{{ hc_checks }}"
   loop_control:
     loop_var: check
