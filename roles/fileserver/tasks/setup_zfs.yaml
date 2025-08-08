@@ -35,4 +35,6 @@
         path: "{{ fileserver_zfs_keylocation_path }}"
         state: directory
         mode: '0700'
+        owner: root
+        group: root
       become: true
