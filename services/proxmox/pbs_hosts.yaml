@@ -168,6 +168,16 @@
         - proxmox
         - proxmox.pbs
 
+    # Setup AWS resources for rclone
+    - name: Setup AWS resources for rclone
+      ansible.builtin.include_role:
+        name: aws
+        tasks_from: aws-rclone
+      when: rclone_setup is defined and rclone_setup is true
+      tags:
+        - aws
+        - rclone
+
     # Run the base role
     - name: Run the base role
       ansible.builtin.include_role:

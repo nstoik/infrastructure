@@ -4,6 +4,8 @@ collections:
   - name: community.docker
   - name: community.digitalocean
   - name: ansible.posix
+  - name: community.aws
+  - name: amazon.aws
 
 roles:
   - name: geerlingguy.security

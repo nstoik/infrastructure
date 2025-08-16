@@ -128,3 +128,17 @@ proxmox_pbs_verify_schedules:
     outdated-after: 0
     ignore-verified: false
     schedule: "Sat *-1..7 05:00"  # First Saturday of the month at 5 AM
+
+rclone_setup: true
+
+rclone_remote_name: "nelson-backup"
+rclone_aws_region: "ca-west-1"
+rclone_aws_acl: "private"
+rclone_aws_storage_class: "DEEP_ARCHIVE"
+rclone_remotes:
+  - remote_name: "rclone-glacier-pictures"
+    s3_bucket_expiration_days: 1095 # 3 years
+  - remote_name: "rclone-glacier-stechsolutions"
+    s3_bucket_expiration_days: 1095 # 3 years
+  - remote_name: "rclone-glacier-safekeep"
+    s3_bucket_expiration_days: 365 # 1 year

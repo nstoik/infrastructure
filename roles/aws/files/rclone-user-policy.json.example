@@ -1,0 +1,40 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "BucketLevelActions",
+      "Effect": "Allow",
+      "Action": [
+        "s3:CreateBucket",
+        "s3:DeleteBucket",
+        "s3:GetBucketLocation",
+        "s3:ListBucket",
+        "s3:PutBucketPolicy",
+        "s3:GetBucketPolicy",
+        "s3:PutLifecycleConfiguration",
+        "s3:GetLifecycleConfiguration",
+        "s3:GetEncryptionConfiguration",
+        "s3:PutEncryptionConfiguration"
+      ],
+      "Resource": [
+        "arn:aws:s3:::rclone-glacier-pictures",
+        "arn:aws:s3:::rclone-glacier-stechsolutions",
+        "arn:aws:s3:::rclone-glacier-safekeep"
+      ]
+    },
+    {
+      "Sid": "ObjectLevelActions",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::rclone-glacier-pictures/*",
+        "arn:aws:s3:::rclone-glacier-stechsolutions/*",
+        "arn:aws:s3:::rclone-glacier-safekeep/*"
+      ]
+    }
+  ]
+}

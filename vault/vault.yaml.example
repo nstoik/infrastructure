@@ -93,3 +93,8 @@ secret_zfs_datasets_encryption:
     passphrase: change_me
   "Dataset Name 2":
     passphrase: change_me
+
+# Rclone secrets
+secret_rclone_user_access_key: change_me
+secret_rclone_user_secret_key: change_me
+
