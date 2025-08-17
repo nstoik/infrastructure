@@ -98,3 +98,5 @@ secret_zfs_datasets_encryption:
 secret_rclone_user_access_key: change_me
 secret_rclone_user_secret_key: change_me
 
+secret_rclone_user_aws_access_key: change_me
+secret_rclone_user_aws_secret_key: change_me

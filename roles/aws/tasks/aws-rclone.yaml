@@ -3,16 +3,12 @@
 
 - name: Configure an S3 bucket for rclone
   amazon.aws.s3_bucket:
-    name: "{{ rclone_remote.remote_name }}"
+    name: "{{ rclone_aws_s3_bucket_name }}"
     region: "{{ rclone_aws_region }}"
     state: present
     encryption: AES256
-    aws_access_key: "{{ secret_rclone_user_access_key }}"
-    aws_secret_key: "{{ secret_rclone_user_secret_key }}"
-  loop: "{{ rclone_remotes }}"
-  loop_control:
-    loop_var: rclone_remote
-    label: "{{ rclone_remote.remote_name }}"
+    aws_access_key: "{{ secret_rclone_user_aws_access_key }}"
+    aws_secret_key: "{{ secret_rclone_user_aws_secret_key }}"
   delegate_to: localhost
   tags:
     - aws
@@ -20,21 +16,17 @@
 
 - name: Add lifecycle rule for Deep Archive
   community.aws.s3_lifecycle:
-    name: "{{ rclone_remote.remote_name }}"
+    name: "{{ rclone_aws_s3_bucket_name }}"
     region: "{{ rclone_aws_region }}"
     state: present
     status: enabled
     transitions:
       - transition_days: 0
         storage_class: "{{ rclone_aws_storage_class }}"
-    expiration_days: "{{ rclone_remote.s3_bucket_expiration_days }}"
+    expiration_days: "{{ rclone_aws_s3_bucket_expiration_days }}"
     prefix: ""
-    aws_access_key: "{{ secret_rclone_user_access_key }}"
-    aws_secret_key: "{{ secret_rclone_user_secret_key }}"
-  loop: "{{ rclone_remotes }}"
-  loop_control:
-    loop_var: rclone_remote
-    label: "{{ rclone_remote.remote_name }}"
+    aws_access_key: "{{ secret_rclone_user_aws_access_key }}"
+    aws_secret_key: "{{ secret_rclone_user_aws_secret_key }}"
   delegate_to: localhost
   tags:
     - aws

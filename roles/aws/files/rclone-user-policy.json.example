@@ -6,7 +6,6 @@
       "Effect": "Allow",
       "Action": [
         "s3:CreateBucket",
-        "s3:DeleteBucket",
         "s3:GetBucketLocation",
         "s3:ListBucket",
         "s3:PutBucketPolicy",
@@ -17,9 +16,7 @@
         "s3:PutEncryptionConfiguration"
       ],
       "Resource": [
-        "arn:aws:s3:::rclone-glacier-pictures",
-        "arn:aws:s3:::rclone-glacier-stechsolutions",
-        "arn:aws:s3:::rclone-glacier-safekeep"
+        "arn:aws:s3:::rclone-glacier-backup"
       ]
     },
     {
@@ -31,9 +28,7 @@
         "s3:DeleteObject"
       ],
       "Resource": [
-        "arn:aws:s3:::rclone-glacier-pictures/*",
-        "arn:aws:s3:::rclone-glacier-stechsolutions/*",
-        "arn:aws:s3:::rclone-glacier-safekeep/*"
+        "arn:aws:s3:::rclone-glacier-backup/*"
       ]
     }
   ]
