@@ -178,6 +178,14 @@
         - aws
         - rclone
 
+    # Setup rclone
+    - name: Setup rclone
+      ansible.builtin.include_role:
+        name: rclone
+      when: rclone_setup is defined and rclone_setup is true
+      tags:
+        - rclone
+
     # Run the base role
     - name: Run the base role
       ansible.builtin.include_role:

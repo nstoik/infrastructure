@@ -1,0 +1,62 @@
+---
+# Task file for installing and configuring rclone
+
+# Install the rclone package
+- name: Install the rclone package
+  ansible.builtin.apt:
+    name: rclone
+    state: present
+    update_cache: true
+  tags:
+    - rclone
+  become: true
+
+# Create the rclone configuration directory
+- name: Create rclone configuration directory
+  ansible.builtin.file:
+    path: "{{ rclone_config_path | dirname }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+  tags:
+    - rclone
+
+# Configure rclone template
+- name: Configure rclone template
+  ansible.builtin.template:
+    src: rclone.conf.j2
+    dest: "{{ rclone_config_path }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0644"
+  tags:
+    - rclone
+
+# Create the rclone-wrapper script
+- name: Create the rclone-wrapper script
+  ansible.builtin.template:
+    src: rclone-wrapper.sh.j2
+    dest: "{{ rclone_script_path }}"
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
+    mode: "0755"
+  tags:
+    - rclone
+
+# Set the rclone-wrapper script to run on a schedule
+- name: Set the rclone-wrapper script to run on a schedule
+  ansible.builtin.cron:
+    name: "Run rclone sync for {{ remote.subpath }}"
+    minute: "{{ remote.schedule_minute }}"
+    hour: "{{ remote.schedule_hour }}"
+    user: "{{ default_user }}"
+    job: "{{ rclone_script_path }} {{ remote.subpath }}"
+    state: present
+  loop: "{{ rclone_remotes }}"
+  loop_control:
+    loop_var: remote
+    label: "{{ remote.subpath }}"
+  when: rclone_setup is defined and rclone_setup is true
+  tags:
+    - rclone

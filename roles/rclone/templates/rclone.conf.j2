@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+# -------------------- Base S3 Remote --------------------
+[{{ rclone_remote_name }}]
+type = s3
+provider = AWS
+env_auth = false
+region = {{ rclone_aws_region }}
+location_constraint = {{ rclone_aws_region }}
+acl = {{ rclone_aws_acl }}
+server_side_encryption = AES256
+storage_class = {{ rclone_aws_storage_class }}
+access_key_id = {{ secret_rclone_user_aws_access_key }}
+secret_access_key = {{ secret_rclone_user_aws_secret_key }}
+
+# -------------------- Subpath Remotes --------------------
+{% for remote in rclone_remotes %}
+[{{ remote.subpath }}_raw]
+type = alias
+remote = {{ rclone_remote_name }}:{{ rclone_aws_s3_bucket_name }}/{{ remote.subpath }}
+
+{% endfor %}
+# -------------------- Encrypted (crypt) Remotes-----------
+{% for remote in rclone_remotes %}
+[{{ remote.subpath }}]
+type = crypt
+remote = {{ remote.subpath }}_raw:
+filename_encryption = standard
+password = {{ secret_rclone_password[loop.index - 1].password }}
+password2 = {{ secret_rclone_password[loop.index - 1].salt }}
+
+{% endfor %}
