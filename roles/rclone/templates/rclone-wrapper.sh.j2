@@ -21,9 +21,9 @@ log_output() {
 
 # local paths for each rclone remote
 declare -A LOCAL_PATHS=(
-    ["pictures"]="/mnt/zfs/backup/pictures"
-    ["stechsolutions"]="/mnt/zfs/backup/stechsolutions"
-    ["safekeep"]="/mnt/zfs/backup/safekeep"
+{% for remote in rclone_remotes %}
+    ["{{ remote.subpath }}"]="{{ remote.local_path }}"
+{% endfor %}
 )
 
 # Validate input
