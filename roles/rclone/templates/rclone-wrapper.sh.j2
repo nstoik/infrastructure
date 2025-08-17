@@ -41,7 +41,7 @@ fi
 
 log_output "Starting rclone sync for remote: $REMOTE_NAME"
 # Send start ping to healthcheck URL
-curl -fsS --retry 3 ${START_URL} || {
+curl -fsS --retry 3 "${START_URL}" || {
     log_output "Failed to send start ping to healthcheck URL."
     exit 1
 }
@@ -61,7 +61,7 @@ RC=$?
 
 # Send the healthcheck based on the exit status
 if [ $RC -eq 0 ]; then
-    curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "$HC_URL"
+    curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "${HC_URL}"
 
     log_output "Rclone sync completed successfully for $REMOTE_NAME."
 else
