@@ -96,3 +96,27 @@ hc_checks:
     timeout: 3600
     grace: 43200
     channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"
+  # Check for PBS rclone pictures slug
+  - project: "{{ hc_projects[0].name }}"
+    name: Rclone Pictures
+    slug: rclone-pictures
+    desc: Rclone pictures backup
+    timeout: 3600
+    grace: 43200
+    channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"
+  # Check for PBS rclone stechsolutions slug
+  - project: "{{ hc_projects[0].name }}"
+    name: Rclone Stechsolutions
+    slug: rclone-stechsolutions
+    desc: Rclone Stechsolutions backup
+    timeout: 3600
+    grace: 43200
+    channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"
+  # Check for PBS rclone safekeep slug
+  - project: "{{ hc_projects[0].name }}"
+    name: Rclone Safekeep
+    slug: rclone-safekeep
+    desc: Rclone Safekeep backup
+    timeout: 3600
+    grace: 43200
+    channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"
