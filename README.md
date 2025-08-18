@@ -13,7 +13,7 @@ Go through the steps to add it to the path and enable autocomplete.
 Install Ansible via Pipx
 ```bash
 pipx install ansible-core
-pipx inject ansible-core jmespath
+pipx inject ansible-core boto3 botocore jmespath
 pipx install ansible-lint
 pipx inject ansible-lint jmespath
 pipx install yamllint
@@ -288,6 +288,13 @@ The docker container is configured to be deployed via Ansible. However, the Tdar
 - Set the Cache Threshold to 25GB
 - Set the job history size limit to 3 GB
 
+## Rclone (AWS Config)
+Rclone is configured to use AWS S3 for storage. The following steps need to be done manually first to create the required user, access key, and secret key on AWS for Rclone to use.
+
+1. Create an IAM policy on AWS with the following permissions. An example policy file is located at [roles/aws/files/rclone-user-policy.json.example](roles/aws/files/rclone-user-policy.json.example). The policy file needs to be modified to use the correct bucket name.
+2. Create an IAM user on AWS and attach the policy created in step 1 to the user.
+3. Create an access key and secret key for the user.
+4. Add the access key and secret key to the `vault/vault.yaml` file under the `secret_rclone_user_access_key` and `secret_rclone_user_secret_key`
 
 ## TailScale
 Some Tailscale configuration is done manually via the Tailscale admin console. The Tailscale admin console is located at [Tailscale Admin Console](https://login.tailscale.com/admin).

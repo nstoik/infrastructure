@@ -45,7 +45,8 @@
     src: sanoid_healthcheck.sh.j2
     dest: "{{ sanoid_healthcheck_script_path }}"
     mode: '0755'
-  become: true
+    owner: "{{ default_user }}"
+    group: "{{ default_user }}"
   when: sanoid_hc_url is defined and sanoid_hc_uuid is defined
   tags:
     - sanoid

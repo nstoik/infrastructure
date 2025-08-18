@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# ----------------------
+# Rclone Wrapper Script
+# ----------------------
+
+# Usage: rclone-wrapper.sh [remote_name]
+# Where [remote_name] is the name of the rclone remote to sync.
+
+# Defined variables
+LOGFILE="/tmp/rclone_wrapper_$(date '+%Y-%m-%d').log"
+REMOTE_NAME="$1"
+HC_URL="{{ rclone_hc_url }}{{ rclone_hc_uuid }}/rclone-${REMOTE_NAME}"
+FAIL_URL="${HC_URL}/fail"
+START_URL="${HC_URL}/start"
+
+# Function to log the outputs with a timestamp
+log_output() {
+  printf "%s - %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$1" >> "$LOGFILE"
+}
+
+# local paths for each rclone remote
+declare -A LOCAL_PATHS=(
+{% for remote in rclone_remotes %}
+    ["{{ remote.subpath }}"]="{{ remote.local_path }}"
+{% endfor %}
+)
+
+# Validate input
+if [ -z "$1" ]; then
+    log_output "Usage: $0 [remote_name]"
+    exit 1
+fi
+
+# Lookup local path based on remote name
+LOCAL_PATH="${LOCAL_PATHS[$REMOTE_NAME]}"
+if [ -z "$LOCAL_PATH" ]; then
+    log_output "Unknown remote name: $REMOTE_NAME"
+    exit 1
+fi
+
+log_output "Starting rclone sync for remote: $REMOTE_NAME"
+# Send start ping to healthcheck URL
+curl -fsS --retry 3 "${START_URL}" || {
+    log_output "Failed to send start ping to healthcheck URL."
+    exit 1
+}
+
+# run the rclone commands
+OUTPUT=$(rclone copy "$LOCAL_PATH" "${REMOTE_NAME}": \
+    --config="{{ rclone_config_path }}" \
+    --size-only \
+    --fast-list \
+    --s3-no-check-bucket \
+    --log-level=INFO 2>&1)
+
+log_output "$OUTPUT"
+
+# Capture the exit status of the rclone command
+RC=$?
+
+# Send the healthcheck based on the exit status
+if [ $RC -eq 0 ]; then
+    curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "${HC_URL}"
+
+    log_output "Rclone sync completed successfully for $REMOTE_NAME."
+else
+    curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "$FAIL_URL"
+    log_output "Rclone sync failed for $REMOTE_NAME."
+fi

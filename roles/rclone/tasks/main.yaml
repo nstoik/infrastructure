@@ -1,0 +1,7 @@
+---
+# The main task file for the rclone role
+
+- name: Install and configure rclone
+  ansible.builtin.include_tasks: rclone.yaml
+  tags:
+    - rclone
