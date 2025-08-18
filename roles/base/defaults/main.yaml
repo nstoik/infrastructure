@@ -15,6 +15,7 @@ base_reboot_host_if_required: true
 # the base packages to install
 base_packages:
   - git
+  - jq
   - neofetch
   - vnstat
   - wireguard
