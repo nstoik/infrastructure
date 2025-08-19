@@ -5,3 +5,9 @@
   ansible.builtin.command: sysctl -p /etc/sysctl.d/99-tailscale.conf
   become: true
   changed_when: false
+
+- name: Restart vnstat service
+  ansible.builtin.systemd:
+    name: vnstat
+    state: restarted
+  become: true

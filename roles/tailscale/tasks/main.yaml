@@ -25,3 +25,14 @@
   tags:
     - tailscale
     - tailscale.up
+
+- name: Add Tailscale to vnstat
+  ansible.builtin.command:
+    cmd: vnstat --add tailscale0
+  args:
+    creates: "/var/lib/vnstat/tailscale0"
+  become: true
+  notify: Restart vnstat service
+  tags:
+    - tailscale
+    - tailscale.up
