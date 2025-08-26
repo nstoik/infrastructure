@@ -86,8 +86,22 @@ HC_REMOTE_URL="${HC_URL}-${REMOTE_NAME}"
 FAIL_URL="${HC_REMOTE_URL}${FAIL_URL_SUFFIX}"
 START_URL="${HC_REMOTE_URL}${START_URL_SUFFIX}"
 
-# run the rclone commands
-OUTPUT=$(rclone copy "$LOCAL_PATH" "${REMOTE_NAME}": \
+log_output "Starting rclone $RCLONE_MODE for remote: $REMOTE_NAME"
+
+# ----------------------
+# Healthchecks start ping
+# ----------------------
+if [ "$RCLONE_DRY_RUN_ENABLED" = false ]; then
+    curl -fsS --retry 3 "${START_URL}" || {
+        log_output "Failed to send start ping to healthcheck URL."
+        exit 1
+    }
+fi
+
+# ----------------------
+# Run rclone
+# ----------------------
+OUTPUT=$(rclone "$RCLONE_MODE" "$LOCAL_PATH" "${REMOTE_NAME}": \
     --config="{{ rclone_config_path }}" \
     --size-only \
     --fast-list \
@@ -99,12 +113,17 @@ log_output "$OUTPUT"
 # Capture the exit status of the rclone command
 RC=$?
 
-# Send the healthcheck based on the exit status
-if [ $RC -eq 0 ]; then
-    curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "${HC_URL}"
-
-    log_output "Rclone sync completed successfully for $REMOTE_NAME."
+# ----------------------
+# Healthchecks finish ping
+# ----------------------
+if [ "$RCLONE_DRY_RUN_ENABLED" = false ]; then
+    if [ $RC -eq 0 ]; then
+        curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "${HC_REMOTE_URL}"
+        log_output "Rclone ${RCLONE_MODE} completed successfully for $REMOTE_NAME."
+    else
+        curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "$FAIL_URL"
+        log_output "Rclone ${RCLONE_MODE} failed for $REMOTE_NAME."
+    fi
 else
-    curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "$FAIL_URL"
-    log_output "Rclone sync failed for $REMOTE_NAME."
+    log_output "Dry run completed for $REMOTE_NAME. No healthcheck ping sent."
 fi
