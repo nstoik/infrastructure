@@ -24,7 +24,9 @@ START_URL_SUFFIX="/start"
 
 # Function to log the outputs with a timestamp
 log_output() {
-  printf "%s - %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$1" >> "$LOGFILE"
+  # printf "%s - %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$1" >> "$LOGFILE"
+  local msg="$(date '+%Y-%m-%d %H:%M:%S') - $1"
+  echo "$msg" | tee -a "$LOGFILE"
 }
 
 # local paths for each rclone remote
