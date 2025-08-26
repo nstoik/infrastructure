@@ -136,6 +136,7 @@ rclone_aws_acl: "private"
 rclone_aws_storage_class: "DEEP_ARCHIVE"
 rclone_aws_s3_bucket_name: "rclone-glacier-backup"
 rclone_aws_s3_bucket_expiration_days: 1095 # 3 years
+rclone_aws_s3_bucket_versioning: true
 rclone_script_path: /home/{{ default_user }}/rclone_wrapper.sh
 rclone_config_path: /home/{{ default_user }}/.config/rclone/rclone.conf
 rclone_hc_url: "https://hc.stechsolutions.ca/ping/"
