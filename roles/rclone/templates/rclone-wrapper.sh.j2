@@ -106,7 +106,13 @@ OUTPUT=$(rclone "$RCLONE_MODE" "$LOCAL_PATH" "${REMOTE_NAME}": \
     --size-only \
     --fast-list \
     --s3-no-check-bucket \
-    --log-level=INFO 2>&1)
+    --s3-chunk-size=64M \
+    --s3-upload-concurrency=4 \
+    --checkers=8 \
+    --transfers=4 \
+    --use-mmap \
+    --log-level=INFO \
+    $RCLONE_DRY_RUN 2>&1)
 
 log_output "$OUTPUT"
 
