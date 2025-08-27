@@ -24,7 +24,6 @@ START_URL_SUFFIX="/start"
 
 # Function to log the outputs with a timestamp
 log_output() {
-  # printf "%s - %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$1" >> "$LOGFILE"
   local msg="$(date '+%Y-%m-%d %H:%M:%S') - $1"
   echo "$msg" | tee -a "$LOGFILE"
 }
@@ -54,8 +53,6 @@ for arg in "$@"; do
             ;;
     esac
 done
-
-
 # Validate input
 if [ -z "$REMOTE_NAME" ]; then
     log_output "Usage: $0 [remote_name] [mode] [--dry-run]"
@@ -112,7 +109,7 @@ OUTPUT=$(rclone "$RCLONE_MODE" "$LOCAL_PATH" "${REMOTE_NAME}": \
     --transfers=4 \
     --use-mmap \
     --log-level=INFO \
-    $RCLONE_DRY_RUN 2>&1)
+    "$RCLONE_DRY_RUN" 2>&1)
 
 log_output "$OUTPUT"
 
