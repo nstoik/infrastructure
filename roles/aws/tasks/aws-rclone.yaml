@@ -7,7 +7,7 @@
     region: "{{ rclone_aws_region }}"
     state: present
     encryption: AES256
-    versioning: "{{ rclone_aws_s3_bucket_versioning}}"
+    versioning: "{{ rclone_aws_s3_bucket_versioning }}"
     aws_access_key: "{{ secret_rclone_user_aws_access_key }}"
     aws_secret_key: "{{ secret_rclone_user_aws_secret_key }}"
   delegate_to: localhost
