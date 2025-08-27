@@ -296,6 +296,38 @@ Rclone is configured to use AWS S3 for storage. The following steps need to be d
 3. Create an access key and secret key for the user.
 4. Add the access key and secret key to the `vault/vault.yaml` file under the `secret_rclone_user_access_key` and `secret_rclone_user_secret_key`
 
+### Restore with Rclone
+Restoring from AWS S3 Deep-Archive requires thawing the files first and then using Rclone to copy them back to the desired location. An example set of commands is as follows:
+
+First figure out the encrypted path of the files or folders that you want to restore. This gives the encrypted path for a folder in the pictures remote
+``` bash
+> rclone cryptdecode --reverse pictures: "Folder Name"
+
+"Folder Name"   emtv41nsarc0j44ompd7gpbjl25daacc954qek16gp07m7tj9igg/
+```
+
+Then issue the command to thaw the files from AWS S3. This will take up to 48 hours to complete. This command will initiate the thawing process for the *_raw remote. 
+
+The `restore-days` option specifies the number of days to keep the restored files in S3.
+The `restore-priority` option specifies the priority of the restore operation.
+You can optionally run with `--dry-run` to see what would happen without actually performing the restore.
+
+``` bash
+> rclone backend restore "pictures_raw:[ENCRYPTED_PATH]" -o restore-days=3 -o restore-priority=Bulk
+```
+Then you need to wait for the thawing process to complete before using Rclone to copy the files back to their original location. In future versions of rclone, there is a built-in restore-status command instead: `rclone backend restore-status remote`. To check the status of the files operation, you can use the following command:
+
+``` bash
+> rclone lsjson "pictures_raw:[ENCRYPTED_PATH]"
+```
+Once the files are thawed, you can use Rclone to copy and decode the files.
+```bash
+> mkdir /tmp/glacier_restore
+> rclone copy "pictures:[PATH]" /tmp/glacier_restore --progress
+> ls /tmp/glacier_restore
+```
+
+
 ## TailScale
 Some Tailscale configuration is done manually via the Tailscale admin console. The Tailscale admin console is located at [Tailscale Admin Console](https://login.tailscale.com/admin).
 

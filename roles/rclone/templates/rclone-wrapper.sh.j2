@@ -4,19 +4,28 @@
 # Rclone Wrapper Script
 # ----------------------
 
-# Usage: rclone-wrapper.sh [remote_name]
-# Where [remote_name] is the name of the rclone remote to sync.
+# Usage: rclone-wrapper.sh [remote_name] [mode] [--dry-run]
+#   [remote_name] is the rclone remote
+#   [mode] (optional) can be "sync" or "copy"
+#   [--dry-run] (optional) makes rclone do a trial run with no changes
+#
+# If no [mode] is given, the script runs "sync" on the 1st of the month,
+# otherwise it defaults to "copy".
 
-# Defined variables
+# Defaults
+REMOTE_NAME=""
+RCLONE_MODE=""
+RCLONE_DRY_RUN_ENABLED=false
+RCLONE_DRY_RUN=""
 LOGFILE="/tmp/rclone_wrapper_$(date '+%Y-%m-%d').log"
-REMOTE_NAME="$1"
-HC_URL="{{ rclone_hc_url }}{{ rclone_hc_uuid }}/rclone-${REMOTE_NAME}"
-FAIL_URL="${HC_URL}/fail"
-START_URL="${HC_URL}/start"
+HC_URL="{{ rclone_hc_url }}{{ rclone_hc_uuid }}/rclone"
+FAIL_URL_SUFFIX="/fail"
+START_URL_SUFFIX="/start"
 
 # Function to log the outputs with a timestamp
 log_output() {
-  printf "%s - %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$1" >> "$LOGFILE"
+  local msg="$(date '+%Y-%m-%d %H:%M:%S') - $1"
+  echo "$msg" | tee -a "$LOGFILE"
 }
 
 # local paths for each rclone remote
@@ -26,9 +35,27 @@ declare -A LOCAL_PATHS=(
 {% endfor %}
 )
 
+# Parse args
+for arg in "$@"; do
+    case "$arg" in
+        --dry-run)
+            RCLONE_DRY_RUN_ENABLED=true
+            RCLONE_DRY_RUN="--dry-run"
+            ;;
+        sync|copy)
+            RCLONE_MODE="$arg"
+            ;;
+        *)
+            # If it's not a known mode or flag, treat it as the remote name
+            if [ -z "$REMOTE_NAME" ]; then
+                REMOTE_NAME="$arg"
+            fi
+            ;;
+    esac
+done
 # Validate input
-if [ -z "$1" ]; then
-    log_output "Usage: $0 [remote_name]"
+if [ -z "$REMOTE_NAME" ]; then
+    log_output "Usage: $0 [remote_name] [mode] [--dry-run]"
     exit 1
 fi
 
@@ -39,32 +66,67 @@ if [ -z "$LOCAL_PATH" ]; then
     exit 1
 fi
 
-log_output "Starting rclone sync for remote: $REMOTE_NAME"
-# Send start ping to healthcheck URL
-curl -fsS --retry 3 "${START_URL}" || {
-    log_output "Failed to send start ping to healthcheck URL."
-    exit 1
-}
+# Decide mode: explicit arg > date logic
+if [ -n "$RCLONE_MODE" ]; then
+    log_output "Using explicit mode: $RCLONE_MODE"
+else
+    if [ "$(date '+%d')" -eq 1 ]; then
+        RCLONE_MODE="sync"
+    else
+        RCLONE_MODE="copy"
+    fi
+    log_output "Using default mode based on date: $RCLONE_MODE"
+fi
 
-# run the rclone commands
-OUTPUT=$(rclone copy "$LOCAL_PATH" "${REMOTE_NAME}": \
+# Build healthcheck URLs
+HC_REMOTE_URL="${HC_URL}-${REMOTE_NAME}"
+FAIL_URL="${HC_REMOTE_URL}${FAIL_URL_SUFFIX}"
+START_URL="${HC_REMOTE_URL}${START_URL_SUFFIX}"
+
+log_output "Starting rclone $RCLONE_MODE for remote: $REMOTE_NAME"
+
+# ----------------------
+# Healthchecks start ping
+# ----------------------
+if [ "$RCLONE_DRY_RUN_ENABLED" = false ]; then
+    curl -fsS --retry 3 "${START_URL}" || {
+        log_output "Failed to send start ping to healthcheck URL."
+        exit 1
+    }
+fi
+
+# ----------------------
+# Run rclone
+# ----------------------
+OUTPUT=$(rclone "$RCLONE_MODE" "$LOCAL_PATH" "${REMOTE_NAME}": \
     --config="{{ rclone_config_path }}" \
     --size-only \
     --fast-list \
     --s3-no-check-bucket \
-    --log-level=INFO 2>&1)
+    --s3-chunk-size=64M \
+    --s3-upload-concurrency=4 \
+    --checkers=8 \
+    --transfers=4 \
+    --use-mmap \
+    --log-level=INFO \
+    "$RCLONE_DRY_RUN" 2>&1)
 
 log_output "$OUTPUT"
 
 # Capture the exit status of the rclone command
 RC=$?
 
-# Send the healthcheck based on the exit status
-if [ $RC -eq 0 ]; then
-    curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "${HC_URL}"
-
-    log_output "Rclone sync completed successfully for $REMOTE_NAME."
+# ----------------------
+# Healthchecks finish ping
+# ----------------------
+if [ "$RCLONE_DRY_RUN_ENABLED" = false ]; then
+    if [ $RC -eq 0 ]; then
+        curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "${HC_REMOTE_URL}"
+        log_output "Rclone ${RCLONE_MODE} completed successfully for $REMOTE_NAME."
+    else
+        curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "$FAIL_URL"
+        log_output "Rclone ${RCLONE_MODE} failed for $REMOTE_NAME."
+    fi
 else
-    curl -fsS --retry 3 --data-raw "$(tail -n 100 <<< "$OUTPUT")" "$FAIL_URL"
-    log_output "Rclone sync failed for $REMOTE_NAME."
+    log_output "Dry run completed for $REMOTE_NAME. No healthcheck ping sent."
 fi
