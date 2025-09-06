@@ -11,7 +11,7 @@ all:
       hosts:
         storage.home.stechsolutions.ca:
           base_docker_install: false
-          dotfiles:
+          base_dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
           postfix:
@@ -63,7 +63,7 @@ all:
                 backup: 0
         vpn.home.stechsolutions.ca:
           base_docker_install: false
-          dotfiles:
+          base_dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
           network:
