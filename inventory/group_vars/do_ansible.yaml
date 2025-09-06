@@ -19,7 +19,7 @@ digitalocean_droplet_image: ubuntu-24-04-x64
 base_timezone: "UTC"
 
 # additional packages to install on the host
-host_additional_packages:
+base_additional_packages:
   - prometheus-node-exporter
 
 # additional services to configure on the host

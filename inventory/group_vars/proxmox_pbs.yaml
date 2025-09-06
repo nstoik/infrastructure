@@ -9,7 +9,7 @@ base_user_additional_groups:
   - "backup"
 
 # The proxmox nodes need sudo to be installed
-host_additional_packages:
+base_additional_packages:
   - "sudo"
   - "lshw"
   - "prometheus-node-exporter"
