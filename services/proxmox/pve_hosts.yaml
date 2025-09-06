@@ -78,8 +78,6 @@
         name: base
       vars:
         base_user_add_ssh_keys: true
-        base_user_default: "{{ default_user }}"
-        base_user_password_prehashed: "{{ secret_user_password_prehashed }}"
       tags:
         - base.apt
         - base.user
