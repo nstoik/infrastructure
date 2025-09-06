@@ -20,6 +20,12 @@ base_additional_services:
     state: "stopped"
     enabled: false
 
+base_user_run_setup: false
+
+base_dotfiles:
+  install: true
+  dotbot_skip_ssh_authorized_file: false
+
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
 base_apt_upgrade_packages: "dist"
