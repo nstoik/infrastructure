@@ -1,0 +1,8 @@
+---
+
+# Configure an internet monitoring raspberry pi
+- name: Configure internet monitoring raspberry pi
+  hosts: rpi_temp
+  vars_files:
+    - ../vault/vault.yaml
+  tags: rpi.internet-monitor
