@@ -77,10 +77,7 @@
       ansible.builtin.include_role:
         name: base
       vars:
-        base_additional_packages: "{{ hostvars[inventory_hostname].host_additional_packages }}"
         base_user_add_ssh_keys: true
-        base_user_default: "{{ default_user }}"
-        base_user_password_prehashed: "{{ secret_user_password_prehashed }}"
       tags:
         - base.apt
         - base.user
@@ -165,11 +162,6 @@
     - name: Run the base role
       ansible.builtin.include_role:
         name: base
-      vars:
-        base_user_run_setup: false
-        base_dotfiles:
-          install: true
-          dotbot_skip_ssh_authorized_file: false
       tags:
         - base.apt
         - base.docker

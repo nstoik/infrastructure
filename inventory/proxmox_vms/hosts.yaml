@@ -10,11 +10,11 @@ all:
     proxmox_vms:
       hosts:
         storage.home.stechsolutions.ca:
-          docker_install: false
-          dotfiles:
+          base_docker_install: false
+          base_dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
-          postfix:
+          base_postfix:
             install: true
             relayhost: "{{ smtp_host }}:{{ smtp_port }}"
             relayhost_username: storage@mg.stechsolutions.ca
@@ -62,8 +62,8 @@ all:
                 device: "/dev/disk/by-id/ata-WDC_WD120EFBX-68B0EN0_5QJRU8GB"
                 backup: 0
         vpn.home.stechsolutions.ca:
-          docker_install: false
-          dotfiles:
+          base_docker_install: false
+          base_dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
           network:
