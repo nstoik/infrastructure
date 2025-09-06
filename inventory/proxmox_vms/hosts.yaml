@@ -14,7 +14,7 @@ all:
           base_dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
-          postfix:
+          base_postfix:
             install: true
             relayhost: "{{ smtp_host }}:{{ smtp_port }}"
             relayhost_username: storage@mg.stechsolutions.ca
