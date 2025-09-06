@@ -1,0 +1,5 @@
+---
+# group_vars for the rpi group
+ansible_become_password: "{{ secret_become_pass }}"
+
+ansible_ssh_pass: "{{ secret_become_pass }}"

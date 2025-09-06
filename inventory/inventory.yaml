@@ -7,6 +7,7 @@ all:
     pbs.home.stechsolutions.ca:
     pihole-1.home.stechsolutions.ca:
     pihole-2.home.stechsolutions.ca:
+    pi-speedtest.home.stechsolutions.ca:
     pve3.home.stechsolutions.ca:
     vpn.arnie-karen:
     vpn.home.stechsolutions.ca:
@@ -32,6 +33,9 @@ all:
         docker-02.home.stechsolutions.ca:
       children:
         do_docker:
+    rpi:
+      hosts:
+        pi-speedtest.home.stechsolutions.ca:
     nodes_remote:
       hosts:
         vpn.arnie-karen:

@@ -1,0 +1,12 @@
+---
+# Hosts that are raspberry pi devices used to monitor internet connectivity
+
+all:
+  children:
+    rpi:
+      hosts:
+        pi-speedtest.home.stechsolutions.ca:
+          docker_install: true
+          dotfiles:
+            install: true
+            dotbot_skip_ssh_authorized_file: false
