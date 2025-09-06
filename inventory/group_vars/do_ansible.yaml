@@ -23,7 +23,7 @@ base_additional_packages:
   - prometheus-node-exporter
 
 # additional services to configure on the host
-host_additional_services:
+base_additional_services:
   - name: "openipmi.service"
     state: "stopped"
     enabled: false

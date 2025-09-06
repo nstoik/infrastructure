@@ -15,7 +15,7 @@ base_additional_packages:
   - "prometheus-node-exporter"
   - "expect"  # For PBS CLI commands that require user interaction
 
-host_additional_services:
+base_additional_services:
   - name: "openipmi.service"
     state: "stopped"
     enabled: false

@@ -6,7 +6,7 @@ base_additional_packages:
   - "qemu-guest-agent"
   - prometheus-node-exporter
 
-host_additional_services:
+base_additional_services:
   - name: "qemu-guest-agent.service"
     state: "started"
     enabled: true
