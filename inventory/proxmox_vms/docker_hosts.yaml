@@ -11,7 +11,7 @@ all:
       hosts:
         docker-02.home.stechsolutions.ca:
           base_docker_install: true
-          docker_config: true
+          base_docker_config: true
           dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
@@ -59,7 +59,7 @@ all:
                 backup: 1
         docker-testing.home.stechsolutions.ca:
           base_docker_install: true
-          docker_config: true
+          base_docker_config: true
           dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false

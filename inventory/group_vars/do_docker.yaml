@@ -3,7 +3,7 @@
 
 # variables for the base and docker roles
 base_docker_install: true
-docker_config: true
+base_docker_config: true
 dotfiles:
   install: true
   dotbot_skip_ssh_authorized_file: false
