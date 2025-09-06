@@ -10,7 +10,7 @@ all:
     proxmox_vms:
       hosts:
         docker-02.home.stechsolutions.ca:
-          docker_install: true
+          base_docker_install: true
           docker_config: true
           dotfiles:
             install: true
@@ -58,7 +58,7 @@ all:
                 device: "data:5,discard=on"
                 backup: 1
         docker-testing.home.stechsolutions.ca:
-          docker_install: true
+          base_docker_install: true
           docker_config: true
           dotfiles:
             install: true

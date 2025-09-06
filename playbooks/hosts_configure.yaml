@@ -59,7 +59,6 @@
       ansible.builtin.import_role:
         name: base
       vars:
-        base_docker_install: "{{ hostvars[inventory_hostname].docker_install }}"
         base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
         base_postfix: "{{ hostvars[inventory_hostname].postfix }}"
       tags:

@@ -2,7 +2,7 @@
 # variables for the dynamic inventory group do_docker
 
 # variables for the base and docker roles
-docker_install: true
+base_docker_install: true
 docker_config: true
 dotfiles:
   install: true
