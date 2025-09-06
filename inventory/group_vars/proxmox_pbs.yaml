@@ -9,16 +9,22 @@ base_user_additional_groups:
   - "backup"
 
 # The proxmox nodes need sudo to be installed
-host_additional_packages:
+base_additional_packages:
   - "sudo"
   - "lshw"
   - "prometheus-node-exporter"
   - "expect"  # For PBS CLI commands that require user interaction
 
-host_additional_services:
+base_additional_services:
   - name: "openipmi.service"
     state: "stopped"
     enabled: false
+
+base_user_run_setup: false
+
+base_dotfiles:
+  install: true
+  dotbot_skip_ssh_authorized_file: false
 
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html

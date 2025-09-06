@@ -12,8 +12,6 @@
       ansible.builtin.include_role:
         name: base
         tasks_from: setup_dotfiles.yaml
-      vars:
-        base_dotfiles: "{{ hostvars[inventory_hostname].dotfiles }}"
       when: base_dotfiles['install'] is true
       tags:
         - base

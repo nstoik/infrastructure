@@ -6,7 +6,7 @@ all:
     proxmox_containers:
       hosts:
         pihole-1.home.stechsolutions.ca:
-          dotfiles:
+          base_dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
           network:
@@ -28,7 +28,7 @@ all:
             memory: 2048
             balloon: 1024
         pihole-2.home.stechsolutions.ca:
-          dotfiles:
+          base_dotfiles:
             install: true
             dotbot_skip_ssh_authorized_file: false
           network:

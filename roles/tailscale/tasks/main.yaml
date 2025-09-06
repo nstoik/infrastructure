@@ -26,12 +26,21 @@
     - tailscale
     - tailscale.up
 
+- name: Check if tailscale is added to vnstat
+  ansible.builtin.command:
+    cmd: vnstat --dbiflist
+  register: tailscale_vnstat_dbiflist
+  changed_when: false
+  tags:
+    - tailscale
+    - tailscale.up
+
 - name: Add Tailscale to vnstat
   ansible.builtin.command:
     cmd: vnstat --add tailscale0
-  args:
-    creates: "/var/lib/vnstat/tailscale0"
   become: true
+  when: "'tailscale0' not in tailscale_vnstat_dbiflist.stdout"
+  changed_when: "'tailscale0' not in tailscale_vnstat_dbiflist.stdout"
   notify: Restart vnstat service
   tags:
     - tailscale
