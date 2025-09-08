@@ -1,0 +1,22 @@
+# Host variables for pi-speedtest-2.home.stechsolutions.ca
+
+# docker container paths. All found files will be processed and copied to the docker host
+# docker_configuration_paths:
+
+# docker mounts subfolders
+docker_mounts_subfolders:
+  - name: speedtest
+    dest: /home/{{ default_user }}/docker_mounts/speedtest
+    mode: '0775'
+    container_name: speedtest-tracker
+
+docker_compose_subpath: "{{ inventory_dir }}/host_vars/pi-speedtest-2.home.stechsolutions.ca/docker_compose"
+
+# docker compose template files
+docker_compose_files:
+  - name: speedtest-docker-compose.yaml
+    compose_name: speedtest
+    state: present
+    src: "{{ docker_compose_subpath }}/speedtest.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/speedtest-docker-compose.yaml
+    mode: '0664'

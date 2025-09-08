@@ -31,11 +31,12 @@ all:
       hosts:
         docker-testing.home.stechsolutions.ca:
         docker-02.home.stechsolutions.ca:
+        pi-speedtest[1:2].home.stechsolutions.ca:
       children:
         do_docker:
     rpi:
       hosts:
-        pi-speedtest.home.stechsolutions.ca:
+        pi-speedtest[1:2].home.stechsolutions.ca:
     nodes_remote:
       hosts:
         vpn.arnie-karen:
