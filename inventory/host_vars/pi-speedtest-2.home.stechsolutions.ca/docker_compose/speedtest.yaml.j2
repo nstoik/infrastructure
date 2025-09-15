@@ -18,6 +18,9 @@ services:
             - SPEEDTEST_SCHEDULE=0 * * * *
             - SPEEDTEST_INTERFACE=wlan0
             - PRUNE_RESULTS_OLDER_THAN=180
+            - ADMIN_NAME=speedtest-admin
+            - ADMIN_EMAIL={{ default_user_email }}
+            - ADMIN_PASSWORD={{ secret_user_password }}
         volumes:
             - /home/{{ default_user }}/docker_mounts/speedtest:/config
         healthcheck:
