@@ -149,6 +149,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.user - Configure the default user
     - base.postfix - Configure postfix
     - base.timezone - Configure the timezone
+    - base.netplan - Configure netplan
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider

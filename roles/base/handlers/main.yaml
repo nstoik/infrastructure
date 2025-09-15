@@ -13,3 +13,9 @@
   ansible.builtin.command: systemctl reset-failed
   changed_when: true
   become: true
+
+# handler to apply the netplan configuration
+- name: Apply netplan configuration
+  ansible.builtin.command: netplan apply
+  changed_when: true
+  become: true

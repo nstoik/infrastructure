@@ -1,0 +1,36 @@
+---
+# tasks to setup netplan onto a host.
+#
+# inputs:
+#   base_netplan: A list of netplan configuration dictionaries
+#     - configure: Boolean indicating if netplan should be configured
+#     - name: The name of the netplan configuration
+#     - ethernets: A list of ethernet configurations
+#       - name: The name of the ethernet interface
+#         dhcp4: Boolean indicating if DHCP is enabled
+#         optional: Boolean indicating if the interface is optional
+#     - wifis: A list of wifi configurations
+#       - name: The name of the wifi interface
+#         dhcp4: Boolean indicating if DHCP is enabled
+#         optional: Boolean indicating if the interface is optional
+#         access-points: A list of access points for the wifi interface
+#           - ssid: The SSID of the access point
+#             password: The password for the access point
+
+# block for base netplan tasks
+- name: Block for base netplan tasks
+  tags:
+    - base
+    - base.netplan
+  block:
+    # create the netplan configuration file
+    - name: Create the netplan configuration file
+      ansible.builtin.template:
+        src: netplan.yaml.j2
+        dest: /{{ base_netplan['name'] | default('etc/netplan/51-ansiblenetcfg.yaml') }}
+        owner: root
+        group: root
+        mode: '0600'
+      when: base_netplan['configure'] is true
+      notify: Apply netplan configuration
+      become: true
