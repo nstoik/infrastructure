@@ -103,3 +103,6 @@ secret_rclone_password:
     salt: rclone obscure "$(openssl rand -base64 32)"
   - password: rclone obscure "$(openssl rand -base64 32)"
     salt: rclone obscure "$(openssl rand -base64 32)"
+
+# Wifi secrets
+secret_default_wifi_password: change_me
