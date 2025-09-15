@@ -1,13 +1,8 @@
-This is a backup of the access controls file for Tailscale made on 2025-04-11
+This is a backup of the access controls file for Tailscale made on 2025-09-14
 
 {
 	// Declare static groups of users. Use autogroups for all users or users with a specific role.
-	"groups": {
-		"group:exit_nodes_only":
-			[
-				"REDACTED",
-			],
-	},
+	"groups": {"group:exit_nodes_only": ["akstoik@hotmail.com"]},
 
 	"hosts": {
 		"home-network-1": "10.10.1.0/24",
@@ -18,6 +13,9 @@ This is a backup of the access controls file for Tailscale made on 2025-04-11
 	"tagOwners": {
 		"tag:server":            ["autogroup:admin"],
 		"tag:docker-monitoring": ["autogroup:admin"],
+
+		// Tags for devices that are not in the local network or VPS. External devices like monitoring or at another house
+		"tag:external-devices": ["autogroup:admin"],
 	},
 
 	"autoApprovers": {
@@ -25,47 +23,19 @@ This is a backup of the access controls file for Tailscale made on 2025-04-11
 			"10.10.1.0/24": ["tag:server"],
 			"10.10.5.0/24": ["tag:server"],
 		},
+
 		"exitNode": ["tag:server"],
 	},
 
 	// Define access control lists for users, groups, autogroups, tags,
 	// Tailscale IP addresses, and subnet ranges.
 	"acls": [
-		//The admins of this tailnet can get everywhere
-		{"action": "accept", "src": ["autogroup:admin"], "dst": ["*:*"]},
-
-		//Servers can communicate with each other and the local network
-		{
-			"action": "accept",
-			"src":    ["tag:server"],
-			"dst": [
-				"tag:server:*",
-				"home-network-1:53,80,443",
-				"home-network-5:53,80,443",
-			],
-		},
-
-		// Allow communication to the docker container tag on the following ports.
-		// 443: for cadvisor https endpoint for docker prometheus monitoring
-		// 2375: for homepage docker monitoring of the socket proxy
-		// 8081: for prometheus traefik monitoring
-		// 9100: for prometheus node monitoring
-		{
-			"action": "accept",
-			"src": [
-				"home-network-1",
-				"home-network-5",
-			],
-			"dst": ["tag:docker-monitoring:2375,8081,9100"],
-		},
-
 		//Admins and exit_nodes_only users can use exit nodes
 		{
 			"action": "accept",
 			"src":    ["autogroup:admin", "group:exit_nodes_only"],
 			"dst":    ["autogroup:internet:*"],
 		},
-
 		//People we share exit nodes with can use exit nodes
 		{
 			"action": "accept",
@@ -86,12 +56,49 @@ This is a backup of the access controls file for Tailscale made on 2025-04-11
 		},
 	],
 
+	"grants": [
+		// Servers can communicate with each other
+		{
+			"src": ["tag:server"],
+			"dst": ["tag:server"],
+			"ip":  ["*"],
+		},
+		// Servers can communicate with the local network
+		{
+			"src": ["tag:server"],
+			"dst": ["home-network-1", "home-network-5"],
+			"ip":  ["53", "80", "443"],
+		},
+		// The admins of this tailnet can get everywhere
+		{
+			"src": ["autogroup:admin"],
+			"dst": ["*"],
+			"ip":  ["*"],
+		},
+		// Allow communication to the docker container tag on the following ports.
+		// 443: for cadvisor https endpoint for docker prometheus monitoring
+		// 2375: for homepage docker monitoring of the socket proxy
+		// 8081: for prometheus traefik monitoring
+		// 9100: for prometheus node monitoring
+		{
+			"src": ["home-network-1", "home-network-5"],
+			"dst": ["tag:docker-monitoring"],
+
+			"ip": [
+				"443",
+				"2375",
+				"8081",
+				"9100",
+			],
+		},
+	],
+
 	// Test access rules every time they're saved.
 	// "tests": [
-	//  	{
-	//  		"src": "alice@example.com",
-	//  		"accept": ["tag:example"],
-	//  		"deny": ["100.101.102.103:443"],
-	//  	},
+	//   {
+	//       "src": "alice@example.com",
+	//       "accept": ["tag:example"],
+	//       "deny": ["100.101.102.103:443"],
+	//   },
 	// ],
 }

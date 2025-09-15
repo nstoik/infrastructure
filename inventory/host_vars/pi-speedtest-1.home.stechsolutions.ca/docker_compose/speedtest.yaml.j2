@@ -1,0 +1,32 @@
+---
+name: speedtest
+
+services:
+    speedtest-ethernet:
+        image: lscr.io/linuxserver/speedtest-tracker:1.6.6
+        container_name: speedtest-tracker-ethernet
+        network_mode: host
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - APP_NAME=speedtest-tracker-ethernet
+            - APP_KEY=base64:wBGLVMg+mPj7v9BEZXDh+zMSf3T3DWwnc5HqwkdsjbE=
+            - APP_TIMEZONE=UTC
+            - DISPLAY_TIMEZONE={{ base_timezone }}
+            - DB_CONNECTION=sqlite
+            - PUBLIC_DASHBOARD=true
+            - SPEEDTEST_SCHEDULE=0 * * * *
+            - SPEEDTEST_INTERFACE=eth0
+            - PRUNE_RESULTS_OLDER_THAN=180
+            - ADMIN_NAME=speedtest-admin
+            - ADMIN_EMAIL={{ default_user_email }}
+            - ADMIN_PASSWORD={{ secret_user_password }}
+        volumes:
+            - /home/{{ default_user }}/docker_mounts/speedtest:/config
+        healthcheck:
+            test: curl -fSs http://localhost/api/healthcheck | jq -r .message || exit 1
+            interval: 10s
+            retries: 3
+            start_period: 30s
+            timeout: 10s
+        restart: unless-stopped

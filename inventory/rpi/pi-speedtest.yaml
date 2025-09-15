@@ -1,0 +1,19 @@
+---
+# Hosts that are raspberry pi devices used to monitor internet connectivity
+
+all:
+  children:
+    rpi:
+      hosts:
+        pi-speedtest-[1:2].home.stechsolutions.ca:
+          base_docker_install: true
+          base_docker_config: true
+          base_dotfiles:
+            install: true
+            dotbot_skip_ssh_authorized_file: false
+          tailscale_setup: true
+          tailscale_authkey: "{{ secret_ts_client_secret_external }}?ephemeral=false&preauthorized=true"
+          tailscale_args: |
+            --advertise-tags='tag:external-devices'
+            --accept-dns
+            --reset

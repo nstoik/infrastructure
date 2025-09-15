@@ -1,0 +1,68 @@
+---
+
+# Configure an internet monitoring raspberry pi
+- name: Configure internet monitoring raspberry pi
+  hosts: pi-speedtest-[1:2].home.stechsolutions.ca
+  vars_files:
+    - ../../vault/vault.yaml
+  vars:
+    ansible_host_key_checking: false
+    ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null'
+  tags: rpi.internet-monitor
+
+  tasks:
+    # Update the known_hosts var_file
+    - name: Update the known_hosts var_file
+      ansible.builtin.include_role:
+        name: base
+        tasks_from: update_known_hosts
+      vars:
+        base_hostname: "{{ item }}"
+        base_state: present
+        base_comment: "RPI host: {{ ansible_hostname }}"
+      loop:
+        - "{{ ansible_default_ipv4.address }}"
+        - "{{ ansible_hostname }}"
+        - "{{ inventory_hostname }}"
+      loop_control:
+        label: "{{ item }}"
+      tags:
+        - base.known_hosts
+
+# finish setup
+- name: Finish setup
+  hosts: pi-speedtest-[1:2].home.stechsolutions.ca
+  vars_files:
+    - ../../vault/vault.yaml
+
+  tasks:
+    # Run the base role
+    - name: Import base role
+      ansible.builtin.import_role:
+        name: base
+      tags:
+        - base
+        - base.apt
+        - base.docker
+        - base.dotfiles
+        - base.known_hosts
+        - base.postfix
+        - base.timezone
+
+    # Run the geerlingguy.security role
+    - name: Import geerlingguy.security role
+      ansible.builtin.import_role:
+        name: geerlingguy.security
+      become: true
+      tags:
+        - base.geerlingguy.security
+
+    # Run the tailscale role
+    - name: Import tailscale role
+      ansible.builtin.import_role:
+        name: tailscale
+      when:
+        hostvars[inventory_hostname].tailscale_setup is defined and
+        hostvars[inventory_hostname].tailscale_setup is true
+      tags:
+        - tailscale

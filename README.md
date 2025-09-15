@@ -63,6 +63,8 @@ The main configuration is done in the [inventory/group_vars/all.yaml](inventory/
 The playbooks directory contains the different playbooks that can be run.
 
 The playbooks are:
+- [rpi](playbooks/rpi)
+    - [internet-monitor.yaml](playbooks/rpi/internet-monitor.yaml) - Configure an internet monitoring raspberry pi
 - [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
 - [digitalocean.yaml](playbooks/digitalocean.yaml) - Configure DigitalOcean configuration as specified.
 - [docker_compose.yaml](playbooks/docker_compose.yaml) - Run the docker role on the docker hosts.
@@ -149,6 +151,7 @@ The following ansible tags are available to specify specific tasks to run.
     - base.user - Configure the default user
     - base.postfix - Configure postfix
     - base.timezone - Configure the timezone
+    - base.netplan - Configure netplan
 - cloudflare - Configure Cloudflare
     - cloudflare.dns - Configure Cloudflare DNS
 - digitalocean - Configure the DigitalOcean cloud provider
@@ -197,7 +200,9 @@ Inventory files are as follows in the [inventory](inventory) directory:
     - [pihole.yaml](inventory/group_vars/pihole.yaml) - Inventory for the pihole servers
     - [proxmox_containers.yaml](inventory/group_vars/proxmox_containers.yaml) - Inventory for the proxmox containers
     - [proxmox_nodes.yaml](inventory/group_vars/proxmox_nodes.yaml) - Inventory for the proxmox nodes
+    - [proxmox_pbs.yaml](inventory/group_vars/proxmox_pbs.yaml) - Inventory for the proxmox pbs
     - [proxmox_vms.yaml](inventory/group_vars/proxmox_vms.yaml) - Inventory for the proxmox vms
+    - [rpi.yaml](inventory/group_vars/rpi.yaml) - Inventory for the raspberry pi devices
 - [host_vars](inventory/host_vars/) - Inventory for each host
     - [docker-02.home.stechsolutions.ca](inventory/host_vars/docker-02.home.stechsolutions.ca) - Folder for multiple inventory files for the docker-02 host
         - [docker_compose](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose) - Folder for docker-compose files for the docker-02 host
@@ -225,6 +230,16 @@ Inventory files are as follows in the [inventory](inventory) directory:
         - [docker.yaml](inventory/host_vars/docker-testing.home.stechsolutions.ca/docker.yaml) - Docker configuration for the docker-testing host
         - [fileserver.yaml](inventory/host_vars/docker-testing.home.stechsolutions.ca/fileserver.yaml) - Fileserver configuration for the docker-testing host
         - [tailscale.yaml](inventory/host_vars/docker-testing.home.stechsolutions.ca/tailscale.yaml) - Tailscale configuration for the docker-testing host
+    - [pi-speedtest-1.home.stechsolutions.ca](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca) - Folder for multiple inventory files for the pi-speedtest-1 host
+        - [docker_compose](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca/docker_compose) - Folder for docker-compose files for the pi-speedtest-1 host
+            - [speedtest.yaml.j2](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca/docker_compose/speedtest.yaml.j2) - Jinja2 template for the speedtest docker-compose file
+        - [docker.yaml](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca/docker.yaml) - Docker configuration for the pi-speedtest-1 host
+        - [netplan.yaml](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca/netplan.yaml) - Netplan configuration for the pi-speedtest-1 host
+    - [pi-speedtest-2.home.stechsolutions.ca](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca) - Folder for multiple inventory files for the pi-speedtest-2 host
+        - [docker_compose](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca/docker_compose) - Folder for docker-compose files for the pi-speedtest-2 host
+            - [speedtest.yaml.j2](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca/docker_compose/speedtest.yaml.j2) - Jinja2 template for the speedtest docker-compose file
+        - [docker.yaml](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca/docker.yaml) - Docker configuration for the pi-speedtest-2 host
+        - [netplan.yaml](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca/netplan.yaml) - Netplan configuration for the pi-speedtest-2 host
     - [pihole-1.home.stechsolutions.ca.yaml](inventory/host_vars/pihole-1.home.stechsolutions.ca.yaml) - Yaml configuration for the pihole-1 host
     - [pihole-2.home.stechsolutions.ca.yaml](inventory/host_vars/pihole-2.home.stechsolutions.ca.yaml) - Yaml configuration for the pihole-2 host
     - [pve3.home.stechsolutions.ca.yaml](inventory/host_vars/pve3.home.stechsolutions.ca.yaml) - Yaml configuration for the pve3 host
@@ -342,6 +357,11 @@ The split DNS settings for `home.stechsolutions.ca` need to be added via the Tai
 
 The IP addresses of remote tailscale nodes need to be manually added to the Cloudflare DNS settings for `tailscale.stechsolutions.ca`. This is done via the Cloudflare admin console.
 
+### Tags and --advertise-tags
+--advertise-tags can be set to specify which tags should be assigned to the node when it is joined to the tailnet. The tag is tied to the tailscale_authkey. The authkey must have the tags associated with it when it is created in the tailscale admin console.
+
+The auth key is then stored in the ansible vault.
+
 ## Uptime-Kuma
 Uptime-Kuma is installed as a docker container by Ansible. Currently, the configuration is not automated and needs to be done manually (until an API for uptime-kuma is available).
 
@@ -354,6 +374,14 @@ ansible-lint
 ansible-playbook site.yaml --syntax-check
 ```
 # General Services Documentation
+## Raspberry Pi
+The following services are configured on Raspberry Pi devices.
+
+### Internet Monitoring
+Internet monitoring is configured using a speedtest docker container configured to run periodically. Either wifi or ethernet depending on the configuration. When using RPi 3B devices, the max ethernet speed is limited to 100Mbps and the max 2.4 Ghz wifi speed is limited to 30Mbps.
+
+To set up the device, run the [rpi/internet_monitoring](roles/rpi/tasks/internet_monitoring.yaml) playbook.
+
 ## NUT
 NUT is installed and configured to monitor the UPS device of the PVE3 proxmox host. Once configured, here are some commands to monitor and test the UPS from the command line of the PVE3 host.
 

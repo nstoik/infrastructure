@@ -68,3 +68,21 @@ base_postfix:
 
 # variables for timezone
 base_timezone: "America/Edmonton"
+
+# variables for netplan
+# base_netplan:
+#   configure: true
+#   name: /etc/netplan/51-ansible-netcfg.yaml
+#   ethernets:
+#     - name: "eth0"
+#       dhcp4: true
+#       optional: false
+#   wifis:
+#     - name: "wlan0"
+#       dhcp4: true
+#       optional: false
+#       access-points:
+#         - ssid: "MySSID"
+#           password: "MyPassword"
+base_netplan:
+  configure: false

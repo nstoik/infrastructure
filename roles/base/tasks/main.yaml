@@ -12,6 +12,7 @@
 #   - base_user_run_setup: boolean to setup a user
 #   - base_postfix: dictionary of postfix configuration
 #   - base_timezone: timezone to set
+#   - base_netplan: dictionary of netplan configuration
 
 
 # Update and upgrade apt packages
@@ -45,6 +46,14 @@
   tags:
     - base
     - base.timezone
+
+# Set the netplan configuration if flag is set
+- name: Set the netplan configuration
+  ansible.builtin.include_tasks: setup_netplan.yaml
+  when: base_netplan['configure'] is true
+  tags:
+    - base
+    - base.netplan
 
 # Check if a reboot is required
 - name: Check if a reboot is required

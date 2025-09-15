@@ -3,9 +3,11 @@
 
 # restart docker
 - name: Restart docker
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: docker
     state: restarted
+    enabled: true
+    daemon_reload: true
   register: docker_restart_result
   become: true
 

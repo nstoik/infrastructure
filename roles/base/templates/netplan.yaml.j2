@@ -1,0 +1,19 @@
+network:
+  version: 2
+  ethernets:
+{% for eth in base_netplan.ethernets %}
+    {{ eth.name }}:
+      dhcp4: {{ eth.dhcp4 | default(false) | lower }}
+      optional: {{ eth.optional | default(true) | lower }}
+{% endfor %}
+  wifis:
+{% for wifi in base_netplan.wifis %}
+    {{ wifi.name }}:
+      dhcp4: {{ wifi.dhcp4 | default(false) | lower }}
+      optional: {{ wifi.optional | default(true) | lower }}
+      access-points:
+{% for ap in wifi['access-points'] %}
+        "{{ ap.ssid }}":
+          password: "{{ ap.password }}"
+{% endfor %}
+{% endfor %}
