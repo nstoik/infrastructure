@@ -27,7 +27,7 @@
     - name: Create the netplan configuration file
       ansible.builtin.template:
         src: netplan.yaml.j2
-        dest: /{{ base_netplan['name'] | default('etc/netplan/51-ansiblenetcfg.yaml') }}
+        dest: "{{ base_netplan['name'] | default('/etc/netplan/51-ansiblenetcfg.yaml') }}"
         owner: root
         group: root
         mode: '0600'
