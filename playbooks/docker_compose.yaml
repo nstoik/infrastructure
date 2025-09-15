@@ -7,6 +7,9 @@
     - ../vault/vault.yaml
   roles:
     - role: docker
+      vars:
+        docker_install: "{{ base_docker_install }}"
+        docker_config: "{{ base_docker_config }}"
   tags:
     - docker
     - docker.compose
