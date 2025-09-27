@@ -100,7 +100,7 @@ fi
 # ----------------------
 OUTPUT=$(
     rclone "$RCLONE_MODE" "$LOCAL_PATH" "${REMOTE_NAME}": \
-        --config="/home/nelson/.config/rclone/rclone.conf" \
+        --config="{{ rclone_config_path }}" \
         --size-only \
         --fast-list \
         --s3-no-check-bucket \
