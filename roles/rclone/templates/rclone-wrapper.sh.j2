@@ -109,6 +109,7 @@ OUTPUT=$(
         --checkers=8 \
         --transfers=4 \
         --use-mmap \
+        --exclude "*:Zone.Identifier" \
         --log-level=INFO \
         $RCLONE_DRY_RUN \
     2>&1
