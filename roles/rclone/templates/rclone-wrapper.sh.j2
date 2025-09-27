@@ -110,8 +110,8 @@ OUTPUT=$(rclone "$RCLONE_MODE" "$LOCAL_PATH" "${REMOTE_NAME}": \
     --use-mmap \
     --log-level=INFO \
     "$RCLONE_DRY_RUN" 2>&1)
-
 log_output "$OUTPUT"
+        $RCLONE_DRY_RUN \
 
 # Capture the exit status of the rclone command
 RC=$?
