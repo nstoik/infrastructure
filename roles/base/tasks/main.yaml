@@ -3,6 +3,7 @@
 #
 # inputs:
 #   - base_additional_packages: list of additional packages to install
+#   - base_additional_remove_packages: list of additional packages to remove
 #   - base_additional_services: list of additional services to enable and start
 #   - base_reboot_host_if_required: boolean to reboot the host if required
 #   - base_apt_upgrade_packages: if or how to upgrade apt packages
@@ -33,6 +34,16 @@
     # append the list of packages to install with optional additional packages
     name: "{{ base_packages + (base_additional_packages | default([])) }}"
     state: present
+  become: true
+  tags:
+    - base
+    - base.apt
+
+# remove base packages on the host
+- name: Remove base packages
+  ansible.builtin.apt:
+    name: "{{ base_remove_packages + (base_additional_remove_packages | default([])) }}"
+    state: absent
   become: true
   tags:
     - base
