@@ -117,6 +117,16 @@ OUTPUT=$(
 # Capture the exit status of the rclone command
 RC=$?
 
+log_output "$OUTPUT"
+
+# Extra sanity check: ensure rclone actually ran transfers or reported success
+if [ $RC -eq 0 ]; then
+    if ! grep -q "Transferred:" <<<"$OUTPUT"; then
+        RC=1
+        log_output "Rclone exited 0 but did not report any transfers — marking as failure."
+    fi
+fi
+
 # ----------------------
 # Healthchecks finish ping
 # ----------------------
