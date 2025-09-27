@@ -98,20 +98,21 @@ fi
 # ----------------------
 # Run rclone
 # ----------------------
-OUTPUT=$(rclone "$RCLONE_MODE" "$LOCAL_PATH" "${REMOTE_NAME}": \
-    --config="{{ rclone_config_path }}" \
-    --size-only \
-    --fast-list \
-    --s3-no-check-bucket \
-    --s3-chunk-size=64M \
-    --s3-upload-concurrency=4 \
-    --checkers=8 \
-    --transfers=4 \
-    --use-mmap \
-    --log-level=INFO \
-    "$RCLONE_DRY_RUN" 2>&1)
-log_output "$OUTPUT"
+OUTPUT=$(
+    rclone "$RCLONE_MODE" "$LOCAL_PATH" "${REMOTE_NAME}": \
+        --config="/home/nelson/.config/rclone/rclone.conf" \
+        --size-only \
+        --fast-list \
+        --s3-no-check-bucket \
+        --s3-chunk-size=64M \
+        --s3-upload-concurrency=4 \
+        --checkers=8 \
+        --transfers=4 \
+        --use-mmap \
+        --log-level=INFO \
         $RCLONE_DRY_RUN \
+    2>&1
+)
 
 # Capture the exit status of the rclone command
 RC=$?
