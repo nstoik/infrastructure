@@ -33,7 +33,7 @@
           qm set {{ proxmox_vm_info.id }}
           --{{ item_disk.scsi }}
           {{ item_disk.device }},backup={{ item_disk.backup }}
-      loop: "{{ proxmox_vm_info.passthrough_disks }}"
+      loop: "{{ proxmox_vm_info.passthrough_disks | default([]) }}"
       loop_control:
         loop_var: item_disk
       when: proxmox_vm_info.passthrough_disks is defined and
@@ -48,7 +48,7 @@
           qm set {{ proxmox_vm_info.id }}
           --{{ item_disk.scsi }}
           {{ item_disk.device }},backup={{ item_disk.backup }}
-      loop: "{{ proxmox_vm_info.virtual_disks }}"
+      loop: "{{ proxmox_vm_info.virtual_disks | default([]) }}"
       loop_control:
         loop_var: item_disk
       when: proxmox_vm_info.virtual_disks is defined and
