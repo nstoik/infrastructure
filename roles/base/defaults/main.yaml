@@ -86,3 +86,10 @@ base_timezone: "America/Edmonton"
 #           password: "MyPassword"
 base_netplan:
   configure: false
+
+base_journald:
+  Storage: "auto"
+  SystemMaxUse: "2G"
+  SystemKeepFree: "500M"
+  SystemMaxFileSize: "100M"
+  SystemMaxFiles: "20"

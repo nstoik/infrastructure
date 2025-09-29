@@ -103,6 +103,14 @@
     - base
     - base.dotfiles
 
+# Configure journald
+- name: Configure journald
+  ansible.builtin.include_tasks: setup_journald.yaml
+  when: ansible_os_family == "Debian"
+  tags:
+    - base
+    - base.journald
+
 # set specified systemd services to the specified state and status
 - name: Set specified systemd services to the specified state and status
   ansible.builtin.service:
