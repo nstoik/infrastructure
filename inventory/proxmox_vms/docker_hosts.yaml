@@ -9,6 +9,29 @@ all:
   children:
     proxmox_vms:
       hosts:
+        docker-01.home.stechsolutions.ca:
+          base_docker_install: true
+          base_docker_config: true
+          base_dotfiles:
+            install: true
+            dotbot_skip_ssh_authorized_file: false
+          network:
+            ip: "10.10.5.24"
+            gateway: "10.10.5.1"
+          proxmox_vm:
+            proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
+            template_id: 9001
+            state: "present"
+            id: 352
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            name_fqdn: "{{ inventory_hostname }}"
+            start_onboot: true
+            disk_size: 30G
+            net0: virtio,bridge=vmbr0
+            ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
+            cores: 16
+            memory: 65536
+            balloon: 16384
         docker-02.home.stechsolutions.ca:
           base_docker_install: true
           base_docker_config: true
