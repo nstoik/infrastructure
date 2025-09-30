@@ -3,7 +3,6 @@ all:
   hosts:
     docker-01.home.stechsolutions.ca:
     docker-02.home.stechsolutions.ca:
-    docker-testing.home.stechsolutions.ca:
     storage.home.stechsolutions.ca:
     pbs.home.stechsolutions.ca:
     pihole-1.home.stechsolutions.ca:
@@ -30,7 +29,6 @@ all:
     proxmox_vms:
     docker_hosts:
       hosts:
-        docker-testing.home.stechsolutions.ca:
         docker-01.home.stechsolutions.ca:
         docker-02.home.stechsolutions.ca:
         pi-speedtest-[1:2].home.stechsolutions.ca:
