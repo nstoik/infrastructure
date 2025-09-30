@@ -23,6 +23,8 @@ pihole_dns_entries:
     ip: 10.10.5.9
   - domain: "pihole-2.home.stechsolutions.ca"
     ip: 10.10.5.11
+  - domain: "docker-01.home.stechsolutions.ca"
+    ip: 10.10.5.24
   - domain: "docker-testing.home.stechsolutions.ca"
     ip: 10.10.5.25
   - domain: "storage.home.stechsolutions.ca"

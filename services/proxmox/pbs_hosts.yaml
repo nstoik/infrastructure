@@ -1,5 +1,5 @@
 ---
-# This playbook is ued to configure the Proxmox Backup Server (PBS) hosts.
+# This playbook is used to configure the Proxmox Backup Server (PBS) hosts.
 
 # Run the pihole playbook to make sure the DNS records are correct
 - name: Run the pihole role

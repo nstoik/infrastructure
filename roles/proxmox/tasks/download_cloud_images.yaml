@@ -15,6 +15,16 @@
         mode: '0755'
       become: true
 
+    # Remove the cloud images if state is absent or recreate
+    - name: Remove the cloud images if state is absent or recreate
+      ansible.builtin.file:
+        path: "{{ proxmox_iso_path }}/{{ item.template_name }}.iso"
+        state: absent
+      loop: "{{ proxmox_cloud_imgs }}"
+      become: true
+      when: item.state in ["absent", "recreate"] and
+            inventory_hostname in item.proxmox_nodes
+
     # Download the cloud images
     - name: Download the cloud images
       ansible.builtin.get_url:
@@ -24,5 +34,5 @@
         timeout: 60
       loop: "{{ proxmox_cloud_imgs }}"
       become: true
-      when: item.state == "present" and
+      when: item.state in ["present", "recreate"] and
             inventory_hostname in item.proxmox_nodes

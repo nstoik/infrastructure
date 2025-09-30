@@ -1,0 +1,39 @@
+---
+# Configure journald with defaults or overrides
+
+- name: Configure journald
+  become: true
+  tags:
+    - base
+    - base.journald
+  block:
+
+    - name: Ensure /var/log/journal exists
+      ansible.builtin.file:
+        path: /var/log/journal
+        state: directory
+        mode: '0755'
+        owner: root
+        group: systemd-journal
+
+    - name: Ensure the directory for journal configs exists
+      ansible.builtin.file:
+        path: /etc/systemd/journald.conf.d
+        state: directory
+        mode: '0755'
+
+    - name: Configure journald with custom settings
+      ansible.builtin.blockinfile:
+        path: /etc/systemd/journald.conf.d/99-ansible-settings.conf
+        create: true
+        state: present
+        owner: root
+        group: root
+        mode: '0644'
+        block: |
+          # This file is managed by Ansible. Manual changes will be overwritten.
+          [Journal]
+          {% for item in base_journald | dict2items %}
+          {{ item.key }}={{ item.value }}
+          {% endfor %}
+      notify: Restart systemd-journald

@@ -79,3 +79,31 @@
         state: directory
         mode: "0755"
       become: true
+
+    # Ensure the docker service drop-in directory exists
+    - name: Ensure the docker service drop-in directory exists
+      ansible.builtin.file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+      become: true
+
+    # Ensure docker waits for NFS mounts to be available before starting
+    - name: Ensure docker waits for NFS mounts to be available before starting
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/docker.service.d/ansible-override.conf
+        content: |
+          [Unit]
+          Requires={{ fileserver_nfs_mounts | map(attribute='docker_nfs_unit') | join(' ') }}
+          After={{ fileserver_nfs_mounts | map(attribute='docker_nfs_unit') | join(' ') }}
+        owner: root
+        group: root
+        mode: "0644"
+      when: fileserver_nfs_mounts is defined and
+            fileserver_nfs_mounts | length > 0
+      become: true
+      notify:
+        - Reload systemd
+        - Restart docker
