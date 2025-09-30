@@ -97,46 +97,7 @@ The services are:
 - [Proxmox](services/proxmox/README.md)
 
 ## Files
-The files directory contains files that are used by certain roles or hosts.
-- [alertmanager](files/alertmanager) - Alertmanager configuration files
-    - [alertmanager.yaml.j2](files/alertmanager/alertmanager.yaml.j2) - Alertmanager configuration
-- [grafana/provisioning](files/grafana/provisioning) - Grafana configuration files
-    - [dashboards](files/grafana/provisioning/dashboards) - Grafana dashboard configuration files
-        - [dashboard_config.yaml](files/grafana/provisioning/dashboards/dashboard_config.yaml) - Grafana dashboard config
-    - [dashboards_json/prometheus](files/grafana/provisioning/dashboards/dashboards_json/prometheus) - Grafana dashboards in JSON format
-        - [cadvisor_docker.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/cadvisor_docker.json) - Cadvisor docker dashboard
-        - [node_exporter.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/node_exporter.json) - Node exporter dashboard
-        - [pihole.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/pihole.json) - Pihole dashboard
-        - [pve.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/pve.json) - Proxmox dashboard
-        - [traefik.json](files/grafana/provisioning/dashboards/dashboards_json/prometheus/traefik.json) - Traefik dashboard
-    - [datasources](files/grafana/provisioning/datasources) - Grafana datasource configuration files
-        - [prometheus.yaml](files/grafana/provisioning/datasources/prometheus.yaml) - Prometheus datasource configuration
-- [homepage](files/homepage) - Homepage files
-    - [bookmarks.yaml](files/homepage/bookmarks.yaml) - Bookmarks for the homepage
-    - [docker.yaml](files/homepage/docker.yaml) - Docker configuration for the homepage
-    - [services.yaml](files/homepage/services.yaml) - Services for the homepage
-    - [settings.yaml](files/homepage/settings.yaml) - Settings for the homepage
-    - [widgets.yaml](files/homepage/widgets.yaml) - Widgets for the homepage
-- [ntfy](files/ntfy) - Ntfy configuration files
-    - [server.yaml](files/ntfy/server.yaml) - Ntfy server configuration
-- [prometheus](files/prometheus) - Prometheus configuration files
-    - [rules](files/prometheus/rules) - Prometheus alerting rules
-        - [alerts.yaml](files/prometheus/rules/alerts.yaml) - Prometheus alerting rules
-        - [node_alerts.yaml](files/prometheus/rules/node_alerts.yaml) - Prometheus node alerting rules  
-        - [test.yaml](files/prometheus/rules/test.yaml) - Prometheus E2E test alert
-    - [targets](files/prometheus/targets) - Prometheus scrape targets
-        - [node_remote.yaml.j2](files/prometheus/targets/node_remote.yaml.j2) - Jinja2 template for Prometheus node remote scrape targets
-        - [nodes.yaml.j2](files/prometheus/targets/nodes.yaml.j2) - Jinja2 template for Prometheus node scrape targets
-        - [pve.yaml.j2](files/prometheus/targets/pve.yaml.j2) - Jinja2 template for Prometheus pve scrape targets
-    - [alertmanager.yaml.j2](files/prometheus/alertmanager.yaml.j2) - Jinja2 template for Alertmanager configuration
-    - [ntfy-alertmanager_config.yaml.j2](files/prometheus/ntfy-alertmanager_config.yaml.j2) - Jinja2 template for Ntfy Alertmanager configuration
-    - [prometheus.yaml](files/prometheus/prometheus.yaml) - Prometheus configuration
-- [traefik](files/traefik) - Traefik configuration files
-    - [dynamic.yaml](files/traefik/dynamic.yaml) - Traefik dynamic configuration for https proxy
-        - [unifi.yaml](files/traefik/dynamic/unifi.yaml) - Unifi router file
-    - [traefik-dev.yaml](files/traefik/traefik-dev.yaml) - Traefik configuration for development
-    - [traefik-prod-no-file-provider.yaml](files/traefik/traefik-prod-no-file-provider.yaml) - Traefik configuration for production without a file provider for dynamic configuration.
-    - [traefik-prod.yaml](files/traefik/traefik-prod.yaml) - Traefik configuration for production
+The files directory contains files that are used by the roles and playbooks.
 
 ## Ansible Tags
 The following ansible tags are available to specify specific tasks to run.
@@ -191,72 +152,7 @@ The following ansible tags are available to specify specific tasks to run.
         - proxmox.pve.storage - Configure proxmox storage
 
 # Inventory
-Inventory files are as follows in the [inventory](inventory) directory:
-
-- [group_vars](inventory/group_vars/) - Inventory for each group
-    - [all.yaml](inventory/group_vars/all.yaml) - Inventory for all hosts
-    - [do_ansible.yaml](inventory/group_vars/do_ansible.yaml) - Inventory for the DigitalOcean VMs that are managed by Ansible
-    - [do_docker.yaml](inventory/group_vars/do_docker.yaml) - Inventory for the DigitalOcean VMs that are used for Docker
-    - [pihole.yaml](inventory/group_vars/pihole.yaml) - Inventory for the pihole servers
-    - [proxmox_containers.yaml](inventory/group_vars/proxmox_containers.yaml) - Inventory for the proxmox containers
-    - [proxmox_nodes.yaml](inventory/group_vars/proxmox_nodes.yaml) - Inventory for the proxmox nodes
-    - [proxmox_pbs.yaml](inventory/group_vars/proxmox_pbs.yaml) - Inventory for the proxmox pbs
-    - [proxmox_vms.yaml](inventory/group_vars/proxmox_vms.yaml) - Inventory for the proxmox vms
-    - [rpi.yaml](inventory/group_vars/rpi.yaml) - Inventory for the raspberry pi devices
-- [host_vars](inventory/host_vars/) - Inventory for each host
-    - [docker-02.home.stechsolutions.ca](inventory/host_vars/docker-02.home.stechsolutions.ca) - Folder for multiple inventory files for the docker-02 host
-        - [docker_compose](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose) - Folder for docker-compose files for the docker-02 host
-            - [files.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/files.yaml.j2) - Jinja2 template for the files docker-compose file
-            - [monitoring.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/monitoring.yaml.j2) - Jinja2 template for the monitoring docker-compose file
-            - [proxy.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/proxy.yaml.j2) - Jinja2 template for the proxy docker-compose file
-            - [tdarr.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/tdarr.yaml.j2) - Jinja2 template for the tdarr docker-compose file
-            - [vehicle.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/vehicle.yaml.j2) - Jinja2 template for the vehicle docker-compose file
-            - [wud.yaml.j2](inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/wud.yaml.j2) - Jinja2 template for the wud docker-compose file
-        - [docker.yaml](inventory/host_vars/docker-02.home.stechsolutions.ca/docker.yaml) - Docker configuration for the docker-02 host
-        - [fileserver.yaml](inventory/host_vars/docker-02.home.stechsolutions.ca/fileserver.yaml) - Fileserver configuration for the docker-02 host
-    - [docker-cloud-01](inventory/host_vars/docker-cloud-01) - Folder for multiple inventory files for the docker-cloud-01 host
-        - [docker-compose](inventory/host_vars/docker-cloud-01/docker-compose) - Folder for docker-compose files for the docker-cloud-01 host
-            - [monitoring.yaml.j2](inventory/host_vars/docker-cloud-01/docker-compose/monitoring.yaml.j2) - Jinja2 template for the monitoring docker-compose file
-            - [proxy.yaml.j2](inventory/host_vars/docker-cloud-01/docker-compose/proxy.yaml.j2) - Jinja2 template for the proxy docker-compose file
-        - [docker.yaml](inventory/host_vars/docker-cloud-01/docker.yaml) - Docker configuration for the docker-cloud-01 host
-        - [fileserver.yaml](inventory/host_vars/docker-cloud-01/fileserver.yaml) - Fileserver configuration for the docker-cloud-01 host
-        - [healthchecks.yaml](inventory/host_vars/docker-cloud-01/healthchecks.yaml) - Healthchecks configuration for the docker-cloud-01 host
-        - [ntfy.yaml](inventory/host_vars/docker-cloud-01/ntfy.yaml) - Ntfy configuration for the docker-cloud-01 host
-        - [tailscale.yaml](inventory/host_vars/docker-cloud-01/tailscale.yaml) - Tailscale configuration for the docker-cloud-01 host
-    - [docker-testing.home.stechsolutions.ca](inventory/host_vars/docker-testing.home.stechsolutions.ca) - Folder for multiple inventory files for the docker-testing host
-        - [docker-compose](inventory/host_vars/docker-testing.home.stechsolutions.ca/docker-compose) - Folder for docker-compose files for the docker-testing host
-            - [monitoring.yaml.j2](inventory/host_vars/docker-testing.home.stechsolutions.ca/docker-compose/monitoring.yaml.j2) - Jinja2 template for the monitoring docker-compose file
-            - [proxy.yaml.j2](inventory/host_vars/docker-testing.home.stechsolutions.ca/docker-compose/proxy.yaml.j2) - Jinja2 template for the proxy docker-compose file
-        - [docker.yaml](inventory/host_vars/docker-testing.home.stechsolutions.ca/docker.yaml) - Docker configuration for the docker-testing host
-        - [fileserver.yaml](inventory/host_vars/docker-testing.home.stechsolutions.ca/fileserver.yaml) - Fileserver configuration for the docker-testing host
-        - [tailscale.yaml](inventory/host_vars/docker-testing.home.stechsolutions.ca/tailscale.yaml) - Tailscale configuration for the docker-testing host
-    - [pi-speedtest-1.home.stechsolutions.ca](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca) - Folder for multiple inventory files for the pi-speedtest-1 host
-        - [docker_compose](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca/docker_compose) - Folder for docker-compose files for the pi-speedtest-1 host
-            - [speedtest.yaml.j2](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca/docker_compose/speedtest.yaml.j2) - Jinja2 template for the speedtest docker-compose file
-        - [docker.yaml](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca/docker.yaml) - Docker configuration for the pi-speedtest-1 host
-        - [netplan.yaml](inventory/host_vars/pi-speedtest-1.home.stechsolutions.ca/netplan.yaml) - Netplan configuration for the pi-speedtest-1 host
-    - [pi-speedtest-2.home.stechsolutions.ca](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca) - Folder for multiple inventory files for the pi-speedtest-2 host
-        - [docker_compose](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca/docker_compose) - Folder for docker-compose files for the pi-speedtest-2 host
-            - [speedtest.yaml.j2](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca/docker_compose/speedtest.yaml.j2) - Jinja2 template for the speedtest docker-compose file
-        - [docker.yaml](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca/docker.yaml) - Docker configuration for the pi-speedtest-2 host
-        - [netplan.yaml](inventory/host_vars/pi-speedtest-2.home.stechsolutions.ca/netplan.yaml) - Netplan configuration for the pi-speedtest-2 host
-    - [pihole-1.home.stechsolutions.ca.yaml](inventory/host_vars/pihole-1.home.stechsolutions.ca.yaml) - Yaml configuration for the pihole-1 host
-    - [pihole-2.home.stechsolutions.ca.yaml](inventory/host_vars/pihole-2.home.stechsolutions.ca.yaml) - Yaml configuration for the pihole-2 host
-    - [pve3.home.stechsolutions.ca.yaml](inventory/host_vars/pve3.home.stechsolutions.ca.yaml) - Yaml configuration for the pve3 host
-    - [storage.home.stechsolutions.ca.yaml](inventory/host_vars/storage.home.stechsolutions.ca.yaml) - Yaml configuration for the storage host
-    - [vpn.arnie-karen.yaml](inventory/host_vars/vpn.arnie-karen.yaml) - Yaml configuration for the vpn.arnie-karen host
-    - [vpn.home.stechsolutions.ca.yaml](inventory/host_vars/vpn.home.stechsolutions.ca.yaml) - Yaml configuration for the vpn.home.stechsolutions.ca host
-- [proxmox_containers](inventory/proxmox_containers) - Inventory for the proxmox containers
-    - [hosts.yaml](inventory/proxmox_containers/hosts.yaml) - Inventory for the proxmox containers
-- [proxmox_vms](inventory/proxmox_vms) - Inventory for the proxmox vms
-    - [docker_hosts.yaml](inventory/proxmox_vms/docker_hosts.yaml) - Inventory for the docker hosts running on proxmox
-    - [hosts.yaml](inventory/proxmox_vms/hosts.yaml) - Inventory for the proxmox vms
-- [do_hosts.yaml](inventory/do_hosts.yaml) - Dynamic inventory for DigitalOcean
-    - Inventory from DigtalOcean is dynamic using a plugin.
-    - When using this inventory, the `DO_API_TOKEN` environment variable must be set. See [Environment variables](#environment-variables) for more information.
-- [inventory.yaml](inventory/inventory.yaml) - Main inventory file
-    - This file includes the main inventory hosts and groups
-
+Inventory files are in the [inventory](inventory) directory:
 
 # Manual Configuration
 While the purpose of this repository is to automate the configuration of the infrastructure, there are some manual configurations that need to be done.
