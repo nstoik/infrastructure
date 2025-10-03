@@ -77,7 +77,7 @@
       ansible.builtin.command: >
         zfs create
         -o mountpoint="{{ result.dataset.mount_point }}"
-        -o recordsize={{ result.dataset.recordsize | default('128K') }} \
+        -o recordsize="{{ result.dataset.recordsize | default('128K') }}" \
         -o quota="{{ result.dataset.quota }}"
         -o canmount="{{ result.dataset.canmount }}"
         "{{ result.dataset.name }}"
@@ -95,7 +95,7 @@
       ansible.builtin.command: >
         zfs create
         -o mountpoint="{{ result.dataset.mount_point }}"
-        -o recordsize={{ result.dataset.recordsize | default('128K') }}
+        -o recordsize="{{ result.dataset.recordsize | default('128K') }}"
         -o quota="{{ result.dataset.quota }}"
         -o canmount="{{ result.dataset.canmount }}"
         -o encryption=on
@@ -119,10 +119,10 @@
           set -o pipefail
           expect << EOF
           spawn zfs create \
-            -o mountpoint={{ result.dataset.mount_point }} \
-            -o recordsize={{ result.dataset.recordsize | default('128K') }} \
-            -o quota={{ result.dataset.quota }} \
-            -o canmount={{ result.dataset.canmount }} \
+            -o mountpoint="{{ result.dataset.mount_point }}" \
+            -o recordsize="{{ result.dataset.recordsize | default('128K') }}" \
+            -o quota="{{ result.dataset.quota }}" \
+            -o canmount="{{ result.dataset.canmount }}" \
             -o encryption=on \
             -o keyformat=passphrase \
             {{ result.dataset.name }}
