@@ -68,19 +68,20 @@ fileserver_attached_disks:
 fileserver_nfs_mounts:
   - path: /mnt/nfs/movies
     server: storage.home.stechsolutions.ca
-    nfs_export: /mnt/storage/movies
+    nfs_export: /export/movies
     docker_nfs_unit: mnt-nfs-movies.mount
     options: defaults,_netdev
     state: mounted
   - path: /mnt/nfs/tv
     server: storage.home.stechsolutions.ca
-    nfs_export: /mnt/storage/tv
+    nfs_export: /export/tv
     docker_nfs_unit: mnt-nfs-tv.mount
     options: defaults,_netdev
     state: mounted
 
 fileserver_nfs_exports:
-  - path: /mnt/scratch/tdarr
+  - src: /mnt/scratch/tdarr
+    alias: /export/tdarr
     machines:
       - name: 10.10.1.100/32  # nelsons desktop
         options: rw,sync,no_subtree_check,no_root_squash,fsid=10

@@ -18,10 +18,18 @@ sanoid_templates:
     autoprune: "yes"
   - name: safekeep
     frequently: 0
-    hourly: 0
+    hourly: 36
     daily: 10
     monthly: 6
     yearly: 1
+    autosnap: "yes"
+    autoprune: "yes"
+  - name: replaceable  # for datasets that can be 'easily' replaced
+    frequently: 0
+    hourly: 12
+    daily: 7
+    monthly: 0
+    yearly: 0
     autosnap: "yes"
     autoprune: "yes"
   - name: backup
@@ -35,7 +43,7 @@ sanoid_templates:
   - name: backup_safekeep
     frequently: 0
     hourly: 0
-    daily: 0
+    daily: 30
     monthly: 12
     yearly: 3
     autosnap: "no"

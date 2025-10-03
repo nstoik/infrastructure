@@ -47,6 +47,7 @@
     mode: '0755'
     owner: "{{ default_user }}"
     group: "{{ default_user }}"
+  become: true
   when: sanoid_hc_url is defined and sanoid_hc_uuid is defined
   tags:
     - sanoid
