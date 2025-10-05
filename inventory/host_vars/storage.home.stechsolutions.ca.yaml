@@ -211,47 +211,54 @@ fileserver_snapraid_aio:
   log_dir: /home/{{ default_user }}/snapraid-logs
 
 fileserver_nfs_exports:
-  - src: /mnt/storage/movies
+  - src: /mnt/zfs/storage2/movies
     alias: /export/movies
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=10
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=11
-  - src: /mnt/storage/tv
+  - src: /mnt/zfs/storage2/tv
     alias: /export/tv
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=12
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=13
-  - src: /mnt/storage/music
+  - src: /mnt/zfs/storage2/music
     alias: /export/music
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=14
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=15
-  - src: /mnt/storage/audiobooks
+  - src: /mnt/zfs/storage2/audiobooks
     alias: /export/audiobooks
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=16
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=17
-  - src: /mnt/storage/sport
+  - src: /mnt/zfs/storage2/sport
     alias: /export/sport
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=18
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=19
-  - src: /mnt/storage/other
+  - src: /mnt/zfs/storage2/other
     alias: /export/other
     mode: '0755'
     machines:
       - name: 10.10.1.100/32  # nelsons desktop
         options: rw,sync,no_subtree_check,no_root_squash,fsid=26
+  - src: /mnt/zfs/storage2/downloads
+    alias: /export/downloads
+    machines:
+      - name: 10.10.1.0/24  # home network
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=27
+      - name: 10.10.5.0/24  # trusted network
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=28
   - src: /mnt/zfs/storage1/pictures
     alias: /export/pictures
     machines:
