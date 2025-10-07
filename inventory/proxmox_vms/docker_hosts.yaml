@@ -32,6 +32,15 @@ all:
             cores: 16
             memory: 65536
             balloon: 16384
+            virtual_disks:
+              - comment: 20 GB disk for docker compose downloader volume
+                scsi: "scsi1"
+                device: "data:20,discard=on"
+                backup: 1
+              - comment: 10 GB disk for docker compose proxy volume
+                scsi: "scsi2"
+                device: "data:10,discard=on"
+                backup: 1
         docker-02.home.stechsolutions.ca:
           base_docker_install: true
           base_docker_config: true
