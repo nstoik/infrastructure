@@ -1,0 +1,24 @@
+---
+# Docker host variables for docker-01.home.stechsolutions.ca host
+
+# other variables are set in group_vars/proxmox_vms.yaml and
+# proxmox_vms/docker_hosts.yaml
+
+# docker container configuration files
+docker_configuration_files:
+  # traefik configuration file
+  - name: traefik.yaml
+    src: "{{ inventory_dir }}/../files/traefik/traefik-prod-no-file-provider.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
+    mode: '0664'
+    container_name: traefik
+
+docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-01.home.stechsolutions.ca/docker_compose"
+
+docker_compose_files:
+  - name: proxy-docker-compose.yaml
+    compose_name: proxy
+    state: present
+    src: "{{ docker_compose_subpath }}/proxy.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/proxy-docker-compose.yaml
+    mode: '0664'
