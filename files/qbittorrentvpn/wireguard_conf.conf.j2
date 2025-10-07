@@ -1,0 +1,10 @@
+#
+# Use this configuration with WireGuard client
+#
+[Interface]
+Address = 10.14.0.2/16
+PrivateKey = {{ secret_qbittorrentvpn_wg_private_key }}
+[Peer]
+PublicKey = {{ secret_qbittorrentvpn_wg_public_key }}
+AllowedIPs = 0.0.0.0/0
+Endpoint = ca-van.prod.surfshark.com:51820

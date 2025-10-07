@@ -1,0 +1,51 @@
+---
+name: downloader
+
+services:
+  downloader:
+    image: nstoik/qbittorrent-vpn:1.0.22
+    networks:
+      - traefik
+    container_name: qbittorrentvpn
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Edmonton
+      - VPN_ENABLED=yes
+      - LAN_NETWORK=10.10.0.0/21
+      - WEBUI_PORT=8080
+      # DNS servers from surfshark; removed from wg0.conf and set here
+      - NAME_SERVERS=162.252.172.57,149.154.159.92
+    privileged: true
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn:/config
+      - /mnt/nfs/downloads:/downloads
+    ports:
+      - 8080:8080
+      - 8999:8999
+      - 8999:8999/udp
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.home.stechsolutions.ca`)"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+      - "homepage.group=Media"
+      - "homepage.name=qBittorrent VPN"
+      - "homepage.description=qBittorrent with VPN"
+      - "homepage.icon=vuetorrent.png"
+      - "homepage.href=https://qbittorrent.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://qbittorrent.home.stechsolutions.ca"
+      - "homepage.widget.type=qbittorrent"
+      - "homepage.widget.url=https://qbittorrent.home.stechsolutions.ca"
+      - "homepage.widget.username={{ default_user }}"
+      - "homepage.widget.password={{ secret_qbittorrentvpn_webui_password }}"
+      - "homepage.widget.enableLeechProgress=false"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://hub.docker.com/r/nstoik/qbittorrent-vpn/tags"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
