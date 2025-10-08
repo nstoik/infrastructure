@@ -25,6 +25,21 @@ sanoid_datasets:
     template: production
   - name: storage1/safekeep
     template: safekeep
+  - name: storage2/audiobooks
+    template: replaceable
+  - name: storage2/downloads
+    template: replaceable
+  - name: storage2/movies
+    template: replaceable
+  - name: storage2/music
+    template: replaceable
+  - name: storage2/other
+    template: replaceable
+    # TODO: Change to production after initial sync and testing (and storage space allows)
+  - name: storage2/sport
+    template: replaceable
+  - name: storage2/tv
+    template: replaceable
 
 sanoid_zfs_permissions:
   - user: "{{ default_user }}"
@@ -51,20 +66,71 @@ fileserver_zfs_pools:
           - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi2
     datasets:
       - name: storage1/pictures
-        mount_point: /mnt/zfs/pictures
+        mount_point: /mnt/zfs/storage1/pictures
         quota: 2T
         canmount: "on"
         encryption: false
       - name: storage1/stechsolutions
-        mount_point: /mnt/zfs/stechsolutions
+        mount_point: /mnt/zfs/storage1/stechsolutions
         quota: 200G
         canmount: "on"
         encryption: false
       - name: storage1/safekeep
-        mount_point: /mnt/zfs/safekeep
+        mount_point: /mnt/zfs/storage1/safekeep
         quota: 200G
         canmount: "on"
         encryption: false
+  - pool_name: storage2
+    mount_point: none
+    vdevs:
+      - raid_type: raidz1
+        disks:
+          - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi7
+          - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi8
+          - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi9
+    datasets:
+      - name: storage2/audiobooks
+        mount_point: /mnt/zfs/storage2/audiobooks
+        quota: 100G
+        canmount: "on"
+        encryption: false
+        recordsize: 1M
+      - name: storage2/downloads
+        mount_point: /mnt/zfs/storage2/downloads
+        quota: 2T
+        canmount: "on"
+        encryption: false
+        recordsize: 1M
+      - name: storage2/movies
+        mount_point: /mnt/zfs/storage2/movies
+        quota: 10T
+        canmount: "on"
+        encryption: false
+        recordsize: 1M
+      - name: storage2/music
+        mount_point: /mnt/zfs/storage2/music
+        quota: 200G
+        canmount: "on"
+        encryption: false
+        recordsize: 1M
+      - name: storage2/other
+        mount_point: /mnt/zfs/storage2/other
+        quota: 100G
+        canmount: "on"
+        encryption: false
+        recordsize: 1M
+      - name: storage2/sport
+        mount_point: /mnt/zfs/storage2/sport
+        quota: 1T
+        canmount: "on"
+        encryption: false
+        recordsize: 1M
+      - name: storage2/tv
+        mount_point: /mnt/zfs/storage2/tv
+        quota: 30T
+        canmount: "on"
+        encryption: false
+        recordsize: 1M
 
 fileserver_mergerfs_disks:
   - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi3
@@ -145,54 +211,70 @@ fileserver_snapraid_aio:
   log_dir: /home/{{ default_user }}/snapraid-logs
 
 fileserver_nfs_exports:
-  - path: /mnt/storage/movies
+  - src: /mnt/zfs/storage2/movies
+    alias: /export/movies
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=10
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=11
-  - path: /mnt/storage/tv
+  - src: /mnt/zfs/storage2/tv
+    alias: /export/tv
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=12
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=13
-  - path: /mnt/storage/music
+  - src: /mnt/zfs/storage2/music
+    alias: /export/music
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=14
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=15
-  - path: /mnt/storage/audiobooks
+  - src: /mnt/zfs/storage2/audiobooks
+    alias: /export/audiobooks
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=16
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=17
-  - path: /mnt/storage/sport
+  - src: /mnt/zfs/storage2/sport
+    alias: /export/sport
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=18
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=19
-  - path: /mnt/storage/other
+  - src: /mnt/zfs/storage2/other
+    alias: /export/other
     mode: '0755'
     machines:
       - name: 10.10.1.100/32  # nelsons desktop
         options: rw,sync,no_subtree_check,no_root_squash,fsid=26
-  - path: /mnt/zfs/pictures
+  - src: /mnt/zfs/storage2/downloads
+    alias: /export/downloads
+    machines:
+      - name: 10.10.1.0/24  # home network
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=27
+      - name: 10.10.5.0/24  # trusted network
+        options: rw,sync,no_subtree_check,no_root_squash,fsid=28
+  - src: /mnt/zfs/storage1/pictures
+    alias: /export/pictures
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=20
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=21
-  - path: /mnt/zfs/stechsolutions
+  - src: /mnt/zfs/storage1/stechsolutions
+    alias: /export/stechsolutions
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=22
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=23
-  - path: /mnt/zfs/safekeep
+  - src: /mnt/zfs/storage1/safekeep
+    alias: /export/safekeep
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=24

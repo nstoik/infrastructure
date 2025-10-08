@@ -15,14 +15,35 @@
         state: present
       become: true
 
-    # create directories for nfs exports
-    - name: Create directories for nfs exports
+    # ensure /export root directory exists
+    - name: Ensure /export root directory exists
       ansible.builtin.file:
-        path: "{{ item.path }}"
+        path: /export
         state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      become: true
+
+    # create bind-mount directories for exports
+    - name: Ensure /export subdirs exist
+      ansible.builtin.file:
+        path: "{{ item.alias }}"
+        state: directory
+        owner: root
+        group: root
         mode: "{{ item.mode | default('0755') }}"
-        owner: "{{ default_user }}"
-        group: "{{ default_user }}"
+      loop: "{{ fileserver_nfs_exports }}"
+      become: true
+
+    # bind mount ZFS datasets → /export/...
+    - name: Create bind mounts for export aliases
+      ansible.posix.mount:
+        src: "{{ item.src }}"
+        path: "{{ item.alias }}"
+        fstype: none
+        opts: bind
+        state: mounted
       loop: "{{ fileserver_nfs_exports }}"
       become: true
 

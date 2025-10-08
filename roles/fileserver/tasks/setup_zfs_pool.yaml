@@ -43,6 +43,7 @@
         -O compression=lz4
         -O xattr=sa
         -O normalization=formD
+        -O atime=off
         {{ fileserver_zfs_pool.pool_name }}
         {% for vdev in fileserver_zfs_pool.vdevs %}
         {% if vdev.raid_type | default('') | length > 0 %}
