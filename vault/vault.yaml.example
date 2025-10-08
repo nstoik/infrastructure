@@ -106,3 +106,8 @@ secret_rclone_password:
 
 # Wifi secrets
 secret_default_wifi_password: change_me
+
+# qbittorrentVPN secrets
+secret_qbittorrentvpn_webui_password: change_me
+secret_qbittorrentvpn_wg_private_key: change_me
+secret_qbittorrentvpn_wg_public_key: change_me
