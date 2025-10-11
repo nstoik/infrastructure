@@ -6,10 +6,10 @@
 
 docker_mounts_subfolders:
   # downloader docker mounts
-  - name: downloader_qbittorrentvpn
-    dest: /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn
+  - name: downloader_qbit_manage
+    dest: /home/{{ default_user }}/docker_mounts/downloader/qbit_manage
     mode: '0775'
-    container_name: qbittorrentvpn
+    container_name: qbit_manage
 
 # docker container configuration files
 docker_configuration_files:
@@ -25,6 +25,11 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn/wireguard/wg0.conf
     mode: '0664'
     container_name: qbittorrentvpn
+  - name: qbit_manage.yml
+    src: "{{ inventory_dir }}/../files/qbittorrentvpn/qbit_manage_config.yml.j2"
+    dest: /home/{{ default_user }}/docker_mounts/downloader/qbit_manage/config.yml
+    mode: '0664'
+    container_name: qbit_manage
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-01.home.stechsolutions.ca/docker_compose"
 
