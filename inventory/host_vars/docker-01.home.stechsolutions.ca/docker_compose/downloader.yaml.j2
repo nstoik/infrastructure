@@ -20,13 +20,10 @@ services:
     volumes:
       - /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn:/config
       - /mnt/nfs/downloads:/downloads
-    ports:
-      - 8080:8080
-      - 8999:8999
-      - 8999:8999/udp
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
       - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.home.stechsolutions.ca`)"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
@@ -44,6 +41,32 @@ services:
       - "homepage.widget.enableLeechProgress=false"
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.docker.com/r/nstoik/qbittorrent-vpn/tags"
+  qbit_manage:
+    image: ghcr.io/stuffanthings/qbit_manage:v4.6.3
+    network_mode: "service:downloader"
+    container_name: qbit_manage
+    environment:
+      # Scheduler Configuration
+      - QBT_RUN=false
+      - QBT_SCHEDULE=1440
+      - QBT_STARTUP_DELAY=0
+      - QBT_CONFIG_DIR=/config
+      - QBT_LOGFILE=qbit_manage.log
+
+      # Logging Configuration
+      - QBT_LOG_LEVEL=INFO
+      - QBT_LOG_SIZE=10
+      - QBT_LOG_COUNT=5
+      - QBT_DIVIDER==
+      - QBT_WIDTH=100
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/downloader/qbit_manage:/config:rw
+      - /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn:/qbittorrent:ro
+      - /mnt/nfs/downloads:/downloads:rw
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/stuffanthings/qbit_manage/releases"
 
 networks:
   traefik:
