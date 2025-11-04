@@ -54,3 +54,8 @@ cloud_droplets:
         record: 'uptime'
         proxied: false
         state: 'present'
+      - name: 'docker-cloud-01'
+        zone: 'stechsolutions.ca'
+        record: 'apprise'
+        proxied: false
+        state: 'present'
