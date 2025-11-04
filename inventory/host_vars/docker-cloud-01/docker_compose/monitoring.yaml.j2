@@ -2,6 +2,38 @@
 name: monitoring
 
 services:
+  apprise:
+    image: ghcr.io/caronc/apprise:1.2.2
+    networks:
+      - traefik
+    container_name: apprise
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ={{ base_timezone }}
+        - APPRISE_STATEFUL_MODE=simple
+        - APPRISE_WORKER_COUNT=1
+        - APPRISE_CONFIG_LOCK=true
+    volumes:
+        - /home/{{ default_user }}/docker_mounts/monitoring/apprise:/config
+    healthcheck:
+        test: [
+            "CMD-SHELL",
+            "curl -fs -H 'Accept: application/json' http://localhost:8000/status | grep -q '\"details\".*OK' || exit 1"
+        ]
+        interval: 60s
+        timeout: 10s
+        retries: 3
+        start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.apprise.rule=Host(`apprise.stechsolutions.ca`) && PathPrefix(`/notify`)"
+      - "traefik.http.services.apprise.loadbalancer.server.port=8000"
+      - "traefik.http.routers.apprise.entrypoints=websecure"
+      - "traefik.http.routers.apprise.tls.certresolver=letsencrypt"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/caronc/apprise/releases"
   ntfy:
     image: binwiederhier/ntfy:v2.13.0
     networks:
