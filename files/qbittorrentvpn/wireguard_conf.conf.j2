@@ -1,10 +1,15 @@
-#
-# Use this configuration with WireGuard client
-#
 [Interface]
-Address = 10.14.0.2/16
+# Key for qbittorrent vpn
+# Bouncing = 2
+# NetShield = 1
+# Moderate NAT = off
+# NAT-PMP (Port Forwarding) = on
+# VPN Accelerator = on
 PrivateKey = {{ secret_qbittorrentvpn_wg_private_key }}
+Address = 10.2.0.2/32
+
 [Peer]
+# CA#1139
 PublicKey = {{ secret_qbittorrentvpn_wg_public_key }}
-AllowedIPs = 0.0.0.0/0
-Endpoint = ca-van.prod.surfshark.com:51820
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = 89.222.98.39:51820
