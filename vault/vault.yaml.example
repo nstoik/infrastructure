@@ -34,6 +34,10 @@ secret_unifi_username_password: change_me
 secret_ntfy_password: change_me
 secret_ntfy_mailgun_smtp_password: get from mailgun
 
+# Apprise secrets
+secret_apprise_config_id: apprise-change_me
+secret_apprise_qbit_config_id: qbit-change_me
+
 # Traefik secrets
 secret_traefik_dashboard_password: change_me
 # Hash generated from https://hostingcanada.org/htpasswd-generator/ with mode bcrypt
