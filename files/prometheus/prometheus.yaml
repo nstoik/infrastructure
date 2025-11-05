@@ -56,7 +56,7 @@ scrape_configs:
           - 'prometheus-pihole-exporter:9617'
 
   - job_name: 'docker'
-    # Use static hosts as we need to use the tailscale hostname to access the remote docker hosts
+    # Use static hosts as we need to use the Tailscale CloudFlare hostname to access the remote docker hosts
     static_configs:
       - targets:
           - 'docker-02.home.stechsolutions.ca'

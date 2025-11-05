@@ -1,0 +1,11 @@
+version: 1
+# Global configuration for Apprise
+# https://github.com/caronc/apprise/wiki/config_yaml
+
+urls:
+    - ntfys://{{ ntfy_user }}:{{ ntfy_password }}@{{ ntfy_base_domain }}/test
+
+
+# With the working config file created, the ansible docker compose task will copy this file to the docker container
+# and will set the file name to the unique config id stored in vault as secret_apprise_config_id.
+# The traefik rules are set in the docker compose file to route only /notify requests, essentially disabling the web interface.

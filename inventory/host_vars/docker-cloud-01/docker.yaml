@@ -16,6 +16,16 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy/server.yaml
     mode: '0664'
     container_name: ntfy
+  - name: apprise.yml
+    src: "{{ inventory_dir }}/../files/apprise/apprise.yml.j2"
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/apprise/{{ secret_apprise_config_id }}.yml
+    mode: '0600'
+    container_name: apprise
+  - name: qbit.yml
+    src: "{{ inventory_dir }}/../files/apprise/qbit.yml.j2"
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/apprise/{{ secret_apprise_qbit_config_id }}.yml
+    mode: '0600'
+    container_name: apprise
 
 # docker mounts subfolders
 docker_mounts_subfolders:
