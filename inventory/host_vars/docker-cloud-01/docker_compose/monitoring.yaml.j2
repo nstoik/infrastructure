@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.apprise.rule=Host(`apprise.stechsolutions.ca`) && PathPrefix(`/notify`)"
+      - "traefik.http.routers.apprise.rule=Host(`apprise.stechsolutions.ca`) && (PathPrefix(`/notify`) || PathPrefix(`/status`))"
       - "traefik.http.services.apprise.loadbalancer.server.port=8000"
       - "traefik.http.routers.apprise.entrypoints=websecure"
       - "traefik.http.routers.apprise.tls.certresolver=letsencrypt"
