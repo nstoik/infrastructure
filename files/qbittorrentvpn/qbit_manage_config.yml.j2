@@ -199,7 +199,7 @@ apprise:
   api_url: https://apprise.stechsolutions.ca
   # Mandatory to fill out the notification url/urls based on the notification services provided by apprise. https://github.com/caronc/apprise/wiki
   notify_url:
-    - ntfys://nelson:{{ secret_ntfy_password }}@ntfy.stechsolutions.ca/qbit
+    - ntfys://{{ ntfy_user }}:{{ secret_ntfy_password }}@{{ ntfy_base_domain }}/qbit
 
 # notifiarr:
 #   # Notifiarr integration with webhooks
