@@ -5,7 +5,8 @@ This is the documentation for media services in my infrastructure.
 - `docker-01.home.stechsolutions.ca`: This host runs docker containers for media services
 
 ## Services
-- `downloader`: This service runs qBittorrent with VPN for downloading torrents securely. qbittorrentvpn is a forked version of an older image. This version focuses on using WireGuard for VPN connectivity.
+- `downloader`: This service runs qBittorrent with VPN for downloading torrents securely. [qbittorrentvpn docker](https://github.com/nstoik/docker-qBittorrentvpn) is a forked version of an older image. This version focuses on using WireGuard for VPN connectivity.
+- `qbit_manage`: This service manages qBittorrent downloads, including automatic rechecking, categorization, and notifications. It uses [qbit_manage](https://github.com/StuffAnThings/qbit_manage) with a user-defined configuration.
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
@@ -13,4 +14,12 @@ Configuration for these services can be found in the respective `docker_compose`
 
 ### QBittorrent with VPN
 On first setup, you need to get the auto generated password from the log file, and then change the webui password to the desired password (stored in Bitwarden).
+
+### Qbit Manage
+The configuration for qbit_manage is templated using Jinja2 and can be found [here](../../files/qbittorrentvpn/qbit_manage_config.yml.j2). Key configurations include:
+- Commands to run (recheck, category update, tag update)
+- Category definitions for organizing downloads
+- Tracker tags for all in use trackers
+- Notification settings using Apprise
+- Retention policies for completed downloads (inlcluding specific settings for private trackers)
 
