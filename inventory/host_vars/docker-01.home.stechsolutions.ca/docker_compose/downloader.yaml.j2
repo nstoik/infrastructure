@@ -93,6 +93,18 @@ services:
       - "homepage.widget.key={{ secret_prowlarr_api_key }}"
       - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hotio.dev/containers/prowlarr/"
+  flaresolver:
+    image: ghcr.io/flaresolverr/flaresolverr:v3.4.3
+    network_mode: "service:prowlarr"
+    container_name: flaresolverr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Edmonton
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/FlareSolverr/FlareSolverr/releases"
 
 networks:
   traefik:
