@@ -6,10 +6,10 @@
 
 docker_mounts_subfolders:
   # downloader docker mounts
-  - name: downloader_qbit_manage
-    dest: /home/{{ default_user }}/docker_mounts/downloader/qbit_manage
+  - name: downloader_prowlarr
+    dest: /home/{{ default_user }}/docker_mounts/downloader/prowlarr
     mode: '0775'
-    container_name: qbit_manage
+    container_name: prowlarr
 
 # docker container configuration files
 docker_configuration_files:

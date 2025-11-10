@@ -63,6 +63,36 @@ services:
     labels:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/stuffanthings/qbit_manage/releases"
+  prowlarr:
+    image: ghcr.io/hotio/prowlarr:release-2.1.5.5216
+    networks:
+      - traefik
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Edmonton
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/downloader/prowlarr:/config
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.stechsolutions.ca`)"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      - "traefik.http.routers.prowlarr.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
+      - "homepage.group=Media"
+      - "homepage.name=Prowlarr"
+      - "homepage.description=Prowlarr Indexer Manager"
+      - "homepage.icon=prowlarr.png"
+      - "homepage.href=https://prowlarr.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://prowlarr.home.stechsolutions.ca"
+      - "homepage.widget.type=prowlarr"
+      - "homepage.widget.url=https://prowlarr.home.stechsolutions.ca"
+      - "homepage.widget.key={{ secret_prowlarr_api_key }}"
+      - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://hotio.dev/containers/prowlarr/"
 
 networks:
   traefik:
