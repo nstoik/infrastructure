@@ -7,7 +7,7 @@ This is the documentation for media services in my infrastructure.
 ## Services
 - `downloader`: This service runs qBittorrent with VPN for downloading torrents securely. [qbittorrentvpn docker](https://github.com/nstoik/docker-qBittorrentvpn) is a forked version of an older image. This version focuses on using WireGuard for VPN connectivity.
 - `qbit_manage`: This service manages qBittorrent downloads, including automatic rechecking, categorization, and notifications. It uses [qbit_manage](https://github.com/StuffAnThings/qbit_manage) with a user-defined configuration.
-- `prowlarr`: This service is an indexer manager for torrent and usenet indexers. It integrates with download clients to automate the search and download process
+- `prowlarr`: This service is an indexer manager for torrent and usenet indexers. It integrates with download clients to automate the search and download process.
     - indexers that need to solve a captcha are configured to use flaresolverr for automatic solving.
 
 ## Configuration
@@ -23,7 +23,7 @@ The configuration for qbit_manage is templated using Jinja2 and can be found [he
 - Category definitions for organizing downloads
 - Tracker tags for all in use trackers
 - Notification settings using Apprise
-- Retention policies for completed downloads (inlcluding specific settings for private trackers)
+- Retention policies for completed downloads (including specific settings for private trackers)
 
 ### Prowlarr
 Prowlarr is configured via its web interface.
