@@ -36,7 +36,6 @@ secret_ntfy_mailgun_smtp_password: get from mailgun
 
 # Apprise secrets
 secret_apprise_config_id: apprise-change_me
-secret_apprise_qbit_config_id: qbit-change_me
 
 # Traefik secrets
 secret_traefik_dashboard_password: change_me
@@ -115,3 +114,6 @@ secret_default_wifi_password: change_me
 secret_qbittorrentvpn_webui_password: change_me
 secret_qbittorrentvpn_wg_private_key: change_me
 secret_qbittorrentvpn_wg_public_key: change_me
+
+# prowlarr secrets
+secret_prowlarr_api_key: change_me
