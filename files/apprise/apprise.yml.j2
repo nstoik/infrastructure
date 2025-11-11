@@ -4,6 +4,10 @@ version: 1
 
 urls:
     - ntfys://{{ ntfy_user }}:{{ ntfy_password }}@{{ ntfy_base_domain }}/test
+    - ntfys://{{ ntfy_user }}:{{ ntfy_password }}@{{ ntfy_base_domain }}/media:
+        - tag: media, prowlarr
+    - ntfys://{{ ntfy_user }}:{{ ntfy_password }}@{{ ntfy_base_domain }}/prowlarr:
+        - tag: prowlarr
 
 
 # With the working config file created, the ansible docker compose task will copy this file to the docker container
