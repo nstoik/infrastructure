@@ -27,7 +27,7 @@ The configuration for qbit_manage is templated using Jinja2 and can be found [he
 
 ### Prowlarr
 Prowlarr is configured via its web interface.
-- Get the API key and add it in the secrets vault in Ansible.
+- Access the web UI and set the initial username and password (stored in Bitwarden).
 - Add the FlareSolverr connection in Prowlarr settings for automatic captcha solving (http://localhost:8191/ since the service is running in the same Docker network).
 - Add the Sync Profiles for private trackers.
 - Add Download Clients (qBittorrent VPN).

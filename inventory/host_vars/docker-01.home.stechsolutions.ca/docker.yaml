@@ -5,11 +5,10 @@
 # proxmox_vms/docker_hosts.yaml
 
 docker_mounts_subfolders:
-  # downloader docker mounts
-  - name: downloader_prowlarr
-    dest: /home/{{ default_user }}/docker_mounts/downloader/prowlarr
+  - name: downloader_configarr_dockrepos
+    dest: /home/{{ default_user }}/docker_mounts/downloader/configarr/dockrepos
     mode: '0775'
-    container_name: prowlarr
+    container_name: configarr
 
 # docker container configuration files
 docker_configuration_files:
@@ -30,6 +29,12 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/downloader/qbit_manage/config.yml
     mode: '0664'
     container_name: qbit_manage
+  # prowlarr configuration file
+  - name: prowlarr_config.xml
+    src: "{{ inventory_dir }}/../files/prowlarr/config.xml.j2"
+    dest: /home/{{ default_user }}/docker_mounts/downloader/prowlarr/config.xml
+    mode: '0664'
+    container_name: prowlarr
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-01.home.stechsolutions.ca/docker_compose"
 
