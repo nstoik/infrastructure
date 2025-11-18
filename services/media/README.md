@@ -53,7 +53,7 @@ Profilarr is configured via its web interface.
 Radarr is configured via its web interface.
 - Access the web UI and set the initial username and password (stored in Bitwarden).
     - You will need to change the `<AuthenticationMethod>Form</AuthenticationMethod>` to `External` in the `config.xml` file in order to login to the web UI.
-    - Change the password and set it back to `Form` authentication method.
+    - Change the password and set it back to `Forms` authentication method.
 - Change Certification Country to "Canada" in Settings -> Metadata.
 - Add Download Client (qBittorrent VPN).
     - Set Post-Import Category to "radarr-finished"
