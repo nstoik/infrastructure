@@ -179,7 +179,8 @@ The subscribed topics need to be added manually in the Ntfy clients (web or iOS 
 - Proxmox
 - SnapRAID
 - Uptime-Kuma
-- prowlarr
+- media
+- media-health
 - qbit
 - wud
 
