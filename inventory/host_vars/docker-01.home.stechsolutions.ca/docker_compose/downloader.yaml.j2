@@ -97,7 +97,7 @@ services:
       - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Prowlarr/Prowlarr/releases"
   flaresolver:
-    image: ghcr.io/flaresolverr/flaresolverr:v3.4.3
+    image: ghcr.io/flaresolverr/flaresolverr:v3.4.5
     network_mode: "service:prowlarr"
     container_name: flaresolverr
     environment:
