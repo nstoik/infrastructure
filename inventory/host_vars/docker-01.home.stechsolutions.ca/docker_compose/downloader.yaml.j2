@@ -59,6 +59,8 @@ services:
       - /home/{{ default_user }}/docker_mounts/downloader/qbit_manage:/config:rw
       - /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn:/qbittorrent:ro
       - /mnt/nfs/downloads:/downloads:rw
+    depends_on:
+      - downloader
     restart: unless-stopped
     labels:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
@@ -66,6 +68,7 @@ services:
   prowlarr:
     image: ghcr.io/hotio/prowlarr:release-2.1.5.5216
     networks:
+      - arr_network
       - traefik
     container_name: prowlarr
     environment:
@@ -101,12 +104,46 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Edmonton
+    depends_on:
+      - prowlarr
     restart: unless-stopped
     labels:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/FlareSolverr/FlareSolverr/releases"
+  profilarr:
+    image: santiagosayshey/profilarr:beta
+    networks:
+      - arr_network
+      - traefik
+    container_name: profilarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Edmonton
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/downloader/profilarr:/config
+    depends_on:
+      - radarr
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.profilarr.rule=Host(`profilarr.home.stechsolutions.ca`)"
+      - "traefik.http.services.profilarr.loadbalancer.server.port=6868"
+      - "traefik.http.routers.profilarr.entrypoints=websecure"
+      - "traefik.http.routers.profilarr.tls.certresolver=letsencrypt"
+      - "homepage.group=Media"
+      - "homepage.name=Profilarr"
+      - "homepage.description=Profile Manager for *arr Apps"
+      - "homepage.icon=profilarr.png"
+      - "homepage.href=https://profilarr.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://profilarr.home.stechsolutions.ca"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/Dictionarry-Hub/profilarr/releases"
 
 networks:
   traefik:
     name: traefik
     external: true
+  arr_network:
+    name: arr_network

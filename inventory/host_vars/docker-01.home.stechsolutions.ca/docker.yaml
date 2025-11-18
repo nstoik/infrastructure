@@ -4,11 +4,14 @@
 # other variables are set in group_vars/proxmox_vms.yaml and
 # proxmox_vms/docker_hosts.yaml
 
+# docker container paths. All found files will be processed and copied to the docker host
+# docker_configuration_paths:
+
 docker_mounts_subfolders:
-  - name: downloader_configarr_dockrepos
-    dest: /home/{{ default_user }}/docker_mounts/downloader/configarr/dockrepos
+  - name: downloader_profilarr
+    dest: /home/{{ default_user }}/docker_mounts/downloader/profilarr
     mode: '0775'
-    container_name: configarr
+    container_name: profilarr
 
 # docker container configuration files
 docker_configuration_files:
@@ -22,7 +25,7 @@ docker_configuration_files:
   - name: qbittorrentvpn.conf
     src: "{{ inventory_dir }}/../files/qbittorrentvpn/wireguard_conf.conf.j2"
     dest: /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn/wireguard/wg0.conf
-    mode: '0664'
+    mode: '0775'
     container_name: qbittorrentvpn
   - name: qbit_manage.yml
     src: "{{ inventory_dir }}/../files/qbittorrentvpn/qbit_manage_config.yml.j2"

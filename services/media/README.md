@@ -9,6 +9,7 @@ This is the documentation for media services in my infrastructure.
 - `qbit_manage`: This service manages qBittorrent downloads, including automatic rechecking, categorization, and notifications. It uses [qbit_manage](https://github.com/StuffAnThings/qbit_manage) with a user-defined configuration.
 - `prowlarr`: This service is an indexer manager for torrent and usenet indexers. It integrates with download clients to automate the search and download process.
     - indexers that need to solve a captcha are configured to use flaresolverr for automatic solving.
+- `profilarr`: This service manages profiles for media management applications like Radarr and Sonarr. It helps in organizing and maintaining consistent settings across multiple applications.
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
@@ -36,4 +37,12 @@ Prowlarr is configured via its web interface.
     - one alert one for issues
 - Add indexers
 
+### Profilarr
+Profilarr is configured via its web interface.
+- Access the web UI and set the initial username and password (stored in Bitwarden).
+- Add the database (Dictionary/Database)
+- Connect Radarr to Profilarr via the API key.
+- Confirm Media Management settings are correct (naming, folders, etc).
+- Select the desired profiles to manage.
+    - Starting with default 1080p Efficient as a start.
 
