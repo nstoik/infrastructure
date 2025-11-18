@@ -31,6 +31,9 @@
 - name: Prune everything
   community.docker.docker_prune:
     containers: true
+    containers_filters:
+      label:
+        - "stechsolutions.prune_protect!=true"
     images: true
     images_filters:
       dangling: false

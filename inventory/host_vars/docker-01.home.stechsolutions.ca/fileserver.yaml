@@ -35,3 +35,9 @@ fileserver_nfs_mounts:
     docker_nfs_unit: mnt-nfs-downloads.mount
     options: defaults,_netdev
     state: mounted
+  - path: /mnt/nfs/movies
+    server: storage.home.stechsolutions.ca
+    nfs_export: /export/movies
+    docker_nfs_unit: mnt-nfs-movies.mount
+    options: defaults,_netdev
+    state: mounted
