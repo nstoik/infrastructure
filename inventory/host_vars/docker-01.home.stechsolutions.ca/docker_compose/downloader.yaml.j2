@@ -43,7 +43,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.docker.com/r/nstoik/qbittorrent-vpn/tags"
   qbit_manage:
-    image: ghcr.io/stuffanthings/qbit_manage:v4.6.3
+    image: ghcr.io/stuffanthings/qbit_manage:v4.6.4
     network_mode: "service:downloader"
     container_name: qbit_manage
     environment:
