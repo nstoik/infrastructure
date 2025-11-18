@@ -66,7 +66,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/stuffanthings/qbit_manage/releases"
   prowlarr:
-    image: ghcr.io/hotio/prowlarr:release-2.1.5.5216
+    image: ghcr.io/hotio/prowlarr:release-2.3.0.5236
     networks:
       - arr_network
       - traefik
@@ -95,7 +95,7 @@ services:
       - "homepage.widget.url=https://prowlarr.home.stechsolutions.ca"
       - "homepage.widget.key={{ secret_prowlarr_api_key }}"
       - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
-      - "wud.link.template=https://hotio.dev/containers/prowlarr/"
+      - "wud.link.template=https://github.com/Prowlarr/Prowlarr/releases"
   flaresolver:
     image: ghcr.io/flaresolverr/flaresolverr:v3.4.3
     network_mode: "service:prowlarr"
