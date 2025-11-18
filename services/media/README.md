@@ -10,6 +10,7 @@ This is the documentation for media services in my infrastructure.
 - `prowlarr`: This service is an indexer manager for torrent and usenet indexers. It integrates with download clients to automate the search and download process.
     - indexers that need to solve a captcha are configured to use flaresolverr for automatic solving.
 - `profilarr`: This service manages profiles for media management applications like Radarr and Sonarr. It helps in organizing and maintaining consistent settings across multiple applications.
+- `radarr`: This service manages movie downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing movies.
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
@@ -36,6 +37,8 @@ Prowlarr is configured via its web interface.
     - one general one for all grabs
     - one alert one for issues
 - Add indexers
+- Add Applications
+    - Radarr
 
 ### Profilarr
 Profilarr is configured via its web interface.
@@ -46,3 +49,16 @@ Profilarr is configured via its web interface.
 - Select the desired profiles to manage.
     - Starting with default 1080p Efficient as a start.
 
+### Radarr
+Radarr is configured via its web interface.
+- Access the web UI and set the initial username and password (stored in Bitwarden).
+    - You will need to change the `<AuthenticationMethod>Form</AuthenticationMethod>` to `External` in the `config.xml` file in order to login to the web UI.
+    - Change the password and set it back to `Form` authentication method.
+- Change Certification Country to "Canada" in Settings -> Metadata.
+- Add Download Client (qBittorrent VPN).
+    - Set Post-Import Category to "radarr-finished"
+    - Uncheck "Remove Completed"
+- Add notifications using Ntfy.
+    - one general one for all grabs
+    - one alert one for issues
+- Add root movie folder `/movies`.

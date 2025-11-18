@@ -115,5 +115,6 @@ secret_qbittorrentvpn_webui_password: change_me
 secret_qbittorrentvpn_wg_private_key: change_me
 secret_qbittorrentvpn_wg_public_key: change_me
 
-# prowlarr secrets
+# *arr secrets
 secret_prowlarr_api_key: change_me
+secret_radarr_api_key: change_me

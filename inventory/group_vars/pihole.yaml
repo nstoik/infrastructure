@@ -49,6 +49,9 @@ pihole_dns_entries:
 #   downloader.home.stechsolutions.ca -> docker.home.stechsolutions.ca
 #   downloader -> docker.home.stechsolutions.ca
 pihole_cname_entries:
+  - domain: "radarr.home.stechsolutions.ca"
+    target: "docker-01.home.stechsolutions.ca"
+    add_hostname: true
   - domain: "profilarr.home.stechsolutions.ca"
     target: "docker-01.home.stechsolutions.ca"
     add_hostname: true
