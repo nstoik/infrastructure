@@ -68,7 +68,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/binwiederhier/ntfy/releases"
   postgres_hc_db:
-    image: postgres:17.5
+    image: postgres:18.1
     user: 1000:1000
     networks:
       - hc_postgres
@@ -78,7 +78,7 @@ services:
         - POSTGRES_USER={{ hc_db_user }}
         - POSTGRES_PASSWORD={{ secret_hc_db_password }}
     volumes:
-        - /home/{{ default_user }}/docker_mounts/monitoring/postgres:/var/lib/postgresql/data
+        - /home/{{ default_user }}/docker_mounts/monitoring/postgres:/var/lib/postgresql
         - /etc/passwd:/etc/passwd:ro
     healthcheck:
         test: [
