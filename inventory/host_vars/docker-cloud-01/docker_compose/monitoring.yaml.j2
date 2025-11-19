@@ -94,7 +94,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+(\\.\\d+)?$"
       - "wud.link.template=https://www.postgresql.org/docs/release/"
   healthchecks:
-    image: healthchecks/healthchecks:v3.9
+    image: healthchecks/healthchecks:v3.11.2
     networks:
       - traefik
       - hc_postgres
