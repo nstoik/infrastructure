@@ -85,16 +85,6 @@
       tags:
         - tailscale
 
-    # Run the ntfy role
-    - name: Import ntfy role
-      ansible.builtin.import_role:
-        name: ntfy
-      when:
-        hostvars[inventory_hostname].ntfy_setup is defined and
-        hostvars[inventory_hostname].ntfy_setup is true
-      tags:
-        - ntfy
-
     # Run the healthchecks role
     - name: Import healthchecks role
       ansible.builtin.import_role:

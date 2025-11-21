@@ -28,7 +28,7 @@
     hc_channel_url: "{{ hc_channel.value_url }}"
     hc_channel_priority: "{{ hc_channel.value_priority }}"
     hc_channel_priority_up: "{{ hc_channel.value_priority_up }}"
-    hc_channel_token: "{{ ntfy_tokens_extracted[hc_channel.token_name] }}"
+    hc_channel_token: "{{ secret_ntfy_tokens[hc_channel.token_name] }}"
   loop: "{{ hc_channels }}"
   loop_control:
     loop_var: hc_channel

@@ -83,7 +83,6 @@ The roles are:
 - [docker](roles/docker/)
 - [fileserver](roles/fileserver/)
 - [healthchecks](roles/healthchecks/)
-- [ntfy](roles/ntfy/)
 - [nut](roles/nut/)
 - [pihole](roles/pihole/)
 - [proxmox](roles/proxmox/)
