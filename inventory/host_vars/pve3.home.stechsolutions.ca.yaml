@@ -7,14 +7,6 @@ proxmox_nut_configure: true
 
 # Proxmox nfs storage
 proxmox_storage:
-  # Synology backup weekly NFS storage TODO: Remove this when PBS has been tested
-  - storage: "syno_bw"
-    type: "nfs"
-    state: "present"
-    server: "10.10.1.200"
-    export: "/volume2/backup/pve_backup_weekly"
-    content: "backup"
-    prune_backups: "keep-last=5,keep-monthly=2,keep-yearly=1"
   # PBS
   - storage: "pbs"
     type: "pbs"
