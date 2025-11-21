@@ -57,7 +57,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/traefik/traefik/releases"
   docker-socket-proxy:
-    image: tecnativa/docker-socket-proxy:0.4.1
+    image: tecnativa/docker-socket-proxy:v0.4.1
     networks:
       - docker-proxy
     container_name: docker-socket-proxy
