@@ -1,8 +1,8 @@
 ---
 # Tasks to create the notification settings on a PBS server
 #
-# This works for webook notifications, such as ntfy.
-# It assumes that the ntfy tokens are already set up in the ntfy role.
+# This works for webhook notifications, such as ntfy.
+# The ntfy tokens are expected to be defined in the vault as a secret_ntfy_tokens dictionary.
 
 # Check if the notification targets already exist
 - name: Check if the notification targets already exist
