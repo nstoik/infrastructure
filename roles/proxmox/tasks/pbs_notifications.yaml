@@ -1,9 +1,8 @@
 ---
 # Tasks to create the notification settings on a PBS server
 #
-# This works for webook notifications, such as ntfy.
-# It assumes that the ntfy tokens are already set up in the ntfy role.
-# It also assumes that the ntfy tokens are available in the `ntfy_tokens_extracted` variable.
+# This works for webhook notifications, such as ntfy.
+# The ntfy tokens are expected to be defined in the vault as a secret_ntfy_tokens dictionary.
 
 # Check if the notification targets already exist
 - name: Check if the notification targets already exist
@@ -27,7 +26,7 @@
       --header name=Authorization,value={{ 'Bearer {{ secrets.token }}' | b64encode }}
       --header name=Priority,value={{ target.priority | b64encode }}
       --header name=Title,value={{ '{{ title }}' | b64encode }}
-      --secret name=token,value={{ ntfy_tokens_extracted[target.token_name] | b64encode }}
+      --secret name=token,value={{ secret_ntfy_tokens[target.token_name] | b64encode }}
   become: true
   loop: "{{ proxmox_pbs_notification_targets }}"
   loop_control:

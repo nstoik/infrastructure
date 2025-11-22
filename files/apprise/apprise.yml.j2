@@ -3,10 +3,10 @@ version: 1
 # https://github.com/caronc/apprise/wiki/config_yaml
 
 urls:
-    - ntfys://{{ ntfy_user }}:{{ ntfy_password }}@{{ ntfy_base_domain }}/test
-    - ntfys://{{ ntfy_user }}:{{ ntfy_password }}@{{ ntfy_base_domain }}/media:
+    - ntfys://{{ ntfy_user }}:{{ secret_ntfy_password }}@{{ ntfy_base_domain }}/test
+    - ntfys://{{ ntfy_user }}:{{ secret_ntfy_password }}@{{ ntfy_base_domain }}/media:
         - tag: media, prowlarr
-    - ntfys://{{ ntfy_user }}:{{ ntfy_password }}@{{ ntfy_base_domain }}/media-health:
+    - ntfys://{{ ntfy_user }}:{{ secret_ntfy_password }}@{{ ntfy_base_domain }}/media-health:
         - tag: prowlarr-health
 
 

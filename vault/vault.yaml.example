@@ -32,7 +32,11 @@ secret_unifi_username_password: change_me
 
 # Ntfy secrets
 secret_ntfy_password: change_me
+secret_ntfy_password_hash: hashed version of 'secret_ntfy_password'
 secret_ntfy_mailgun_smtp_password: get from mailgun
+secret_ntfy_tokens:
+  label_1: token_value_1
+  label_2: token_value_2
 
 # Apprise secrets
 secret_apprise_config_id: apprise-change_me

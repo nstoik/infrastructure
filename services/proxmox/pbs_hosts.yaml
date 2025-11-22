@@ -10,26 +10,6 @@
     - proxmox.pve
     - base.known_hosts
 
-# Get the ntfy tokens to use later in the playbook for notifications.
-- name: Get the ntfy tokens
-  hosts: docker-cloud-01
-  gather_facts: false
-  vars_files:
-    - ../../vault/vault.yaml
-  tasks:
-    - name: Get the ntfy tokens
-      ansible.builtin.include_role:
-        name: ntfy
-        tasks_from: tokens.yaml
-
-    # Make the ntfy_tokens_extracted variable available to the proxmox_pbs hosts
-    - name: Make the ntfy_tokens_extracted variable available to the proxmox_pbs hosts
-      ansible.builtin.add_host:
-        name: "{{ item }}"
-        ntfy_tokens_extracted: "{{ ntfy_tokens_extracted }}"
-      loop: "{{ groups['proxmox_pbs'] }}"
-      delegate_to: localhost
-
 # These first tasks are run as the root user since it includes
 # setting up the new user with the ssh keys.
 - name: Make sure the PBS host is setup
