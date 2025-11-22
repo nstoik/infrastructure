@@ -3,7 +3,7 @@ name: monitoring
 
 services:
   prometheus:
-    image: prom/prometheus:v3.5.0
+    image: prom/prometheus:v3.7.3
     user: 1000:1000
     networks:
       - traefik
@@ -41,7 +41,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/prometheus/releases"
   alertmanager:
-    image: prom/alertmanager:v0.28.1
+    image: prom/alertmanager:v0.29.0
     user: 1000:1000
     networks:
       - traefik
@@ -167,7 +167,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/eko/pihole-exporter/releases"
   prometheus-nut-exporter:
-    image: ghcr.io/druggeri/nut_exporter:3.2.1
+    image: ghcr.io/druggeri/nut_exporter:3.2.2
     networks:
       - prometheus_exporter
     container_name: prometheus-nut-exporter
@@ -181,7 +181,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/druggeri/nut_exporter/releases"
   peanut:
-    image: brandawg93/peanut:5.10.0
+    image: brandawg93/peanut:5.17.0
     networks:
       - traefik
       - prometheus_exporter
@@ -210,7 +210,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/brandawg93/peanut/releases"
   grafana:
-    image: grafana/grafana:12.1.0
+    image: grafana/grafana:12.3.0
     networks:
       - traefik
       - prometheus_exporter
