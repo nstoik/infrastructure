@@ -3,7 +3,7 @@ name: vehicle
 
 services:
   postgres_vehicle_db:
-    image: postgres:17.5
+    image: postgres:18.1
     user: 1000:1000
     networks:
       - vehicle_postgres
@@ -13,7 +13,7 @@ services:
         - POSTGRES_USER={{ vehicle_db_user }}
         - POSTGRES_PASSWORD={{ vehicle_db_password }}
     volumes:
-        - /home/{{ default_user }}/docker_mounts/vehicle/postgres:/var/lib/postgresql/data
+        - /home/{{ default_user }}/docker_mounts/vehicle/postgres:/var/lib/postgresql
         - /etc/passwd:/etc/passwd:ro
     healthcheck:
         test: [
