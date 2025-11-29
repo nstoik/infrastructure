@@ -4,6 +4,6 @@
 # apply nfs exports
 - name: Apply nfs exports
   ansible.builtin.command: exportfs -ra
-  register: exportfs_result
+  register: fileserver_exportfs_result
   become: true
-  changed_when: exportfs_result.rc == 0
+  changed_when: fileserver_exportfs_result.rc == 0
