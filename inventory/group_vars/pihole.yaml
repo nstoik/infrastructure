@@ -52,6 +52,9 @@ pihole_cname_entries:
   - domain: "radarr.home.stechsolutions.ca"
     target: "docker-01.home.stechsolutions.ca"
     add_hostname: true
+  - domain: "sonarr.home.stechsolutions.ca"
+    target: "docker-01.home.stechsolutions.ca"
+    add_hostname: true
   - domain: "profilarr.home.stechsolutions.ca"
     target: "docker-01.home.stechsolutions.ca"
     add_hostname: true

@@ -173,7 +173,41 @@ services:
       - "homepage.widget.key={{ secret_radarr_api_key }}"
       - "homepage.widget.enableQueue=true"
       - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
-      - "wud.link.template=https://hotio.dev/containers/radarr/"
+      - "wud.link.template=https://github.com/Radarr/Radarr/releases"
+  sonarr:
+    image: ghcr.io/hotio/sonarr:release-4.0.16.2944
+    networks:
+      - arr_network
+      - traefik
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Edmonton
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/downloader/sonarr:/config
+      - /mnt/nfs/downloads:/downloads
+      - /mnt/nfs/tv:/tv
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.stechsolutions.ca`)"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+      - "homepage.group=Media"
+      - "homepage.name=Sonarr"
+      - "homepage.description=TV Show Manager"
+      - "homepage.icon=sonarr.png"
+      - "homepage.href=https://sonarr.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://sonarr.home.stechsolutions.ca"
+      - "homepage.widget.type=sonarr"
+      - "homepage.widget.url=https://sonarr.home.stechsolutions.ca"
+      - "homepage.widget.key={{ secret_sonarr_api_key }}"
+      - "homepage.widget.enableQueue=true"
+      - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/Sonarr/Sonarr/releases"
 
 networks:
   traefik:
