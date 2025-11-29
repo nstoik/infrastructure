@@ -11,6 +11,7 @@ This is the documentation for media services in my infrastructure.
     - indexers that need to solve a captcha are configured to use flaresolverr for automatic solving.
 - `profilarr`: This service manages profiles for media management applications like Radarr and Sonarr. It helps in organizing and maintaining consistent settings across multiple applications.
 - `radarr`: This service manages movie downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing movies.
+- `sonarr`: This service manages TV show downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing TV shows.
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
@@ -27,6 +28,33 @@ The configuration for qbit_manage is templated using Jinja2 and can be found [he
 - Notification settings using Apprise
 - Retention policies for completed downloads (including specific settings for private trackers)
 
+### Radarr
+Radarr is configured via its web interface.
+- Access the web UI and set the initial username and password (stored in Bitwarden).
+    - You will need to change the `<AuthenticationMethod>Forms</AuthenticationMethod>` to `External` in the `config.xml` file in order to login to the web UI.
+    - Change the password and set it back to `Forms` authentication method.
+- Change Certification Country to "Canada" in Settings -> Metadata.
+- Add Download Client (qBittorrent VPN).
+    - Set Post-Import Category to "radarr-finished"
+    - Uncheck "Remove Completed"
+- Add notifications using Ntfy.
+    - one general one for all grabs
+    - one alert one for issues
+- Add root movie folder `/movies`.
+
+### Sonarr
+Sonarr is configured via its web interface.
+- Access the web UI and set the initial username and password (stored in Bitwarden).
+    - You will need to change the `<AuthenticationMethod>Forms</AuthenticationMethod>` to `External` in the `config.xml` file in order to login to the web UI.
+    - Change the password and set it back to `Forms` authentication method.
+- Add Download Client (qBittorrent VPN).
+    - Set Post-Import Category to "sonarr-finished"
+    - Uncheck "Remove Completed"
+- Add notifications using Ntfy.
+    - one general one for all grabs
+    - one alert one for issues
+- Add root TV show folder `/tv`.
+
 ### Prowlarr
 Prowlarr is configured via its web interface.
 - Access the web UI and set the initial username and password (stored in Bitwarden).
@@ -39,26 +67,14 @@ Prowlarr is configured via its web interface.
 - Add indexers
 - Add Applications
     - Radarr
+    - Sonarr
 
 ### Profilarr
 Profilarr is configured via its web interface.
 - Access the web UI and set the initial username and password (stored in Bitwarden).
 - Add the database (Dictionary/Database)
 - Connect Radarr to Profilarr via the API key.
+- Connect Sonarr to Profilarr via the API key.
 - Confirm Media Management settings are correct (naming, folders, etc).
 - Select the desired profiles to manage.
     - Starting with default 1080p Efficient as a start.
-
-### Radarr
-Radarr is configured via its web interface.
-- Access the web UI and set the initial username and password (stored in Bitwarden).
-    - You will need to change the `<AuthenticationMethod>Form</AuthenticationMethod>` to `External` in the `config.xml` file in order to login to the web UI.
-    - Change the password and set it back to `Forms` authentication method.
-- Change Certification Country to "Canada" in Settings -> Metadata.
-- Add Download Client (qBittorrent VPN).
-    - Set Post-Import Category to "radarr-finished"
-    - Uncheck "Remove Completed"
-- Add notifications using Ntfy.
-    - one general one for all grabs
-    - one alert one for issues
-- Add root movie folder `/movies`.
