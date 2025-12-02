@@ -1,0 +1,46 @@
+---
+name: media
+
+services:
+  tautulli:
+    image: ghcr.io/tautulli/tautulli:v2.16.0
+    networks:
+      - arr_network
+      - traefik
+    container_name: tautulli
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Edmonton
+      - TAUTULLI_API_KEY={{ secret_tautulli_api_key }}
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/media/tautulli:/config
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.tautulli.rule=Host(`tautulli.home.stechsolutions.ca`)"
+      - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
+      - "traefik.http.routers.tautulli.entrypoints=websecure"
+      - "traefik.http.routers.tautulli.tls.certresolver=letsencrypt"
+      - "homepage.group=Media Playback"
+      - "homepage.name=Tautulli"
+      - "homepage.description=Tautulli Plex Monitoring"
+      - "homepage.icon=tautulli.png"
+      - "homepage.href=https://tautulli.home.stechsolutions.ca/home"
+      - "homepage.siteMonitor=https://tautulli.home.stechsolutions.ca/home"
+      - "homepage.widget.type=tautulli"
+      - "homepage.widget.url=https://tautulli.home.stechsolutions.ca"
+      - "homepage.widget.key={{ secret_tautulli_api_key }}"
+      - "homepage.widget.enableUser=true"
+      - "homepage.widget.showEpisodeNumber=false"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/Tautulli/Tautulli/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+  arr_network:
+    name: arr_network
+    external: true
