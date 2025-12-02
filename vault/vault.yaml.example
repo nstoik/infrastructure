@@ -123,3 +123,4 @@ secret_qbittorrentvpn_wg_public_key: change_me
 secret_prowlarr_api_key: change_me
 secret_radarr_api_key: change_me
 secret_sonarr_api_key: change_me
+secret_tautulli_api_key: change_me
