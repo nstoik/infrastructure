@@ -84,7 +84,7 @@ Profilarr is configured via its web interface.
 Tautulli is configured via its web interface.
 - Best case scenario, copy an existing Tautulli database from another installation to preserve all settings and history.
 - The API key is stored in the Vault and is used in the homepage widget configuration.
-- Set the Plex server connection if required
+- Set the Plex server connection if required.
 - Configure notifications using Apprise. You need to get the ntfy Access Token from the ntfy web UI.
     - one general one for all notifications
     - one alert one for issues
