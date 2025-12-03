@@ -41,6 +41,10 @@ all:
                 scsi: "scsi2"
                 device: "data:10,discard=on"
                 backup: 1
+              - comment: 200 GB disk for docker compose media volume
+                scsi: "scsi3"
+                device: "data:200,discard=on"
+                backup: 1
         docker-02.home.stechsolutions.ca:
           base_docker_install: true
           base_docker_config: true

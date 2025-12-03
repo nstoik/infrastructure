@@ -30,7 +30,7 @@ fileserver_attached_disks:
     state: mounted
   # 10 GB disk for docker compose tdarr volume
   - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi3
-    partition_label: 10-GB-VD-0
+    partition_label: 10-GB-VD-2
     mount_point: "/home/{{ default_user }}/docker_mounts/tdarr"
     owner: "{{ default_user }}"
     group: "{{ default_user }}"

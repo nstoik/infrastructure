@@ -12,6 +12,10 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/downloader/profilarr
     mode: '0775'
     container_name: profilarr
+  - name: media_tautulli
+    dest: /home/{{ default_user }}/docker_mounts/media/tautulli
+    mode: '0775'
+    container_name: tautulli
 
 # docker container configuration files
 docker_configuration_files:
@@ -65,4 +69,10 @@ docker_compose_files:
     state: present
     src: "{{ docker_compose_subpath }}/proxy.yaml.j2"
     dest: /home/{{ default_user }}/docker_compose/proxy-docker-compose.yaml
+    mode: '0664'
+  - name: media-docker-compose.yaml
+    compose_name: media
+    state: present
+    src: "{{ docker_compose_subpath }}/media.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/media-docker-compose.yaml
     mode: '0664'

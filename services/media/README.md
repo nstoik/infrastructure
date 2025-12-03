@@ -12,6 +12,7 @@ This is the documentation for media services in my infrastructure.
 - `profilarr`: This service manages profiles for media management applications like Radarr and Sonarr. It helps in organizing and maintaining consistent settings across multiple applications.
 - `radarr`: This service manages movie downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing movies.
 - `sonarr`: This service manages TV show downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing TV shows.
+- `tautulli`: This service monitors Plex Media Server activity and provides detailed statistics and notifications about media consumption.
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
@@ -78,3 +79,12 @@ Profilarr is configured via its web interface.
 - Confirm Media Management settings are correct (naming, folders, etc).
 - Select the desired profiles to manage.
     - Starting with default 1080p Efficient as a start.
+
+### Tautulli
+Tautulli is configured via its web interface.
+- Best case scenario, copy an existing Tautulli database from another installation to preserve all settings and history.
+- The API key is stored in the Vault and is used in the homepage widget configuration.
+- Set the Plex server connection if required.
+- Configure notifications using Apprise. You need to get the ntfy Access Token from the ntfy web UI.
+    - one general one for all notifications
+    - one alert one for issues
