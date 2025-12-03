@@ -49,15 +49,6 @@ pihole_dns_entries:
 #   downloader.home.stechsolutions.ca -> docker.home.stechsolutions.ca
 #   downloader -> docker.home.stechsolutions.ca
 pihole_cname_entries:
-  - domain: "tautulli.home.stechsolutions.ca"
-    target: "docker-01.home.stechsolutions.ca"
-    add_hostname: true
-  - domain: "radarr.home.stechsolutions.ca"
-    target: "docker-01.home.stechsolutions.ca"
-    add_hostname: true
-  - domain: "sonarr.home.stechsolutions.ca"
-    target: "docker-01.home.stechsolutions.ca"
-    add_hostname: true
   - domain: "profilarr.home.stechsolutions.ca"
     target: "docker-01.home.stechsolutions.ca"
     add_hostname: true
@@ -67,37 +58,46 @@ pihole_cname_entries:
   - domain: "qbittorrent.home.stechsolutions.ca"
     target: "docker-01.home.stechsolutions.ca"
     add_hostname: true
+  - domain: "radarr.home.stechsolutions.ca"
+    target: "docker-01.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "sonarr.home.stechsolutions.ca"
+    target: "docker-01.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "tautulli.home.stechsolutions.ca"
+    target: "docker-01.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "alertmanager.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "filestash.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
+  - domain: "grafana.home.stechsolutions.ca"
+    target: "docker-02.home.stechsolutions.ca"
+    add_hostname: true
   - domain: "homepage.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
   - domain: "lubelogger.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
-  - domain: "tdarr.home.stechsolutions.ca"
+  - domain: "ntfy-alertmanager.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
-  - domain: "unifi.home.stechsolutions.ca"
-    target: "docker-02.home.stechsolutions.ca"
-    add_hostname: true
-  - domain: "wud.home.stechsolutions.ca"
+  - domain: "peanut.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
   - domain: "prometheus.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
-  - domain: "alertmanager.home.stechsolutions.ca"
+  - domain: "unifi.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
-  - domain: "ntfy-alertmanager.home.stechsolutions.ca"
+  - domain: "tdarr.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
-  - domain: "grafana.home.stechsolutions.ca"
-    target: "docker-02.home.stechsolutions.ca"
-    add_hostname: true
-  - domain: "filestash.home.stechsolutions.ca"
-    target: "docker-02.home.stechsolutions.ca"
-    add_hostname: true
-  - domain: "peanut.home.stechsolutions.ca"
+  - domain: "wud.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
   - domain: "downloader.home.stechsolutions.ca"
