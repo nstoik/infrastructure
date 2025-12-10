@@ -138,16 +138,16 @@ share_limits:
     priority: 1
     include_any_tags:
       - private
-    max_ratio: 10
+    max_ratio: 7
     min_seeding_time: 2w
-    max_last_active: 12w
+    max_last_active: 3w
     cleanup: true
   default:
     priority: 999
-    max_ratio: 10
+    max_ratio: 7
     min_seeding_time: 1w
-    max_seeding_time: 12w
-    max_last_active: 4w
+    max_seeding_time: 4w
+    max_last_active: 10d
     cleanup: true
 
 recyclebin:
@@ -221,11 +221,11 @@ webhooks:
   run_end: apprise
   function:
     recheck: apprise
-    cat_update: apprise
-    tag_update: apprise
+    cat_update:
+    tag_update:
     rem_unregistered: apprise
     tag_tracker_error: apprise
     rem_orphaned: apprise
-    tag_nohardlinks: apprise
+    tag_nohardlinks:
     share_limits: apprise
-    cleanup_dirs: apprise
+    cleanup_dirs:
