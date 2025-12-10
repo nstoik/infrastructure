@@ -10,19 +10,35 @@ quicklaunch:
   provider: google # google, duckduckgo, bing, baidu, brave or custom
 
 layout:
-  Media:
-    style: column
+  Media Playback:
+    tab: Media
+    style: row
+    useEqualHeights: true
+  Media Management:
+    tab: Media
     useEqualHeights: true
   3DPrinting:
+    tab: Tools
     style: column
   Files:
+    tab: Tools
     style: column
   Monitoring:
+    tab: Monitoring
+    style: column
+  Alerts and Reporting:
+    tab: Monitoring
+    style: column
+  Vehicle:
+    tab: Tools
     style: column
   Proxy:
+    tab: Infrastructure
     style: column
     useEqualHeights: true
   Network:
+    tab: Infrastructure
     style: column
-  Vehicle:
+  Proxmox:
+    tab: Infrastructure
     style: column
