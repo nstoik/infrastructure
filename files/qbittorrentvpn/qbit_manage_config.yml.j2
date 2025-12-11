@@ -142,14 +142,23 @@ share_limits:
       - private
     max_ratio: 7
     min_seeding_time: 2w
-    max_last_active: 3w
+    max_last_active: 15d
+    cleanup: true
+  public:
+    priority: 100
+    include_any_tags:
+      - public
+    max_ratio: 4
+    min_seeding_time: 1w
+    max_seeding_time: 4w
+    max_last_active: 2d
     cleanup: true
   default:
     priority: 999
-    max_ratio: 7
+    max_ratio: 5
     min_seeding_time: 1w
     max_seeding_time: 4w
-    max_last_active: 10d
+    max_last_active: 8d
     cleanup: true
 
 recyclebin:
