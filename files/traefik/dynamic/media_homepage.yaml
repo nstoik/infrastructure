@@ -1,0 +1,24 @@
+---
+http:
+  routers:
+    wrapperr-router:
+      rule: Host(`media.stechsolutions.ca`) && PathPrefix(`/wrapperr`)
+      entryPoints:
+        - websecure
+      service: wrapperr-service
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - wrapperr-stripprefix
+
+  services:
+    wrapperr-service:
+      loadBalancer:
+        servers:
+          - url: https://wrapperr.home.stechsolutions.ca
+
+  middlewares:
+    wrapperr-stripprefix:
+      stripPrefix:
+        prefixes:
+          - /wrapperr
