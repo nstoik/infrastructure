@@ -9,6 +9,7 @@ http:
       tls:
         certResolver: letsencrypt
       middlewares:
+        - homepage_media-auth@docker
         - wrapperr-stripprefix
 
   services:
