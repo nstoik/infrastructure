@@ -1,0 +1,6 @@
+---
+- Services:
+    - Wrapperr:
+        description: Plex Wrapped
+        icon: plex-rewind.png
+        href: https://media.stechsolutions.ca/wrapperr

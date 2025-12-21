@@ -43,8 +43,10 @@ secret_apprise_config_id: apprise-change_me
 
 # Traefik secrets
 secret_traefik_dashboard_password: change_me
+secret_traefik_homepage_media_password: change_me
 # Hash generated from https://hostingcanada.org/htpasswd-generator/ with mode bcrypt
 secret_traefik_dashboard_password_hash: hashed version of 'secret_traefik_dashboard_password'
+secret_traefik_homepage_media_password_hash: hashed version of 'secret_traefik_homepage_media_password'
 
 # Healthchecks secrets
 secret_hc_mg_password: get from mailgun

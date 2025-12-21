@@ -1,0 +1,29 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/settings
+
+title: StechSolutions Media
+
+description: "Dashboard for media services at StechSolutions"
+
+color: sky
+
+headerStyle: clean
+
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: false
+  showSearchSuggestions: true
+  hideVisitURL: false
+  provider: google # google, duckduckgo, bing, baidu, brave or custom
+  mobileButtonPosition: top-right
+
+hideVersion: true
+
+disableUpdateCheck: true
+
+instanceName: homepage_media
+
+hideErrors: true
+
+disableIndexing: true

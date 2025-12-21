@@ -59,3 +59,8 @@ cloud_droplets:
         record: 'apprise'
         proxied: false
         state: 'present'
+      - name: 'docker-cloud-01'
+        zone: 'stechsolutions.ca'
+        record: 'media'
+        proxied: false
+        state: 'present'

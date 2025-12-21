@@ -79,6 +79,32 @@ services:
     labels:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Tecnativa/docker-socket-proxy/releases"
+  homepage_media:
+    image: ghcr.io/gethomepage/homepage:v1.7.0
+    networks:
+      - traefik
+      - docker-proxy
+    container_name: homepage_media
+    environment:
+      - TZ=America/Edmonton
+      - PUID=1000
+      - PGID=1000
+      - HOMEPAGE_ALLOWED_HOSTS=media.stechsolutions.ca
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/proxy/homepage_media:/app/config
+    depends_on:
+      - docker-socket-proxy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage_media.rule=Host(`media.stechsolutions.ca`)"
+      - "traefik.http.services.homepage_media.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.homepage_media-auth.basicauth.users=user:{{ secret_traefik_homepage_media_password_hash }}"
+      - "traefik.http.routers.homepage_media.middlewares=homepage_media-auth"
+      - "traefik.http.routers.homepage_media.entrypoints=websecure"
+      - "traefik.http.routers.homepage_media.tls.certresolver=letsencrypt"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/gethomepage/homepage/releases"
 
 networks:
   traefik:

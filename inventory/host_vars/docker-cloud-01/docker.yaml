@@ -2,15 +2,27 @@
 # Host variables for docker-cloud-01 host.
 
 # docker container paths. All found files will be processed and copied to the docker host
-# docker_configuration_paths:
+docker_configuration_paths:
+  - name: homepage_media
+    src: /home/nelson/GitHub/infrastructure/files/homepage_media
+    dest: /home/{{ default_user }}/docker_mounts/proxy/homepage_media
+    mode: '0664'
+    container_name: homepage_media
 
 # docker container configuration files
 docker_configuration_files:
+  # traefik configuration file
   - name: traefik.yaml
-    src: "{{ inventory_dir }}/../files/traefik/traefik-prod-no-file-provider.yaml"
+    src: "{{ inventory_dir }}/../files/traefik/traefik-prod.yaml"
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
     mode: '0664'
     container_name: traefik
+  - name: media_homepage.yaml
+    src: "{{ inventory_dir }}/../files/traefik/dynamic/media_homepage.yaml"
+    dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/dynamic/media_homepage.yaml
+    mode: '0664'
+    container_name: traefik
+  # ntfy configuration file
   - name: server.yaml
     src: "{{ inventory_dir }}/../files/ntfy/server.yaml.j2"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy/server.yaml
