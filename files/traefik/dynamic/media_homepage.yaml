@@ -10,7 +10,7 @@ http:
         certResolver: letsencrypt
       middlewares:
         - homepage_media-auth@docker
-        - wrapperr-stripprefix
+        - wrapperr-headers
 
   services:
     wrapperr-service:
@@ -19,7 +19,7 @@ http:
           - url: https://wrapperr.home.stechsolutions.ca
 
   middlewares:
-    wrapperr-stripprefix:
-      stripPrefix:
-        prefixes:
-          - /wrapperr
+    wrapperr-headers:
+      headers:
+        customRequestHeaders:
+          Host: wrapperr.home.stechsolutions.ca
