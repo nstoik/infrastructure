@@ -67,6 +67,9 @@ pihole_cname_entries:
   - domain: "tautulli.home.stechsolutions.ca"
     target: "docker-01.home.stechsolutions.ca"
     add_hostname: true
+  - domain: "wrapperr.home.stechsolutions.ca"
+    target: "docker-01.home.stechsolutions.ca"
+    add_hostname: true
   - domain: "alertmanager.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
     add_hostname: true
