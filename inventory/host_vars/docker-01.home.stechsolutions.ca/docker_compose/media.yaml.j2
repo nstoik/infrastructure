@@ -36,6 +36,33 @@ services:
       - "homepage.widget.showEpisodeNumber=true"
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Tautulli/Tautulli/releases"
+  wrapperr:
+    image: ghcr.io/aunefyren/wrapperr:v3.2.10
+    networks:
+      - traefik
+    container_name: wrapperr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Edmonton
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/media/wrapperr:/app/config
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.wrapperr.rule=Host(`wrapperr.home.stechsolutions.ca`) && PathPrefix(`/wrapperr`)"
+      - "traefik.http.services.wrapperr.loadbalancer.server.port=8282"
+      - "traefik.http.routers.wrapperr.entrypoints=websecure"
+      - "traefik.http.routers.wrapperr.tls.certresolver=letsencrypt"
+      - "homepage.group=Media Playback"
+      - "homepage.name=Wrapperr"
+      - "homepage.description=Plex Wrapped"
+      - "homepage.icon=plex-rewind.png"
+      - "homepage.href=https://wrapperr.home.stechsolutions.ca/wrapperr"
+      - "homepage.siteMonitor=https://wrapperr.home.stechsolutions.ca/wrapperr"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/aunefyren/wrapperr/releases"
 
 networks:
   traefik:
