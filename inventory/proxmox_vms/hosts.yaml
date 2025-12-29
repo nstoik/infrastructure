@@ -35,7 +35,7 @@ all:
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 12
             memory: 20480
-            balloon: 4096
+            balloon: 20480
             passthrough_disks:
               - comment: 12TB disk for ZFS
                 scsi: "scsi1"

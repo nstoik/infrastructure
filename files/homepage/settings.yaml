@@ -12,7 +12,7 @@ quicklaunch:
 layout:
   Media Playback:
     tab: Media
-    style: row
+    style: column
     useEqualHeights: true
   Media Management:
     tab: Media
