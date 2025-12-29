@@ -16,6 +16,10 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/media/tautulli
     mode: '0775'
     container_name: tautulli
+  - name: media_wrapperr
+    dest: /home/{{ default_user }}/docker_mounts/media/wrapperr
+    mode: '0775'
+    container_name: wrapperr
 
 # docker container configuration files
 docker_configuration_files:

@@ -13,6 +13,7 @@ This is the documentation for media services in my infrastructure.
 - `radarr`: This service manages movie downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing movies.
 - `sonarr`: This service manages TV show downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing TV shows.
 - `tautulli`: This service monitors Plex Media Server activity and provides detailed statistics and notifications about media consumption.
+- `wrapperr`: This service sets up a Spotify Wrapped style dashboard for Plex Media Server using Tautulli data.
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
@@ -88,3 +89,19 @@ Tautulli is configured via its web interface.
 - Configure notifications using Apprise. You need to get the ntfy Access Token from the ntfy web UI.
     - one general one for all notifications
     - one alert one for issues
+
+### Wrapperr
+Wrapperr is configured via its web interface.
+- Best case scenario, copy the config files from an existing installation to preserve all settings.
+- On first setup, set the Admin username and password (*Arr username and password stored in Bitwarden).
+- Under Wrapperr Settings:
+    - Set the Wrapper URL Base to `wrapperr`. This is to work with the external Traefik reverse proxy. (e.g., `https://media.stechsolutions.ca/wrapperr`)
+    - Set the Timezone to America/Edmonton
+    - Set the Start of Wrapped Period to January 1st of the current year.
+    - Set the End of Wrapped Period to December 31st of the current year.
+- Under Tautulli Setup:
+    - Set the Tautulli server name, API key, domain, port, HTTPS setting.
+- Under Wrapperr Setup:
+    - Manually trigger the data fetch to populate the initial data.
+- Under Users
+    - Sync with Tautulli to import users.
