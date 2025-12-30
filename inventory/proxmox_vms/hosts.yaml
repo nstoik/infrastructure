@@ -37,39 +37,39 @@ all:
             memory: 20480
             balloon: 20480
             passthrough_disks:
-              - comment: 12TB disk for ZFS
+              - comment: 12TB disk for ZFS storage1
                 scsi: "scsi1"
                 device: "/dev/disk/by-id/ata-ST12000NM0127_ZJV0P7MQ"
                 backup: 0
-              - comment: 12TB disk for ZFS
+              - comment: 12TB disk for ZFS storage1
                 scsi: "scsi2"
                 device: "/dev/disk/by-id/ata-ST12000NM0127_ZJV0PGT8"
                 backup: 0
-              - comment: 8 TB disk for mergerfs
+              - comment: 8 TB disk for ZFS storage3
                 scsi: "scsi3"
                 device: "/dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHUNJ6Z"
                 backup: 0
-              - comment: 8 TB disk for mergerfs
+              - comment: 8 TB disk for ZFS storage3
                 scsi: "scsi4"
                 device: "/dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHVSEBZ"
                 backup: 0
-              - comment: 12 TB disk for snapraid parity
+              - comment: 12 TB disk for ZFS storage3
                 scsi: "scsi5"
                 device: "/dev/disk/by-id/ata-WDC_WD120EMFZ-11A6JA0_Z2KZU83T"
                 backup: 0
-              - comment: 12 TB disk for mergerfs
+              - comment: 12 TB disk for ZFS storage3
                 scsi: "scsi6"
                 device: "/dev/disk/by-id/ata-WDC_WD120EFBX-68B0EN0_5QJRU8GB"
                 backup: 0
-              - comment: 24 TB disk for ZFS
+              - comment: 24 TB disk for ZFS storage2
                 scsi: "scsi7"
                 device: "/dev/disk/by-id/ata-ST24000NM000H-3KS103_ZYD04Z2F"
                 backup: 0
-              - comment: 24 TB disk for ZFS
+              - comment: 24 TB disk for ZFS storage2
                 scsi: "scsi8"
                 device: "/dev/disk/by-id/ata-ST24000NM000H-3KS103_ZYD05KR1"
                 backup: 0
-              - comment: 24 TB disk for ZFS
+              - comment: 24 TB disk for ZFS storage2
                 scsi: "scsi9"
                 device: "/dev/disk/by-id/ata-ST24000NM000H-3KS103_ZYD0773G"
                 backup: 0
