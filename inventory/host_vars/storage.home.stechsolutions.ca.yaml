@@ -5,8 +5,8 @@
 # proxmox_vms/hosts.yaml
 
 fileserver_setup: true
-fileserver_setup_mergerfs: true
-fileserver_setup_snapraid: true
+fileserver_setup_mergerfs: false
+fileserver_setup_snapraid: false
 fileserver_setup_nfs_server: true
 fileserver_setup_zfs: true
 
@@ -131,84 +131,6 @@ fileserver_zfs_pools:
         canmount: "on"
         encryption: false
         recordsize: 1M
-
-fileserver_mergerfs_disks:
-  - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi3
-    partition_label: 08-TB-01
-    mount_point: /mnt/disks/disk1
-    filesystem_type: ext4
-    options: defaults,errors=remount-ro
-    state: mounted
-    disk_type: data
-    snapraid_label: d1
-  - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi4
-    partition_label: 08-TB-02
-    mount_point: /mnt/disks/disk2
-    filesystem_type: ext4
-    options: defaults,errors=remount-ro
-    state: mounted
-    disk_type: data
-    snapraid_label: d2
-  - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi6
-    partition_label: 12-TB-01
-    mount_point: /mnt/disks/disk3
-    filesystem_type: ext4
-    options: defaults,errors=remount-ro
-    state: mounted
-    disk_type: data
-    snapraid_label: d3
-  - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi5
-    partition_label: 12-TB-02
-    mount_point: /mnt/disks/parity1
-    filesystem_type: ext4
-    options: defaults,errors=remount-ro
-    state: mounted
-    disk_type: parity
-    snapraid_label: parity
-
-fileserver_mergerfs:
-  src: /mnt/disks/disk*
-  mount_point: /mnt/storage
-  filesystem_type: fuse.mergerfs
-  options: "defaults,use_ino,allow_other,dropcacheonclose=true,category.create=mfs,minfreespace=4G,fsname=mergerfs"
-  state: mounted
-  mergerfs_tools:
-    - name: mergerfs.ctl
-      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.ctl
-    - name: mergerfs.fsck
-      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.fsck
-    - name: mergerfs.dup
-      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.dup
-    - name: mergerfs.dedup
-      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.dedup
-    - name: mergerfs.balance
-      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.balance
-    - name: mergerfs.consolidate
-      url: https://raw.githubusercontent.com/trapexit/mergerfs-tools/master/src/mergerfs.consolidate
-
-fileserver_snapraid:
-  url: https://github.com/amadvance/snapraid/releases/download/v12.3/snapraid-12.3.tar.gz
-  version: 12.3
-
-fileserver_snapraid_aio:
-  # url: https://github.com/auanasgheps/snapraid-aio-script/archive/refs/tags/v3.3.2.tar.gz
-  # use my fork as it has changes to work with ntfy
-  # Credit:
-  # https://www.reddit.com/r/Snapraid/comments/1blqvay/comment/kws09bh/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-  url: https://github.com/nstoik/snapraid-aio-script/archive/refs/tags/v3.3.2.tar.gz
-  version: 3.3.2
-  enable_ntfy: true
-  ntfy_script_path: /usr/local/bin/snapraid-aio-script/ntfy-send-snapraid.sh
-  ntfy_topic: "SnapRAID"
-  enable_hc: true
-  hc_url: "https://hc.stechsolutions.ca/ping/"
-  hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/snapraid-aio-backup"
-  sync_warn_threshold: 5
-  scrub_percent: 5
-  scrub_age: 10
-  scrub_delayed_run: 3
-  log_retention_days: 30
-  log_dir: /home/{{ default_user }}/snapraid-logs
 
 fileserver_nfs_exports:
   - src: /mnt/zfs/storage2/movies
