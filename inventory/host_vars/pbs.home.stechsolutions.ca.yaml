@@ -60,13 +60,15 @@ fileserver_zfs_pools:
     mount_point: none
     vdevs:
       # for a single disk, no raid type needs to be specified
-      - raid_type: ""
+      - raid_type: "mirror"
         disks:
-          - name: "/dev/disk/by-id/ata-ST1000LM024_HN-M101MBB_S30YJ9DGA19386"
+          # - name: "/dev/disk/by-id/ata-ST1000LM024_HN-M101MBB_S30YJ9DGA19386"
+          - name: "/dev/disk/by-id/ata-WDC_WD40EFRX-68N32N0_WD-WCC7K7EU9YAV"
+          - name: "/dev/disk/by-id/ata-WDC_WD40EFRX-68N32N0_WD-WCC7K3RJ1XHR"
     datasets:
       - name: pbs/backup
         mount_point: /mnt/zfs/pbs
-        quota: 850G
+        quota: 2TB
         canmount: "on"
         encryption: false
   - pool_name: backup
