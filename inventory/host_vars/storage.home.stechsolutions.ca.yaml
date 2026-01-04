@@ -92,12 +92,6 @@ fileserver_zfs_pools:
           - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi8
           - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi9
     datasets:
-      - name: storage2/audiobooks
-        mount_point: /mnt/zfs/storage2/audiobooks
-        quota: 100G
-        canmount: "on"
-        encryption: false
-        recordsize: 1M
       - name: storage2/downloads
         mount_point: /mnt/zfs/storage2/downloads
         quota: 2T
@@ -107,24 +101,6 @@ fileserver_zfs_pools:
       - name: storage2/movies
         mount_point: /mnt/zfs/storage2/movies
         quota: 10T
-        canmount: "on"
-        encryption: false
-        recordsize: 1M
-      - name: storage2/music
-        mount_point: /mnt/zfs/storage2/music
-        quota: 200G
-        canmount: "on"
-        encryption: false
-        recordsize: 1M
-      - name: storage2/other
-        mount_point: /mnt/zfs/storage2/other
-        quota: 100G
-        canmount: "on"
-        encryption: false
-        recordsize: 1M
-      - name: storage2/sport
-        mount_point: /mnt/zfs/storage2/sport
-        quota: 1T
         canmount: "on"
         encryption: false
         recordsize: 1M
@@ -193,28 +169,28 @@ fileserver_nfs_exports:
         options: rw,sync,no_subtree_check,no_root_squash,fsid=12
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=13
-  - src: /mnt/zfs/storage2/music
+  - src: /mnt/zfs/storage3/music
     alias: /export/music
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=14
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=15
-  - src: /mnt/zfs/storage2/audiobooks
+  - src: /mnt/zfs/storage3/audiobooks
     alias: /export/audiobooks
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=16
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=17
-  - src: /mnt/zfs/storage2/sport
+  - src: /mnt/zfs/storage3/sport
     alias: /export/sport
     machines:
       - name: 10.10.1.0/24  # home network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=18
       - name: 10.10.5.0/24  # trusted network
         options: rw,sync,no_subtree_check,no_root_squash,fsid=19
-  - src: /mnt/zfs/storage2/other
+  - src: /mnt/zfs/storage3/other
     alias: /export/other
     mode: '0755'
     machines:
