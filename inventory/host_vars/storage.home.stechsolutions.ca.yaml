@@ -136,6 +136,8 @@ fileserver_zfs_pools:
         recordsize: 1M
   - pool_name: storage3
     mount_point: none
+    # Set this flag to force pool creation even if disks are different sizes
+    pool_creation_flags: "-f"
     vdevs:
       - raid_type: raidz2
         disks:
@@ -143,6 +145,7 @@ fileserver_zfs_pools:
           - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi4
           - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi5
           - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi6
+          - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi10
     datasets:
       - name: storage3/audiobooks
         mount_point: /mnt/zfs/storage3/audiobooks
