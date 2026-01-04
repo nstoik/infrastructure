@@ -73,6 +73,10 @@ all:
                 scsi: "scsi9"
                 device: "/dev/disk/by-id/ata-ST24000NM000H-3KS103_ZYD0773G"
                 backup: 0
+              - comment: 12 TB disk for ZFS storage3
+                scsi: "scsi10"
+                device: "/dev/disk/by-id/ata-ST12000NE0008-2JL101_ZHZ6GGAB"
+                backup: 0
         vpn.home.stechsolutions.ca:
           base_docker_install: false
           base_dotfiles:
