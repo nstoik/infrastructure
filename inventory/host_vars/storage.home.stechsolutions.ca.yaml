@@ -16,6 +16,7 @@ sanoid_hc_url: "https://hc.stechsolutions.ca/ping/"
 sanoid_hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/sanoid-fileserver"
 
 sanoid_datasets:
+  # Storage1 datasets
   - name: storage1/pictures
     template: production
     # Only set the pre and post snapshot scripts once per host
@@ -25,20 +26,22 @@ sanoid_datasets:
     template: production
   - name: storage1/safekeep
     template: safekeep
-  - name: storage2/audiobooks
-    template: replaceable
+  # Storage2 datasets
   - name: storage2/downloads
     template: replaceable
   - name: storage2/movies
     template: replaceable
-  - name: storage2/music
-    template: replaceable
-  - name: storage2/other
-    template: replaceable
-    # TODO: Change to production after initial sync and testing (and storage space allows)
-  - name: storage2/sport
-    template: replaceable
   - name: storage2/tv
+    template: replaceable
+  # Storage3 datasets
+  - name: storage3/audiobooks
+    template: replaceable
+  - name: storage3/music
+    template: replaceable
+  - name: storage3/other
+    template: replaceable
+# TODO: Change to production after initial sync and testing (and storage space allows)
+  - name: storage3/sport
     template: replaceable
 
 sanoid_zfs_permissions:
