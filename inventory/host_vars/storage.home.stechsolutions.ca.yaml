@@ -29,12 +29,12 @@ sanoid_datasets:
   # Storage2 datasets
   - name: storage2/downloads
     template: replaceable
-  - name: storage2/movies
-    template: replaceable
   - name: storage2/tv
     template: replaceable
   # Storage3 datasets
   - name: storage3/audiobooks
+    template: replaceable
+  - name: storage3/movies
     template: replaceable
   - name: storage3/music
     template: replaceable
@@ -94,13 +94,7 @@ fileserver_zfs_pools:
     datasets:
       - name: storage2/downloads
         mount_point: /mnt/zfs/storage2/downloads
-        quota: 2T
-        canmount: "on"
-        encryption: false
-        recordsize: 1M
-      - name: storage2/movies
-        mount_point: /mnt/zfs/storage2/movies
-        quota: 10T
+        quota: 4T
         canmount: "on"
         encryption: false
         recordsize: 1M
@@ -155,7 +149,7 @@ fileserver_zfs_pools:
         recordsize: 1M
 
 fileserver_nfs_exports:
-  - src: /mnt/zfs/storage2/movies
+  - src: /mnt/zfs/storage3/movies
     alias: /export/movies
     machines:
       - name: 10.10.1.0/24  # home network
