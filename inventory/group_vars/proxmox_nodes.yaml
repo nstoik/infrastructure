@@ -104,13 +104,13 @@ proxmox_users:
 proxmox_notification_targets:
   - name: ntfy-info
     method: get
-    url: "https://ntfy.stechsolutions.ca/Proxmox/trigger"
+    url: "https://ntfy.stechsolutions.ca/Proxmox"
     priority: 2
     comment: "Proxmox info notifications"
     token_name: Proxmox
   - name: ntfy-error
     method: get
-    url: "https://ntfy.stechsolutions.ca/Proxmox/trigger"
+    url: "https://ntfy.stechsolutions.ca/Proxmox"
     priority: 5
     comment: "Proxmox error notifications"
     token_name: Proxmox

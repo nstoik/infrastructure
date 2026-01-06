@@ -35,15 +35,21 @@
       failed_when: false
 
     # Create the ZFS pool if it does not exist
+    # -o is for zpool properties
+    # -O is for filesystem properties
     - name: Create the ZFS pool if it does not exist
       ansible.builtin.command: >
         zpool create
         -m {{ fileserver_zfs_pool.mount_point }}
         -o ashift=12
+        -o autoexpand=on
         -O compression=lz4
         -O xattr=sa
         -O normalization=formD
         -O atime=off
+        {% if fileserver_zfs_pool.pool_creation_flags is defined %}
+        {{ fileserver_zfs_pool.pool_creation_flags }}
+        {% endif %}
         {{ fileserver_zfs_pool.pool_name }}
         {% for vdev in fileserver_zfs_pool.vdevs %}
         {% if vdev.raid_type | default('') | length > 0 %}

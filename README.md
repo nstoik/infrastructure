@@ -213,7 +213,7 @@ Rclone is configured to use AWS S3 for storage. The following steps need to be d
 ### Restore with Rclone
 Restoring from AWS S3 Deep-Archive requires thawing the files first and then using Rclone to copy them back to the desired location. An example set of commands is as follows:
 
-First figure out the encrypted path of the files or folders that you want to restore. This gives the encrypted path for a folder in the pictures remote
+First figure out the encrypted path of the files or folders that you want to restore. This gives the encrypted path for a folder in the pictures remote. The path in quotations doesn't need to escape spaces, Rclone handles that automatically.
 ``` bash
 > rclone cryptdecode --reverse pictures: "Folder Name"
 
