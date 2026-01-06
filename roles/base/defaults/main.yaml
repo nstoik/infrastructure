@@ -14,12 +14,15 @@ base_reboot_host_if_required: true
 
 # the base packages to install
 base_packages:
+  - fastfetch
   - git
   - jq
-  - neofetch
   - vnstat
   - wireguard
   - wireguard-tools
+
+base_remove_packages:
+  - neofetch
 
 # the base services to enable and start
 # eg format will include the service name, state, and optional enabled state
