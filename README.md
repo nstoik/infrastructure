@@ -254,7 +254,7 @@ Any users that need to be added to the shared exit nodes need to be done manuall
 ### DNS
 The split DNS settings for `home.stechsolutions.ca` need to be added via the Tailscale admin console.
 
-The IP addresses of remote tailscale nodes need to be manually added to the Cloudflare DNS settings for `tailscale.stechsolutions.ca`. This is done via the Cloudflare admin console.
+The IP addresses of remote or static tailscale nodes need to be manually added to the Cloudflare DNS settings for `tailscale.stechsolutions.ca`. This is done via the Cloudflare admin console.
 
 ### Tags and --advertise-tags
 --advertise-tags can be set to specify which tags should be assigned to the node when it is joined to the tailnet. The tag is tied to the tailscale_authkey. The authkey must have the tags associated with it when it is created in the tailscale admin console.

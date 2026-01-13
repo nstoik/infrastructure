@@ -40,5 +40,6 @@ all:
     nodes_remote:
       hosts:
         vpn.arnie-karen:
+        pi-speedtest-[1:2].home.stechsolutions.ca:
       children:
         do_ansible:

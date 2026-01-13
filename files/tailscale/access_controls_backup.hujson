@@ -78,6 +78,7 @@ This is a backup of the access controls file for Tailscale made on 2025-09-14
 		// Allow communication to the docker container tag on the following ports.
 		// 443: for cadvisor https endpoint for docker prometheus monitoring
 		// 2375: for homepage docker monitoring of the socket proxy
+		// 5252: for tailscale metrics
 		// 8081: for prometheus traefik monitoring
 		// 9100: for prometheus node monitoring
 		{
@@ -87,6 +88,7 @@ This is a backup of the access controls file for Tailscale made on 2025-09-14
 			"ip": [
 				"443",
 				"2375",
+				"5252",
 				"8081",
 				"9100",
 			],

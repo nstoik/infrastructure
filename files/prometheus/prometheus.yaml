@@ -13,6 +13,7 @@ alerting:
 rule_files:
   - '/etc/prometheus/rules/alerts.yaml'
   - '/etc/prometheus/rules/node_alerts.yaml'
+  - '/etc/prometheus/rules/tailscale_alerts.yaml'
   - '/etc/prometheus/rules/test.yaml'
   - '/etc/prometheus/rules/traefik_alerts.yaml'
   - '/etc/prometheus/rules/ups_alerts.yaml'
@@ -59,6 +60,7 @@ scrape_configs:
     # Use static hosts as we need to use the Tailscale CloudFlare hostname to access the remote docker hosts
     static_configs:
       - targets:
+          - 'docker-01.home.stechsolutions.ca'
           - 'docker-02.home.stechsolutions.ca'
           - 'docker-cloud-01.tailscale.stechsolutions.ca'
     scheme: https
@@ -69,6 +71,7 @@ scrape_configs:
   - job_name: 'traefik'
     static_configs:
       - targets:
+          - 'docker-01.home.stechsolutions.ca:8081'
           - 'docker-02.home.stechsolutions.ca:8081'
           - 'docker-cloud-01.tailscale.stechsolutions.ca:8081'
     metrics_path: '/metrics'
@@ -95,3 +98,21 @@ scrape_configs:
         target_label: __address__
       - source_labels: [__param_ups]
         target_label: instance
+
+  - job_name: 'tailscale-machine'
+    static_configs:
+      - targets:
+          - 'vpn.tailscale.stechsolutions.ca:5252'
+        labels:
+          tailscale_machine: 'vpn.home.stechsolutions.ca'
+      - targets:
+          - 'docker-cloud-01.tailscale.stechsolutions.ca:5252'
+        labels:
+          tailscale_machine: 'docker-cloud-01.tailscale.stechsolutions.ca'
+    metrics_path: '/metrics'
+
+  - job_name: 'tailscale-exporter'
+    static_configs:
+      - targets:
+          - prometheus-tailscale-exporter:9250
+    metrics_path: '/metrics'

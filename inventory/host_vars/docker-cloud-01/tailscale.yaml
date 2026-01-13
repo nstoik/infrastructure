@@ -8,3 +8,5 @@ tailscale_args: |
   --advertise-tags='tag:server,tag:docker-monitoring'
   --accept-routes
   --accept-dns
+
+tailscale_web_interface: true
