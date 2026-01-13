@@ -109,3 +109,9 @@ scrape_configs:
         labels:
           tailscale_machine: 'docker-cloud-01.tailscale.stechsolutions.ca'
     metrics_path: '/metrics'
+
+  - job_name: 'tailscale-exporter'
+    static_configs:
+      - targets:
+          - prometheus-tailscale-exporter:9250
+    metrics_path: '/metrics'
