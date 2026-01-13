@@ -26,6 +26,16 @@
     - tailscale
     - tailscale.up
 
+- name: Enable Tailscale web interface (for metrics)
+  ansible.builtin.command: >
+    tailscale set --webclient=true
+  when: tailscale_web_interface | default(false)
+  changed_when: tailscale_web_interface | default(false)
+  become: true
+  tags:
+    - tailscale
+    - tailscale.up
+
 - name: Check if tailscale is added to vnstat
   ansible.builtin.command:
     cmd: vnstat --dbiflist

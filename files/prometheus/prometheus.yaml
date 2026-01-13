@@ -70,6 +70,7 @@ scrape_configs:
   - job_name: 'traefik'
     static_configs:
       - targets:
+          - 'docker-01.home.stechsolutions.ca:8081'
           - 'docker-02.home.stechsolutions.ca:8081'
           - 'docker-cloud-01.tailscale.stechsolutions.ca:8081'
     metrics_path: '/metrics'
@@ -96,3 +97,15 @@ scrape_configs:
         target_label: __address__
       - source_labels: [__param_ups]
         target_label: instance
+
+  - job_name: 'tailscale-machine'
+    static_configs:
+      - targets:
+          - 'vpn.tailscale.stechsolutions.ca:5252'
+        labels:
+          tailscale_machine: 'vpn.home.stechsolutions.ca'
+      - targets:
+          - 'docker-cloud-01.tailscale.stechsolutions.ca:5252'
+        labels:
+          tailscale_machine: 'docker-cloud-01.tailscale.stechsolutions.ca'
+    metrics_path: '/metrics'
