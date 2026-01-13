@@ -4,14 +4,6 @@
 # Input:
 #   - healtchecks_channels_existing: list of channels already created on Healthchecks
 
-# Get the ntfy tokens
-- name: Get the ntfy tokens
-  ansible.builtin.include_role:
-    name: ntfy
-    tasks_from: tokens.yaml
-  tags:
-    - healthchecks
-
 # Initialize the list of ntfy channel values
 - name: Initialize the list of ntfy channel values
   ansible.builtin.set_fact:
