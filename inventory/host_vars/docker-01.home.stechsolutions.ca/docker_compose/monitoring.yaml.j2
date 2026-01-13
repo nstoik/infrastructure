@@ -1,0 +1,42 @@
+---
+name: monitoring
+
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.52.1
+    networks:
+      - traefik
+    container_name: cadvisor
+    command: ['--logtostderr', '--docker_only=true']
+    volumes:
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - {{ docker_data_dir }}:{{ docker_data_dir }}:ro
+    healthcheck:
+      test: [
+          "CMD-SHELL",
+          "wget -q --tries=1 http://localhost:8080/healthz -O - | grep -q 'ok' || exit 1"
+      ]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cadvisor.rule=Host(`docker-01.home.stechsolutions.ca`) && PathPrefix(`/dockermetrics`)"
+      - "traefik.http.middlewares.cadvisor-replace-path.replacepath.path=/metrics"
+      - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
+      - "traefik.http.routers.cadvisor.entrypoints=websecure"
+      - "traefik.http.routers.cadvisor.tls.certresolver=letsencrypt"
+      # Whitelist IPs for Tailscale, Docker, and local network
+      - "traefik.http.middlewares.cadvisor-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+      - "traefik.http.routers.cadvisor.middlewares=cadvisor-IPAllowList,cadvisor-replace-path"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/google/cadvisor/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true

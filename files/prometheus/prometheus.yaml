@@ -59,6 +59,7 @@ scrape_configs:
     # Use static hosts as we need to use the Tailscale CloudFlare hostname to access the remote docker hosts
     static_configs:
       - targets:
+          - 'docker-01.home.stechsolutions.ca'
           - 'docker-02.home.stechsolutions.ca'
           - 'docker-cloud-01.tailscale.stechsolutions.ca'
     scheme: https

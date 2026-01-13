@@ -80,3 +80,9 @@ docker_compose_files:
     src: "{{ docker_compose_subpath }}/media.yaml.j2"
     dest: /home/{{ default_user }}/docker_compose/media-docker-compose.yaml
     mode: '0664'
+  - name: monitoring-docker-compose.yaml
+    compose_name: monitoring
+    state: present
+    src: "{{ docker_compose_subpath }}/monitoring.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/monitoring-docker-compose.yaml
+    mode: '0664'
