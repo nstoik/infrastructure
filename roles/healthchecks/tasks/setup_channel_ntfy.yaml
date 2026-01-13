@@ -2,7 +2,7 @@
 # Setup channels on Healthchecks for ntfy notifications
 #
 # Input:
-#   - healtchecks_channels_existing: list of channels already created on Healthchecks
+#   - healthchecks_channels_existing: list of channels already created on Healthchecks
 
 # Initialize the list of ntfy channel values
 - name: Initialize the list of ntfy channel values

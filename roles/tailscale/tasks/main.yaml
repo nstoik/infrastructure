@@ -30,7 +30,7 @@
   ansible.builtin.command: >
     tailscale set --webclient=true
   when: tailscale_web_interface | default(false)
-  changed_when: tailscale_web_interface | default(false)
+  changed_when: false
   become: true
   tags:
     - tailscale
