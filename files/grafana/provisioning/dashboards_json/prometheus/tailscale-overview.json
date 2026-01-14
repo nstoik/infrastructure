@@ -628,7 +628,7 @@
             "uid": "$datasource"
           },
           "editorMode": "builder",
-          "expr": "count(\n  tailscale_devices_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (os)\n",
+          "expr": "count by(os) (tailscale_devices_info{job=\"$job\", tailnet=\"$tailnet\"})",
           "instant": true,
           "legendFormat": "{{ os }}",
           "refId": "A"
@@ -701,7 +701,8 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "count(\n  tailscale_devices_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (client_version)\n",
+          "editorMode": "builder",
+          "expr": "count by(client_version) (tailscale_devices_info{job=\"$job\", tailnet=\"$tailnet\"})",
           "instant": true,
           "legendFormat": "{{ client_version }}",
           "refId": "A"
@@ -774,7 +775,8 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "count(\n  tailscale_devices_update_available{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 1\n)\n",
+          "editorMode": "builder",
+          "expr": "count(tailscale_devices_update_available{job=\"$job\", tailnet=\"$tailnet\"} == 1)",
           "instant": true,
           "legendFormat": "Update Available",
           "refId": "A"
@@ -784,7 +786,8 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "count(\n  tailscale_devices_update_available{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 0\n)\n",
+          "editorMode": "builder",
+          "expr": "count(tailscale_devices_update_available{job=\"$job\", tailnet=\"$tailnet\"} == 0)",
           "instant": true,
           "legendFormat": "No Update Available",
           "refId": "B"
@@ -857,7 +860,8 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "count(\n  tailscale_devices_authorized{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 1\n)\n",
+          "editorMode": "builder",
+          "expr": "count(tailscale_devices_authorized{job=\"$job\", tailnet=\"$tailnet\"} == 1)",
           "instant": true,
           "legendFormat": "Authorized",
           "refId": "A"
@@ -867,7 +871,8 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "count(\n  tailscale_devices_authorized{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 0\n)\n",
+          "editorMode": "builder",
+          "expr": "count(tailscale_devices_authorized{job=\"$job\", tailnet=\"$tailnet\"} == 0)",
           "instant": true,
           "legendFormat": "Not Authorized",
           "refId": "B"
@@ -2142,5 +2147,5 @@
   "timezone": "browser",
   "title": "Tailscale / Overview",
   "uid": "tailscale-mixin-over-k12e",
-  "version": 1
+  "version": 2
 }

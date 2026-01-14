@@ -15,6 +15,8 @@ pihole_dns_entries:
     ip: 10.10.1.51
   - domain: "pi4-dev.home.stechsolutions.ca"
     ip: 10.10.1.179
+  - domain: "mainsail.home.stechsolutions.ca"
+    ip: 10.10.1.186
   - domain: "nelson_ds.home.stechsolutions.ca"
     ip: 10.10.1.200
   - domain: "pve3.home.stechsolutions.ca"
