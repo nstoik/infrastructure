@@ -105,3 +105,32 @@ Wrapperr is configured via its web interface.
     - Manually trigger the data fetch to populate the initial data.
 - Under Users
     - Sync with Tautulli to import users.
+
+### Ombi
+Ombi is configured via its web interface.
+- Best case scenario, copy an existing Ombi database from another installation to preserve all settings and requests.
+- Log in is via Plex OAuth, so no separate username/password is required.
+- Under Settings -> Configuration -> General
+    - Ensure the base URL is set to `/ombi` to work with the external Traefik reverse proxy.
+    - Set the API Key to the value stored in the Vault.
+- Under Settings -> Configuration -> Customization
+    - Set the Application URL to `https://media.stechsolutions.ca/ombi` to work with the external Traefik reverse proxy.
+- Under Settings -> Configuration -> Issues
+    - Enable issues
+- Under Settings -> Configuration -> Users
+    - Configure user roles and permissions as desired. Enable import from Plex and Plex Admin.
+- Under Settings -> Configuration -> Authentication
+    - Ensure Plex is set up as the authentication provider.
+- Under Settings -> Media Servers
+    - Ensure the Plex Media Server connection is set up.
+    - Enable User Watchlist Requests
+- Under Settings -> TV Shows
+    - Configure Sonarr connection with API key.
+- Under Settings -> Movies
+    - Configure Radarr connection with API key.
+- Under Settings -> Notifications -> Email
+    - Configure email notifications as desired.
+    - Currently using SMTP with Gmail SMTP server to personal email account.(TODO: Migrate to Mailgun or similar service)
+- Under Settings -> Notifications -> Newsletter
+    - Configure newsletter settings as desired.
+- Keep using Discord for request notifications until Ombi supports Ntfy.
