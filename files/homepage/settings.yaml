@@ -17,6 +17,9 @@ layout:
   Media Management:
     tab: Media
     useEqualHeights: true
+  Media Requests:
+    tab: Media
+    style: column
   3DPrinting:
     tab: Tools
     style: column
