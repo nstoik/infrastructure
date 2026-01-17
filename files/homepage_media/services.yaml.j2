@@ -1,0 +1,45 @@
+---
+- Requests:
+    - Ombi:
+        description: Media Requests
+        icon: ombi.png
+        href: https://media.stechsolutions.ca/ombi
+- Services:
+    - Wrapperr:
+        description: Plex Wrapped
+        icon: plex-rewind.png
+        href: https://media.stechsolutions.ca/wrapperr
+- Status:
+    - Uptime:
+        description: Click to view the uptime status page
+        icon: uptime-kuma.png
+        href: https://uptime.stechsolutions.ca/status/nelsonplex
+    - Current Activity:
+        description: Current NelsonPlex server activity
+        icon: plex.png
+        widgets:
+            - type: customapi
+              url: https://tautulli.home.stechsolutions.ca/api/v2?apikey={{ secret_tautulli_api_key }}&cmd=get_activity
+              refreshInterval: 5000
+              method: GET
+              mappings:
+                - label: Watching
+                  field: response.data.stream_count
+                  format: number
+                - label: Bandwidth
+                  field: response.data.total_bandwidth
+                  format: bitrate
+                  scale: 1000
+    - Watch Time Today:
+        description: NelsonPlex total time watched today
+        icon: mdi-counter
+        widgets:
+            - type: customapi
+              url: https://tautulli.home.stechsolutions.ca/api/v2?cmd=get_plays_by_date&time_range=1&y_axis=duration&apikey={{ secret_tautulli_api_key }}
+              method: GET
+              refreshInterval: 60000
+              mappings:
+                - label: Total Watch Time
+                  # navigate into the series array to get the 'Total' entry
+                  field: response.data.series[4].data
+                  format: duration
