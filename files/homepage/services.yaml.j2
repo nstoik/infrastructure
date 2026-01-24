@@ -88,3 +88,17 @@
         description: External dashhboard page
         siteMonitor: https://media.stechsolutions.ca
         icon: mdi-monitor-dashboard
+- Media Playback:
+    - Watch Time Today:
+        description: NelsonPlex total time watched today
+        icon: mdi-counter
+        widgets:
+            - type: customapi
+              url: https://tautulli.home.stechsolutions.ca/api/v2?cmd=get_plays_by_date&time_range=1&y_axis=duration&apikey={{ secret_tautulli_api_key }}
+              method: GET
+              refreshInterval: 60000
+              mappings:
+                - label: Total Watch Time
+                  # navigate into the series array to get the 'Total' entry
+                  field: response.data.series[4].data
+                  format: duration
