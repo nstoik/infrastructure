@@ -1,0 +1,50 @@
+---
+# Attach PCI passthrough devices to a Proxmox VM.
+#
+# Only attach devices that are not already attached to the VM.
+# This task assumes that the VM is created.
+
+# Required inputs:
+#   proxmox_vm_info: The Proxmox VM to attach the PCI devices to
+
+# Get the exisitng disks for the VM
+- name: Get the existing disks for the VM
+  ansible.builtin.command:
+    cmd: >
+      qm config {{ proxmox_vm_info.id }}
+  register: proxmox_vm_config
+  become: true
+  changed_when: false
+
+# Disk block
+- name: Attach PCI devices to Proxmox VM
+  when:
+    proxmox_vm_info.pci_devices is defined
+  tags:
+    - proxmox
+    - proxmox.vm
+  block:
+
+    # Set the machine type to q35 if PCI devices are defined
+    - name: Set machine type to q35
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm_info.id }}
+          --machine q35
+      become: true
+      changed_when: false
+
+    # Set passthrough PCI devices
+    - name: Set passthrough PCI devices
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm_info.id }}
+          --hostpci{{ index_pci }} {{item_pci.id}},pcie={{ item_pci.pci_number }}
+      loop: "{{ proxmox_vm_info.pci_devices | default([]) }}"
+      loop_control:
+        loop_var: item_pci
+        index_var: index_pci
+      when: proxmox_vm_info.pci_devices is defined and
+            proxmox_vm_config.stdout.find(item_pci.id) == -1
+      become: true
+      changed_when: false
