@@ -4,6 +4,9 @@ This is the documentation for media services in my infrastructure.
 ## Hosts
 - `docker-01.home.stechsolutions.ca`: This host runs docker containers for media services
 
+## External Webpage and Access
+The media services are accessible via the external webpage at [media.stechsolutions.ca](https://media.stechsolutions.ca). Access to the services is managed through Traefik reverse proxy with authentication. The username is 'user' and the password is 'NelsonPlex123!'.
+
 ## Services
 - `downloader`: This service runs qBittorrent with VPN for downloading torrents securely. [qbittorrentvpn docker](https://github.com/nstoik/docker-qBittorrentvpn) is a forked version of an older image. This version focuses on using WireGuard for VPN connectivity.
 - `qbit_manage`: This service manages qBittorrent downloads, including automatic rechecking, categorization, and notifications. It uses [qbit_manage](https://github.com/StuffAnThings/qbit_manage) with a user-defined configuration.
@@ -14,6 +17,7 @@ This is the documentation for media services in my infrastructure.
 - `sonarr`: This service manages TV show downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing TV shows.
 - `tautulli`: This service monitors Plex Media Server activity and provides detailed statistics and notifications about media consumption.
 - `wrapperr`: This service sets up a Spotify Wrapped style dashboard for Plex Media Server using Tautulli data.
+- `ombi`: This service provides a user-friendly interface for requesting media on Plex Media Server. It allows users to request movies and TV shows, which can then be approved and added to the server.
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
@@ -86,7 +90,7 @@ Tautulli is configured via its web interface.
 - Best case scenario, copy an existing Tautulli database from another installation to preserve all settings and history.
 - The API key is stored in the Vault and is used in the homepage widget configuration.
 - Set the Plex server connection if required.
-- Configure notifications using Apprise. You need to get the ntfy Access Token from the ntfy web UI.
+- Configure notifications using Ntfy. You need to get the ntfy Access Token from the ntfy web UI.
     - one general one for all notifications
     - one alert one for issues
 
@@ -105,3 +109,32 @@ Wrapperr is configured via its web interface.
     - Manually trigger the data fetch to populate the initial data.
 - Under Users
     - Sync with Tautulli to import users.
+
+### Ombi
+Ombi is configured via its web interface.
+- Best case scenario, copy an existing Ombi database from another installation to preserve all settings and requests.
+- Log in is via Plex OAuth, so no separate username/password is required.
+- Under Settings -> Configuration -> General
+    - Ensure the base URL is set to `/ombi` to work with the external Traefik reverse proxy.
+    - Set the API Key to the value stored in the Vault.
+- Under Settings -> Configuration -> Customization
+    - Set the Application URL to `https://media.stechsolutions.ca/ombi` to work with the external Traefik reverse proxy.
+- Under Settings -> Configuration -> Issues
+    - Enable issues
+- Under Settings -> Configuration -> Users
+    - Configure user roles and permissions as desired. Enable import from Plex and Plex Admin.
+- Under Settings -> Configuration -> Authentication
+    - Ensure Plex is set up as the authentication provider.
+- Under Settings -> Media Servers
+    - Ensure the Plex Media Server connection is set up.
+    - Enable User Watchlist Requests
+- Under Settings -> TV Shows
+    - Configure Sonarr connection with API key.
+- Under Settings -> Movies
+    - Configure Radarr connection with API key.
+- Under Settings -> Notifications -> Email
+    - Configure email notifications as desired.
+    - Currently using SMTP with Gmail SMTP server to personal email account.(TODO: Migrate to Mailgun or similar service)
+- Under Settings -> Notifications -> Newsletter
+    - Configure newsletter settings as desired.
+- Keep using Discord for request notifications until Ombi supports Ntfy.

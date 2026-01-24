@@ -20,6 +20,10 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/media/wrapperr
     mode: '0775'
     container_name: wrapperr
+  - name: media_ombi
+    dest: /home/{{ default_user }}/docker_mounts/media/ombi
+    mode: '0775'
+    container_name: ombi
 
 # docker container configuration files
 docker_configuration_files:

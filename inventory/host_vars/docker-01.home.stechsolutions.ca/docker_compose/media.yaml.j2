@@ -63,6 +63,37 @@ services:
       - "homepage.siteMonitor=https://wrapperr.home.stechsolutions.ca/wrapperr"
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/aunefyren/wrapperr/releases"
+  ombi:
+    image: linuxserver/ombi:4.53.4
+    networks:
+      - traefik
+    container_name: ombi
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Edmonton
+      - BASE_URL=/ombi
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/media/ombi:/config
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.ombi.rule=Host(`ombi.home.stechsolutions.ca`) && PathPrefix(`/ombi`)"
+      - "traefik.http.services.ombi.loadbalancer.server.port=3579"
+      - "traefik.http.routers.ombi.entrypoints=websecure"
+      - "traefik.http.routers.ombi.tls.certresolver=letsencrypt"
+      - "homepage.group=Media Requests"
+      - "homepage.name=Ombi"
+      - "homepage.description=Media Request System"
+      - "homepage.icon=ombi.png"
+      - "homepage.href=https://ombi.home.stechsolutions.ca/ombi"
+      - "homepage.siteMonitor=https://ombi.home.stechsolutions.ca/ombi"
+      - "homepage.widget.type=ombi"
+      - "homepage.widget.url=https://ombi.home.stechsolutions.ca/ombi"
+      - "homepage.widget.key={{ secret_ombi_api_key }}"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/Ombi-app/Ombi/releases"
 
 networks:
   traefik:

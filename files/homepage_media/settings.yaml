@@ -27,3 +27,11 @@ instanceName: homepage_media
 hideErrors: true
 
 disableIndexing: true
+
+layout:
+  Requests:
+    style: column
+  Services:
+    style: column
+  Status:
+    style: column

@@ -10,15 +10,32 @@ http:
         certResolver: letsencrypt
       middlewares:
         - wrapperr-headers
+    ombi-router:
+      rule: Host(`media.stechsolutions.ca`) && PathPrefix(`/ombi`)
+      entryPoints:
+        - websecure
+      service: ombi-service
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - ombi-headers
 
   services:
     wrapperr-service:
       loadBalancer:
         servers:
-          - url: https://wrapperr.home.stechsolutions.ca
+          - url: https://wrapperr.home.stechsolutions.ca/wrapperr
+    ombi-service:
+      loadBalancer:
+        servers:
+          - url: https://ombi.home.stechsolutions.ca/ombi
 
   middlewares:
     wrapperr-headers:
       headers:
         customRequestHeaders:
           Host: wrapperr.home.stechsolutions.ca
+    ombi-headers:
+      headers:
+        customRequestHeaders:
+          Host: ombi.home.stechsolutions.ca
