@@ -4,6 +4,9 @@ This is the documentation for media services in my infrastructure.
 ## Hosts
 - `docker-01.home.stechsolutions.ca`: This host runs docker containers for media services
 
+## External Webpage and Access
+The media services are accessible via the external webpage at [media.stechsolutions.ca](https://media.stechsolutions.ca). Access to the services is managed through Traefik reverse proxy with authentication. The username is 'user' and the password is 'NelsonPlex123!'.
+
 ## Services
 - `downloader`: This service runs qBittorrent with VPN for downloading torrents securely. [qbittorrentvpn docker](https://github.com/nstoik/docker-qBittorrentvpn) is a forked version of an older image. This version focuses on using WireGuard for VPN connectivity.
 - `qbit_manage`: This service manages qBittorrent downloads, including automatic rechecking, categorization, and notifications. It uses [qbit_manage](https://github.com/StuffAnThings/qbit_manage) with a user-defined configuration.
@@ -14,6 +17,7 @@ This is the documentation for media services in my infrastructure.
 - `sonarr`: This service manages TV show downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing TV shows.
 - `tautulli`: This service monitors Plex Media Server activity and provides detailed statistics and notifications about media consumption.
 - `wrapperr`: This service sets up a Spotify Wrapped style dashboard for Plex Media Server using Tautulli data.
+- `ombi`: This service provides a user-friendly interface for requesting media on Plex Media Server. It allows users to request movies and TV shows, which can then be approved and added to the server.
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
@@ -86,7 +90,7 @@ Tautulli is configured via its web interface.
 - Best case scenario, copy an existing Tautulli database from another installation to preserve all settings and history.
 - The API key is stored in the Vault and is used in the homepage widget configuration.
 - Set the Plex server connection if required.
-- Configure notifications using Apprise. You need to get the ntfy Access Token from the ntfy web UI.
+- Configure notifications using Ntfy. You need to get the ntfy Access Token from the ntfy web UI.
     - one general one for all notifications
     - one alert one for issues
 
