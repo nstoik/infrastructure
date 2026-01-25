@@ -4,6 +4,18 @@
 # other variables are set in group_vars/proxmox_vms.yaml and
 # proxmox_vms/docker_hosts.yaml
 
+docker_config_nvidia_gpu: true
+
+# override default docker daemon options to add nvidia runtime
+docker_daemon_options:
+  data-root: '{{ docker_data_dir }}'
+  log-opts:
+    max-size: "10m"
+  runtimes:
+    nvidia:
+      path: nvidia-container-runtime
+      runtimeArgs: []
+
 # docker container paths. All found files will be processed and copied to the docker host
 # docker_configuration_paths:
 

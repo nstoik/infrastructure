@@ -45,6 +45,11 @@ all:
                 scsi: "scsi3"
                 device: "data:200,discard=on"
                 backup: 1
+            pci_devices:
+              - id: "0000:84:00.0"
+                pci_number: 1
+              - id: "0000:84:00.1"
+                pci_number: 1
         docker-02.home.stechsolutions.ca:
           base_docker_install: true
           base_docker_config: true
