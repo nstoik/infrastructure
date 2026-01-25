@@ -39,7 +39,7 @@
       ansible.builtin.command:
         cmd: >
           qm set {{ proxmox_vm_info.id }}
-          --hostpci{{ index_pci }} {{item_pci.id}},pcie={{ item_pci.pci_number }}
+          --hostpci{{ index_pci }} {{ item_pci.id }},pcie={{ item_pci.pci_number }}
       loop: "{{ proxmox_vm_info.pci_devices | default([]) }}"
       loop_control:
         loop_var: item_pci
