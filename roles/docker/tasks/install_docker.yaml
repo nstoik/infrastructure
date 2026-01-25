@@ -15,6 +15,12 @@
         state: present
       become: true
 
+    # install the nvidia docker toolkit if nvidia gpu support is enabled
+    - name: Install nvidia docker toolkit if nvidia gpu support is enabled
+      ansible.builtin.import_tasks: install_nvidia_toolkit.yaml
+      when: docker_config_nvidia_gpu | bool
+      become: true
+
     # add the user to the docker group
     - name: Add user to docker group
       ansible.builtin.user:

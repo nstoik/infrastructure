@@ -1,0 +1,52 @@
+---
+# file to install nvidia docker toolkit
+
+# block for nvidia docker toolkit tasks if nvidia gpu support is enabled
+- name: Install nvidia docker toolkit
+  tags:
+    - docker
+  when: docker_config_nvidia_gpu | bool
+  block:
+    # Add NVidia container toolkit GPG key
+    - name: Add NVIDIA container toolkit GPG key
+      ansible.builtin.get_url:
+        url: https://nvidia.github.io/libnvidia-container/gpgkey
+        dest: /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
+        mode: "0644"
+      become: true
+
+    - name: Convert NVIDIA GPG key to binary keyring
+      ansible.builtin.command:
+        cmd: >
+          gpg --dearmor
+          -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+          /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
+      args:
+        creates: /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+      become: true
+
+    - name: Remove armored NVIDIA GPG key
+      ansible.builtin.file:
+        path: /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
+        state: absent
+      become: true
+
+    # Add NVidia container toolkit repository
+    - name: Add NVIDIA container toolkit repository
+      ansible.builtin.apt_repository:
+        repo: >
+          deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg]
+          https://nvidia.github.io/libnvidia-container/stable/deb/amd64 /
+        filename: nvidia-container-toolkit
+        state: present
+      become: true
+
+    # install nvidia docker toolkit
+    - name: Install NVIDIA container toolkit
+      ansible.builtin.apt:
+        pkg:
+          - nvidia-container-toolkit
+        state: present
+        cache_valid_time: 120
+      notify: Restart docker
+      become: true
