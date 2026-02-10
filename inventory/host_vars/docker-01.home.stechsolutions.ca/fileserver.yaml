@@ -6,6 +6,7 @@
 
 fileserver_setup: true
 fileserver_setup_nfs_client: true
+fileserver_setup_nfs_server: true
 fileserver_setup_attached_disks: true
 
 fileserver_attached_disks:
