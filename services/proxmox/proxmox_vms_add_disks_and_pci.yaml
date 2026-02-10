@@ -1,5 +1,5 @@
 ---
-# This playbook will add the disks for all the specified VMs. It will add
+# This playbook will add the disks and PCI devices for all the specified VMs. It will add
 # virtual and passthrough disks to the VMs in Proxmox.
 
 # Run the proxmox role
@@ -36,6 +36,15 @@
       ansible.builtin.include_role:
         name: proxmox
         tasks_from: attach_disks
+      vars:
+        proxmox_vm_info: "{{ hostvars[item].proxmox_vm }}"
+      loop: "{{ vm_hosts }}"
+
+    # This updates the PCI devices for the VMs
+    - name: Run the proxmox role to update PCI devices for VMs
+      ansible.builtin.include_role:
+        name: proxmox
+        tasks_from: attach_pci_devices
       vars:
         proxmox_vm_info: "{{ hostvars[item].proxmox_vm }}"
       loop: "{{ vm_hosts }}"
