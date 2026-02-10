@@ -7,12 +7,12 @@
 # Required inputs:
 #   proxmox_vm_info: The Proxmox VM to attach the PCI devices to
 
-# Get the exisitng disks for the VM
-- name: Get the existing disks for the VM
+# Get the existing PCI devices for the VM
+- name: Get the existing PCI devices for the VM
   ansible.builtin.command:
     cmd: >
       qm config {{ proxmox_vm_info.id }}
-  register: proxmox_vm_config
+  register: proxmox_vm_pci_config
   become: true
   changed_when: false
 
@@ -45,6 +45,6 @@
         loop_var: item_pci
         index_var: index_pci
       when: proxmox_vm_info.pci_devices is defined and
-            proxmox_vm_config.stdout.find(item_pci.id) == -1
+            proxmox_vm_pci_config.stdout.find(item_pci.id) == -1
       become: true
       changed_when: false
