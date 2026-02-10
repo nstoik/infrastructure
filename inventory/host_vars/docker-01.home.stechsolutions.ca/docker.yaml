@@ -13,7 +13,7 @@ docker_daemon_options:
     max-size: "10m"
   runtimes:
     nvidia:
-      path: nvidia-container-runtime
+      path: /usr/bin/nvidia-container-runtime
       runtimeArgs: []
 
 # docker container paths. All found files will be processed and copied to the docker host
