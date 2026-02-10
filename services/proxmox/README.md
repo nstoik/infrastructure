@@ -78,16 +78,16 @@ To only add a specific VM or container, run the following command. The `pihole` 
     ansible-playbook services/proxmox/proxmox_vms_add.yaml --limit=pihole:proxmox_nodes:[VM Name]:
 ```
 
-### Adding VM disks
-To add virtual and passthrough disks on the VMs, update the VM configuration as required and run the following command. This runs against all the hosts in the `proxmox_nodes` group. Currently only VMs are supported, not containers with disks.
+### Adding VM disks and PCI devices
+To add virtual and passthrough disks, or PCI devices, on the VMs, update the VM configuration as required and run the following command. This runs against all the hosts in the `proxmox_nodes` group. Currently only VMs are supported, not containers with disks.
 
 ```bash
-    ansible-playbook services/proxmox/proxmox_vms_add_disks.yaml
+    ansible-playbook services/proxmox/proxmox_vms_add_disks_and_pci.yaml
 ```
 To add disks for a specific VM, use host limits. This can be limitied to a specific proxmox node and VM. The `VM Name` should be replaced with the ansible name of the VM.
 
 ```bash
-    ansible-playbook services/proxmox/proxmox_vms_add_disks.yaml --limit=pve3.home.stechsolutions.ca:[VM Name]:
+    ansible-playbook services/proxmox/proxmox_vms_add_disks_and_pci.yaml --limit=pve3.home.stechsolutions.ca:[VM Name]:
 ```
 
 ### Removing VMs

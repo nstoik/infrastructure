@@ -1,0 +1,41 @@
+---
+# tdarr node that uses local storage for temp files and GPU for transcoding
+name: tdarr_node
+
+services:
+  tdarr_node:
+    image: haveagitgat/tdarr_node:2.58.02
+    networks:
+      - tdarr_network
+    container_name: tdarr_node
+    gpus: all
+    environment:
+        - TZ=America/Edmonton
+        - PUID=1000
+        - PGID=1000
+        - UMASK_SET=022
+        - serverURL=http://tdarr.home.stechsolutions.ca:8266
+        - inContainer=true
+        - ffmpegVersion=7
+        - nodeName=GPUExternalNode
+        - nodeType=mapped
+        - maxLogSizeMB=10
+        - startPaused=true
+        - transcodegpuWorkers=2
+        - NVIDIA_VISIBLE_DEVICES=all
+        - NVIDIA_DRIVER_CAPABILITIES=video,compute,utility
+    volumes:
+        - /mnt/scratch/tdarr:/temp
+        - /mnt/nfs/movies:/movies
+        - /mnt/nfs/tv:/tv
+        - /home/{{ default_user }}/docker_mounts/tdarr/server:/app/server
+        - /home/{{ default_user }}/docker_mounts/tdarr/configs:/app/configs
+        - /home/{{ default_user }}/docker_mounts/tdarr/logs:/app/logs
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://home.tdarr.io/download"
+
+networks:
+  tdarr_network:
+    name: tdarr_network

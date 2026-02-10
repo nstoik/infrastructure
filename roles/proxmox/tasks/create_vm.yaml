@@ -115,3 +115,9 @@
       ansible.builtin.include_tasks: attach_disks.yaml
       vars:
         proxmox_vm_info: "{{ proxmox_vm }}"
+
+    # Set PCI passthrough devices
+    - name: Include attach pci devices role
+      ansible.builtin.include_tasks: attach_pci_devices.yaml
+      vars:
+        proxmox_vm_info: "{{ proxmox_vm }}"

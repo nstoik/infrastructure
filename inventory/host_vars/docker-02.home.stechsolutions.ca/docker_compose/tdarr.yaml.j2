@@ -26,6 +26,8 @@ services:
         - /home/{{ default_user }}/docker_mounts/tdarr/server:/app/server
         - /home/{{ default_user }}/docker_mounts/tdarr/configs:/app/configs
         - /home/{{ default_user }}/docker_mounts/tdarr/logs:/app/logs
+    ports:
+      - 8266:8266
     restart: unless-stopped
     labels:
       - "traefik.enable=true"

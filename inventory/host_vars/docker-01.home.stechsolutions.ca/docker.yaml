@@ -4,6 +4,18 @@
 # other variables are set in group_vars/proxmox_vms.yaml and
 # proxmox_vms/docker_hosts.yaml
 
+docker_config_nvidia_gpu: true
+
+# override default docker daemon options to add nvidia runtime
+docker_daemon_options:
+  data-root: '{{ docker_data_dir }}'
+  log-opts:
+    max-size: "10m"
+  runtimes:
+    nvidia:
+      path: /usr/bin/nvidia-container-runtime
+      runtimeArgs: []
+
 # docker container paths. All found files will be processed and copied to the docker host
 # docker_configuration_paths:
 
@@ -89,4 +101,10 @@ docker_compose_files:
     state: present
     src: "{{ docker_compose_subpath }}/monitoring.yaml.j2"
     dest: /home/{{ default_user }}/docker_compose/monitoring-docker-compose.yaml
+    mode: '0664'
+  - name: tdarr-docker-compose.yaml
+    compose_name: tdarr
+    state: present
+    src: "{{ docker_compose_subpath }}/tdarr.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/tdarr-docker-compose.yaml
     mode: '0664'
