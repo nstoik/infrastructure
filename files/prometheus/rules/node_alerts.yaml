@@ -190,14 +190,17 @@ groups:
           summary: Host CPU is underutilized (instance {{ $labels.instance }})
           description: "CPU load is < 20% for 1 week (all CPUs combined). Consider reducing the number of CPUs.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
+      # Set the severity to 'info' since I am getting too many alerts
+      # Also, set the duration to 5 continuous minutes to avoid alerting on short spikes
+      # Original was 'warning' and '0'. Updated 2026-02-14
       - alert: HostCpuStealNoisyNeighbor
         expr: (avg by(instance) (rate(node_cpu_seconds_total{mode="steal"}[5m])) * 100 > 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
-        for: 0m
+        for: 5m
         labels:
-          severity: warning
+          severity: info
         annotations:
           summary: Host CPU steal noisy neighbor (instance {{ $labels.instance }})
-          description: "CPU steal is > 10%. A noisy neighbor is killing VM performances or a spot instance may be out of credit.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          description: "CPU steal is > 10% for 5 minutes. A noisy neighbor is killing VM performances or a spot instance may be out of credit.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
       # Original threshold was 10%. Set to 15% on 2025-05-13
       - alert: HostCpuHighIowait
