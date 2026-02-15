@@ -190,7 +190,7 @@ groups:
           summary: Host CPU is underutilized (instance {{ $labels.instance }})
           description: "CPU load is < 20% for 1 week (all CPUs combined). Consider reducing the number of CPUs.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
-      # Set the severity to 'info' since I am getting to many alerts
+      # Set the severity to 'info' since I am getting too many alerts
       # Also, set the duration to 5 continuous minutes to avoid alerting on short spikes
       # Original was 'warning' and '0'. Updated 2026-02-14
       - alert: HostCpuStealNoisyNeighbor
