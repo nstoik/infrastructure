@@ -1,5 +1,5 @@
 ---
-# 2026-02-14: These hosts have been decomissioned and removed from inventory.
+# 2026-02-14: These hosts have been decommissioned and removed from inventory.
 # This playbook is being kept for reference and may be used again in the future if I decide to set up new monitoring devices.
 #
 # Example docker compose file for speedtest-tracker is added below as well:
