@@ -64,7 +64,7 @@ The playbooks directory contains the different playbooks that can be run.
 
 The playbooks are:
 - [rpi](playbooks/rpi)
-    - [internet-monitor.yaml](playbooks/rpi/internet-monitor.yaml) - Configure an internet monitoring raspberry pi
+    - [internet-monitor.yaml](playbooks/rpi/internet-monitor.yaml) - Configure an internet monitoring raspberry pi. Not used, kept for future reference.
 - [base_update.yaml](playbooks/base_update.yaml) - Update the base packages on all hosts
 - [digitalocean.yaml](playbooks/digitalocean.yaml) - Configure DigitalOcean configuration as specified.
 - [docker_compose.yaml](playbooks/docker_compose.yaml) - Run the docker role on the docker hosts.
