@@ -138,3 +138,9 @@ docker_compose_files:
     src: "{{ docker_compose_subpath }}/files.yaml.j2"
     dest: /home/{{ default_user }}/docker_compose/files-docker-compose.yaml
     mode: '0664'
+  - name: scrutiny-docker-compose.yaml
+    compose_name: scrutiny
+    state: present
+    src: "{{ docker_compose_subpath }}/scrutiny.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/scrutiny-docker-compose.yaml
+    mode: '0664'
