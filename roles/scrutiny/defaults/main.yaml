@@ -1,0 +1,6 @@
+---
+
+scrutiny_collector_install: false
+
+scrutiny_collector_name: "scrutiny-collector-metrics-linux-amd64"
+scrutiny_collector_path: "/opt/scrutiny/bin/{{ scrutiny_collector_name }}"
