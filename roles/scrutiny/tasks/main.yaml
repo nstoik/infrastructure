@@ -92,8 +92,8 @@
 - name: Schedule Scrutiny's collector binary to run every 15 minutes via cron
   ansible.builtin.cron:
     name: "Scrutiny Collector Metrics"
-    job: "{{ scrutiny_collector_path }} run --api-endpoint https://scrutiny.home.stechsolutions.ca"
-    minute: "*/15"
+    job: ". /etc/profile; {{ scrutiny_collector_path }} run --api-endpoint https://scrutiny.home.stechsolutions.ca --host-id {{ inventory_hostname }}"
+    minute: "*/30"
     user: root
     state: present
   become: true
