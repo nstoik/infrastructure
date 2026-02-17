@@ -77,6 +77,7 @@ The playbooks are:
 The roles directory contains roles that are used by the playbooks.
 
 The roles are:
+- [aws](roles/aws/)
 - [base](roles/base/)
 - [cloudflare](roles/cloudflare/)
 - [digitalocean](roles/digitalocean/)
@@ -86,6 +87,9 @@ The roles are:
 - [nut](roles/nut/)
 - [pihole](roles/pihole/)
 - [proxmox](roles/proxmox/)
+- [rclone](roles/rclone/)
+- [sanoid](roles/sanoid/)
+- [scrutiny](roles/scrutiny/)
 - [tailscale](roles/tailscale/)
 
 ## Services
@@ -149,6 +153,7 @@ The following ansible tags are available to specify specific tasks to run.
         - proxmox.pve.permissions - Configure proxmox permissions
         - proxmox.pve.users - Configure proxmox users
         - proxmox.pve.storage - Configure proxmox storage
+- scrutiny - Configure the Scrutiny SMART monitoring collector
 
 # Inventory
 Inventory files are in the [inventory](inventory) directory:
@@ -176,7 +181,7 @@ The subscribed topics need to be added manually in the Ntfy clients (web or iOS 
 - AlertManager
 - Healthchecks
 - Proxmox
-- SnapRAID
+- scrutiny
 - Uptime-Kuma
 - media
 - media-health
@@ -311,6 +316,17 @@ The main configuration file for Prometheus is located at [files/prometheus/prome
 ### Alertmanager
 
 Prometheus is configured to use Alertmanager for alerting. The Alertmanager configuration is located at [files/prometheus/alertmanager.yaml.j2](files/prometheus/alertmanager.yaml.j2). This file contains the configuration for the alert receivers.
+
+## Scrutiny
+
+It runs as a docker service (`scrutiny`) and provides a web UI for SMART and disk health monitoring as well as a light-weight collector that can be installed on Proxmox/PBS hosts.
+
+- Container and compose: the Scrutiny docker-compose template is provided per-host under the host's `docker_compose` path (example: `inventory/host_vars/docker-02.home.stechsolutions.ca/docker_compose/scrutiny.yaml.j2`)
+- Configuration template: `files/scrutiny/scrutiny.yaml.j2` is used to render the container configuration.
+- Collector: a small Scrutiny collector binary/role is installed to run on the proxmox and PBS hosts to scrape SMART metrics. Installer flags are controlled by `scrutiny_collector_install` in `inventory/group_vars/proxmox_nodes.yaml` and `inventory/group_vars/proxmox_pbs.yaml`.
+- DNS / reverse proxy: a DNS name `scrutiny.home.stechsolutions.ca` has been added to `inventory/group_vars/pihole.yaml` for convenience when routing via the existing reverse proxy.
+
+See `files/scrutiny/scrutiny.yaml.j2`, `roles/scrutiny/`, and the host_vars `docker.yaml` entries for exact paths and variables.
 
 ## ZFS
 ZFS is used for the fileserver and proxmox/pbs hosts. It can be configured to use encrypted datasets. The ZFS datasets are configured in the [setup_zfs_pool.yaml](roles/fileserver/tasks/setup_zfs_pool.yaml) and [setup_zfs_datasets.yaml](roles/fileserver/tasks/setup_zfs_datasets.yaml) files.
