@@ -187,3 +187,11 @@
       when: proxmox_nut_configure
       tags:
         - nut
+
+    # Run the Scrutiny role
+    - name: Run the Scrutiny role
+      ansible.builtin.include_role:
+        name: scrutiny
+      when: scrutiny_collector_install
+      tags:
+        - scrutiny
