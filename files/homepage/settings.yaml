@@ -32,6 +32,9 @@ layout:
   Alerts and Reporting:
     tab: Monitoring
     style: column
+  Disk Monitoring:
+    tab: Monitoring
+    style: column
   Vehicle:
     tab: Tools
     style: column

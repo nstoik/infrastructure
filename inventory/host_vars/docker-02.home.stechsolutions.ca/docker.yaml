@@ -66,6 +66,12 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy-alertmanager/config
     mode: '0664'
     container_name: ntfy-alertmanager
+  # scrutiny configuration files
+  - name: scrutiny_config.yaml
+    src: "{{ inventory_dir }}/../files/scrutiny/scrutiny.yaml.j2"
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/scrutiny/config/scrutiny.yaml
+    mode: '0664'
+    container_name: scrutiny
 
 # docker mounts subfolders
 docker_mounts_subfolders:
@@ -97,6 +103,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/files/filestash
     mode: '0775'
     container_name: filestash
+  # scrutiny docker mounts
+  - name: monitoring_scrutiny
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/scrutiny
+    mode: '0775'
+    container_name: scrutiny
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-02.home.stechsolutions.ca/docker_compose"
 
@@ -137,4 +148,10 @@ docker_compose_files:
     state: present
     src: "{{ docker_compose_subpath }}/files.yaml.j2"
     dest: /home/{{ default_user }}/docker_compose/files-docker-compose.yaml
+    mode: '0664'
+  - name: scrutiny-docker-compose.yaml
+    compose_name: scrutiny
+    state: present
+    src: "{{ docker_compose_subpath }}/scrutiny.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/scrutiny-docker-compose.yaml
     mode: '0664'

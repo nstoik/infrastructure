@@ -38,6 +38,9 @@ security_ssh_allowed_users:
   - "{{ default_user }}"
   - "root"
 
+# Whether to install the Scrutiny collector on the pbs nodes
+scrutiny_collector_install: true
+
 # Whether to configure the NUT role for the Proxmox nodes
 # Default to false, but set to true on the host_vars files of the hosts that have a UPS
 proxmox_nut_configure: false

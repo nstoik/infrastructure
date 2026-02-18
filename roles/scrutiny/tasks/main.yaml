@@ -1,0 +1,101 @@
+---
+
+# install dependencies for scrutiny
+- name: Install dependencies for scrutiny
+  ansible.builtin.apt:
+    pkg:
+      - smartmontools
+      - cron
+    state: present
+  become: true
+  tags:
+    - scrutiny
+
+# create the directory for Scrutiny's collector binary
+- name: Create directory for Scrutiny's collector binary
+  ansible.builtin.file:
+    path: /opt/scrutiny/bin
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+  tags:
+    - scrutiny
+
+# Get the installed version of Scrutiny
+- name: Get the installed version of Scrutiny
+  ansible.builtin.command:
+    cmd: "{{ scrutiny_collector_path }} --version"
+  register: scrutiny_collector_version_result
+  failed_when: false
+  changed_when: false
+  tags:
+    - scrutiny
+
+- name: Get installed Scrutiny version (or none)
+  ansible.builtin.set_fact:
+    scrutiny_collector_current_version: >-
+      {{
+        'v' ~ (
+          scrutiny_collector_version_result.stdout
+          | split('version')
+          | last
+          | trim
+        )
+        if scrutiny_collector_version_result.rc == 0
+        else 'none'
+      }}
+  tags:
+    - scrutiny
+
+# Get the latest version of Scrutiny's collector binary from GitHub releases
+- name: Get the latest version of Scrutiny's collector binary from GitHub releases
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/AnalogJ/scrutiny/releases/latest"
+    return_content: true
+  register: scrutiny_collector_latest_release
+  failed_when: scrutiny_collector_latest_release.status != 200
+  tags:
+    - scrutiny
+
+# Parse the latest version of Scrutiny's collector binary from GitHub releases
+- name: Parse the latest version of Scrutiny's collector binary from GitHub releases
+  ansible.builtin.set_fact:
+    scrutiny_collector_latest_version: "{{ scrutiny_collector_latest_release.json.tag_name }}"
+  tags:
+    - scrutiny
+
+# Determine if the Scrutiny collector binary needs to be updated
+- name: Determine if the Scrutiny collector binary needs to be updated
+  ansible.builtin.set_fact:
+    scrutiny_collector_update_needed: >-
+      {{
+        scrutiny_collector_current_version == 'none' or
+        (scrutiny_collector_latest_version is version(scrutiny_collector_current_version, '>'))
+      }}
+  tags:
+    - scrutiny
+
+# download Scrutiny's collector binary from GitHub releases and place it in the appropriate directory
+- name: Download Scrutiny's collector binary from GitHub releases
+  ansible.builtin.get_url:
+    url: "https://github.com/AnalogJ/scrutiny/releases/download/{{ scrutiny_collector_latest_version }}/{{ scrutiny_collector_name }}"
+    dest: "{{ scrutiny_collector_path }}"
+    mode: '0755'
+  when: scrutiny_collector_update_needed
+  become: true
+  tags:
+    - scrutiny
+
+# Schedule Scrutiny's collector binary to run every 30 minutes via cron
+- name: Schedule Scrutiny's collector binary to run every 30 minutes via cron
+  ansible.builtin.cron:
+    name: "Scrutiny Collector Metrics"
+    job: ". /etc/profile; {{ scrutiny_collector_path }} run --api-endpoint https://scrutiny.home.stechsolutions.ca --host-id {{ inventory_hostname }}"
+    minute: "*/30"
+    user: root
+    state: present
+  become: true
+  tags:
+    - scrutiny

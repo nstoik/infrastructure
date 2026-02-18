@@ -43,6 +43,17 @@ Run the following command to configure the proxmox hosts. By default this will r
     ansible-playbook services/proxmox/pve_hosts.yaml
 ```
 
+### Scrutiny collector
+
+The repository includes a small Scrutiny collector role that can be installed on Proxmox and PBS hosts to gather SMART and disk health metrics. Enable it by setting `scrutiny_collector_install: true` in the appropriate group vars:
+
+- `inventory/group_vars/proxmox_nodes.yaml` (for proxmox hosts)
+- `inventory/group_vars/proxmox_pbs.yaml` (for PBS hosts)
+
+When enabled, the `services/proxmox/pve_hosts.yaml` and `services/proxmox/pbs_hosts.yaml` playbooks will include the `scrutiny` role and install the collector. See `roles/scrutiny/` for implementation details and `files/scrutiny/scrutiny.yaml.j2` for the container configuration template.
+
+### Proxmox Hosts Templates Configuration
+
 Template cloud images and template container images are downloaded. The template cloud images can have the `state` variable of `present`, `absent`, or `recreate`. The `recreate` state will delete the template and recreate it. Container templates are just downloaded. 
 
 To setup the cloud images and templates on the proxmox hosts, run the following command. By default this will run against all Proxmox hosts

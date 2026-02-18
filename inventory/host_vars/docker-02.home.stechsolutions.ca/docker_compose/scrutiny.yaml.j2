@@ -1,0 +1,64 @@
+---
+name: scrutiny
+
+services:
+  scrutiny:
+    container_name: scrutiny
+    image: ghcr.io/analogj/scrutiny:v0.8.6-web
+    networks:
+      - traefik
+      - scrutiny
+    depends_on:
+      - scrutiny-influxdb
+    environment:
+      SCRUTINY_WEB_INFLUXDB_HOST: 'scrutiny-influxdb'
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/monitoring/scrutiny/config:/opt/scrutiny/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.scrutiny.rule=Host(`scrutiny.home.stechsolutions.ca`)"
+      - "traefik.http.services.scrutiny.loadbalancer.server.port=8080"
+      - "traefik.http.routers.scrutiny.entrypoints=websecure"
+      - "traefik.http.routers.scrutiny.tls.certresolver=letsencrypt"
+      - "homepage.group=Disk Monitoring"
+      - "homepage.name=Scrutiny"
+      - "homepage.description=Scrutiny"
+      - "homepage.icon=scrutiny.png"
+      - "homepage.href=https://scrutiny.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://scrutiny.home.stechsolutions.ca"
+      - "homepage.widget.type=scrutiny"
+      - "homepage.widget.url=https://scrutiny.home.stechsolutions.ca"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/AnalogJ/scrutiny/releases"
+  scrutiny-influxdb:
+    container_name: scrutiny-influxdb
+    image: influxdb:2.8.0
+    networks:
+      - scrutiny
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/monitoring/scrutiny/influxdb:/var/lib/influxdb2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/influxdata/influxdb/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+  scrutiny:
+    name: scrutiny
