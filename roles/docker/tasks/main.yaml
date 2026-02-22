@@ -27,6 +27,14 @@
     - docker
     - docker.compose
 
+# run the docker post setup tasks
+- name: Run the docker post setup tasks
+  ansible.builtin.include_tasks: docker_application_setup.yaml
+  when: docker_config is true
+  tags:
+    - docker
+    - docker.compose
+
 # prune the docker system
 - name: Prune everything
   community.docker.docker_prune:
