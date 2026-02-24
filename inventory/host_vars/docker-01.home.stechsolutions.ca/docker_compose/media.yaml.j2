@@ -2,6 +2,40 @@
 name: media
 
 services:
+  plex:
+    image: plexinc/pms-docker:1.43.0.10492-121068a07
+    container_name: plex
+    gpus: all
+    environment:
+      - TZ=America/Edmonton
+      - PLEX_UID=1000
+      - PLEX_GID=1000
+      - HOSTNAME=plex.home.stechsolutions.ca
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=video,compute,utility
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/media/plex:/config
+      - /mnt/scratch/plex:/transcode
+      - /mnt/nfs/movies:/data/movies
+      - /mnt/nfs/tv:/data/tvshows
+      - /mnt/nfs/music:/data/music
+      - /mnt/nfs/sport:/data/sport
+    ports:
+      - "32400:32400/tcp"
+    restart: unless-stopped
+    labels:
+      - "homepage.group=Media Playback"
+      - "homepage.name=Plex"
+      - "homepage.description=Plex Media Server"
+      - "homepage.icon=plex.png"
+      - "homepage.href=http://10.10.5.24:32400/web"
+      - "homepage.siteMonitor=http://10.10.5.24:32400/web"
+      - "homepage.widget.type=plex"
+      - "homepage.widget.url=http://10.10.5.24:32400"
+      - "homepage.widget.key={{ secret_plex_api_key }}"
+      - homepage.widget.fields=["movies","tv"]
+      - "wud.tag.include=^\\d+\\.\\d+\\.\\d+\\.\\d+-[a-f0-9]+$"
+      - "wud.link.template=https://hub.docker.com/r/plexinc/pms-docker/tags"
   tautulli:
     image: ghcr.io/tautulli/tautulli:v2.16.0
     networks:

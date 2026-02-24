@@ -6,6 +6,8 @@
 
 docker_config_nvidia_gpu: true
 
+plex_setup: true
+
 # override default docker daemon options to add nvidia runtime
 docker_daemon_options:
   data-root: '{{ docker_data_dir }}'
