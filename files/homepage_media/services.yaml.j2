@@ -14,6 +14,11 @@
         description: Plex Media Server
         icon: plex.png
         href: https://app.plex.tv/desktop/#!/
+        widget:
+          type: plex
+          url: http://10.10.5.24:32400
+          key: {{ secret_plex_api_key }}
+          fields: ["movies","tv"]
 - Status:
     - Uptime:
         description: Click to view the uptime status page
