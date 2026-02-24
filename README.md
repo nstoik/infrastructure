@@ -86,6 +86,7 @@ The roles are:
 - [healthchecks](roles/healthchecks/)
 - [nut](roles/nut/)
 - [pihole](roles/pihole/)
+- [plex](roles/plex/)
 - [proxmox](roles/proxmox/)
 - [rclone](roles/rclone/)
 - [sanoid](roles/sanoid/)
@@ -190,22 +191,6 @@ The subscribed topics need to be added manually in the Ntfy clients (web or iOS 
 
 ## Proxmox
 The proxmox hosts need to be bootstrapped to a point where they can be managed by ansible. See the [Proxmox Hosts Manual Configuration](services/proxmox/README.md) for more information.
-
-## Tdarr
-The docker container is configured to be deployed via Ansible. However, the Tdarr server needs to be configured manually after the container is running.
-- Navigate to the [web interface](https://tdarr.home.stechsolutions.ca)
-- Set up the libraries for the media files (mounted as /movies and /tv in the container).
-- Set the Transcode cache for each library to be /temp (mounted as /temp in the container).
-- Set up the Flow transcode plugin. Current flow logic is as follows:
-    - If the video is AV1, or 480p, or 576p, or Other, then ensure the audio stream has 2 channel AAC, remove data streams, and reorder data streams.
-    - Otherwise, do the same checks but also set 10 bit video, set MKV as the container format, set the FFMPEG settings to HEVC, medium preset, quality 27, hardware encoding, and force encoding.
-    - Set the custom FFMpeg command to use 7 threads
-    - Then run the FFMpeg command
-    - Then compare the file size and file duration to the original file to make sure it didn't change too drastically.
-    - Then replace the original file.
-    - Then notify either Radarr or Sonarr that the file has been replaced.
-- Set the Cache Threshold to 25GB
-- Set the job history size limit to 3 GB
 
 ## Rclone (AWS Config)
 Rclone is configured to use AWS S3 for storage. The following steps need to be done manually first to create the required user, access key, and secret key on AWS for Rclone to use.
