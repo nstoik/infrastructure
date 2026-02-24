@@ -5,7 +5,7 @@
 - name: "Configure Plex"
   ansible.builtin.include_role:
     name: plex
-  when: plex_setup
+  when: plex_setup is defined and plex_setup
   tags:
     - docker
     - docker.compose
