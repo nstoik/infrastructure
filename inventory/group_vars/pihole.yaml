@@ -54,9 +54,6 @@ pihole_cname_entries:
   - domain: "ombi.home.stechsolutions.ca"
     target: "docker-01.home.stechsolutions.ca"
     add_hostname: true
-  - domain: "plex.home.stechsolutions.ca"
-    target: "docker-01.home.stechsolutions.ca"
-    add_hostname: true
   - domain: "profilarr.home.stechsolutions.ca"
     target: "docker-01.home.stechsolutions.ca"
     add_hostname: true
