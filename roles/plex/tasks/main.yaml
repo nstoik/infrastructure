@@ -1,7 +1,7 @@
 ---
 
 # setup scheduled plex tasks for maintenance.
-- name: " Cron Plex Clean Photo Transcoder Cache"
+- name: "Cron Plex Clean Photo Transcoder Cache"
   ansible.builtin.cron:
     name: "Plex Scheduled Task - Plex Clean Photo Transcoder Cache"
     job: 'find /home/{{ default_user }}/docker_mounts/media/plex -path "*/PhotoTranscoder/*" -type f -mtime +7 -delete'
