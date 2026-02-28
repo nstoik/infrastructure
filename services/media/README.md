@@ -18,6 +18,8 @@ The media services are accessible via the external webpage at [media.stechsoluti
 - `tautulli`: This service monitors Plex Media Server activity and provides detailed statistics and notifications about media consumption.
 - `wrapperr`: This service sets up a Spotify Wrapped style dashboard for Plex Media Server using Tautulli data.
 - `ombi`: This service provides a user-friendly interface for requesting media on Plex Media Server. It allows users to request movies and TV shows, which can then be approved and added to the server.
+- `plex`: Plex Media Server hosting the media library (see Plex configuration below).
+- `tdarr`: This service is a media transcoding and management tool that helps optimize media files for better performance and compatibility.
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
@@ -138,3 +140,31 @@ Ombi is configured via its web interface.
 - Under Settings -> Notifications -> Newsletter
     - Configure newsletter settings as desired.
 - Keep using Discord for request notifications until Ombi supports Ntfy.
+
+### Plex
+- Docker: expose port `32400` (eg. `-p 32400:32400/tcp`).
+- Router: forward TCP `32400` (or chosen external port) -> `<PLEX_HOST_IP>:32400`.
+- Claim: set `PLEX_CLAIM` env var for first-boot server claim if needed.
+- Plex UI: Settings → Server → Remote Access — enable manual port if not auto, enter external port, then retry until green.
+- Integrations: configure Tautulli and Ombi to point to the Plex server and use API keys stored in the Vault.
+- Enable GPU transcoding in Plex settings if using GPU passthrough in Docker.
+- Set up media libraries and organize media files in the `/movies` and `/tv` directories as configured in Radarr and Sonarr.
+- Set the LAN network in Plex settings so devices on the local network can connect without internet access.
+
+### Tdarr
+The docker container is configured to be deployed via Ansible. However, the Tdarr server needs to be configured manually after the container is running.
+- Navigate to the [web interface](https://tdarr.home.stechsolutions.ca)
+- Set up the libraries for the media files (mounted as /movies and /tv in the container).
+- Set the Transcode cache for each library to be /temp (mounted as /temp in the container).
+- Set up the Flow transcode plugin. Current flow logic is as follows:
+    - If the video is AV1, or 480p, or 576p, or Other, then ensure the audio stream has 2 channel AAC, remove data streams, and reorder data streams.
+    - Otherwise, do the same checks but also set 10 bit video, set MKV as the container format, set the FFMPEG settings to HEVC, medium preset, quality 27, hardware encoding, and force encoding.
+    - Set the custom FFMpeg command to use 7 threads
+    - Then run the FFMpeg command
+    - Then compare the file size and file duration to the original file to make sure it didn't change too drastically.
+    - Then replace the original file.
+    - Then notify either Radarr or Sonarr that the file has been replaced.
+- Set the Cache Threshold to 25GB
+- Set the job history size limit to 3 GB
+
+A second Tdarr node is configured with the same settings but is used as a worker node to offload the transcoding work from the main server. The second node is configured to connect to the main server and will automatically receive jobs when they are created. The second node uses a GPU for transcoding. It starts as paused so the node will only be used when manually unpaused for large transcoding tasks.

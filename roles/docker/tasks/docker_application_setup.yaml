@@ -1,0 +1,12 @@
+---
+# Setup docker applications when applicable.
+
+# Configure plex when the flag is set
+- name: "Configure Plex"
+  ansible.builtin.include_role:
+    name: plex
+  when: plex_setup is defined and plex_setup
+  tags:
+    - docker
+    - docker.compose
+    - plex

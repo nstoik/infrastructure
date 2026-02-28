@@ -53,6 +53,10 @@ all:
                 scsi: "scsi5"
                 device: "data:10,discard=on"
                 backup: 1
+              - comment: 50 GB disk for plex transcode space
+                scsi: "scsi6"
+                device: "local-thin-pool-ssd1:50,discard=on"
+                backup: 0
             pci_devices:
               - id: "0000:84:00.0"
                 pci_number: 1

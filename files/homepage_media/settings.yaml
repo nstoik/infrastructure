@@ -29,6 +29,8 @@ hideErrors: true
 disableIndexing: true
 
 layout:
+  Media Playback:
+    style: column
   Requests:
     style: column
   Services:

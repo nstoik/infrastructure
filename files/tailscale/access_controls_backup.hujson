@@ -1,4 +1,4 @@
-This is a backup of the access controls file for Tailscale made on 2025-09-14
+This is a backup of the access controls file for Tailscale made on 2026-02-23.
 
 {
 	// Declare static groups of users. Use autogroups for all users or users with a specific role.
@@ -92,6 +92,13 @@ This is a backup of the access controls file for Tailscale made on 2025-09-14
 				"8081",
 				"9100",
 			],
+		},
+		// Allow communication to the home network from the docker-monitoring tag for the following ports:
+		// 32400: for plex uptime monitoring from uptime kuma
+		{
+			"src": ["tag:docker-monitoring"],
+			"dst": ["host:home-network-1", "host:home-network-5"],
+			"ip":  ["32400"],
 		},
 	],
 
