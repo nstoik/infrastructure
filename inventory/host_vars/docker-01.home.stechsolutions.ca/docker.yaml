@@ -38,6 +38,10 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/media/ombi
     mode: '0775'
     container_name: ombi
+  - name: media_plex
+    dest: /home/{{ default_user }}/docker_mounts/media/plex
+    mode: '0775'
+    container_name: plex
 
 # docker container configuration files
 docker_configuration_files:
