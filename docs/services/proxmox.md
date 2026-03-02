@@ -1,4 +1,5 @@
 # Proxmox Role
+The Proxmox role is responsible for managing the Proxmox Virtual Environment (PVE) and Proxmox Backup Server (PBS) hosts. It includes playbooks to configure the hosts, manage VMs and containers, and setup monitoring with Scrutiny. Files are located in the `services/proxmox/` directory.
 
 ## Proxmox Hosts Manual Configuration
 
@@ -16,12 +17,12 @@ The following steps are required to setup a new proxmox host manually.
 - Login and configure the following so that the host can be managed by ansible.
     - Make sure it is accessible via SSH as root (other user is added by ansible)
     - Configure the network interfaces as required.
-        - [Example for Proxmox](files/proxmox_interfaces.example) network configuration
-        - [Example for PBS](files/pbs_interfaces.example) network configuration
+        - [Example for Proxmox](../../services/proxmox/files/proxmox_interfaces.example) network configuration
+        - [Example for PBS](../../services/proxmox/files/pbs_interfaces.example) network configuration
     - Configure the required storage (ZFS pools)
 - After the ansible configuration is run, the following steps are required to complete the setup.
     - For Homepage configuration, on both Proxmox and PBS, create an API token for the `homepage` user.
-        - Enter that token into the `vault/vault.yaml` file under the appropriate section.
+        - Enter that token into the `vaults/home/vault.yaml` file under the appropriate section.
         - Then add the required permission to the token.
             - For Proxmox, it needs to have the `PVEAuditor` role on the `/` path.
             - For PBS, it needs to have the `Audit` role on the `/` path.
@@ -47,8 +48,8 @@ Run the following command to configure the proxmox hosts. By default this will r
 
 The repository includes a small Scrutiny collector role that can be installed on Proxmox and PBS hosts to gather SMART and disk health metrics. Enable it by setting `scrutiny_collector_install: true` in the appropriate group vars:
 
-- `inventory/group_vars/proxmox_nodes.yaml` (for proxmox hosts)
-- `inventory/group_vars/proxmox_pbs.yaml` (for PBS hosts)
+- `inventories/home/group_vars/proxmox_nodes.yaml` (for proxmox hosts)
+- `inventories/home/group_vars/proxmox_pbs.yaml` (for PBS hosts)
 
 When enabled, the `services/proxmox/pve_hosts.yaml` and `services/proxmox/pbs_hosts.yaml` playbooks will include the `scrutiny` role and install the collector. See `roles/scrutiny/` for implementation details and `files/scrutiny/scrutiny.yaml.j2` for the container configuration template.
 
@@ -74,7 +75,7 @@ sudo apt install sshpass
 ```
 
 ## Proxmox VMs Ansible Configuration
-VM configurations is specified in the `inventory\proxmox_vms\` folder, the `inventory\proxmox_containers\` folder,  and the individual files for each VM in the `inventory\host_vars\` folder.
+VM configurations is specified in the `inventories/home/proxmox_vms/` folder, the `inventories/home/proxmox_containers/` folder, and the individual files for each VM in the `inventories/home/host_vars/` folder.
 
 ### Adding VMs
 Run the following command to create and configure the VMs and containers on the proxmox hosts. This runs against all the hosts in the `proxmox_nodes` group.

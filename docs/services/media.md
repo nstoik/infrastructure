@@ -23,7 +23,7 @@ The media services are accessible via the external webpage at [media.stechsoluti
 
 ## Configuration
 Configuration for these services can be found in the respective `docker_compose` YAML files located in the host variable directories, such as:
-- `inventory/host_vars/docker-01.home.stechsolutions.ca/docker_compose/downloader.yaml.j2`
+- `inventories/home/host_vars/docker-01.home.stechsolutions.ca/docker_compose/downloader.yaml.j2`
 
 ### QBittorrent with VPN
 On first setup, you need to get the auto generated password from the log file, and then change the webui password to the desired password (stored in Bitwarden).
