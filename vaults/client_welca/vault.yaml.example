@@ -1,0 +1,5 @@
+---
+# Vault secrets for client_welca (example)
+
+secret_user_password: change_me
+secret_become_pass: change_me

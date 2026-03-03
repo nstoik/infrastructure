@@ -1,0 +1,13 @@
+---
+# Client WELCA inventory
+# Replace/extend with actual hosts for the client site.
+all:
+  children:
+    proxmox_nodes:
+      hosts:
+        # Add Proxmox nodes here
+    proxmox_pbs:
+      hosts:
+        # Add Proxmox Backup Server hosts here
+
+# End of inventory

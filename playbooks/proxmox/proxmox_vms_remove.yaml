@@ -6,7 +6,7 @@
 - name: Run the proxmox role
   hosts: proxmox_nodes
   vars_files:
-    - ../../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
 
   tasks:
     # Run the proxmox role to delete the VMs

@@ -5,7 +5,7 @@
   hosts: localhost
   gather_facts: false
   vars_files:
-    - ../../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
     - vars/droplet.yaml
 
   tasks:
@@ -35,7 +35,7 @@
   hosts: do_ansible
   gather_facts: false
   vars_files:
-    - ../../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
     - vars/droplet.yaml
 
   tasks:

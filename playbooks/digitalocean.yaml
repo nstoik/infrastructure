@@ -5,7 +5,7 @@
   hosts: localhost
   gather_facts: false
   vars_files:
-    - ../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
 
   tasks:
     - name: Configure tags on digitalocean
