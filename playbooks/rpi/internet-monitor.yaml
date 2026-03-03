@@ -39,7 +39,7 @@
 - name: Configure internet monitoring raspberry pi
   hosts: pi-speedtest-[1:2].home.stechsolutions.ca
   vars_files:
-    - ../../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
   vars:
     ansible_host_key_checking: false
     ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null'
@@ -68,7 +68,7 @@
 - name: Finish setup
   hosts: pi-speedtest-[1:2].home.stechsolutions.ca
   vars_files:
-    - ../../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
 
   tasks:
     # Run the base role

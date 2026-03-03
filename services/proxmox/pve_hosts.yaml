@@ -15,7 +15,7 @@
 - name: Make sure the Proxmox host is setup
   hosts: proxmox_nodes
   vars_files:
-    - ../../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
   vars:
     ansible_host_key_checking: false
     ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null'
@@ -124,7 +124,7 @@
 - name: Continue setting up the Proxmox host as the new user
   hosts: proxmox_nodes
   vars_files:
-    - ../../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
   tags:
     - proxmox
     - proxmox.pve

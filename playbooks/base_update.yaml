@@ -4,7 +4,7 @@
 - name: Apply base updates to all hosts
   hosts: all
   vars_files:
-    - ../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
   roles:
     - role: base
   tags:

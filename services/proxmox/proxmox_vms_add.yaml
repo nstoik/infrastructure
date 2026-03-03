@@ -18,7 +18,7 @@
 - name: Run the proxmox role
   hosts: proxmox_nodes
   vars_files:
-    - ../../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
   tags:
     - proxmox
     - proxmox.vm
@@ -73,7 +73,7 @@
   hosts: proxmox_containers
   gather_facts: false
   vars_files:
-    - ../../vault/vault.yaml
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
 
   tasks:
     - name: Import create_container_user role from proxmox
