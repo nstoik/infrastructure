@@ -1,0 +1,5 @@
+---
+# Example group_vars for client_welca
+# Copy values from inventory/group_vars/all.yaml and adjust for client
+
+base_timezone: UTC
