@@ -30,10 +30,9 @@ Key roles:
 - **proxmox** - Hypervisor/container management
 
 ### Service Organization
-`../services/` subdirectories contain service-specific playbooks and compose files:
-- `cloud_hosts/` - DigitalOcean configuration
-- `media/` - Media server stack (Plex, Sonarr, Radarr, qBittorrent, tdarr)
-- `proxmox/` - Proxmox backup and management
+Service-specific playbooks live alongside general playbooks under `../playbooks/`:
+- `playbooks/cloud_hosts/` - DigitalOcean configuration
+- `playbooks/proxmox/` - Proxmox backup and management
 
 ## Configuration Patterns
 

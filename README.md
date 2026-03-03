@@ -52,9 +52,10 @@ infrastructure/
 ├── vaults/                    # Per-inventory encrypted secrets
 │   ├── home/vault.yaml        # Encrypted home secrets
 │   └── client_welca/vault.yaml  # Encrypted client secrets
-├── playbooks/                 # Ansible playbooks
+├── playbooks/                 # Ansible playbooks (including service-specific)
+│   ├── proxmox/               # Proxmox PVE/PBS/VM management playbooks
+│   └── cloud_hosts/           # DigitalOcean cloud host playbooks
 ├── roles/                     # Ansible roles
-├── services/                  # Service-specific configs and playbooks
 ├── files/                     # Template and static files
 ├── scripts/                   # Helper scripts
 └── ansible.cfg                # Ansible configuration

@@ -122,12 +122,12 @@ ansible-playbook playbooks/hosts_configure.yaml --skip-tags=docker.compose
 
 ## Services
 
-The `services/` directory contains service-specific playbooks and docker-compose configurations:
+The `playbooks/` directory contains both general and service-specific playbooks:
 
-- **Cloud Hosts** - DigitalOcean droplet and DNS configuration
+- **Cloud Hosts** - DigitalOcean droplet and DNS configuration (`playbooks/cloud_hosts/`)
   - See [docs/services/cloud_hosts.md](./services/cloud_hosts.md)
 
-- **Proxmox** - Proxmox node bootstrapping and backup management
+- **Proxmox** - Proxmox node bootstrapping and backup management (`playbooks/proxmox/`)
   - See [docs/services/proxmox.md](./services/proxmox.md)
 
 - **Media** - Media server stack (Plex, Sonarr, Radarr, etc.)
