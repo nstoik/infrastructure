@@ -178,7 +178,7 @@ Create per-host variables in `inventories/client_welca/host_vars/` similar to `i
 cp vaults/client_welca/vault.yaml.example vaults/client_welca/vault.yaml
 
 # Edit with client-specific secrets
-vim vaults/client_welca/vault.yaml
+nano vaults/client_welca/vault.yaml
 
 # Encrypt the vault
 ansible-vault encrypt vaults/client_welca/vault.yaml --vault-password-file vault_pass_client_welca.txt

@@ -195,7 +195,7 @@ Import existing dashboard JSON from the provisioning directory or create new one
 - Alert rules are in [files/prometheus/rules/](../files/prometheus/rules/)
 - Alertmanager config is in [files/alertmanager/alertmanager.yaml.j2](../files/alertmanager/alertmanager.yaml.j2)
 
-## Zeropack VPN
+## ZFS Encryption and Automatic Key Loading
 
 Documentation for ZFS encryption and automatic key loading configuration. See [INVENTORIES.md](./INVENTORIES.md) for details on ZFS dataset configuration.
 
