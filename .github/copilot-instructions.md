@@ -6,12 +6,12 @@ This is an Ansible-based infrastructure-as-code project managing a homelab and S
 ## Architecture Patterns
 
 ### Inventory Organization
-- **Hierarchical groups** in `../inventory/inventory.yaml` define host relationships
-- **Group variables** in `../inventory/group_vars/` apply settings hierarchically:
+- **Hierarchical groups** in `../inventories/home/inventory.yaml` define host relationships
+- **Group variables** in `../inventories/home/group_vars/` apply settings hierarchically:
   - `all.yaml` - Global defaults (timezones, domains, SMTP, Prometheus/Grafana/Alertmanager URLs)
   - `proxmox_vms.yaml` - VM-specific settings (qemu-guest-agent, node-exporter)
   - `do_docker.yaml`, `rpi.yaml`, `pihole.yaml` - Group-specific configs
-- **Host variables** in `../inventory/host_vars/` override group settings per hostname
+- **Host variables** in `../inventories/home/host_vars/` override group settings per hostname
   - Directory-based: `docker-02.home.stechsolutions.ca/fileserver.yaml` groups related vars
 - **Variable precedence**: host_vars > group_vars (groups applied in dependency order)
 
@@ -65,12 +65,12 @@ From `../requirements.yaml`:
 
 ## Secrets & Vault Management
 
-- **File**: `../vault/vault.yaml` (encrypted, not in git)
-- **Reference**: `../vault/vault.yaml.example` for structure
+- **File**: `../vaults/<inventory>/vault.yaml` (encrypted, committed to git)
+- **Reference**: `../vaults/home/vault.yaml.example` for structure
 - **Common secrets**: SSH keys, DO/Cloudflare tokens, passwords, IPMI credentials
-- **Usage**: Include in playbooks via `vars_files: - ../vault/vault.yaml`
+- **Usage**: Include in playbooks via `vars_files: - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"` — automatically resolves to the correct vault for whichever inventory is active
 - **Pre-commit hook**: `../git-init.sh` prevents unencrypted vault commits
-- **Ansible config** (`../ansible.cfg`): `vault_password_file = ./vault_pass.txt`
+- **Ansible config** (`../ansible.cfg`): `vault_identity_list = home@./vault_pass.txt`
 
 ## Playbook Invocation
 
@@ -81,7 +81,7 @@ From `../requirements.yaml`:
 
 ## File Organization Examples
 
-**Docker host setup** (`../inventory/host_vars/docker-02.home.stechsolutions.ca/`):
+**Docker host setup** (`../inventories/home/host_vars/docker-02.home.stechsolutions.ca/`):
 - `fileserver.yaml` - Disk mounts, NFS clients/exports
 - Other YAML files for service-specific config (proxy, tdarr, monitoring volumes)
 
@@ -94,7 +94,7 @@ From `../requirements.yaml`:
 
 1. **Environment setup**: `chmod +x setenv.sh && source setenv.sh` (loads vault password from `.env`)
 2. **Install collections**: `ansible-galaxy install -r requirements.yaml`
-3. **Validate**: `ansible-lint playbooks/*.yaml` and `yamllint inventory/`
+3. **Validate**: `ansible-lint playbooks/*.yaml` and `yamllint inventories/`
 4. **Dry run**: `ansible-playbook playbooks/hosts_configure.yaml --check`
 5. **Execute**: Run playbook with appropriate `--limit` or `--tags`
 

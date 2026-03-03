@@ -84,9 +84,10 @@ This repository supports multiple independent inventory sets (e.g., `home` and `
 
 ### Selecting an Inventory
 
-Use the helper script to set environment variables:
+Use the helper script to set environment variables. It must be `source`d (not executed directly) so the exports persist in your current shell:
 
 ```bash
+chmod +x scripts/select-inventory.sh
 source scripts/select-inventory.sh home
 # or
 source scripts/select-inventory.sh client_welca
