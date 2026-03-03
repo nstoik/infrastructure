@@ -103,7 +103,7 @@ To add disks for a specific VM, use host limits. This can be limitied to a speci
 ```
 
 ### Removing VMs
-To remove the VMs or containers on the proxmox hosts, set the `state` variable for the VM to absent and run the following command. This is run against all the hosts in the `proxmox_nodes` group so the VM state (`absent`) needs to be properly set in the appropriate `inventory\proxmox_vms\` file , or `inventory\proxmox_containers\` file..
+To remove the VMs or containers on the proxmox hosts, set the `state` variable for the VM to absent and run the following command. This is run against all the hosts in the `proxmox_nodes` group so the VM state (`absent`) needs to be properly set in the appropriate `inventories/<inventory>/proxmox_vms/` file, or `inventories/<inventory>/proxmox_containers/` file.
 
 ```bash
     ansible-playbook services/proxmox/proxmox_vms_remove.yaml
