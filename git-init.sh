@@ -12,7 +12,7 @@ cat <<'EOT' >> .git/hooks/pre-commit
 # Checks both the legacy `vault/` directory and per-inventory vaults under `vaults/*/vault.yaml`.
 for file in vault/*.yaml vaults/*/vault.yaml; do
     [ -e "$file" ] || continue
-    if ( git show :"$file" | grep -q "$ANSIBLE_VAULT;" ); then
+    if ( git show :"$file" | grep -q '^\$ANSIBLE_VAULT;' ); then
         echo "Vault Encrypted. Safe to commit."
     else
         echo "Vault not encrypted! Run 'ansible-vault encrypt \"$file\"' and try again."

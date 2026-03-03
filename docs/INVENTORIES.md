@@ -61,7 +61,7 @@ source scripts/select-inventory.sh client_welca
 ansible-playbook playbooks/hosts_configure.yaml
 ```
 
-This exports `ANSIBLE_INVENTORY` and `ANSIBLE_VAULT_PASSWORD_FILE` which override `ansible.cfg`.
+This exports `ANSIBLE_INVENTORY` and `ANSIBLE_VAULT_IDENTITY_LIST` which override the inventory and vault configuration from `ansible.cfg`.
 
 #### Option B: Use CLI flags
 ```bash

@@ -8,7 +8,7 @@ The configuration for the cloud hosts is stored in the [droplet.yaml](../../play
 ## Usage
 To create the cloud hosts as specified in the configuration file, run the following command:
 ```bash
-ansible-playbook playbooks/cloud_hosts/create_hosts.yaml
+ansible-playbook playbooks/cloud_hosts/create_host.yaml
 ```
 
 This calls the create_droplet file for each droplet specified. It also creates any block storage volumes specified in the configuration file.

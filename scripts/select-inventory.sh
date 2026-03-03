@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Helper to set ANSIBLE_INVENTORY and ANSIBLE_VAULT_PASSWORD_FILE for a named inventory
+# Helper to set ANSIBLE_INVENTORY and ANSIBLE_VAULT_IDENTITY_LIST for a named inventory
 # Usage: source scripts/select-inventory.sh <inventory-name>
 
 if [ "$#" -ne 1 ]; then

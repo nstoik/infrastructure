@@ -59,7 +59,7 @@ To decrypt a file, run:
 ansible-vault decrypt <file> --vault-password-file ./vault_pass_<inventory>.txt
 ```
 
-The `ansible.cfg` has entries for `vault_password_file` to point to the default home vault.
+The `ansible.cfg` is configured using `vault_identity_list` entries that point to the default home vault.
 
 ### 3. Environment Variables
 
@@ -95,7 +95,7 @@ source scripts/select-inventory.sh client_welca
 
 This sets:
 - `ANSIBLE_INVENTORY` - Path to the inventory files
-- `ANSIBLE_VAULT_PASSWORD_FILE` - Path to the vault password file
+- `ANSIBLE_VAULT_IDENTITY_LIST` - Vault identity list (including the path to the vault password file) used for encrypting/decrypting secrets for that inventory
 
 Alternatively, run playbooks with explicit flags:
 
