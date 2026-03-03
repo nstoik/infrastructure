@@ -1,8 +1,10 @@
 collections/*
 roles/galaxy/*
 
-vault_pass.txt
-
 .env
 
-.ansbile/.lock
+# Per-inventory vault password files
+vault_pass.txt
+vault_pass_*.txt
+
+.ansible/.lock
