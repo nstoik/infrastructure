@@ -32,6 +32,10 @@ base_packages:
 #     enabled: false
 base_services: []
 
+# the user on the Ansible control node (local machine)
+# eg. used for the known_hosts_ansible_file variable to specify the path to the known_hosts file on the Ansible control node
+base_controller_user: "nelson"
+
 # the base settings for user setup
 base_user_run_setup: true
 
