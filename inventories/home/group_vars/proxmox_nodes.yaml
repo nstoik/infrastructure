@@ -141,6 +141,7 @@ proxmox_backups:
     all: true
 
 # Proxmox ACME configuration
+proxmox_acme_setup: true
 proxmox_acme:
   # Proxmox ACME account
   account:
