@@ -1,0 +1,23 @@
+---
+# Host variables for pve.internal.welca.ca
+#
+# This host has:
+#   - 1 OS disk (used by Proxmox for the OS and local VM storage)
+#   - 2 x 3TB disks passed through to the video storage VM
+
+ansible_host: pve.internal.welca.ca
+
+# No UPS attached to this host
+proxmox_nut_configure: false
+
+# No Proxmox Backup Server configured yet.
+# Add proxmox_storage here when a PBS is available, e.g.:
+# proxmox_storage:
+#   - storage: "pbs"
+#     type: "pbs"
+#     state: "present"
+#     server: "pbs.internal.welca.ca"
+#     datastore: "pbs"
+#     namespace: "proxmox-vms"
+#     username: "backup@pbs"
+#     password: "{{ secret_user_password }}"
