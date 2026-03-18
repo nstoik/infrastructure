@@ -110,6 +110,7 @@
       ansible.builtin.include_role:
         name: proxmox
         tasks_from: pve_backup_healthchecks
+      when: proxmox_backup_healthchecks_setup
       tags:
         - proxmox.pve.backup.healthchecks
 

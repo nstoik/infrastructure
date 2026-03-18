@@ -140,6 +140,8 @@ proxmox_backups:
     script: "/usr/local/bin/vzdump-hook-script.py"
     all: true
 
+proxmox_backup_healthchecks_setup: true
+
 # Proxmox ACME configuration
 proxmox_acme_setup: true
 proxmox_acme:
