@@ -49,14 +49,19 @@ For each additional inventory (e.g., client_welca), create a corresponding vault
 # Store these securely, outside git
 ```
 
-To encrypt a file, run:
+To encrypt a file, you must use `--vault-id` (not `--vault-password-file`) so the vault header is stamped with the correct inventory label. Using `--vault-password-file` will apply the default `home` label, causing decryption failures for other inventories.
+
 ```bash
-ansible-vault encrypt <file> --vault-password-file ./vault_pass_<inventory>.txt
+ansible-vault encrypt vaults/<inventory>/vault.yaml \
+  --vault-id <inventory>@./vault_pass_<inventory>.txt \
+  --encrypt-vault-id <inventory>
 ```
+
+`--encrypt-vault-id` is required when multiple vault IDs are loaded (e.g. via `ANSIBLE_VAULT_IDENTITY_LIST`) to ensure the header is stamped with the correct label.
 
 To decrypt a file, run:
 ```bash
-ansible-vault decrypt <file> --vault-password-file ./vault_pass_<inventory>.txt
+ansible-vault decrypt vaults/<inventory>/vault.yaml --vault-id <inventory>@./vault_pass_<inventory>.txt
 ```
 
 The `ansible.cfg` is configured using `vault_identity_list` entries that point to the default home vault.
