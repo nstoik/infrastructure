@@ -1,0 +1,37 @@
+---
+# Hosts that are proxmox VMs and their configuration
+#
+# Before running proxmox_vms_add.yaml, find the disk IDs on the Proxmox host:
+#   ls -la /dev/disk/by-id/ | grep -v part
+# Then replace the placeholder values in passthrough_disks below.
+
+all:
+  children:
+    proxmox_vms:
+      hosts:
+        video.internal.welca.ca:
+          network:
+            ip: "dhcp"  # TODO: set actual IP once known
+          proxmox_vm:
+            proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
+            template_id: 9001  # ubuntu-24.04-server-cloudimg
+            state: "present"
+            id: 100  # TODO: choose a VM ID that doesn't conflict with existing VMs
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            name_fqdn: "{{ inventory_hostname }}"
+            start_onboot: true
+            disk_size: "32G"
+            net0: "virtio,bridge=vmbr0"
+            ipconfig0: "ip=dhcp"  # TODO: set static IP if desired, e.g. ip=10.150.1.10/24,gw=10.150.1.1
+            cores: 4
+            memory: 4096
+            balloon: 1024
+            # Passthrough disks — the two 3TB drives for video storage.
+            # Use wwn- or ata- IDs (not partitions) for stable passthrough.
+            passthrough_disks:
+              - scsi: "scsi1"
+                device: "/dev/disk/by-id/REPLACE_WITH_DISK1_ID"
+                backup: 0
+              - scsi: "scsi2"
+                device: "/dev/disk/by-id/REPLACE_WITH_DISK2_ID"
+                backup: 0

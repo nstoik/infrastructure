@@ -1,0 +1,5 @@
+---
+# Host variables for video.internal.welca.ca
+# VM provisioning config lives in proxmox_vms/hosts.yaml
+
+ansible_host: video.internal.welca.ca  # TODO: set actual IP once known

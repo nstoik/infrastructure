@@ -3,6 +3,7 @@
 all:
   hosts:
     pve.internal.welca.ca:
+    video.internal.welca.ca:
 
   children:
     proxmox_nodes:
@@ -11,5 +12,4 @@ all:
     proxmox_pbs:
       hosts:
         # Add Proxmox Backup Server hosts here
-
-# End of inventory
+    proxmox_vms:
