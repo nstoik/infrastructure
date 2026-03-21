@@ -48,6 +48,7 @@
         - "{{ inventory_hostname }}"
       loop_control:
         label: "{{ item }}"
+      when: proxmox_update_known_hosts | default(true)
       tags:
         - base.known_hosts
 

@@ -6,6 +6,10 @@
 
 ansible_become_password: "{{ secret_become_pass }}"
 
+# Whether to update the known_hosts_ansible file with the proxmox host keys.
+# Set to false if the controller cannot resolve the proxmox hostnames (e.g. .internal DNS zones).
+proxmox_update_known_hosts: true
+
 # The proxmox nodes need sudo to be installed
 base_additional_packages:
   - "sudo"
