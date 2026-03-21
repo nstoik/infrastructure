@@ -20,6 +20,18 @@ pipx inject ansible-lint jmespath
 pipx install yamllint
 ```
 
+### Bitwarden SSH Agent
+
+SSH keys used to connect to managed hosts are stored in Bitwarden. Bitwarden is configured to act as the SSH agent, serving keys to Ansible during playbook runs.
+
+Before running any playbooks, ensure Bitwarden is unlocked and the SSH agent is active. You can verify the agent is running with:
+
+```bash
+ssh-add -l
+```
+
+If the agent has no identities listed, unlock Bitwarden and enable the SSH agent in the Bitwarden desktop app settings. When a key is first requested each session, Bitwarden will prompt for approval in the desktop app — this must be accepted before the key will be served to the agent.
+
 ## Repository Setup
 
 ### 1. Install Ansible Collections
