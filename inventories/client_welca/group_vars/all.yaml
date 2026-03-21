@@ -8,6 +8,9 @@ ansible_user: "{{ default_user }}"
 default_user_email: "nstoik@stechsolutions.ca"
 # secret_user_password is set in vaults/client_welca/vault.yaml
 
+# Use bash as the default shell — no dotfiles/zsh setup for this inventory.
+base_user_shell: /bin/bash
+
 # timezone
 base_timezone: "America/Edmonton"
 
