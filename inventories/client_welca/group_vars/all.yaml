@@ -4,6 +4,7 @@ ansible_become_password: "{{ secret_become_pass }}"
 
 # Default user values
 default_user: "welca"
+ansible_user: "{{ default_user }}"
 default_user_email: "nstoik@stechsolutions.ca"
 # secret_user_password is set in vaults/client_welca/vault.yaml
 
