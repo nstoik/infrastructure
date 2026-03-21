@@ -66,7 +66,17 @@ ansible-vault decrypt vaults/<inventory>/vault.yaml --vault-id <inventory>@./vau
 
 The `ansible.cfg` is configured using `vault_identity_list` entries that point to the default home vault.
 
-### 3. Environment Variables
+### 3. Generate Pre-hashed Passwords
+
+Some vault variables require a pre-hashed password (e.g., `secret_user_password_prehashed`). Generate one using `openssl`:
+
+```bash
+openssl passwd -6 'your_password_here'
+```
+
+`-6` produces a SHA-512 crypt hash, which is the format Ansible's `user` module expects for the `password` field.
+
+### 4. Environment Variables
 
 Copy the example environment file to `.env` and fill in required values:
 
