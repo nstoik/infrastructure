@@ -1,0 +1,52 @@
+#!/bin/bash
+# Managed by Ansible - do not edit manually
+# zfs_snapshot_metrics.sh - Collect ZFS snapshot metrics for Prometheus textfile collector
+# Tracks snapshot counts and ages per dataset (sanoid/syncoid snapshots included)
+
+set -uo pipefail
+
+OUTPUT_FILE="{{ base_node_exporter_textfile_dir }}/zfs_snapshots.prom"
+TEMP_FILE=$(mktemp)
+NOW=$(date +%s)
+
+trap 'rm -f "${TEMP_FILE}"' EXIT
+
+# Check if ZFS is available
+if ! command -v zfs &>/dev/null; then
+    exit 0
+fi
+
+declare -A snap_count
+declare -A snap_latest
+
+# zfs list -t snapshot -H -p -o name,creation
+# -H: no headers, tab-separated
+# -p: parseable (creation as unix timestamp)
+while IFS=$'\t' read -r snap_name creation; do
+    # Extract dataset name (everything before @)
+    dataset="${snap_name%@*}"
+
+    snap_count["${dataset}"]=$(( ${snap_count["${dataset}"]:-0} + 1 ))
+
+    if [[ -z "${snap_latest[${dataset}]+x}" ]] || [[ "${creation}" -gt "${snap_latest[${dataset}]}" ]]; then
+        snap_latest["${dataset}"]="${creation}"
+    fi
+done < <(zfs list -t snapshot -H -p -o name,creation 2>/dev/null)
+
+{
+printf '# HELP zfs_snapshot_count Number of ZFS snapshots per dataset\n'
+printf '# TYPE zfs_snapshot_count gauge\n'
+printf '# HELP zfs_snapshot_latest_timestamp_seconds Unix timestamp of the most recent snapshot\n'
+printf '# TYPE zfs_snapshot_latest_timestamp_seconds gauge\n'
+printf '# HELP zfs_snapshot_age_seconds Age of the most recent snapshot in seconds\n'
+printf '# TYPE zfs_snapshot_age_seconds gauge\n'
+
+for dataset in "${!snap_count[@]}"; do
+    age=$(( NOW - snap_latest["${dataset}"] ))
+    printf 'zfs_snapshot_count{dataset="%s"} %s\n' "${dataset}" "${snap_count[${dataset}]}"
+    printf 'zfs_snapshot_latest_timestamp_seconds{dataset="%s"} %s\n' "${dataset}" "${snap_latest[${dataset}]}"
+    printf 'zfs_snapshot_age_seconds{dataset="%s"} %s\n' "${dataset}" "${age}"
+done
+} > "${TEMP_FILE}"
+
+mv "${TEMP_FILE}" "${OUTPUT_FILE}"

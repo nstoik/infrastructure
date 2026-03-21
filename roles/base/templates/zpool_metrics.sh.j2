@@ -1,0 +1,58 @@
+#!/bin/bash
+# Managed by Ansible - do not edit manually
+# zpool_metrics.sh - Collect ZFS pool metrics for Prometheus textfile collector
+
+set -uo pipefail
+
+OUTPUT_FILE="{{ base_node_exporter_textfile_dir }}/zpool.prom"
+TEMP_FILE=$(mktemp)
+
+trap 'rm -f "${TEMP_FILE}"' EXIT
+
+# Check if ZFS is available
+if ! command -v zpool &>/dev/null; then
+    exit 0
+fi
+
+{
+printf '# HELP zpool_size_bytes ZFS pool total size in bytes\n'
+printf '# TYPE zpool_size_bytes gauge\n'
+printf '# HELP zpool_allocated_bytes ZFS pool allocated space in bytes\n'
+printf '# TYPE zpool_allocated_bytes gauge\n'
+printf '# HELP zpool_free_bytes ZFS pool free space in bytes\n'
+printf '# TYPE zpool_free_bytes gauge\n'
+printf '# HELP zpool_fragmentation_percent ZFS pool fragmentation percentage\n'
+printf '# TYPE zpool_fragmentation_percent gauge\n'
+printf '# HELP zpool_capacity_percent ZFS pool capacity usage percentage\n'
+printf '# TYPE zpool_capacity_percent gauge\n'
+printf '# HELP zpool_health ZFS pool health (0=online, 1=degraded, 2=faulted, 3=offline, 4=unavail, 5=removed)\n'
+printf '# TYPE zpool_health gauge\n'
+
+# zpool list -Hp: -H = no headers/tab-separated, -p = parseable (bytes, integers)
+# Fields: name, size, alloc, free, ckpoint, expandsz, frag, cap, dedup, health, altroot
+while IFS=$'\t' read -r name size alloc free _ckpoint _expandsz frag cap _dedup health _altroot; do
+    # Strip percent signs if present (some ZFS versions include them with -p)
+    frag="${frag//%/}"
+    cap="${cap//%/}"
+
+    printf 'zpool_size_bytes{pool="%s"} %s\n' "${name}" "${size}"
+    printf 'zpool_allocated_bytes{pool="%s"} %s\n' "${name}" "${alloc}"
+    printf 'zpool_free_bytes{pool="%s"} %s\n' "${name}" "${free}"
+    printf 'zpool_fragmentation_percent{pool="%s"} %s\n' "${name}" "${frag}"
+    printf 'zpool_capacity_percent{pool="%s"} %s\n' "${name}" "${cap}"
+
+    case "${health}" in
+        ONLINE)   health_val=0 ;;
+        DEGRADED) health_val=1 ;;
+        FAULTED)  health_val=2 ;;
+        OFFLINE)  health_val=3 ;;
+        UNAVAIL)  health_val=4 ;;
+        REMOVED)  health_val=5 ;;
+        *)        health_val=-1 ;;
+    esac
+    health_lower=$(echo "${health}" | tr '[:upper:]' '[:lower:]')
+    printf 'zpool_health{pool="%s",state="%s"} %s\n' "${name}" "${health_lower}" "${health_val}"
+done < <(zpool list -Hp 2>/dev/null)
+} > "${TEMP_FILE}"
+
+mv "${TEMP_FILE}" "${OUTPUT_FILE}"

@@ -14,6 +14,7 @@
 #   - base_timezone: timezone to set
 #   - base_netplan: dictionary of netplan configuration
 #   - base_node_exporter_zfs_collector: boolean to enable ZFS collector for node_exporter
+#   - base_node_exporter_textfile_dir: path for textfile collector (default: /var/lib/prometheus/node-exporter)
 
 
 # Update and upgrade apt packages

@@ -7,6 +7,7 @@
 #   - fileserver_setup_nfs_client: boolean
 #   - fileserver_setup_snapraid: boolean
 #   - fileserver_setup_zfs: boolean
+#   - base_node_exporter_textfile_dir: path to node_exporter textfile directory (from base role)
 #   - fileserver_setup_attached_disks: boolean
 #   - fileserver_setup_swap_file: boolean
 
@@ -91,6 +92,10 @@
       loop_control:
         label: "{{ item.pool_name }}"
       when: item.datasets is defined and item.datasets | length > 0
+
+    # Deploy ZFS snapshot metrics for Prometheus textfile collector
+    - name: Setup ZFS snapshot metrics
+      ansible.builtin.include_tasks: setup_zfs_snapshot_metrics.yaml
 
 # Setup the NFS server
 - name: Setup the NFS server

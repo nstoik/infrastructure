@@ -1,0 +1,11 @@
+# Managed by Ansible - do not edit manually
+[Unit]
+Description=ZFS Snapshot Metrics Collection Timer
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+Unit=zfs-snapshot-metrics.service
+
+[Install]
+WantedBy=timers.target
