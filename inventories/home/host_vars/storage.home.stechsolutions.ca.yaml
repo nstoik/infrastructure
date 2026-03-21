@@ -4,6 +4,9 @@
 # other variables are set in group_vars/proxmox_nodes.yaml and
 # proxmox_vms/hosts.yaml
 
+# Enable ZFS collector for prometheus-node-exporter
+base_node_exporter_zfs_collector: true
+
 fileserver_setup: true
 fileserver_setup_mergerfs: false
 fileserver_setup_snapraid: false

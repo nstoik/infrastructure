@@ -20,6 +20,13 @@
   changed_when: true
   become: true
 
+# Restart prometheus-node-exporter
+- name: Restart prometheus-node-exporter
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    state: restarted
+  become: true
+
 # Restart systemd-journald
 - name: Restart systemd-journald
   ansible.builtin.systemd:

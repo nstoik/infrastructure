@@ -40,6 +40,9 @@ security_ssh_allowed_users:
   - "{{ default_user }}"
   - "root"
 
+# Enable ZFS collector for prometheus-node-exporter on all proxmox nodes
+base_node_exporter_zfs_collector: true
+
 # Whether to install the Scrutiny collector on the proxmox nodes
 scrutiny_collector_install: true
 

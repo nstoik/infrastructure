@@ -1,0 +1,8 @@
+# Managed by Ansible - do not edit manually
+# Options for prometheus-node-exporter
+{% set args = [] %}
+{% if base_node_exporter_zfs_collector %}
+{% set _ = args.append('--collector.zfs') %}
+{% set _ = args.append('--collector.filesystem.mount-points-exclude="' + base_node_exporter_mount_points_exclude + '"') %}
+{% endif %}
+ARGS="{{ args | join(' ') }}"
