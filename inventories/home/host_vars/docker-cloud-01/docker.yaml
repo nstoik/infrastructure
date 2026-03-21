@@ -13,23 +13,23 @@ docker_configuration_paths:
 docker_configuration_files:
   # traefik configuration file
   - name: traefik.yaml
-    src: "{{ inventory_dir }}/../files/traefik/traefik-prod.yaml"
+    src: "{{ inventory_dir }}/../../files/traefik/traefik-prod.yaml"
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
     mode: '0664'
     container_name: traefik
   - name: media_homepage.yaml
-    src: "{{ inventory_dir }}/../files/traefik/dynamic/media_homepage.yaml"
+    src: "{{ inventory_dir }}/../../files/traefik/dynamic/media_homepage.yaml"
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/dynamic/media_homepage.yaml
     mode: '0664'
     container_name: traefik
   # ntfy configuration file
   - name: server.yaml
-    src: "{{ inventory_dir }}/../files/ntfy/server.yaml.j2"
+    src: "{{ inventory_dir }}/../../files/ntfy/server.yaml.j2"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy/server.yaml
     mode: '0664'
     container_name: ntfy
   - name: apprise.yml
-    src: "{{ inventory_dir }}/../files/apprise/apprise.yml.j2"
+    src: "{{ inventory_dir }}/../../files/apprise/apprise.yml.j2"
     dest: /home/{{ default_user }}/docker_mounts/monitoring/apprise/{{ secret_apprise_config_id }}.yml
     mode: '0600'
     container_name: apprise
