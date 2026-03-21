@@ -31,7 +31,8 @@ ansible-playbook playbooks/hosts_configure.yaml --tags=docker,fileserver
 
 # Vault operations
 ansible-vault edit vaults/home/vault.yaml
-ansible-vault encrypt vaults/<inventory>/vault.yaml --vault-password-file vault_pass_<inventory>.txt
+# Encrypt with the correct vault ID label (must match the inventory name)
+ansible-vault encrypt vaults/<inventory>/vault.yaml --vault-id <inventory>@./vault_pass_<inventory>.txt --encrypt-vault-id <inventory>
 ```
 
 ## Repository Structure

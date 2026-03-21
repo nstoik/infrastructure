@@ -1,43 +1,24 @@
 ---
-# group_vars for the all group
+# group_vars for the all group (client_welca inventory)
 ansible_become_password: "{{ secret_become_pass }}"
 
 # Default user values
-default_user: "nelson"
+default_user: "welca"
+ansible_user: "{{ default_user }}"
 default_user_email: "nstoik@stechsolutions.ca"
-# secret_user_password is set in vars\vault.yaml
+# secret_user_password is set in vaults/client_welca/vault.yaml
+
+# Use bash as the default shell — no dotfiles/zsh setup for this inventory.
+base_user_shell: /bin/bash
 
 # timezone
 base_timezone: "America/Edmonton"
 
-base_controller_user: "{{ default_user }}"
+base_controller_user: "nelson"
 known_hosts_ansible_file: "/home/{{ base_controller_user }}/.ssh/known_hosts_ansible"
 
-# smtp variables
-smtp_host: "smtp.mailgun.org"
-smtp_port: 587
-
-# ntfy variables
-ntfy_base_url: "https://ntfy.stechsolutions.ca"
-ntfy_base_domain: "ntfy.stechsolutions.ca"
-ntfy_user: "{{ default_user }}"
-ntfy_email_user: "ntfy@mg.stechsolutions.ca"
-
-# prometheus variables
-prometheus_domain: "prometheus.home.stechsolutions.ca"
-prometheus_base_url: "https://{{ prometheus_domain }}"
-
-# alertmanager variables
-alertmanager_domain: "alertmanager.home.stechsolutions.ca"
-alertmanager_base_url: "https://{{ alertmanager_domain }}"
-
-# ntfy-alertmanager variables
-ntfy_alertmanager_domain: "ntfy-alertmanager.home.stechsolutions.ca"
-ntfy_alertmanager_base_url: "https://{{ ntfy_alertmanager_domain }}"
-
-# grafana variables
-grafana_domain: "grafana.home.stechsolutions.ca"
-grafana_base_url: "https://{{ grafana_domain }}"
+# add ssh keys to the default user from secret_ssh_keys in the vault
+base_user_add_ssh_keys: true
 
 # geerlingguy.security role variables
 # https://galaxy.ansible.com/geerlingguy/security

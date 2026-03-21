@@ -1,14 +1,7 @@
 ---
-# group_vars for the proxmox_nodes group
-#
-# There are some variables that are specific to each node (eg. UPS),
-# and those are defined in the host_vars files for each node.
+# group_vars for the proxmox_nodes group (client_welca inventory)
 
 ansible_become_password: "{{ secret_become_pass }}"
-
-# Whether to update the known_hosts_ansible file with the proxmox host keys.
-# Set to false if the controller cannot resolve the proxmox hostnames (e.g. .internal DNS zones).
-proxmox_update_known_hosts: true
 
 # The proxmox nodes need sudo to be installed
 base_additional_packages:
@@ -16,10 +9,10 @@ base_additional_packages:
   - "lshw"
   - "prometheus-node-exporter"
 
-base_user_run_setup: false
+base_user_run_setup: true
 
 base_dotfiles:
-  install: true
+  install: false
   dotbot_skip_ssh_authorized_file: false
 
 # Use apt dist-upgrade on proxmox nodes
@@ -41,7 +34,11 @@ security_ssh_allowed_users:
   - "root"
 
 # Whether to install the Scrutiny collector on the proxmox nodes
-scrutiny_collector_install: true
+scrutiny_collector_install: false
+
+# Whether to update the known_hosts_ansible file with the proxmox host keys.
+# Set to false if the controller cannot resolve the proxmox hostnames (e.g. .internal DNS zones).
+proxmox_update_known_hosts: false
 
 # Whether to configure the NUT role for the Proxmox nodes
 # Default to false, but set to true on the host_vars files of the hosts that have a UPS
@@ -51,18 +48,10 @@ proxmox_nut_configure: false
 # state: present, absent, recreate
 proxmox_cloud_imgs:
   # yamllint disable-line rule:line-length
-  - url: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
-    template_name: "ubuntu-22.04-server-cloudimg"
-    id: 9000
-    state: "absent"
-    # List of proxmox nodes to download the cloud image to
-    proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
-  # yamllint disable-line rule:line-length
   - url: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
     template_name: "ubuntu-24.04-server-cloudimg"
     id: 9001
     state: "recreate"
-    # List of proxmox nodes to download the cloud image to
     proxmox_nodes: "{{ groups['proxmox_nodes'] }}"
 
 # Proxmox container images
@@ -95,18 +84,6 @@ proxmox_users:
     email: "{{ default_user_email }}"
     groups: "Admins"
     state: "present"
-  - userid: "prometheus@pve"
-    comment: "Prometheus user"
-    email: "noemmail@noemail.com"
-    groups: "API RO Users"
-    state: "present"
-    password: "{{ secret_pve_prometheus_user_password }}"
-  - userid: "homepage@pve"
-    comment: "Homepage user"
-    email: "noemail@noemail.com"
-    groups: "API_RO_Users"
-    state: "present"
-    password: "{{ secret_pve_homepage_user_password }}"
 
 proxmox_notification_targets:
   - name: ntfy-info
@@ -134,34 +111,36 @@ proxmox_notification_matchers:
     target: ntfy-error
     match-severity: "notice,warning,error,unknown"
 
+# Skip healthchecks.io integration for backups
+proxmox_backup_healthchecks_setup: false
+
 # Proxmox backup configs
 proxmox_backups:
   - id: "backup-daily"
     comment: "Daily backup of all VMs"
-    storage: "pbs"
+    storage: "local"
     schedule: "04:30"
     repeat-missed: true
-    script: "/usr/local/bin/vzdump-hook-script.py"
     all: true
 
-proxmox_backup_healthchecks_setup: true
+# Skip ACME certificate setup (no domain configured for this site)
+proxmox_acme_setup: false
 
-# Proxmox ACME configuration
-proxmox_acme_setup: true
-proxmox_acme:
-  # Proxmox ACME account
-  account:
-    name: "default"
-    contact: "{{ default_user_email }}"
-    directory: "https://acme-v02.api.letsencrypt.org/directory"
-
-  # Domain names for the ACME account
-  domains:
-    - "pve3.home.stechsolutions.ca"
-
-  # Proxmox ACME plugin
-  plugin:
-    type: "dns"
-    id_name: "cf"
-    cf_api_email: "{{ default_user_email }}"
-    cf_api_key: "{{ secret_cf_token }}"
+# Proxmox ACME configuration (unused while proxmox_acme_setup is false)
+# proxmox_acme:
+#   # Proxmox ACME account
+#   account:
+#     name: "default"
+#     contact: "{{ default_user_email }}"
+#     directory: "https://acme-v02.api.letsencrypt.org/directory"
+#
+#   # Domain names for the ACME account
+#   domains:
+#     - "pve.internal.welca.ca"
+#
+#   # Proxmox ACME plugin (Cloudflare DNS challenge for internal hostnames)
+#   plugin:
+#     type: "dns"
+#     id_name: "cf"
+#     cf_api_email: "{{ default_user_email }}"
+#     cf_api_key: "{{ secret_cf_token }}"

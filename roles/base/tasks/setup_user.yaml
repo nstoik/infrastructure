@@ -24,6 +24,7 @@
         update_password: on_create
         createhome: true
         home: "/home/{{ base_user_default }}"
+        shell: "{{ base_user_shell }}"
         groups: "{{ base_user_groups + (base_user_additional_groups | default([])) }}"
         append: true
         state: present

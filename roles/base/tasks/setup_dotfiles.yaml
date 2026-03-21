@@ -86,13 +86,6 @@
       become: true
       become_user: "{{ default_user }}"
 
-    # set the shell to ZSH
-    - name: Set the shell to ZSH
-      ansible.builtin.user:
-        name: "{{ default_user }}"
-        shell: /usr/bin/zsh
-      become: true
-
     # source the .zshrc file the first time to perform the initial setup
     - name: Source the .zshrc file the first time to perform the initial setup
       ansible.builtin.shell: "source /home/{{ default_user }}/.zshrc"

@@ -1,9 +1,15 @@
 ---
 # This playbook will configure the Proxmox host.
 
-# Run the pihole playbook to make sure the DNS records are correct
-- name: Run the pihole role
-  ansible.builtin.import_playbook: "../../playbooks/pihole.yaml"
+# Run the pihole role to make sure the DNS records are correct.
+# Only runs if the 'pihole' group exists in the active inventory.
+- name: Configure pihole
+  hosts: "{{ groups['pihole'] | default([]) }}"
+  gather_facts: false
+  vars_files:
+    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
+  roles:
+    - pihole
   tags:
     - pihole
     - proxmox
@@ -42,6 +48,7 @@
         - "{{ inventory_hostname }}"
       loop_control:
         label: "{{ item }}"
+      when: proxmox_update_known_hosts | default(true)
       tags:
         - base.known_hosts
 
@@ -101,6 +108,7 @@
       ansible.builtin.include_role:
         name: proxmox
         tasks_from: pve_acme
+      when: proxmox_acme_setup
       tags:
         - proxmox.pve.acme
 
@@ -109,6 +117,7 @@
       ansible.builtin.include_role:
         name: proxmox
         tasks_from: pve_backup_healthchecks
+      when: proxmox_backup_healthchecks_setup
       tags:
         - proxmox.pve.backup.healthchecks
 

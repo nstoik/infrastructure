@@ -1,0 +1,34 @@
+---
+# Host variables for pve.internal.welca.ca
+#
+# This host has:
+#   - 1 OS disk (used by Proxmox for the OS and local VM storage)
+#   - 2 x 3TB disks passed through to the video storage VM
+
+ansible_host: 10.150.1.5
+
+# TODO: Remove this override once Issue #44 (neofetch -> fastfetch migration) is merged.
+# neofetch was removed from Debian 13 (Trixie) repos and Proxmox 9 is based on Debian 13.
+# fastfetch is not yet available on all supported distros, so this host overrides
+# base_packages to exclude neofetch until the migration PR can be merged.
+base_packages:
+  - git
+  - jq
+  - vnstat
+  - wireguard
+  - wireguard-tools
+
+# No UPS attached to this host
+proxmox_nut_configure: false
+
+# No Proxmox Backup Server configured yet.
+# Add proxmox_storage here when a PBS is available, e.g.:
+# proxmox_storage:
+#   - storage: "pbs"
+#     type: "pbs"
+#     state: "present"
+#     server: "pbs.internal.welca.ca"
+#     datastore: "pbs"
+#     namespace: "proxmox-vms"
+#     username: "backup@pbs"
+#     password: "{{ secret_user_password }}"

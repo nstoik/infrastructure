@@ -20,6 +20,18 @@ pipx inject ansible-lint jmespath
 pipx install yamllint
 ```
 
+### Bitwarden SSH Agent
+
+SSH keys used to connect to managed hosts are stored in Bitwarden. Bitwarden is configured to act as the SSH agent, serving keys to Ansible during playbook runs.
+
+Before running any playbooks, ensure Bitwarden is unlocked and the SSH agent is active. You can verify the agent is running with:
+
+```bash
+ssh-add -l
+```
+
+If the agent has no identities listed, unlock Bitwarden and enable the SSH agent in the Bitwarden desktop app settings. When a key is first requested each session, Bitwarden will prompt for approval in the desktop app — this must be accepted before the key will be served to the agent.
+
 ## Repository Setup
 
 ### 1. Install Ansible Collections
@@ -49,19 +61,34 @@ For each additional inventory (e.g., client_welca), create a corresponding vault
 # Store these securely, outside git
 ```
 
-To encrypt a file, run:
+To encrypt a file, you must use `--vault-id` (not `--vault-password-file`) so the vault header is stamped with the correct inventory label. Using `--vault-password-file` will apply the default `home` label, causing decryption failures for other inventories.
+
 ```bash
-ansible-vault encrypt <file> --vault-password-file ./vault_pass_<inventory>.txt
+ansible-vault encrypt vaults/<inventory>/vault.yaml \
+  --vault-id <inventory>@./vault_pass_<inventory>.txt \
+  --encrypt-vault-id <inventory>
 ```
+
+`--encrypt-vault-id` is required when multiple vault IDs are loaded (e.g. via `ANSIBLE_VAULT_IDENTITY_LIST`) to ensure the header is stamped with the correct label.
 
 To decrypt a file, run:
 ```bash
-ansible-vault decrypt <file> --vault-password-file ./vault_pass_<inventory>.txt
+ansible-vault decrypt vaults/<inventory>/vault.yaml --vault-id <inventory>@./vault_pass_<inventory>.txt
 ```
 
 The `ansible.cfg` is configured using `vault_identity_list` entries that point to the default home vault.
 
-### 3. Environment Variables
+### 3. Generate Pre-hashed Passwords
+
+Some vault variables require a pre-hashed password (e.g., `secret_user_password_prehashed`). Generate one using `openssl`:
+
+```bash
+openssl passwd -6 'your_password_here'
+```
+
+`-6` produces a SHA-512 crypt hash, which is the format Ansible's `user` module expects for the `password` field.
+
+### 4. Environment Variables
 
 Copy the example environment file to `.env` and fill in required values:
 

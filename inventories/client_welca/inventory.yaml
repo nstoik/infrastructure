@@ -1,13 +1,15 @@
 ---
 # Client WELCA inventory
-# Replace/extend with actual hosts for the client site.
 all:
+  hosts:
+    pve.internal.welca.ca:
+    video.internal.welca.ca:
+
   children:
     proxmox_nodes:
       hosts:
-        # Add Proxmox nodes here
+        pve.internal.welca.ca:
     proxmox_pbs:
       hosts:
         # Add Proxmox Backup Server hosts here
-
-# End of inventory
+    proxmox_vms:

@@ -2,4 +2,12 @@
 # Vault secrets for client_welca (example)
 
 secret_user_password: change_me
+secret_user_password_prehashed: hashed version of 'secret_user_password'
 secret_become_pass: change_me
+
+secret_ssh_keys:
+  - name: "Nelson Welca"
+    key: "ssh-ed25519 change_me"
+
+secret_ntfy_tokens:
+  Proxmox: tk_change_me
