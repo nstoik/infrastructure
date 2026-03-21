@@ -47,6 +47,9 @@ base_user_password_prehashed: "{{ secret_user_password_prehashed }}"
 # defaults to false because generally the ssh keys
 # are added using the dotfiles method.
 base_user_add_ssh_keys: false
+
+base_user_shell: /usr/bin/zsh
+
 base_user_groups:
   - sudo
 
