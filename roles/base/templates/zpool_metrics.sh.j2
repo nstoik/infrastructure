@@ -55,4 +55,5 @@ while IFS=$'\t' read -r name size alloc free _ckpoint _expandsz frag cap _dedup 
 done < <(zpool list -Hp 2>/dev/null)
 } > "${TEMP_FILE}"
 
+chmod 0644 "${TEMP_FILE}"
 mv "${TEMP_FILE}" "${OUTPUT_FILE}"
