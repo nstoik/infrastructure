@@ -17,6 +17,9 @@ layout:
   Media Management:
     tab: Media
     useEqualHeights: true
+  Storage:
+    tab: Media
+    style: column
   Media Requests:
     tab: Media
     style: column
