@@ -49,6 +49,28 @@ roles/                      # Custom roles (base, docker, fileserver, proxmox, e
 roles/galaxy/               # Galaxy-installed roles (gitignored)
 collections/                # Galaxy-installed collections (gitignored)
 files/                      # Jinja2 templates and static config files
+  alertmanager/             # Alertmanager config (routes alerts to ntfy-alertmanager)
+  apprise/                  # Apprise notification config
+  grafana/provisioning/
+    dashboards/             # Grafana dashboard provisioning config (points to dashboards_json/)
+    dashboards_json/        # Auto-provisioned Grafana dashboard JSON files
+    datasources/            # Grafana datasource config (Prometheus)
+  homepage/                 # Internal homepage (gethomepage) config — internal dashboard
+  homepage_media/           # External media homepage config — public-facing at media.stechsolutions.ca
+  ntfy/                     # Ntfy notification server config
+  ntfy-alertmanager/        # ntfy-alertmanager bridge config (receives from Alertmanager, sends to ntfy)
+  peanut/                   # Peanut NUT web interface config
+  prometheus/
+    prometheus.yaml         # Prometheus main config (scrape targets, rule_files)
+    rules/                  # Alert rule files (one file per domain)
+    targets/                # Scrape target templates (nodes, pve, remote nodes)
+  prowlarr/                 # Prowlarr indexer config template
+  qbittorrentvpn/           # qBittorrent WireGuard VPN config + qbit_manage config template
+  radarr/                   # Radarr config template
+  scrutiny/                 # Scrutiny SMART monitoring config
+  sonarr/                   # Sonarr config template
+  tailscale/                # Tailscale ACL backup
+  traefik/                  # Traefik reverse proxy static configs (dev, prod) and dynamic rules
 scripts/select-inventory.sh # Helper to switch active inventory + vault
 ```
 

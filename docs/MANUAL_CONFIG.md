@@ -188,11 +188,31 @@ Prometheus and Grafana are configured via Ansible. However, some additional manu
 Check that Prometheus is configured as a datasource (should be auto-provisioned from [files/grafana/provisioning/](../files/grafana/provisioning/)).
 
 ### Grafana Dashboards
-Import existing dashboard JSON from the provisioning directory or create new ones manually.
+Dashboards in `files/grafana/provisioning/dashboards_json/` are **auto-provisioned** on deploy — no manual import needed. Current dashboards include:
+
+- `node_exporter.json` — full host metrics (CPU, memory, disk, network)
+- `cadvisor_docker.json` — Docker container metrics
+- `pve.json` — Proxmox VE host metrics
+- `traefik.json` — Traefik reverse proxy metrics
+- `nut_exporter.json` — UPS/NUT metrics
+- `pihole.json` — Pi-hole DNS metrics
+- `tailscale-overview.json` — Tailscale network overview
+- `tailscale-machine.json` — Per-machine Tailscale metrics
+- `file_storage.json` — ZFS dataset capacity, usage, and I/O
+- `zfs.json` — ZFS ARC stats and pool performance
+- `zfs_health.json` — ZFS pool health status
+
+To add a new dashboard: export JSON from Grafana, save it to `files/grafana/provisioning/dashboards_json/prometheus/`, and redeploy with `--tags docker.compose`.
 
 ### Alerting
 - Prometheus scrape configs are in [files/prometheus/prometheus.yaml](../files/prometheus/prometheus.yaml)
-- Alert rules are in [files/prometheus/rules/](../files/prometheus/rules/)
+- Alert rules are in [files/prometheus/rules/](../files/prometheus/rules/):
+  - `alerts.yaml` — Prometheus self-monitoring
+  - `node_alerts.yaml` — host hardware/OS alerts
+  - `storage_alerts.yaml` — filesystem, ZFS pool, scrub, and snapshot alerts
+  - `ups_alerts.yaml` — UPS/NUT alerts
+  - `tailscale_alerts.yaml` — Tailscale network alerts
+  - `traefik_alerts.yaml` — Traefik HTTP error rate alerts
 - Alertmanager config is in [files/alertmanager/alertmanager.yaml.j2](../files/alertmanager/alertmanager.yaml.j2)
 
 ## ZFS Encryption and Automatic Key Loading
