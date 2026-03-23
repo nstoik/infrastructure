@@ -34,7 +34,7 @@ groups:
           severity: critical
         annotations:
           summary: "ZFS pool degraded (instance {{ $labels.instance }})"
-          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} is in state {{ $labels.state }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          description: "ZFS pool {{ $labels.zpool }} on {{ $labels.instance }} is in state {{ $labels.state }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
       - alert: ZfsPoolHighUsage
         expr: zpool_capacity_percent > 85
