@@ -6,7 +6,7 @@
 set -uo pipefail
 
 OUTPUT_FILE="{{ base_node_exporter_textfile_dir }}/zfs_snapshots.prom"
-TEMP_FILE=$(mktemp)
+TEMP_FILE=$(mktemp "{{ base_node_exporter_textfile_dir }}/zfs_snapshots.prom.XXXXXX")
 NOW=$(date +%s)
 
 trap 'rm -f "${TEMP_FILE}"' EXIT
