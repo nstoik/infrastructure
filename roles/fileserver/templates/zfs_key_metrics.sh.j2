@@ -1,0 +1,38 @@
+#!/bin/bash
+# Managed by Ansible - do not edit manually
+# zfs_key_metrics.sh - Monitor ZFS dataset encryption key status for Prometheus textfile collector
+# Only emits metrics for encrypted datasets (encryption != off)
+
+set -uo pipefail
+
+OUTPUT_FILE="{{ base_node_exporter_textfile_dir }}/zfs_key.prom"
+TEMP_FILE=$(mktemp)
+
+trap 'rm -f "${TEMP_FILE}"' EXIT
+
+# Check if ZFS is available
+if ! command -v zfs &>/dev/null; then
+    exit 0
+fi
+
+{
+printf '# HELP zfs_dataset_key_available ZFS dataset encryption key status (1=available/loaded, 0=unavailable/locked). Only emitted for encrypted datasets.\n'
+printf '# TYPE zfs_dataset_key_available gauge\n'
+
+while IFS= read -r dataset; do
+    encryption=$(zfs get -H -o value encryption "${dataset}" 2>/dev/null)
+    [[ "${encryption}" == "off" ]] && continue
+
+    keystatus=$(zfs get -H -o value keystatus "${dataset}" 2>/dev/null)
+    case "${keystatus}" in
+        available)   key_val=1 ;;
+        unavailable) key_val=0 ;;
+        *)           continue ;;
+    esac
+
+    printf 'zfs_dataset_key_available{dataset="%s"} %s\n' "${dataset}" "${key_val}"
+done < <(zfs list -H -o name -t filesystem 2>/dev/null)
+} > "${TEMP_FILE}"
+
+chmod 0644 "${TEMP_FILE}"
+mv "${TEMP_FILE}" "${OUTPUT_FILE}"

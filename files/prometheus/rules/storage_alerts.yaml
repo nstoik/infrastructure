@@ -74,6 +74,17 @@ groups:
           summary: "ZFS daily snapshot overdue (instance {{ $labels.instance }})"
           description: "Dataset {{ $labels.dataset }} on {{ $labels.instance }} has not had a daily snapshot in {{ $value | humanizeDuration }}. Expected every 24 hours.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
+      # ZFS encryption key alert — uses zfs_dataset_key_available from textfile collector (zfs_key_metrics.sh)
+      # Only fires on hosts running the fileserver role (where encrypted datasets may exist)
+      - alert: ZfsDatasetKeyUnavailable
+        expr: zfs_dataset_key_available == 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ZFS dataset encryption key not loaded (instance {{ $labels.instance }})"
+          description: "Encrypted dataset {{ $labels.dataset }} on {{ $labels.instance }} has no key loaded — the dataset is locked and inaccessible. Load the key with 'zfs load-key {{ $labels.dataset }}'.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
       # ZFS predictive fill alert — uses zpool_free_bytes from textfile collector (zpool_metrics.sh)
       - alert: ZfsPoolWillFillIn24Hours
         expr: predict_linear(zpool_free_bytes[6h], 24 * 3600) < 0
