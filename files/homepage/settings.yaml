@@ -35,6 +35,9 @@ layout:
   Disk Monitoring:
     tab: Monitoring
     style: column
+  Developer Tools:
+    tab: Tools
+    style: column
   Vehicle:
     tab: Tools
     style: column
