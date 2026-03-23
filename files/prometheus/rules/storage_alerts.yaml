@@ -86,13 +86,13 @@ groups:
 
       # ZFS scrub and vdev error alerts — uses zpool_scrub_age_seconds/zpool_*_errors from textfile collector (zpool_metrics.sh)
       - alert: ZfsPoolScrubOverdue
-        expr: (zpool_scrub_age_seconds > 604800) or (zpool_scrub_age_seconds == -1)
+        expr: (zpool_scrub_age_seconds > 2592000) or (zpool_scrub_age_seconds == -1)
         for: 5m
         labels:
           severity: warning
         annotations:
           summary: "ZFS pool scrub overdue (instance {{ $labels.instance }})"
-          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} has not been scrubbed in over 7 days (or never). Run 'zpool scrub {{ $labels.pool }}'.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} has not been scrubbed in over 30 days (or never). Run 'zpool scrub {{ $labels.pool }}'.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
       - alert: ZfsPoolChecksumErrors
         expr: zpool_checksum_errors > 0
