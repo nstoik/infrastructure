@@ -143,6 +143,22 @@
       changed_when: result.rc != 0
       become: true
 
+    # Ensure datasets are mounted before setting permissions.
+    # The base role's apt upgrade can trigger a ZFS service restart that temporarily
+    # unmounts datasets. Without this, the file task below would chown the underlying
+    # directory instead of the ZFS dataset inode, and the ownership would revert to
+    # root:root after ZFS remounts the dataset.
+    - name: Ensure ZFS datasets are mounted before setting permissions
+      ansible.builtin.command: "zfs mount {{ dataset.name }}"
+      loop: "{{ fileserver_zfs_pool.datasets }}"
+      loop_control:
+        loop_var: dataset
+        label: "{{ dataset.name }}"
+      when: dataset.mount_point is defined and dataset.mount_point != 'none'
+      changed_when: false
+      failed_when: false
+      become: true
+
     # Set the dataset mount permissions
     - name: Set the dataset mount permissions
       ansible.builtin.file:
