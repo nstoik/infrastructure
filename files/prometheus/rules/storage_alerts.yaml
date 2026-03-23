@@ -115,10 +115,10 @@ groups:
           description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} has {{ $value }} checksum error(s). May indicate failing hardware.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
       - alert: ZfsPoolReadWriteErrors
-        expr: zpool_read_errors > 0 or zpool_write_errors > 0
+        expr: (zpool_read_errors + zpool_write_errors) > 0
         for: 0m
         labels:
           severity: critical
         annotations:
           summary: "ZFS pool read/write errors detected (instance {{ $labels.instance }})"
-          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} has I/O errors (read={{ $value }}). Investigate hardware immediately.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} has I/O errors (total={{ $value }}). Investigate hardware immediately.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
