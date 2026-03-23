@@ -18,7 +18,7 @@ groups:
       # Note: critical threshold (>90% / <10% free) is covered by HostOutOfDiskSpace (severity: critical) in node_alerts.yaml
 
       - alert: HostFilesystemReadOnly
-        expr: node_filesystem_readonly{fstype!~"tmpfs|overlay|squashfs"} == 1
+        expr: node_filesystem_readonly{fstype!~"tmpfs|overlay|squashfs|ramfs",mountpoint!~".+/.zfs/snapshot/.+"} == 1
         for: 0m
         labels:
           severity: critical
