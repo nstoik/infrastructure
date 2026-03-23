@@ -80,10 +80,10 @@ groups:
       # "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|run)($|/)".
       # Same rule using "node_filesystem_free_bytes" will fire when disk fills for non-root users.
       - alert: HostOutOfDiskSpace
-        expr: ((node_filesystem_avail_bytes{mountpoint!~"^/(sys|proc|dev|run)($|/)"} * 100) / node_filesystem_size_bytes{mountpoint!~"^/(sys|proc|dev|run)($|/)"} < 10 and ON (instance, device, mountpoint) node_filesystem_readonly{mountpoint!~"^/(sys|proc|dev|run)($|/)"} == 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+        expr: ((node_filesystem_avail_bytes{mountpoint!~"^/(sys|proc|dev|run)($|/)",fstype!~"tmpfs|overlay|squashfs|zfs"} * 100) / node_filesystem_size_bytes{mountpoint!~"^/(sys|proc|dev|run)($|/)",fstype!~"tmpfs|overlay|squashfs|zfs"} < 10 and ON (instance, device, mountpoint) node_filesystem_readonly{mountpoint!~"^/(sys|proc|dev|run)($|/)"} == 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
         for: 2m
         labels:
-          severity: warning
+          severity: critical
         annotations:
           summary: Host out of disk space (instance {{ $labels.instance }})
           description: "Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -95,15 +95,15 @@ groups:
         expr: >
           (
             (
-              (node_filesystem_avail_bytes{mountpoint!~"^/(sys|proc|dev|run)($|/)"}
+              (node_filesystem_avail_bytes{mountpoint!~"^/(sys|proc|dev|run)($|/)",fstype!~"tmpfs|overlay|squashfs|zfs"}
               * 100)
-              / node_filesystem_size_bytes{mountpoint!~"^/(sys|proc|dev|run)($|/)"}
+              / node_filesystem_size_bytes{mountpoint!~"^/(sys|proc|dev|run)($|/)",fstype!~"tmpfs|overlay|squashfs|zfs"}
             ) < 10
             and
             on(instance,device,mountpoint)
             predict_linear(
               node_filesystem_avail_bytes{
-                fstype!~"tmpfs",
+                fstype!~"tmpfs|overlay|squashfs|zfs",
                 mountpoint!~"^/(sys|proc|dev|run)($|/)"
               }[1h],
               24 * 3600

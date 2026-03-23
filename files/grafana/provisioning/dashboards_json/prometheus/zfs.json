@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 0,
+  "id": 20,
   "links": [],
   "panels": [
     {
@@ -6005,7 +6005,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Node - ZFS Stats",
+  "title": "ZFS Stats",
   "uid": "i5y0zfoiz",
-  "version": 2
+  "version": 3
 }
