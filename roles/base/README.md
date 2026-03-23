@@ -40,7 +40,7 @@ The base role deploys and configures `prometheus-node-exporter`. On ZFS hosts, i
 
 #### ZFS Pool Metrics (textfile collector)
 
-`zpool_metrics.sh` is deployed to all hosts where `base_node_exporter_zfs_collector: true` or ZFS is present. It writes the following metrics to `zpool.prom`:
+`zpool_metrics.sh` is deployed to all hosts where `base_node_exporter_zfs_collector: true`. It writes the following metrics to `zpool.prom`:
 
 | Metric | Description |
 |---|---|

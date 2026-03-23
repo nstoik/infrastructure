@@ -2,6 +2,18 @@
 # Deploy ZFS encryption key metrics for Prometheus textfile collector
 # Tracks keystatus for all encrypted datasets — alerts when a key is unavailable
 
+- name: Ensure node_exporter textfile directory exists
+  ansible.builtin.file:
+    path: "{{ base_node_exporter_textfile_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+  tags:
+    - fileserver
+    - fileserver.zfs
+
 - name: Deploy ZFS key metrics script
   ansible.builtin.template:
     src: zfs_key_metrics.sh.j2
