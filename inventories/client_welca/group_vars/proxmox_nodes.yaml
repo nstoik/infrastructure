@@ -39,6 +39,9 @@ scrutiny_collector_install: false
 # Set to false if the controller cannot resolve the proxmox hostnames (e.g. .internal DNS zones).
 proxmox_update_known_hosts: false
 
+# Override default storage (home uses 'data', welca uses 'local-lvm')
+proxmox_import_storage: local-lvm
+
 # Whether to configure the NUT role for the Proxmox nodes
 # Default to false, but set to true on the host_vars files of the hosts that have a UPS
 proxmox_nut_configure: false
