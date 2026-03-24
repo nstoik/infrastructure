@@ -4,6 +4,18 @@
 
 ansible_host: 10.150.1.6
 
+# Configure the passed-through Intel I210 NIC (nic0 on PVE host, PCI 0000:02:00.0).
+# Matched by MAC address for deterministic interface naming.
+base_netplan:
+  configure: true
+  ethernets:
+    - name: camera
+      dhcp4: true
+      optional: true
+      match:
+        macaddress: "00:1e:67:df:ae:f2"
+      set_name: camera
+
 # ZFS mirror pool using the two 3TB passthrough disks.
 # Two 3TB WD Purple drives passed through from the Proxmox host.
 sanoid_setup: true
