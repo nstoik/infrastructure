@@ -95,11 +95,11 @@ If the service needs persistent storage, also add to `docker_mounts_subfolders`:
 
 ---
 
-## Step 4: Add PiHole DNS entry
+## Step 4: Add PiHole CNAME entry
 
 **File:** `inventories/home/group_vars/pihole.yaml`
 
-Add an entry to `pihole_dns_entries` in alphabetical order by domain:
+Add an entry to `pihole_cname_entries` in alphabetical order by domain:
 
 ```yaml
   - domain: "<service>.home.stechsolutions.ca"
