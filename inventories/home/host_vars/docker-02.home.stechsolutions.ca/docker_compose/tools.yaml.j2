@@ -17,11 +17,11 @@ services:
       - "traefik.http.routers.it-tools.tls.certresolver=letsencrypt"
       - "homepage.group=Developer Tools"
       - "homepage.name=IT-Tools"
-      - "homepage.description=Developer Tools"
+      - "homepage.description=IT-Tools"
       - "homepage.icon=it-tools.png"
       - "homepage.href=https://it-tools.home.stechsolutions.ca"
       - "homepage.siteMonitor=https://it-tools.home.stechsolutions.ca"
-      - "wud.tag.include=^\\d{4}\\.\\d+\\.\\d+"
+      - "wud.tag.include=^\\d{4}\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.docker.com/r/corentinth/it-tools/tags"
 
 networks:
