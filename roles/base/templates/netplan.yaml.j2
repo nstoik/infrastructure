@@ -5,7 +5,20 @@ network:
     {{ eth.name }}:
       dhcp4: {{ eth.dhcp4 | default(false) | lower }}
       optional: {{ eth.optional | default(true) | lower }}
+{% if eth.match is defined %}
+      match:
+{% if eth.match.macaddress is defined %}
+        macaddress: "{{ eth.match.macaddress }}"
+{% endif %}
+{% if eth.match.driver is defined %}
+        driver: "{{ eth.match.driver }}"
+{% endif %}
+{% endif %}
+{% if eth.set_name is defined %}
+      set-name: "{{ eth.set_name }}"
+{% endif %}
 {% endfor %}
+{% if base_netplan.wifis is defined %}
   wifis:
 {% for wifi in base_netplan.wifis %}
     {{ wifi.name }}:
@@ -17,3 +30,4 @@ network:
           password: "{{ ap.password }}"
 {% endfor %}
 {% endfor %}
+{% endif %}
