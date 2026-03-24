@@ -61,7 +61,8 @@ networks:
 
 **WUD tag regex patterns:**
 - Semver (`v1.2.3` or `1.2.3`): `^v?\\d+\\.\\d+\\.\\d+$`
-- Date-based (`2024.10.22-abc1234`): `^\\d{4}\\.\\d+\\.\\d+$`
+- Date-only (`2024.10.22`): `^\\d{4}\\.\\d+\\.\\d+$`
+- Date+sha (`2024.10.22-abc1234`): `^\\d{4}\\.\\d+\\.\\d+(?:-[0-9a-f]+)?$`
 - Latest-only (no versioned tags): omit `wud.tag.include`, use `wud.watch.digest=true` instead
 
 If the service needs persistent storage, add `volumes:` and a mount under `docker_mounts_subfolders` in `docker.yaml`.
