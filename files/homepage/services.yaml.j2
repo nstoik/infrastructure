@@ -126,7 +126,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage3%2Fmovies%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage3%2Fmovies%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
@@ -135,7 +135,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage3%2Fmovies%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage3%2Fmovies%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
@@ -166,7 +166,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage2%2Ftv%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage2%2Ftv%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
@@ -175,7 +175,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage2%2Ftv%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage2%2Ftv%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
@@ -206,7 +206,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage2%2Fdownloads%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage2%2Fdownloads%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
@@ -215,7 +215,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage2%2Fdownloads%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage2%2Fdownloads%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
@@ -246,7 +246,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage3%2Fmusic%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage3%2Fmusic%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
@@ -255,7 +255,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage3%2Fmusic%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage3%2Fmusic%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
@@ -286,7 +286,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage3%2Faudiobooks%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage3%2Faudiobooks%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
@@ -295,7 +295,7 @@
                   field: data.result.1
                   format: bytes
             - type: customapi
-              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage3%2Faudiobooks%22%7D%5B24h%5D)))
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage3%2Faudiobooks%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
               method: GET
               display: list
               refreshInterval: 300000
