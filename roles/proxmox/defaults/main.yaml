@@ -1,0 +1,7 @@
+---
+# defaults file for proxmox role
+# These can be overridden by inventory group_vars or host_vars.
+
+# Storage used when importing cloud image disks for VM templates.
+# Override per-inventory if the storage name differs from the default.
+proxmox_import_storage: data
