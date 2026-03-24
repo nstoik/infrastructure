@@ -1,0 +1,30 @@
+---
+name: tools
+
+services:
+  it-tools:
+    image: corentinth/it-tools:2024.10.22-7ca5933
+    container_name: it-tools
+    networks:
+      - traefik
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.it-tools.rule=Host(`it-tools.home.stechsolutions.ca`)"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.services.it-tools.loadbalancer.server.port=80"
+      - "traefik.http.routers.it-tools.entrypoints=websecure"
+      - "traefik.http.routers.it-tools.tls.certresolver=letsencrypt"
+      - "homepage.group=Developer Tools"
+      - "homepage.name=IT-Tools"
+      - "homepage.description=IT-Tools"
+      - "homepage.icon=it-tools.png"
+      - "homepage.href=https://it-tools.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://it-tools.home.stechsolutions.ca"
+      - "wud.tag.include=^\\d{4}\\.\\d+\\.\\d+(?:-[0-9a-f]+)?$"
+      - "wud.link.template=https://hub.docker.com/r/corentinth/it-tools/tags"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
