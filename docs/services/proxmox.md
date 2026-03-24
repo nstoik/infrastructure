@@ -20,6 +20,16 @@ The following steps are required to setup a new proxmox host manually.
         - [Example for Proxmox](../../playbooks/proxmox/files/proxmox_interfaces.example) network configuration
         - [Example for PBS](../../playbooks/proxmox/files/pbs_interfaces.example) network configuration
     - Configure the required storage (ZFS pools)
+- If PCI passthrough (NIC or GPU) is required, complete the following steps before running VMs with passthrough devices.
+    - **Enable VT-d (Intel) or AMD-Vi in the server BIOS/UEFI.** This must be done manually — look under Advanced → CPU Configuration. Without this, IOMMU groups will not be created and passthrough will fail even if kernel flags are set. Verify with: `find /sys/kernel/iommu_groups/ -name '*<pci-id>*'`
+    - **Enable IOMMU in GRUB:** edit `/etc/default/grub` and add `intel_iommu=on iommu=pt` (Intel) or `amd_iommu=on iommu=pt` (AMD) to `GRUB_CMDLINE_LINUX_DEFAULT`. Run `update-grub` then reboot.
+    - **Load VFIO modules:** create `/etc/modules-load.d/vfio.conf` with the following contents, then run `modprobe vfio vfio_iommu_type1 vfio_pci` to load them immediately without rebooting.
+        ```
+        vfio
+        vfio_iommu_type1
+        vfio_pci
+        ```
+    - Verify IOMMU is active after reboot: `dmesg | grep -e DMAR -e IOMMU | head -5`
 - After the ansible configuration is run, the following steps are required to complete the setup.
     - For Homepage configuration, on both Proxmox and PBS, create an API token for the `homepage` user.
         - Enter that token into the `vaults/home/vault.yaml` file under the appropriate section.
