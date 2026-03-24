@@ -13,6 +13,8 @@
 #   - base_postfix: dictionary of postfix configuration
 #   - base_timezone: timezone to set
 #   - base_netplan: dictionary of netplan configuration
+#   - base_node_exporter_zfs_collector: boolean to enable ZFS collector for node_exporter
+#   - base_node_exporter_textfile_dir: path for textfile collector (default: /var/lib/prometheus/node-exporter)
 
 
 # Update and upgrade apt packages
@@ -110,6 +112,14 @@
   tags:
     - base
     - base.journald
+
+# Configure node_exporter with ZFS collector when enabled
+- name: Configure prometheus-node-exporter
+  ansible.builtin.include_tasks: setup_node_exporter.yaml
+  when: base_node_exporter_zfs_collector is true
+  tags:
+    - base
+    - base.node_exporter
 
 # set specified systemd services to the specified state and status
 - name: Set specified systemd services to the specified state and status

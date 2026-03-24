@@ -100,3 +100,14 @@ base_journald:
   SystemKeepFree: "500M"
   SystemMaxFileSize: "100M"
   SystemMaxFiles: "20"
+
+# Whether to enable the ZFS collector for prometheus-node-exporter
+base_node_exporter_zfs_collector: false
+
+# Override the default mount-points exclusion for prometheus-node-exporter
+# Default removes /mnt exclusion (to expose ZFS datasets) and adds /export exclusion (to avoid NFS re-export duplicates)
+base_node_exporter_mount_points_exclude: '^/(dev|proc|run|sys|media|export|var/lib/docker/.+|var/lib/containers/storage/.+)($|/)'
+
+# Directory for prometheus-node-exporter textfile collector
+# Scripts write .prom files here; node_exporter reads them
+base_node_exporter_textfile_dir: /var/lib/prometheus/node-exporter

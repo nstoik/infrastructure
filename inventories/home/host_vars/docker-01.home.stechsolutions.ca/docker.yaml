@@ -47,36 +47,36 @@ docker_mounts_subfolders:
 docker_configuration_files:
   # traefik configuration file
   - name: traefik.yaml
-    src: "{{ inventory_dir }}/../files/traefik/traefik-prod-no-file-provider.yaml"
+    src: "{{ inventory_dir }}/../../files/traefik/traefik-prod-no-file-provider.yaml"
     dest: /home/{{ default_user }}/docker_mounts/proxy/traefik/traefik.yaml
     mode: '0664'
     container_name: traefik
   # qbittorrentvpn configuration file
   - name: qbittorrentvpn.conf
-    src: "{{ inventory_dir }}/../files/qbittorrentvpn/wireguard_conf.conf.j2"
+    src: "{{ inventory_dir }}/../../files/qbittorrentvpn/wireguard_conf.conf.j2"
     dest: /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn/wireguard/wg0.conf
     mode: '0775'
     container_name: qbittorrentvpn
   - name: qbit_manage.yml
-    src: "{{ inventory_dir }}/../files/qbittorrentvpn/qbit_manage_config.yml.j2"
+    src: "{{ inventory_dir }}/../../files/qbittorrentvpn/qbit_manage_config.yml.j2"
     dest: /home/{{ default_user }}/docker_mounts/downloader/qbit_manage/config.yml
     mode: '0664'
     container_name: qbit_manage
   # prowlarr configuration file
   - name: prowlarr_config.xml
-    src: "{{ inventory_dir }}/../files/prowlarr/config.xml.j2"
+    src: "{{ inventory_dir }}/../../files/prowlarr/config.xml.j2"
     dest: /home/{{ default_user }}/docker_mounts/downloader/prowlarr/config.xml
     mode: '0664'
     container_name: prowlarr
   # radarr configuration file
   - name: radarr_config.xml
-    src: "{{ inventory_dir }}/../files/radarr/config.xml.j2"
+    src: "{{ inventory_dir }}/../../files/radarr/config.xml.j2"
     dest: /home/{{ default_user }}/docker_mounts/downloader/radarr/config.xml
     mode: '0664'
     container_name: radarr
   # sonarr configuration file
   - name: sonarr_config.xml
-    src: "{{ inventory_dir }}/../files/sonarr/config.xml.j2"
+    src: "{{ inventory_dir }}/../../files/sonarr/config.xml.j2"
     dest: /home/{{ default_user }}/docker_mounts/downloader/sonarr/config.xml
     mode: '0664'
     container_name: sonarr

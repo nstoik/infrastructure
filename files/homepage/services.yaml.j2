@@ -102,3 +102,204 @@
                   # navigate into the series array to get the 'Total' entry
                   field: response.data.series[4].data
                   format: duration
+- Storage:
+    - Movies:
+        description: Movies dataset
+        icon: mdi-filmstrip
+        widgets:
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage3%2Fmovies%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Total Capacity
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage3%2Fmovies%22%7D-node_filesystem_avail_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage3%2Fmovies%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Used
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage3%2Fmovies%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Written (24h)
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage3%2Fmovies%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Read (24h)
+                  field: data.result.1
+                  format: bytes
+    - TV Shows:
+        description: TV shows dataset
+        icon: mdi-television-play
+        widgets:
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage2%2Ftv%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Total Capacity
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage2%2Ftv%22%7D-node_filesystem_avail_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage2%2Ftv%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Used
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage2%2Ftv%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Written (24h)
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage2%2Ftv%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Read (24h)
+                  field: data.result.1
+                  format: bytes
+    - Downloads:
+        description: Downloads dataset
+        icon: mdi-download
+        widgets:
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage2%2Fdownloads%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Total Capacity
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage2%2Fdownloads%22%7D-node_filesystem_avail_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage2%2Fdownloads%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Used
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage2%2Fdownloads%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Written (24h)
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage2%2Fdownloads%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Read (24h)
+                  field: data.result.1
+                  format: bytes
+    - Music:
+        description: Music dataset
+        icon: mdi-music
+        widgets:
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage3%2Fmusic%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Total Capacity
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage3%2Fmusic%22%7D-node_filesystem_avail_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage3%2Fmusic%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Used
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage3%2Fmusic%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Written (24h)
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage3%2Fmusic%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Read (24h)
+                  field: data.result.1
+                  format: bytes
+    - Audiobooks:
+        description: Audiobooks dataset
+        icon: mdi-book-music
+        widgets:
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage3%2Faudiobooks%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Total Capacity
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(node_filesystem_size_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage3%2Faudiobooks%22%7D-node_filesystem_avail_bytes%7Binstance%3D%22storage.home.stechsolutions.ca:9100%22%2Cmountpoint%3D%22%2Fmnt%2Fzfs%2Fstorage3%2Faudiobooks%22%7D)
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Used
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nwritten%7Bdataset%3D%22storage3%2Faudiobooks%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Written (24h)
+                  field: data.result.1
+                  format: bytes
+            - type: customapi
+              url: https://prometheus.home.stechsolutions.ca/api/v1/query?query=scalar(round(increase(node_zfs_zpool_dataset_nread%7Bdataset%3D%22storage3%2Faudiobooks%22%2Cinstance%3D%22storage.home.stechsolutions.ca:9100%22%7D%5B24h%5D)))
+              method: GET
+              display: list
+              refreshInterval: 300000
+              mappings:
+                - label: Read (24h)
+                  field: data.result.1
+                  format: bytes

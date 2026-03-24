@@ -1,0 +1,117 @@
+#!/bin/bash
+# Managed by Ansible - do not edit manually
+# zpool_metrics.sh - Collect ZFS pool metrics for Prometheus textfile collector
+
+set -uo pipefail
+
+OUTPUT_FILE="{{ base_node_exporter_textfile_dir }}/zpool.prom"
+TEMP_FILE=$(mktemp "{{ base_node_exporter_textfile_dir }}/zpool.prom.XXXXXX")
+
+trap 'rm -f "${TEMP_FILE}"' EXIT
+
+# Check if ZFS is available
+if ! command -v zpool &>/dev/null; then
+    exit 0
+fi
+
+{
+printf '# HELP zpool_size_bytes ZFS pool total size in bytes\n'
+printf '# TYPE zpool_size_bytes gauge\n'
+printf '# HELP zpool_allocated_bytes ZFS pool allocated space in bytes\n'
+printf '# TYPE zpool_allocated_bytes gauge\n'
+printf '# HELP zpool_free_bytes ZFS pool free space in bytes\n'
+printf '# TYPE zpool_free_bytes gauge\n'
+printf '# HELP zpool_fragmentation_percent ZFS pool fragmentation percentage\n'
+printf '# TYPE zpool_fragmentation_percent gauge\n'
+printf '# HELP zpool_capacity_percent ZFS pool capacity usage percentage\n'
+printf '# TYPE zpool_capacity_percent gauge\n'
+printf '# HELP zpool_health ZFS pool health (0=online, 1=degraded, 2=faulted, 3=offline, 4=unavail, 5=removed)\n'
+printf '# TYPE zpool_health gauge\n'
+
+# zpool list -Hp: -H = no headers/tab-separated, -p = parseable (bytes, integers)
+# Fields: name, size, alloc, free, ckpoint, expandsz, frag, cap, dedup, health, altroot
+while IFS=$'\t' read -r name size alloc free _ckpoint _expandsz frag cap _dedup health _altroot; do
+    # Strip percent signs if present (some ZFS versions include them with -p)
+    frag="${frag//%/}"
+    cap="${cap//%/}"
+
+    printf 'zpool_size_bytes{pool="%s"} %s\n' "${name}" "${size}"
+    printf 'zpool_allocated_bytes{pool="%s"} %s\n' "${name}" "${alloc}"
+    printf 'zpool_free_bytes{pool="%s"} %s\n' "${name}" "${free}"
+    printf 'zpool_fragmentation_percent{pool="%s"} %s\n' "${name}" "${frag}"
+    printf 'zpool_capacity_percent{pool="%s"} %s\n' "${name}" "${cap}"
+
+    case "${health}" in
+        ONLINE)   health_val=0 ;;
+        DEGRADED) health_val=1 ;;
+        FAULTED)  health_val=2 ;;
+        OFFLINE)  health_val=3 ;;
+        UNAVAIL)  health_val=4 ;;
+        REMOVED)  health_val=5 ;;
+        *)        health_val=-1 ;;
+    esac
+    health_lower=$(echo "${health}" | tr '[:upper:]' '[:lower:]')
+    printf 'zpool_health{pool="%s",state="%s"} %s\n' "${name}" "${health_lower}" "${health_val}"
+done < <(zpool list -Hp 2>/dev/null)
+
+# Per-pool scrub age and vdev error metrics from zpool status -p
+printf '# HELP zpool_scrub_age_seconds Seconds since last completed ZFS scrub (-1 if never scrubbed)\n'
+printf '# TYPE zpool_scrub_age_seconds gauge\n'
+printf '# HELP zpool_scrub_errors Errors found in the last completed ZFS scrub\n'
+printf '# TYPE zpool_scrub_errors gauge\n'
+printf '# HELP zpool_read_errors Aggregate read errors on ZFS pool vdevs\n'
+printf '# TYPE zpool_read_errors gauge\n'
+printf '# HELP zpool_write_errors Aggregate write errors on ZFS pool vdevs\n'
+printf '# TYPE zpool_write_errors gauge\n'
+printf '# HELP zpool_checksum_errors Aggregate checksum errors on ZFS pool vdevs\n'
+printf '# TYPE zpool_checksum_errors gauge\n'
+
+while IFS= read -r pool_name; do
+    status_output=$(zpool status -p "${pool_name}" 2>/dev/null)
+
+    # Parse scrub completion time and error count from scan line
+    # Example: "  scan: scrub repaired 0B in 00:10:23 with 0 errors on Sun Mar 10 04:07:27 2026"
+    scrub_age=-1
+    scrub_errors=0
+    scan_line=$(grep -m1 'scan:' <<< "${status_output}" || true)
+    if [[ "${scan_line}" =~ scrub\ repaired.*on[[:space:]](.+)$ ]]; then
+        scrub_date="${BASH_REMATCH[1]}"
+        scrub_epoch=$(date -d "${scrub_date}" +%s 2>/dev/null || true)
+        if [[ -n "${scrub_epoch}" ]]; then
+            now_epoch=$(date +%s)
+            scrub_age=$(( now_epoch - scrub_epoch ))
+        fi
+        if [[ "${scan_line}" =~ with[[:space:]]([0-9]+)[[:space:]]errors ]]; then
+            scrub_errors="${BASH_REMATCH[1]}"
+        fi
+    fi
+    printf 'zpool_scrub_age_seconds{pool="%s"} %s\n' "${pool_name}" "${scrub_age}"
+    printf 'zpool_scrub_errors{pool="%s"} %s\n' "${pool_name}" "${scrub_errors}"
+
+    # Parse pool-level vdev error counts from config section
+    # The line immediately after "NAME   STATE   READ WRITE CKSUM" is the pool aggregate
+    read_errors=0
+    write_errors=0
+    cksum_errors=0
+    header_seen=0
+    while IFS= read -r line; do
+        if [[ "${line}" =~ NAME[[:space:]]+STATE[[:space:]]+READ ]]; then
+            header_seen=1
+            continue
+        fi
+        if [[ "${header_seen}" -eq 1 && -n "${line//[[:space:]]/}" ]]; then
+            read_errors=$(awk '{print $3}' <<< "${line}")
+            write_errors=$(awk '{print $4}' <<< "${line}")
+            cksum_errors=$(awk '{print $5}' <<< "${line}")
+            break
+        fi
+    done <<< "${status_output}"
+    printf 'zpool_read_errors{pool="%s"} %s\n' "${pool_name}" "${read_errors}"
+    printf 'zpool_write_errors{pool="%s"} %s\n' "${pool_name}" "${write_errors}"
+    printf 'zpool_checksum_errors{pool="%s"} %s\n' "${pool_name}" "${cksum_errors}"
+
+done < <(zpool list -H -o name 2>/dev/null)
+} > "${TEMP_FILE}"
+
+chmod 0644 "${TEMP_FILE}"
+mv "${TEMP_FILE}" "${OUTPUT_FILE}"

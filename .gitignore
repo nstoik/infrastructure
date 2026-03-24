@@ -8,3 +8,5 @@ vault_pass.txt
 vault_pass_*.txt
 
 .ansible/.lock
+
+.claude/settings.local.json

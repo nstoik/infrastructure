@@ -1,0 +1,124 @@
+---
+# yamllint disable rule:line-length
+
+groups:
+  - name: Storage Alerts
+    rules:
+      # Filesystem alerts (covers ext4 and other mounted filesystems)
+      # ZFS datasets are excluded here — ZFS pool alerts below cover that case
+      - alert: HostFilesystemHighUsage
+        expr: (1 - node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|zfs"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|zfs"}) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Filesystem over 85% full (instance {{ $labels.instance }})"
+          description: "Filesystem {{ $labels.mountpoint }} ({{ $labels.fstype }}) on {{ $labels.instance }} is {{ $value | humanize }}% full\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      # Note: critical threshold (>90% / <10% free) is covered by HostOutOfDiskSpace (severity: critical) in node_alerts.yaml
+
+      - alert: HostFilesystemReadOnly
+        expr: node_filesystem_readonly{fstype!~"tmpfs|overlay|squashfs|ramfs",mountpoint!~".+/.zfs/snapshot/.+"} == 1
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Filesystem is read-only (instance {{ $labels.instance }})"
+          description: "Filesystem {{ $labels.mountpoint }} on {{ $labels.instance }} is read-only. This may indicate a disk error.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      # ZFS pool alerts — uses zpool_* metrics from textfile collector (zpool_metrics.sh)
+      - alert: ZfsPoolDegraded
+        expr: node_zfs_zpool_state{state!="online"} == 1
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ZFS pool degraded (instance {{ $labels.instance }})"
+          description: "ZFS pool {{ $labels.zpool }} on {{ $labels.instance }} is in state {{ $labels.state }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: ZfsPoolHighUsage
+        expr: zpool_capacity_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "ZFS pool over 85% full (instance {{ $labels.instance }})"
+          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} is {{ $value | humanize }}% full\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: ZfsPoolCriticalUsage
+        expr: zpool_capacity_percent > 95
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ZFS pool over 95% full (instance {{ $labels.instance }})"
+          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} is {{ $value | humanize }}% full\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      # ZFS snapshot alerts — uses zfs_snapshot_type_age_seconds from textfile collector (zfs_snapshot_metrics.sh)
+      # Only fires on hosts running the fileserver role (where sanoid manages snapshots)
+      - alert: ZfsSnapshotHourlyMissed
+        expr: zfs_snapshot_type_age_seconds{type="hourly"} > 7200
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "ZFS hourly snapshot overdue (instance {{ $labels.instance }})"
+          description: "Dataset {{ $labels.dataset }} on {{ $labels.instance }} has not had an hourly snapshot in {{ $value | humanizeDuration }}. Expected every hour.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: ZfsSnapshotDailyMissed
+        expr: zfs_snapshot_type_age_seconds{type="daily"} > 93600
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ZFS daily snapshot overdue (instance {{ $labels.instance }})"
+          description: "Dataset {{ $labels.dataset }} on {{ $labels.instance }} has not had a daily snapshot in {{ $value | humanizeDuration }}. Expected every 24 hours.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      # ZFS encryption key alert — uses zfs_dataset_key_available from textfile collector (zfs_key_metrics.sh)
+      # Only fires on hosts running the fileserver role (where encrypted datasets may exist)
+      - alert: ZfsDatasetKeyUnavailable
+        expr: zfs_dataset_key_available == 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ZFS dataset encryption key not loaded (instance {{ $labels.instance }})"
+          description: "Encrypted dataset {{ $labels.dataset }} on {{ $labels.instance }} has no key loaded — the dataset is locked and inaccessible. Load the key with 'zfs load-key {{ $labels.dataset }}'.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      # ZFS predictive fill alert — uses zpool_free_bytes from textfile collector (zpool_metrics.sh)
+      - alert: ZfsPoolWillFillIn24Hours
+        expr: predict_linear(zpool_free_bytes[6h], 24 * 3600) < 0
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "ZFS pool predicted to fill in 24h (instance {{ $labels.instance }})"
+          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} is on track to run out of space within 24 hours at the current write rate.\n  LABELS = {{ $labels }}"
+
+      # ZFS scrub and vdev error alerts — uses zpool_scrub_age_seconds/zpool_*_errors from textfile collector (zpool_metrics.sh)
+      - alert: ZfsPoolScrubOverdue
+        expr: (zpool_scrub_age_seconds > 2592000) or (zpool_scrub_age_seconds == -1)
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "ZFS pool scrub overdue (instance {{ $labels.instance }})"
+          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} has not been scrubbed in over 30 days (or never). Run 'zpool scrub {{ $labels.pool }}'.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: ZfsPoolChecksumErrors
+        expr: zpool_checksum_errors > 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "ZFS pool checksum errors detected (instance {{ $labels.instance }})"
+          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} has {{ $value }} checksum error(s). May indicate failing hardware.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: ZfsPoolReadWriteErrors
+        expr: (zpool_read_errors + zpool_write_errors) > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ZFS pool read/write errors detected (instance {{ $labels.instance }})"
+          description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} has I/O errors (total={{ $value }}). Investigate hardware immediately.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

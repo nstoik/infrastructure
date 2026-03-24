@@ -1,0 +1,87 @@
+#!/bin/bash
+# Managed by Ansible - do not edit manually
+# zfs_snapshot_metrics.sh - Collect ZFS snapshot metrics for Prometheus textfile collector
+# Tracks snapshot counts and ages per dataset and snapshot type (sanoid/syncoid)
+
+set -uo pipefail
+
+OUTPUT_FILE="{{ base_node_exporter_textfile_dir }}/zfs_snapshots.prom"
+TEMP_FILE=$(mktemp "{{ base_node_exporter_textfile_dir }}/zfs_snapshots.prom.XXXXXX")
+NOW=$(date +%s)
+
+trap 'rm -f "${TEMP_FILE}"' EXIT
+
+# Check if ZFS is available
+if ! command -v zfs &>/dev/null; then
+    exit 0
+fi
+
+declare -A snap_count
+declare -A snap_latest
+declare -A snap_count_by_type
+declare -A snap_latest_by_type
+
+# zfs list -t snapshot -H -p -o name,creation
+# -H: no headers, tab-separated
+# -p: parseable (creation as unix timestamp)
+while IFS=$'\t' read -r snap_name creation; do
+    # Extract dataset name (everything before @)
+    dataset="${snap_name%@*}"
+    # Extract snapshot label (everything after @)
+    snap_label="${snap_name#*@}"
+
+    # Overall count and latest per dataset
+    snap_count["${dataset}"]=$(( ${snap_count["${dataset}"]:-0} + 1 ))
+    if [[ -z "${snap_latest[${dataset}]+x}" ]] || [[ "${creation}" -gt "${snap_latest[${dataset}]}" ]]; then
+        snap_latest["${dataset}"]="${creation}"
+    fi
+
+    # Extract snapshot type from snapshot name:
+    # - sanoid: autosnap_2026-03-22_00:00:00_hourly -> hourly
+    # - syncoid: syncoid_pbs_... -> syncoid
+    # - other: anything else -> other
+    if [[ "${snap_label}" =~ ^syncoid_ ]]; then
+        snap_type="syncoid"
+    elif [[ "${snap_label}" =~ _([a-z]+)$ ]]; then
+        snap_type="${BASH_REMATCH[1]}"
+    else
+        snap_type="other"
+    fi
+
+    key="${dataset}|${snap_type}"
+    snap_count_by_type["${key}"]=$(( ${snap_count_by_type["${key}"]:-0} + 1 ))
+    if [[ -z "${snap_latest_by_type[${key}]+x}" ]] || [[ "${creation}" -gt "${snap_latest_by_type[${key}]}" ]]; then
+        snap_latest_by_type["${key}"]="${creation}"
+    fi
+done < <(zfs list -t snapshot -H -p -o name,creation 2>/dev/null)
+
+{
+printf '# HELP zfs_snapshot_count Number of ZFS snapshots per dataset\n'
+printf '# TYPE zfs_snapshot_count gauge\n'
+printf '# HELP zfs_snapshot_latest_timestamp_seconds Unix timestamp of the most recent snapshot\n'
+printf '# TYPE zfs_snapshot_latest_timestamp_seconds gauge\n'
+printf '# HELP zfs_snapshot_age_seconds Age of the most recent snapshot in seconds\n'
+printf '# TYPE zfs_snapshot_age_seconds gauge\n'
+printf '# HELP zfs_snapshot_type_count Number of ZFS snapshots per dataset per type\n'
+printf '# TYPE zfs_snapshot_type_count gauge\n'
+printf '# HELP zfs_snapshot_type_age_seconds Age of the most recent snapshot per dataset per type\n'
+printf '# TYPE zfs_snapshot_type_age_seconds gauge\n'
+
+for dataset in "${!snap_count[@]}"; do
+    age=$(( NOW - snap_latest["${dataset}"] ))
+    printf 'zfs_snapshot_count{dataset="%s"} %s\n' "${dataset}" "${snap_count[${dataset}]}"
+    printf 'zfs_snapshot_latest_timestamp_seconds{dataset="%s"} %s\n' "${dataset}" "${snap_latest[${dataset}]}"
+    printf 'zfs_snapshot_age_seconds{dataset="%s"} %s\n' "${dataset}" "${age}"
+done
+
+for key in "${!snap_count_by_type[@]}"; do
+    dataset="${key%|*}"
+    snap_type="${key#*|}"
+    age=$(( NOW - snap_latest_by_type["${key}"] ))
+    printf 'zfs_snapshot_type_count{dataset="%s",type="%s"} %s\n' "${dataset}" "${snap_type}" "${snap_count_by_type[${key}]}"
+    printf 'zfs_snapshot_type_age_seconds{dataset="%s",type="%s"} %s\n' "${dataset}" "${snap_type}" "${age}"
+done
+} > "${TEMP_FILE}"
+
+chmod 0644 "${TEMP_FILE}"
+mv "${TEMP_FILE}" "${OUTPUT_FILE}"

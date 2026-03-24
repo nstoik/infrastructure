@@ -1,0 +1,75 @@
+---
+# Configure prometheus-node-exporter options
+
+- name: Configure prometheus-node-exporter defaults
+  ansible.builtin.template:
+    src: node_exporter_defaults.j2
+    dest: /etc/default/prometheus-node-exporter
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Restart prometheus-node-exporter
+  tags:
+    - base
+    - base.node_exporter
+
+- name: Create textfile collector directory
+  ansible.builtin.file:
+    path: "{{ base_node_exporter_textfile_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+  tags:
+    - base
+    - base.node_exporter
+
+- name: Deploy zpool metrics script
+  ansible.builtin.template:
+    src: zpool_metrics.sh.j2
+    dest: /usr/local/bin/zpool_metrics.sh
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+  tags:
+    - base
+    - base.node_exporter
+
+- name: Deploy ZFS pool metrics systemd service
+  ansible.builtin.template:
+    src: zfs_metrics.service.j2
+    dest: /etc/systemd/system/zfs-metrics.service
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  tags:
+    - base
+    - base.node_exporter
+
+- name: Deploy ZFS pool metrics systemd timer
+  ansible.builtin.template:
+    src: zfs_metrics.timer.j2
+    dest: /etc/systemd/system/zfs-metrics.timer
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  tags:
+    - base
+    - base.node_exporter
+
+- name: Enable and start ZFS pool metrics timer
+  ansible.builtin.systemd:
+    name: zfs-metrics.timer
+    state: started
+    enabled: true
+    daemon_reload: true
+  become: true
+  ignore_errors: "{{ ansible_check_mode }}"
+  tags:
+    - base
+    - base.node_exporter

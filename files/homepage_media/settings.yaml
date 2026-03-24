@@ -37,3 +37,5 @@ layout:
     style: column
   Status:
     style: column
+  Storage:
+    style: column

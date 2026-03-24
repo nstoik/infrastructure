@@ -1,0 +1,10 @@
+# Managed by Ansible - do not edit manually
+[Unit]
+Description=ZFS Metrics Collector for Prometheus Textfile Collector
+After=zfs.target
+Wants=zfs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/zpool_metrics.sh
+User=root

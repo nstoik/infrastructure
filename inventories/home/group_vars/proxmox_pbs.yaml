@@ -38,6 +38,9 @@ security_ssh_allowed_users:
   - "{{ default_user }}"
   - "root"
 
+# Enable ZFS collector for prometheus-node-exporter on PBS
+base_node_exporter_zfs_collector: true
+
 # Whether to install the Scrutiny collector on the pbs nodes
 scrutiny_collector_install: true
 
