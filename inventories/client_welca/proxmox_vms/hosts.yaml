@@ -1,37 +1,48 @@
 ---
 # Hosts that are proxmox VMs and their configuration
 #
-# Before running proxmox_vms_add.yaml, find the disk IDs on the Proxmox host:
-#   ls -la /dev/disk/by-id/ | grep -v part
-# Then replace the placeholder values in passthrough_disks below.
+# Before running proxmox_vms_add.yaml:
+#   1. Find the NIC PCI ID on the Proxmox host:
+#      ethtool -i enp2s0 | grep bus-info
+#   2. Find the disk IDs on the Proxmox host:
+#      ls -la /dev/disk/by-id/ | grep -v part
+# Then replace the placeholder values below.
 
 all:
   children:
     proxmox_vms:
       hosts:
         video.internal.welca.ca:
+          base_docker_install: true
+          base_docker_config: true
           network:
-            ip: "dhcp"  # TODO: set actual IP once known
+            ip: "10.150.1.6"
+            gateway: "10.150.1.1"
           proxmox_vm:
             proxmox_node: "{{ groups['proxmox_nodes'][0] }}"
             template_id: 9001  # ubuntu-24.04-server-cloudimg
             state: "present"
-            id: 100  # TODO: choose a VM ID that doesn't conflict with existing VMs
+            id: 100
             name: "{{ inventory_hostname.split('.')[0] }}"
             name_fqdn: "{{ inventory_hostname }}"
             start_onboot: true
             disk_size: "32G"
             net0: "virtio,bridge=vmbr0"
-            ipconfig0: "ip=dhcp"  # TODO: set static IP if desired, e.g. ip=10.150.1.10/24,gw=10.150.1.1
+            ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 4
             memory: 4096
             balloon: 1024
-            # Passthrough disks — the two 3TB drives for video storage.
+            # NIC passthrough — enp2s0 on the Proxmox host.
+            # Find PCI ID with: ethtool -i enp2s0 | grep bus-info
+            pci_devices:
+              - id: "0000:02:00.0"  # Intel I210 (nic0 on PVE host)
+                pci_number: 1
+            # Passthrough disks — the two 3TB drives for ZFS mirror.
             # Use wwn- or ata- IDs (not partitions) for stable passthrough.
             passthrough_disks:
               - scsi: "scsi1"
-                device: "/dev/disk/by-id/REPLACE_WITH_DISK1_ID"
+                device: "/dev/disk/by-id/ata-WDC_WD30PURX-64P6ZY0_WD-WCC4N3ZX7SJ4"
                 backup: 0
               - scsi: "scsi2"
-                device: "/dev/disk/by-id/REPLACE_WITH_DISK2_ID"
+                device: "/dev/disk/by-id/ata-WDC_WD30PURX-64P6ZY0_WD-WCC4N5AK0HSZ"
                 backup: 0

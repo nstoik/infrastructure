@@ -2,4 +2,36 @@
 # Host variables for video.internal.welca.ca
 # VM provisioning config lives in proxmox_vms/hosts.yaml
 
-ansible_host: video.internal.welca.ca  # TODO: set actual IP once known
+ansible_host: 10.150.1.6
+
+# ZFS mirror pool using the two 3TB passthrough disks.
+# Two 3TB WD Purple drives passed through from the Proxmox host.
+sanoid_setup: true
+
+sanoid_datasets:
+  - name: video/config
+    template: production
+
+fileserver_setup: true
+fileserver_setup_zfs: true
+
+fileserver_zfs_pools:
+  - pool_name: video
+    mount_point: none
+    vdevs:
+      - raid_type: mirror
+        disks:
+          - name: ata-WDC_WD30PURX-64P6ZY0_WD-WCC4N3ZX7SJ4
+          - name: ata-WDC_WD30PURX-64P6ZY0_WD-WCC4N5AK0HSZ
+    datasets:
+      - name: video/recordings
+        mount_point: /mnt/zfs/video/recordings
+        quota: 2T
+        canmount: "on"
+        encryption: false
+        recordsize: 1M  # optimised for large sequential video writes
+      - name: video/config
+        mount_point: /mnt/zfs/video/config
+        quota: 100G
+        canmount: "on"
+        encryption: false
