@@ -109,8 +109,8 @@ docker_mounts_subfolders:
     mode: '0775'
     container_name: scrutiny
   # stirling-pdf docker mounts
-  - name: tools_stirling_pdf_configs
-    dest: /home/{{ default_user }}/docker_mounts/tools/stirling-pdf/configs
+  - name: files_stirling_pdf_configs
+    dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/configs
     mode: '0775'
     container_name: stirling-pdf
 

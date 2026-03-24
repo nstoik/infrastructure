@@ -30,7 +30,7 @@ services:
     networks:
       - traefik
     volumes:
-      - /home/{{ default_user }}/docker_mounts/tools/stirling-pdf/configs:/configs
+      - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/configs:/configs
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
