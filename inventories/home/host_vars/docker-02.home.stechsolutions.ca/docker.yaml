@@ -108,6 +108,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/scrutiny
     mode: '0775'
     container_name: scrutiny
+  # stirling-pdf docker mounts
+  - name: tools_stirling_pdf_configs
+    dest: /home/{{ default_user }}/docker_mounts/tools/stirling-pdf/configs
+    mode: '0775'
+    container_name: stirling-pdf
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-02.home.stechsolutions.ca/docker_compose"
 

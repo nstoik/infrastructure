@@ -24,6 +24,30 @@ services:
       - "wud.tag.include=^\\d{4}\\.\\d+\\.\\d+(?:-[0-9a-f]+)?$"
       - "wud.link.template=https://hub.docker.com/r/corentinth/it-tools/tags"
 
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:2.7.3
+    container_name: stirling-pdf
+    networks:
+      - traefik
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/tools/stirling-pdf/configs:/configs
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.stirling-pdf.rule=Host(`stirling-pdf.home.stechsolutions.ca`)"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.services.stirling-pdf.loadbalancer.server.port=8080"
+      - "traefik.http.routers.stirling-pdf.entrypoints=websecure"
+      - "traefik.http.routers.stirling-pdf.tls.certresolver=letsencrypt"
+      - "homepage.group=Files"
+      - "homepage.name=Stirling PDF"
+      - "homepage.description=PDF manipulation tool"
+      - "homepage.icon=stirling-pdf.png"
+      - "homepage.href=https://stirling-pdf.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://stirling-pdf.home.stechsolutions.ca"
+      - "wud.tag.include=^\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://hub.docker.com/r/stirlingtools/stirling-pdf/tags"
+
 networks:
   traefik:
     name: traefik
