@@ -27,14 +27,22 @@ services:
       - "wud.link.template=https://hub.docker.com/r/machines/filestash/tags"
 
   stirling-pdf:
-    image: stirlingtools/stirling-pdf:2.7.3
+    image: stirlingtools/stirling-pdf:2.8.0
     container_name: stirling-pdf
     networks:
       - traefik
     environment:
-      - SECURITY_ENABLE_LOGIN=false
+      - SECURITY_ENABLELOGIN=false
+      - LANGS=en_US
+      - SYSTEM_DEFAULTLOCALE=en-US
+      - SYSTEM_GOOGLEVISIBILITY=false
+      - SYSTEM_MAXFILESIZE=2000
     volumes:
+      - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/tessdata:/usr/share/tessdata
       - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/configs:/configs
+      - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/logs:/logs
+      - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/customFiles:/customFiles
+      - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/pipeline:/pipeline
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
