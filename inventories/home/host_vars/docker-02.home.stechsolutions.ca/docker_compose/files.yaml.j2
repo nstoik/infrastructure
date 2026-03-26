@@ -31,6 +31,8 @@ services:
     container_name: stirling-pdf
     networks:
       - traefik
+    environment:
+      - SECURITY_ENABLE_LOGIN=false
     volumes:
       - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/configs:/configs
     restart: unless-stopped
