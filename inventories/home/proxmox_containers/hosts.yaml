@@ -8,7 +8,6 @@ all:
         pihole-1.home.stechsolutions.ca:
           base_dotfiles:
             install: true
-            dotbot_skip_ssh_authorized_file: false
           network:
             ip: "10.10.1.11"
             gateway: "10.10.1.1"
@@ -30,7 +29,6 @@ all:
         pihole-2.home.stechsolutions.ca:
           base_dotfiles:
             install: true
-            dotbot_skip_ssh_authorized_file: false
           network:
             ip: "10.10.5.11"
             gateway: "10.10.5.1"

@@ -59,7 +59,7 @@ base_dotfiles_repo: https://github.com/nstoik/dotfiles
 
 base_dotfiles:
   install: false
-  dotbot_skip_ssh_authorized_file: false
+  profile: server
 
 # variables for docker
 # whether to install docker or not

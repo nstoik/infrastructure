@@ -20,7 +20,6 @@ base_user_run_setup: false
 
 base_dotfiles:
   install: true
-  dotbot_skip_ssh_authorized_file: false
 
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
