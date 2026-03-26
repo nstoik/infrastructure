@@ -71,7 +71,7 @@ If the service needs persistent storage, add `volumes:` and a mount under `docke
 
 ## Step 3a: Check existing disk mounts (if persistent storage is needed)
 
-**File:** `inventories/home/host_vars/<docker-host>/fileserver.yaml`
+**File:** `inventories/home/host_vars/<docker-host>.home.stechsolutions.ca/fileserver.yaml`
 
 On Proxmox VM docker hosts, each `docker_mounts/<name>` top-level directory is a **separate virtual disk** mounted at that path. Adding a subfolder under a non-existent mount point will silently place data on the root filesystem instead.
 
