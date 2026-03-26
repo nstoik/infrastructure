@@ -108,6 +108,27 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/scrutiny
     mode: '0775'
     container_name: scrutiny
+  # stirling-pdf docker mounts
+  - name: files_stirling_pdf_tessdata
+    dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/tessdata
+    mode: '0775'
+    container_name: stirling-pdf
+  - name: files_stirling_pdf_configs
+    dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/configs
+    mode: '0775'
+    container_name: stirling-pdf
+  - name: files_stirling_pdf_logs
+    dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/logs
+    mode: '0775'
+    container_name: stirling-pdf
+  - name: files_stirling_pdf_customfiles
+    dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/customFiles
+    mode: '0775'
+    container_name: stirling-pdf
+  - name: files_stirling_pdf_pipeline
+    dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/pipeline
+    mode: '0775'
+    container_name: stirling-pdf
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-02.home.stechsolutions.ca/docker_compose"
 

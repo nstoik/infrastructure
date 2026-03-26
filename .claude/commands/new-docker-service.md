@@ -65,15 +65,37 @@ networks:
 - Date+sha (`2024.10.22-abc1234`): `^\\d{4}\\.\\d+\\.\\d+(?:-[0-9a-f]+)?$`
 - Latest-only (no versioned tags): omit `wud.tag.include`, use `wud.watch.digest=true` instead
 
-If the service needs persistent storage, add `volumes:` and a mount under `docker_mounts_subfolders` in `docker.yaml`.
+If the service needs persistent storage, add `volumes:` and a mount under `docker_mounts_subfolders` in `docker.yaml`. **Before choosing the volume path, read `fileserver.yaml` to check which disk mounts already exist** — see Step 3a.
 
 ---
 
-## Step 3: Register the compose file
+## Step 3a: Check existing disk mounts (if persistent storage is needed)
+
+**File:** `inventories/home/host_vars/<docker-host>.home.stechsolutions.ca/fileserver.yaml`
+
+On Proxmox VM docker hosts, each `docker_mounts/<name>` top-level directory is a **separate virtual disk** mounted at that path. Adding a subfolder under a non-existent mount point will silently place data on the root filesystem instead.
+
+Read `fileserver.yaml` and check `fileserver_attached_disks` for existing mount points. For docker-02, the current mounts are:
+
+| Path | Size |
+|---|---|
+| `docker_mounts/proxy` | 10 GB |
+| `docker_mounts/tdarr` | 10 GB |
+| `docker_mounts/vehicle` | 5 GB |
+| `docker_mounts/monitoring` | 10 GB |
+| `docker_mounts/files` | 5 GB |
+
+**Choose a path under an existing mount** that fits the service's function (e.g. a file tool → `docker_mounts/files/<service>/data`). If no existing mount is appropriate, a new virtual disk must be added to the VM in Proxmox and a new entry added to `fileserver_attached_disks` — flag this to the user before proceeding.
+
+Also consider whether the new service belongs in an **existing compose stack** rather than a new one. If it shares a disk mount and homepage group with an existing stack, add it to that stack's `.yaml.j2` file instead of creating a new one (and skip adding a new entry to `docker_compose_files`).
+
+---
+
+## Step 3b: Register the compose file
 
 **File:** `inventories/home/host_vars/<docker-host>.home.stechsolutions.ca/docker.yaml`
 
-Add to the `docker_compose_files` list:
+If creating a new compose stack, add to the `docker_compose_files` list:
 
 ```yaml
   - name: <service>-docker-compose.yaml
@@ -84,11 +106,11 @@ Add to the `docker_compose_files` list:
     mode: '0664'
 ```
 
-If the service needs persistent storage, also add to `docker_mounts_subfolders`:
+If the service needs persistent storage, also add to `docker_mounts_subfolders` using a path under an existing disk mount:
 
 ```yaml
   - name: <service>_data
-    dest: /home/{{ default_user }}/docker_mounts/<service>/data
+    dest: /home/{{ default_user }}/docker_mounts/<existing-mount>/<service>/data
     mode: '0775'
     container_name: <container-name>
 ```
