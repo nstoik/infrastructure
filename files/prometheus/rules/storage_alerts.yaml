@@ -66,7 +66,7 @@ groups:
           description: "Dataset {{ $labels.dataset }} on {{ $labels.instance }} has not had an hourly snapshot in {{ $value | humanizeDuration }}. Expected every hour.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
       - alert: ZfsSnapshotDailyMissed
-        expr: zfs_snapshot_type_age_seconds{type="daily"} > 93600
+        expr: zfs_snapshot_type_age_seconds{type="daily"} > 100800
         for: 5m
         labels:
           severity: critical

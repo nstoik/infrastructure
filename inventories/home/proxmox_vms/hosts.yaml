@@ -13,7 +13,6 @@ all:
           base_docker_install: false
           base_dotfiles:
             install: true
-            dotbot_skip_ssh_authorized_file: false
           base_postfix:
             install: true
             relayhost: "{{ smtp_host }}:{{ smtp_port }}"
@@ -81,7 +80,6 @@ all:
           base_docker_install: false
           base_dotfiles:
             install: true
-            dotbot_skip_ssh_authorized_file: false
           network:
             ip: "10.10.5.28"
             gateway: "10.10.5.1"

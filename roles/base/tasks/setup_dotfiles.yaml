@@ -4,7 +4,7 @@
 # inputs:
 #  - base_dotfiles: dictionary of dotfiles configuration
 #    - install: boolean to install dotfiles
-#    - dotbot_skip_ssh_authorized_file: boolean to skip ssh authorized file
+#    - profile: dotbot profile to install (default: server)
 
 # block for base dotfiles tasks
 - name: Block for base dotfiles tasks
@@ -47,42 +47,21 @@
         line: "filemode = false"
         state: present
 
-    # set the executable bit on the install scripts
-    - name: Make the install scripts executable
+    # set the executable bit on the install script
+    - name: Make the install script executable
       ansible.builtin.file:
-        path: "{{ base_dotfiles_dir }}/{{ item }}"
+        path: "{{ base_dotfiles_dir }}/install-profile"
         mode: "0700"
-      loop:
-        - install-profile
-        - install-standalone
 
-    # run the install script with no overrides if
-    # dotbot_skip_ssh_authorized_file is false
-    - name: Run the install script with no overrides
-      ansible.builtin.command: "{{ base_dotfiles_dir }}/install-profile workstation"  # yamllint disable-line rule:line-length
+    - name: "Run the install script with profile: {{ profile }}"
+      vars:
+        profile: "{{ base_dotfiles.profile | default('server') }}"
+      ansible.builtin.command: "{{ base_dotfiles_dir }}/install-profile {{ profile }}"
       args:
         chdir: "{{ base_dotfiles_dir }}"
       register: base_dotfiles_install_result
       changed_when: "'Creating link' in base_dotfiles_install_result.stdout"
       failed_when: base_dotfiles_install_result.rc != 0
-      when:
-        base_dotfiles['dotbot_skip_ssh_authorized_file'] is false
-      become: true
-      become_user: "{{ default_user }}"
-
-    # run the install script with override if
-    # dotbot_skip_ssh_authorized_file is true
-    - name: Run the install script with override
-      ansible.builtin.shell: >
-        DOTBOT_SKIP_SSH_AUTHORIZED_FILE=1
-        {{ base_dotfiles_dir }}/install-profile workstation
-      args:
-        chdir: "{{ base_dotfiles_dir }}"
-      register: base_dotfiles_install_result
-      changed_when: "'Creating link' in base_dotfiles_install_result.stdout"
-      failed_when: base_dotfiles_install_result.rc != 0
-      when:
-        base_dotfiles['dotbot_skip_ssh_authorized_file'] is true
       become: true
       become_user: "{{ default_user }}"
 
