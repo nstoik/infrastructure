@@ -69,6 +69,15 @@ scrape_configs:
     tls_config:
       insecure_skip_verify: true
 
+  - job_name: 'flaresolverr'
+    static_configs:
+      - targets:
+          - 'docker-01.home.stechsolutions.ca'
+    scheme: https
+    metrics_path: '/flaresolverrmetrics'
+    tls_config:
+      insecure_skip_verify: true
+
   - job_name: 'traefik'
     static_configs:
       - targets:

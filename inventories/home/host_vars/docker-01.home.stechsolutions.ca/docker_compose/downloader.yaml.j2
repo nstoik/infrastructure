@@ -98,16 +98,28 @@ services:
       - "wud.link.template=https://github.com/Prowlarr/Prowlarr/releases"
   flaresolver:
     image: ghcr.io/flaresolverr/flaresolverr:v3.4.5
-    network_mode: "service:prowlarr"
+    networks:
+      - arr_network
+      - traefik
     container_name: flaresolverr
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/Edmonton
+      - PROMETHEUS_ENABLED=true
     depends_on:
       - prowlarr
     restart: unless-stopped
     labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.flaresolverr-metrics.rule=Host(`docker-01.home.stechsolutions.ca`) && PathPrefix(`/flaresolverrmetrics`)"
+      - "traefik.http.middlewares.flaresolverr-replace-path.replacepath.path=/metrics"
+      - "traefik.http.services.flaresolverr-metrics.loadbalancer.server.port=8191"
+      - "traefik.http.routers.flaresolverr-metrics.entrypoints=websecure"
+      - "traefik.http.routers.flaresolverr-metrics.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.flaresolverr-metrics-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+      - "traefik.http.routers.flaresolverr-metrics.middlewares=flaresolverr-metrics-IPAllowList,flaresolverr-replace-path"
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/FlareSolverr/FlareSolverr/releases"
   profilarr:
