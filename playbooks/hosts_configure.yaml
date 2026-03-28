@@ -15,6 +15,11 @@
     - tailscale
     - tailscale.install
 
+  pre_tasks:
+    - name: Gather facts
+      ansible.builtin.setup:
+      tags: always
+
   tasks:
     # Run the pihole role
     - name: Import pihole role

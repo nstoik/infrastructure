@@ -53,9 +53,10 @@
         path: "{{ base_dotfiles_dir }}/install-profile"
         mode: "0700"
 
-    # run the install script with the configured profile
-    - name: "Run the install script with profile: {{ base_dotfiles.profile | default('server') }}"
-      ansible.builtin.command: "{{ base_dotfiles_dir }}/install-profile {{ base_dotfiles.profile | default('server') }}"
+    - name: "Run the install script with profile: {{ profile }}"
+      vars:
+        profile: "{{ base_dotfiles.profile | default('server') }}"
+      ansible.builtin.command: "{{ base_dotfiles_dir }}/install-profile {{ profile }}"
       args:
         chdir: "{{ base_dotfiles_dir }}"
       register: base_dotfiles_install_result
