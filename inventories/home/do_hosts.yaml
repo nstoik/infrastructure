@@ -23,7 +23,7 @@ filters:
   - '"Ansible" in do_tags'
 # group droplets based on the tag
 keyed_groups:
-  - key: do_tags | lower
+  - key: do_tags | map('lower')
     prefix: 'do'
     separator: '_'
 compose:
