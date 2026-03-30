@@ -12,7 +12,7 @@ The media services are accessible via the external webpage at [media.stechsoluti
 - `qbit_manage`: This service manages qBittorrent downloads, including automatic rechecking, categorization, and notifications. It uses [qbit_manage](https://github.com/StuffAnThings/qbit_manage) with a user-defined configuration.
 - `prowlarr`: This service is an indexer manager for torrent and usenet indexers. It integrates with download clients to automate the search and download process.
     - indexers that need to solve a captcha are configured to use flaresolverr for automatic solving.
-- `flaresolver`: This service provides automatic CAPTCHA solving for Prowlarr indexers using FlareSolverr. It exposes Prometheus metrics at `/flaresolverrmetrics` via Traefik.
+- `flaresolverr`: This service provides automatic CAPTCHA solving for Prowlarr indexers using FlareSolverr. It exposes Prometheus metrics at `/flaresolverrmetrics` via Traefik.
 - `profilarr`: This service manages profiles for media management applications like Radarr and Sonarr. It helps in organizing and maintaining consistent settings across multiple applications.
 - `radarr`: This service manages movie downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing movies.
 - `sonarr`: This service manages TV show downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing TV shows.
