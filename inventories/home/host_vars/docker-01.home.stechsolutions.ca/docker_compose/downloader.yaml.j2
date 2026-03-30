@@ -96,7 +96,7 @@ services:
       - "homepage.widget.key={{ secret_prowlarr_api_key }}"
       - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Prowlarr/Prowlarr/releases"
-  flaresolver:
+  flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:v3.4.5
     networks:
       - arr_network
@@ -107,6 +107,7 @@ services:
       - PGID=1000
       - TZ=America/Edmonton
       - PROMETHEUS_ENABLED=true
+      - PROMETHEUS_PORT=8192
     depends_on:
       - prowlarr
     restart: unless-stopped
@@ -115,7 +116,7 @@ services:
       - "traefik.docker.network=traefik"
       - "traefik.http.routers.flaresolverr-metrics.rule=Host(`docker-01.home.stechsolutions.ca`) && PathPrefix(`/flaresolverrmetrics`)"
       - "traefik.http.middlewares.flaresolverr-replace-path.replacepath.path=/metrics"
-      - "traefik.http.services.flaresolverr-metrics.loadbalancer.server.port=8191"
+      - "traefik.http.services.flaresolverr-metrics.loadbalancer.server.port=8192"
       - "traefik.http.routers.flaresolverr-metrics.entrypoints=websecure"
       - "traefik.http.routers.flaresolverr-metrics.tls.certresolver=letsencrypt"
       - "traefik.http.middlewares.flaresolverr-metrics-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
