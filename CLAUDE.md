@@ -30,16 +30,16 @@ ansible-playbook playbooks/hosts_configure.yaml --limit=<hostname>
 ansible-playbook playbooks/hosts_configure.yaml --tags=docker,fileserver
 
 # Vault operations
-ansible-vault edit vaults/home/vault.yaml
+ansible-vault edit inventories/home/group_vars/all/vault.yaml
 # Encrypt with the correct vault ID label (must match the inventory name)
-ansible-vault encrypt vaults/<inventory>/vault.yaml --vault-id <inventory>@./vault_pass_<inventory>.txt --encrypt-vault-id <inventory>
+ansible-vault encrypt inventories/<inventory>/group_vars/all/vault.yaml --vault-id <inventory>@./vault_pass_<inventory>.txt --encrypt-vault-id <inventory>
 ```
 
 ## Repository Structure
 
 ```
 inventories/<name>/         # Per-inventory: inventory.yaml, group_vars/, host_vars/
-vaults/<name>/vault.yaml    # Encrypted secrets per inventory (committed to git)
+  group_vars/all/vault.yaml # Encrypted secrets — auto-loaded by Ansible for all hosts
 vault_pass*.txt             # Vault passwords (gitignored, stored in Bitwarden)
 playbooks/                  # Playbooks (flat) + service subdirs
   hosts_configure.yaml      # Main entrypoint — runs all roles conditionally
@@ -78,12 +78,7 @@ scripts/select-inventory.sh # Helper to switch active inventory + vault
 
 ### Inventory → Vault → Playbook flow
 
-Every playbook loads its vault via:
-```yaml
-vars_files:
-  - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
-```
-`inventory_dir` is an Ansible magic variable (absolute path), so this expression resolves correctly regardless of playbook depth or active inventory.
+Each inventory's vault lives at `inventories/<name>/group_vars/all/vault.yaml`. Ansible auto-loads all `group_vars/all/` files for every play, so vault variables (prefixed `secret_*`) are available before connection or become credentials are resolved — no `vars_files` needed in playbooks.
 
 ### Role enablement pattern
 
@@ -108,7 +103,7 @@ Variables follow role-name prefixes: `docker_*`, `fileserver_*`, `base_*`, `secr
 
 - Default inventory: `inventories/home` (set in `ansible.cfg`)
 - Switch inventory: `source scripts/select-inventory.sh <name>` — sets `ANSIBLE_INVENTORY` and `ANSIBLE_VAULT_IDENTITY_LIST`
-- Each inventory has an independent vault with a matching vault ID label (e.g., `home@./vault_pass.txt`)
+- Each inventory has an independent vault at `inventories/<name>/group_vars/all/vault.yaml` with a matching vault ID label (e.g., `home@./vault_pass.txt`)
 - Vault files are AES-256 encrypted and safe to commit; only password files (`vault_pass*.txt`) are gitignored
 
 ### Vault security

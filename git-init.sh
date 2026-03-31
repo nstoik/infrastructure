@@ -10,7 +10,7 @@ cat <<'EOT' >> .git/hooks/pre-commit
 #!/bin/sh
 # Ensure any vault files are encrypted before allowing a commit.
 # Only checks vault files that are staged for this commit.
-for file in $(git diff --cached --name-only | grep -E '^(vault/[^/]+\.yaml|vaults/[^/]+/vault\.yaml)$'); do
+for file in $(git diff --cached --name-only | grep -E '^inventories/[^/]+/group_vars/all/vault\.yaml$'); do
     if git show :"$file" | grep -q '^\$ANSIBLE_VAULT;'; then
         echo "Vault Encrypted. Safe to commit."
     else

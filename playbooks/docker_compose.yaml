@@ -3,8 +3,6 @@
 
 - name: Apply docker compose updates to docker hosts
   hosts: docker_hosts
-  vars_files:
-    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
   roles:
     - role: docker
       vars:

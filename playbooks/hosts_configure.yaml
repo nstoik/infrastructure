@@ -8,8 +8,6 @@
 # Run the first time setup to configure the hosts
 - name: Run the first time setup to configure hosts
   hosts: all
-  vars_files:
-    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
   tags:
     - base
     - tailscale
