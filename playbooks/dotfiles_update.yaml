@@ -4,7 +4,6 @@
 - name: Update dotfiles on all hosts
   hosts: all
 
-
   tasks:
     - name: Update dotfiles
       ansible.builtin.include_role:
