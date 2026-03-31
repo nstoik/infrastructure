@@ -57,14 +57,15 @@ Rclone is configured to use AWS S3 for storage. The following steps need to be d
 Add the access key and secret key to the relevant vault file:
 
 ```yaml
-# In vaults/home/vault.yaml or vaults/<inventory>/vault.yaml
+# In inventories/home/group_vars/all/vault.yaml or inventories/<inventory>/group_vars/all/vault.yaml
 secret_rclone_user_aws_access_key: <your_access_key>
 secret_rclone_user_aws_secret_key: <your_secret_key>
 ```
 
 Encrypt the vault:
 ```bash
-ansible-vault encrypt vaults/home/vault.yaml
+ansible-vault encrypt inventories/home/group_vars/all/vault.yaml \
+  --vault-id home@./vault_pass.txt --encrypt-vault-id home
 ```
 
 ### Restoring from AWS S3 Deep-Archive

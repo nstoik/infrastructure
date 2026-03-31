@@ -14,7 +14,7 @@ This inventory includes:
 ## Configuration
 
 - **Inventory files:** `inventory.yaml`, `group_vars/`, `host_vars/`
-- **Secrets vault:** `../../vaults/home/vault.yaml`
+- **Secrets vault:** `group_vars/all/vault.yaml`
 - **Vault password:** `../../vault_pass.txt`
 
 ## Using This Inventory

@@ -6,7 +6,7 @@ This repository supports multiple independent inventory sets, each managing diff
 
 Each inventory has its own:
 - Inventory files (`inventory.yaml`, `group_vars/`, `host_vars/`)
-- Vault secrets (`vaults/<inventory>/vault.yaml`)
+- Vault secrets (`inventories/<inventory>/group_vars/all/vault.yaml`)
 - Vault password file (`vault_pass_<inventory>.txt`)
 
 ## Directory Structure
@@ -17,20 +17,22 @@ infrastructure/
 │   ├── home/                      # Main/default inventory
 │   │   ├── inventory.yaml
 │   │   ├── group_vars/
+│   │   │   ├── all/
+│   │   │   │   ├── main.yaml      # Global defaults
+│   │   │   │   ├── vault.yaml     # Encrypted secrets (auto-loaded)
+│   │   │   │   └── vault.yaml.example
+│   │   │   └── <group>.yaml
 │   │   └── host_vars/
 │   ├── client_welca/              # Client site inventory
 │   │   ├── inventory.yaml
 │   │   ├── group_vars/
+│   │   │   ├── all/
+│   │   │   │   ├── main.yaml
+│   │   │   │   ├── vault.yaml     # Encrypted secrets (auto-loaded)
+│   │   │   │   └── vault.yaml.example
+│   │   │   └── <group>.yaml
 │   │   ├── host_vars/
 │   │   └── README.md
-│   └── ...
-├── vaults/
-│   ├── home/
-│   │   ├── vault.yaml             # Encrypted secrets
-│   │   └── vault.yaml.example
-│   ├── client_welca/
-│   │   ├── vault.yaml             # Encrypted secrets
-│   │   └── vault.yaml.example
 │   └── ...
 ├── docs/
 │   ├── inventories/
@@ -83,7 +85,8 @@ Group variables in `group_vars/` apply settings hierarchically based on group me
 
 **Key group variables files:**
 
-- `all.yaml` - Global defaults (timezones, domains, SMTP, monitoring URLs)
+- `all/main.yaml` - Global defaults (timezones, domains, SMTP, monitoring URLs)
+- `all/vault.yaml` - Encrypted secrets, auto-loaded for all hosts
 - `proxmox_nodes.yaml` - Proxmox hypervisor settings (qemu-guest-agent, node-exporter)
 - `proxmox_containers.yaml` - LXC container settings
 - `proxmox_pbs.yaml` - Proxmox Backup Server settings
@@ -128,9 +131,8 @@ To add a new inventory (e.g., client_welca):
 
 ### 1. Create the inventory directory structure:
 ```bash
-mkdir -p inventories/client_welca/group_vars
+mkdir -p inventories/client_welca/group_vars/all
 mkdir -p inventories/client_welca/host_vars
-mkdir -p vaults/client_welca
 ```
 
 ### 2. Create `inventories/client_welca/inventory.yaml`:
@@ -158,7 +160,7 @@ docker-client.example.com
 ```
 
 ### 3. Create group variables:
-Copy and adapt `inventories/home/group_vars/all.yaml` to `inventories/client_welca/group_vars/all.yaml`:
+Copy and adapt `inventories/home/group_vars/all/main.yaml` to `inventories/client_welca/group_vars/all/main.yaml`:
 
 ```yaml
 ---
@@ -175,13 +177,15 @@ Create per-host variables in `inventories/client_welca/host_vars/` similar to `i
 ### 5. Create vault:
 ```bash
 # Copy the template
-cp vaults/client_welca/vault.yaml.example vaults/client_welca/vault.yaml
+cp inventories/client_welca/group_vars/all/vault.yaml.example inventories/client_welca/group_vars/all/vault.yaml
 
 # Edit with client-specific secrets
-nano vaults/client_welca/vault.yaml
+nano inventories/client_welca/group_vars/all/vault.yaml
 
-# Encrypt the vault
-ansible-vault encrypt vaults/client_welca/vault.yaml --vault-password-file vault_pass_client_welca.txt
+# Encrypt the vault (must use --vault-id to stamp the correct label)
+ansible-vault encrypt inventories/client_welca/group_vars/all/vault.yaml \
+  --vault-id client_welca@./vault_pass_client_welca.txt \
+  --encrypt-vault-id client_welca
 ```
 
 ### 6. Create vault password file:
@@ -220,7 +224,7 @@ ansible-playbook playbooks/hosts_configure.yaml --limit=docker-03.home.stechsolu
 
 ## Vault Management
 
-Each inventory should have an encrypted `vaults/<inventory>/vault.yaml` file containing secrets:
+Each inventory should have an encrypted `inventories/<inventory>/group_vars/all/vault.yaml` file containing secrets:
 
 - SSH keys, API tokens, passwords
 - IPMI/Proxmox credentials
@@ -233,8 +237,8 @@ Each inventory should have an encrypted `vaults/<inventory>/vault.yaml` file con
 
 To rotate secrets:
 ```bash
-ansible-vault view vaults/home/vault.yaml --vault-password-file vault_pass.txt
-ansible-vault edit vaults/home/vault.yaml --vault-password-file vault_pass.txt
+ansible-vault view inventories/home/group_vars/all/vault.yaml --vault-password-file vault_pass.txt
+ansible-vault edit inventories/home/group_vars/all/vault.yaml --vault-password-file vault_pass.txt
 ```
 
 See [SETUP.md](../SETUP.md) for vault encryption details.
