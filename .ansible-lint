@@ -6,3 +6,5 @@ profile: production
 exclude_paths:
   - roles/galaxy/
   - collections/
+  - inventories/home/group_vars/all/vault.yaml
+  - inventories/client_welca/group_vars/all/vault.yaml
