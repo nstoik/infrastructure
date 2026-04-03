@@ -33,8 +33,8 @@ fileserver_zfs_pools:
     vdevs:
       - raid_type: mirror
         disks:
-          - name: ata-WDC_WD30PURX-64P6ZY0_WD-WCC4N3ZX7SJ4
-          - name: ata-WDC_WD30PURX-64P6ZY0_WD-WCC4N5AK0HSZ
+          - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi1
+          - name: scsi-0QEMU_QEMU_HARDDISK_drive-scsi2
     datasets:
       - name: video/recordings
         mount_point: /mnt/zfs/video/recordings

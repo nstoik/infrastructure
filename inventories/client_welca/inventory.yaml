@@ -13,3 +13,4 @@ all:
       hosts:
         # Add Proxmox Backup Server hosts here
     proxmox_vms:
+    proxmox_containers:
