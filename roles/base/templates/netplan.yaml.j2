@@ -5,7 +5,7 @@ network:
     {{ eth.name }}:
       dhcp4: {{ eth.dhcp4 | default(false) | lower }}
       optional: {{ eth.optional | default(true) | lower }}
-{% if eth.match is defined %}
+{% if eth.match is defined and (eth.match.macaddress is defined or eth.match.driver is defined) %}
       match:
 {% if eth.match.macaddress is defined %}
         macaddress: "{{ eth.match.macaddress }}"
