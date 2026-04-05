@@ -16,10 +16,46 @@ Sets up the base configuration for all managed hosts: packages, users, dotfiles,
 
 | Variable | Default | Description |
 |---|---|---|
-| `base_user_default` | `{{ default_user }}` | Default user to configure |
-| `base_user_shell` | `/usr/bin/zsh` | Default shell |
-| `base_user_groups` | `[sudo]` | Groups to add the user to |
-| `base_user_add_ssh_keys` | `false` | Add SSH keys directly (vs via dotfiles) |
+| `base_user_run_setup` | `true` | Whether to run user setup tasks |
+| `base_users` | see below | List of users to create on the host |
+
+Each entry in `base_users` supports:
+
+| Key | Required | Default | Description |
+|---|---|---|---|
+| `name` | yes | — | Username |
+| `password_prehashed` | yes | — | SHA-512 hashed password (`openssl passwd -6`) |
+| `shell` | no | `/usr/bin/zsh` | Login shell |
+| `groups` | no | `[sudo]` | List of groups to add the user to |
+| `add_ssh_keys` | no | `false` | Add keys from `secret_ssh_keys[name]` in the vault |
+
+The default `base_users` list creates a single user from `default_user` and `secret_user_password_prehashed`. Override in inventory to change the default user's settings or add additional users:
+
+```yaml
+base_users:
+  - name: "{{ default_user }}"
+    password_prehashed: "{{ secret_user_password_prehashed }}"
+    shell: /bin/bash
+    groups: [sudo]
+    add_ssh_keys: true
+  - name: nelson
+    password_prehashed: "{{ secret_nelson_password_prehashed }}"
+    shell: /usr/bin/zsh
+    groups: [sudo]
+    add_ssh_keys: true
+```
+
+SSH keys are stored in the vault under `secret_ssh_keys` as a dict keyed by username:
+
+```yaml
+secret_ssh_keys:
+  nelson:
+    - name: "Laptop"
+      key: "ssh-ed25519 ..."
+  welca:
+    - name: "Nelson Welca"
+      key: "ssh-ed25519 ..."
+```
 
 ### Dotfiles
 
