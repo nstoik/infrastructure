@@ -23,6 +23,14 @@
         suffix: .pub
       register: proxmox_ssh_key_tempfile
 
+    # Assert that an SSH key exists for the default user before using it
+    - name: Assert SSH key exists for {{ default_user }}
+      ansible.builtin.assert:
+        that:
+          - secret_ssh_keys[default_user] is defined
+          - secret_ssh_keys[default_user] | length > 0
+        fail_msg: "secret_ssh_keys['{{ default_user }}'] is missing or empty in the vault. Add at least one SSH key for this user."
+
     # Set the SSH public key content
     - name: Set the SSH public key content
       ansible.builtin.copy:
