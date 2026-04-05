@@ -63,7 +63,7 @@
     - name: Check if authorized_keys is a regular file
       ansible.builtin.stat:
         path: "/home/{{ dotfiles_user }}/.ssh/authorized_keys"
-      register: _authorized_keys_stat
+      register: base_authorized_keys_stat
       become: true
 
     - name: Remove authorized_keys if it is a regular file so dotfiles can symlink it
@@ -71,7 +71,7 @@
         path: "/home/{{ dotfiles_user }}/.ssh/authorized_keys"
         state: absent
       become: true
-      when: _authorized_keys_stat.stat.exists and not _authorized_keys_stat.stat.islnk
+      when: base_authorized_keys_stat.stat.exists and not base_authorized_keys_stat.stat.islnk
 
     - name: "Run the install script with profile: {{ dotfiles_profile }}"
       ansible.builtin.command: "{{ dotfiles_dir }}/install-profile {{ dotfiles_profile }}"
