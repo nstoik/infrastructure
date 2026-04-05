@@ -17,7 +17,6 @@ base_packages:
   - git
   - jq
   - neofetch
-  - nmap
   - vnstat
   - wireguard
   - wireguard-tools
