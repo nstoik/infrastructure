@@ -53,13 +53,8 @@ base_users:
       - sudo
     add_ssh_keys: false
 
-# variables for the dotfiles
-base_dotfiles_dir: /home/{{ default_user }}/dotfiles
+# default dotfiles repo used as fallback when base_users[].dotfiles.repo is not set
 base_dotfiles_repo: https://github.com/nstoik/dotfiles
-
-base_dotfiles:
-  install: false
-  profile: server
 
 # variables for docker
 # whether to install docker or not

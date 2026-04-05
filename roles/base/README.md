@@ -59,10 +59,18 @@ secret_ssh_keys:
 
 ### Dotfiles
 
+Dotfiles are configured per-user via `base_users[].dotfiles`:
+
+| Key | Required | Default | Description |
+|---|---|---|---|
+| `dotfiles.install` | no | `false` | Install dotfiles via dotbot for this user |
+| `dotfiles.profile` | no | `server` | Dotbot profile to run |
+| `dotfiles.repo` | no | `base_dotfiles_repo` | Git repo to clone |
+| `dotfiles.dir` | no | `/home/<user>/dotfiles` | Local clone path |
+
 | Variable | Default | Description |
 |---|---|---|
-| `base_dotfiles.install` | `false` | Install dotfiles via dotbot |
-| `base_dotfiles_repo` | `https://github.com/nstoik/dotfiles` | Dotfiles git repo |
+| `base_dotfiles_repo` | `https://github.com/nstoik/dotfiles` | Default dotfiles repo (fallback when `dotfiles.repo` is not set per-user) |
 
 ### Prometheus node_exporter
 
