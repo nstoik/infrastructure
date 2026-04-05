@@ -6,6 +6,7 @@ fileserver_setup_nfs_server: false
 fileserver_setup_nfs_client: false
 fileserver_setup_snapraid: false
 fileserver_setup_zfs: false
+fileserver_setup_zfs_metrics: false
 fileserver_setup_attached_disks: false
 fileserver_setup_swap_file: false
 
