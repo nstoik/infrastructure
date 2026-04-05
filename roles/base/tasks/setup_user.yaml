@@ -37,6 +37,7 @@
   loop_control:
     label: "{{ item.name }}"
   when: base_user.add_ssh_keys | default(false) is true
+  ignore_errors: "{{ ansible_check_mode }}"
   tags:
     - base
     - base.user
