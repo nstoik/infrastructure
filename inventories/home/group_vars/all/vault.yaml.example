@@ -3,10 +3,14 @@
 
 # SSH secrets
 secret_ssh_keys:
-  - name: "Device Name 1"
-    key: change_me
-  - name: "Device Name 2"
-    key: change_me
+  username1:
+    - name: "Device Name 1"
+      key: change_me
+    - name: "Device Name 2"
+      key: change_me
+  username2:
+    - name: "Device Name 1"
+      key: change_me
 
 # Digitalocean secrets
 secret_do_token: change_me

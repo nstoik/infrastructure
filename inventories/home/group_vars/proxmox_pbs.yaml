@@ -5,8 +5,14 @@
 
 ansible_become_password: "{{ secret_become_pass }}"
 
-base_user_additional_groups:
-  - "backup"
+base_users:
+  - name: "{{ default_user }}"
+    password_prehashed: "{{ secret_user_password_prehashed }}"
+    shell: /usr/bin/zsh
+    groups:
+      - sudo
+      - backup
+    add_ssh_keys: true
 
 # The proxmox nodes need sudo to be installed
 base_additional_packages:
@@ -19,8 +25,6 @@ base_additional_services:
   - name: "openipmi.service"
     state: "stopped"
     enabled: false
-
-base_user_run_setup: false
 
 base_dotfiles:
   install: true
