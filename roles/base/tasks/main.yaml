@@ -76,9 +76,13 @@
   tags:
     - base
 
-# setup the user when the flag is set
-- name: Setup the user
+# setup each user when the flag is set
+- name: Setup user {{ base_user.name }}
   ansible.builtin.include_tasks: setup_user.yaml
+  loop: "{{ base_users }}"
+  loop_control:
+    loop_var: base_user
+    label: "{{ base_user.name }}"
   when: base_user_run_setup is true
   tags:
     - base

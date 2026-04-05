@@ -1,45 +1,42 @@
 ---
-# tasks to setup a user on a host.
+# tasks to setup a single user on a host.
+# Called with loop_var: base_user (one entry from base_users list in main.yaml)
 #
-# Creates the user and adds the public ssh keys to the user.
+# inputs (via base_user dict):
+#   - base_user.name: username
+#   - base_user.password_prehashed: prehashed password
+#   - base_user.shell: login shell (optional, default: /usr/bin/zsh)
+#   - base_user.groups: list of groups (optional, default: [sudo])
+#   - base_user.add_ssh_keys: add secret_ssh_keys to authorized_keys (optional, default: false)
 
-# inputs:
-#   - base_user_default: default user to setup
-#   - base_user_password_prehashed: default user password prehashed
-#   - base_user_additional_groups: additional user groups to be added to
-#     base_user_add_ssh_keys: boolean to add ssh keys to the user
-
-
-# block for base user tasks
-- name: Block for base user tasks
+- name: Create user {{ base_user.name }}
+  ansible.builtin.user:
+    name: "{{ base_user.name }}"
+    password: "{{ base_user.password_prehashed }}"
+    update_password: on_create
+    createhome: true
+    home: "/home/{{ base_user.name }}"
+    shell: "{{ base_user.shell | default('/usr/bin/zsh') }}"
+    groups: "{{ base_user.groups | default(['sudo']) }}"
+    append: true
+    state: present
+    generate_ssh_key: true
+    ssh_key_type: ed25519
+  become: true
   tags:
     - base
     - base.user
-  block:
-    # create the default user
-    - name: Create the default user
-      ansible.builtin.user:
-        name: "{{ base_user_default }}"
-        password: "{{ base_user_password_prehashed }}"
-        update_password: on_create
-        createhome: true
-        home: "/home/{{ base_user_default }}"
-        shell: "{{ base_user_shell }}"
-        groups: "{{ base_user_groups + (base_user_additional_groups | default([])) }}"
-        append: true
-        state: present
-        generate_ssh_key: true
-        ssh_key_type: ed25519
-      become: true
 
-    # Add the public ssh keys to the user
-    - name: Add the public ssh keys to the user
-      ansible.posix.authorized_key:
-        user: "{{ base_user_default }}"
-        state: present
-        key: "{{ item.key }}"
-        comment: "{{ item.name }}"
-      loop: "{{ secret_ssh_keys }}"
-      loop_control:
-        label: "{{ item.name }}"
-      when: base_user_add_ssh_keys is true
+- name: Add public SSH keys to {{ base_user.name }}
+  ansible.posix.authorized_key:
+    user: "{{ base_user.name }}"
+    state: present
+    key: "{{ item.key }}"
+    comment: "{{ item.name }}"
+  loop: "{{ secret_ssh_keys[base_user.name] | default([]) }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: base_user.add_ssh_keys | default(false) is true
+  tags:
+    - base
+    - base.user
