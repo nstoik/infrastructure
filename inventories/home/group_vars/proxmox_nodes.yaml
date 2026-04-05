@@ -23,9 +23,8 @@ base_users:
     groups:
       - sudo
     add_ssh_keys: true
-
-base_dotfiles:
-  install: true
+    dotfiles:
+      install: true
 
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html

@@ -13,6 +13,8 @@ base_users:
       - sudo
       - backup
     add_ssh_keys: true
+    dotfiles:
+      install: true
 
 # The proxmox nodes need sudo to be installed
 base_additional_packages:
@@ -25,9 +27,6 @@ base_additional_services:
   - name: "openipmi.service"
     state: "stopped"
     enabled: false
-
-base_dotfiles:
-  install: true
 
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html

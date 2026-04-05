@@ -4,3 +4,13 @@
 ansible_become_password: "{{ secret_become_pass }}"
 
 ansible_ssh_pass: "{{ secret_become_pass }}"
+
+base_users:
+  - name: "{{ default_user }}"
+    password_prehashed: "{{ secret_user_password_prehashed }}"
+    shell: /usr/bin/zsh
+    groups:
+      - sudo
+    add_ssh_keys: true
+    dotfiles:
+      install: true
