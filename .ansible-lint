@@ -6,3 +6,4 @@ profile: production
 exclude_paths:
   - roles/galaxy/
   - collections/
+  - inventories/*/group_vars/all/vault.yaml

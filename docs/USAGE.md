@@ -93,10 +93,10 @@ See role-specific READMEs in `roles/<role>/README.md` for detailed configuration
 ### Main Configuration
 The main configuration is done in two places:
 
-1. **Inventory group variables:** `inventories/home/group_vars/all.yaml`
+1. **Inventory group variables:** `inventories/home/group_vars/all/main.yaml`
 2. **Inventory group variables:** `inventories/home/group_vars/<group>.yaml`
 3. **Host variables:** `inventories/home/host_vars/<hostname>.yaml`
-4. **Vault secrets:** `vaults/home/vault.yaml` (encrypted)
+4. **Vault secrets:** `inventories/home/group_vars/all/vault.yaml` (encrypted)
 
 See [INVENTORIES.md](./INVENTORIES.md) for detailed structure and variable naming conventions.
 

@@ -5,8 +5,6 @@
 # Run the proxmox role
 - name: Run the proxmox role
   hosts: proxmox_nodes
-  vars_files:
-    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
 
   tasks:
     # This downloads the cloud images and creates a template

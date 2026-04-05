@@ -23,7 +23,7 @@
     - name: Add No Subscription Repository
       ansible.builtin.apt_repository:
         # yamllint disable-line rule:line-length
-        repo: deb http://download.proxmox.com/debian/{{ item }} {{ ansible_distribution_release }} {{ item }}-no-subscription
+        repo: deb http://download.proxmox.com/debian/{{ item }} {{ ansible_facts['distribution_release'] }} {{ item }}-no-subscription
         filename: "{{ item }}-no-subscription"
         update_cache: false
         state: present

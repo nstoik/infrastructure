@@ -64,7 +64,7 @@ For each additional inventory (e.g., client_welca), create a corresponding vault
 To encrypt a file, you must use `--vault-id` (not `--vault-password-file`) so the vault header is stamped with the correct inventory label. Using `--vault-password-file` will apply the default `home` label, causing decryption failures for other inventories.
 
 ```bash
-ansible-vault encrypt vaults/<inventory>/vault.yaml \
+ansible-vault encrypt inventories/<inventory>/group_vars/all/vault.yaml \
   --vault-id <inventory>@./vault_pass_<inventory>.txt \
   --encrypt-vault-id <inventory>
 ```
@@ -73,7 +73,7 @@ ansible-vault encrypt vaults/<inventory>/vault.yaml \
 
 To decrypt a file, run:
 ```bash
-ansible-vault decrypt vaults/<inventory>/vault.yaml --vault-id <inventory>@./vault_pass_<inventory>.txt
+ansible-vault decrypt inventories/<inventory>/group_vars/all/vault.yaml --vault-id <inventory>@./vault_pass_<inventory>.txt
 ```
 
 The `ansible.cfg` is configured using `vault_identity_list` entries that point to the default home vault.
@@ -96,7 +96,7 @@ Copy the example environment file to `.env` and fill in required values:
 cp .env.example .env
 ```
 
-The required values are stored in the ansible vault file `vaults/home/vault.yaml` (and per-inventory vaults in `vaults/<inventory>/vault.yaml`). You can copy values from the vault.yaml.example files as templates.
+The required values are stored in the ansible vault file `inventories/home/group_vars/all/vault.yaml` (and per-inventory vaults in `inventories/<inventory>/group_vars/all/vault.yaml`). You can copy values from the vault.yaml.example files as templates.
 
 Set environment variables in your shell before running playbooks:
 

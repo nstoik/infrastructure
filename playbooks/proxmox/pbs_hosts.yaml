@@ -14,8 +14,6 @@
 # setting up the new user with the ssh keys.
 - name: Make sure the PBS host is setup
   hosts: proxmox_pbs
-  vars_files:
-    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
   vars:
     ansible_host_key_checking: false
     ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null'
@@ -82,8 +80,6 @@
 # These tasks can be run as the new user
 - name: Continue setting up the Proxmox host as the new user
   hosts: proxmox_pbs
-  vars_files:
-    - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"
   tags:
     - proxmox
     - proxmox.pve
