@@ -74,7 +74,7 @@
       remote_user: root
       ansible.builtin.lineinfile:
         path: /home/{{ default_user }}/.ssh/authorized_keys
-        line: "{{ authorized_keys.keys }}"
+        line: "{{ authorized_keys.key }}"
         state: present
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
