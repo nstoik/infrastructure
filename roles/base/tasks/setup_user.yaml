@@ -27,6 +27,13 @@
     - base
     - base.user
 
+- name: Setup dotfiles for {{ base_user.name }}
+  ansible.builtin.include_tasks: setup_dotfiles.yaml
+  when: base_user.dotfiles is defined and base_user.dotfiles.install | default(false) is true
+  tags:
+    - base
+    - base.dotfiles
+
 - name: Add public SSH keys to {{ base_user.name }}
   ansible.posix.authorized_key:
     user: "{{ base_user.name }}"
@@ -37,6 +44,7 @@
   loop_control:
     label: "{{ item.name }}"
   when: base_user.add_ssh_keys | default(false) is true
+  become: true
   ignore_errors: "{{ ansible_check_mode }}"
   tags:
     - base

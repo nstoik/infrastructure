@@ -101,14 +101,6 @@
     - base.docker
     - docker
 
-# setup dotfiles when the flag is set
-- name: Setup dotfiles
-  ansible.builtin.include_tasks: setup_dotfiles.yaml
-  when: base_dotfiles['install'] is true
-  tags:
-    - base
-    - base.dotfiles
-
 # Configure journald
 - name: Configure journald
   ansible.builtin.include_tasks: setup_journald.yaml
@@ -137,6 +129,7 @@
     label: "{{ service.name }}"
   become: true
   when: ansible_facts['os_family'] == "Debian"
+  ignore_errors: "{{ ansible_check_mode }}"
   notify: Systemctl reset-failed
   tags:
     - base
