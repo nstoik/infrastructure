@@ -26,7 +26,7 @@
     # Set the SSH public key content
     - name: Set the SSH public key content
       ansible.builtin.copy:
-        content: "{{ secret_ssh_keys[0].key }}"
+        content: "{{ secret_ssh_keys[default_user][0].key }}"
         dest: "{{ proxmox_ssh_key_tempfile.path }}"
         mode: '0600'
 

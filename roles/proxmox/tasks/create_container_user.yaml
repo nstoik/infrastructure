@@ -79,7 +79,7 @@
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: "0600"
-      loop: "{{ secret_ssh_keys }}"
+      loop: "{{ secret_ssh_keys[default_user] | default([]) }}"
       loop_control:
         loop_var: authorized_keys
         label: "{{ authorized_keys.name }}"
