@@ -8,17 +8,25 @@ ansible_user: "{{ default_user }}"
 default_user_email: "nstoik@stechsolutions.ca"
 # secret_user_password is set in vaults/client_welca/vault.yaml
 
-# Use bash as the default shell — no dotfiles/zsh setup for this inventory.
-base_user_shell: /bin/bash
-
 # timezone
 base_timezone: "America/Edmonton"
 
 base_controller_user: "nelson"
 known_hosts_ansible_file: "/home/{{ base_controller_user }}/.ssh/known_hosts_ansible"
 
-# add ssh keys to the default user from secret_ssh_keys in the vault
-base_user_add_ssh_keys: true
+base_users:
+  - name: "{{ default_user }}"
+    password_prehashed: "{{ secret_user_password_prehashed }}"
+    shell: /bin/bash
+    groups:
+      - sudo
+    add_ssh_keys: true
+  - name: nelson
+    password_prehashed: "{{ secret_nelson_password_prehashed }}"
+    shell: /usr/bin/zsh
+    groups:
+      - sudo
+    add_ssh_keys: true
 
 # geerlingguy.security role variables
 # https://galaxy.ansible.com/geerlingguy/security

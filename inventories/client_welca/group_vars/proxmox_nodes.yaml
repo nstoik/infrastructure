@@ -9,8 +9,6 @@ base_additional_packages:
   - "lshw"
   - "prometheus-node-exporter"
 
-base_user_run_setup: true
-
 base_dotfiles:
   install: false
 
