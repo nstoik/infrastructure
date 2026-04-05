@@ -41,7 +41,7 @@ base_user_run_setup: true
 
 # list of users to create on the host.
 # each entry supports:
-#   name (required), password (required, prehashed),
+#   name (required), password_prehashed (required, prehashed),
 #   shell (optional, default: /usr/bin/zsh),
 #   groups (optional, default: [sudo]),
 #   add_ssh_keys (optional, default: false — dotfiles method is preferred)
