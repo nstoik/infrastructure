@@ -17,5 +17,3 @@ proxmox_template_storage: local
 proxmox_template_memory: 2048
 
 proxmox_template_cores: 2
-
-proxmox_import_storage: data

@@ -84,6 +84,9 @@ base_timezone: "America/Edmonton"
 #     - name: "eth0"
 #       dhcp4: true
 #       optional: false
+#       match:
+#         macaddress: "xx:xx:xx:xx:xx:xx"  # optional: match by MAC for deterministic naming
+#       set_name: "eth0"                    # optional: rename interface
 #   wifis:
 #     - name: "wlan0"
 #       dhcp4: true
