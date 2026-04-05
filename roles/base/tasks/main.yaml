@@ -8,7 +8,6 @@
 #   - base_apt_upgrade_packages: if or how to upgrade apt packages
 #   - base_apt_update_packages: boolean to update apt packages or skip
 #   - base_docker_install: boolean to install docker
-#   - base_dotfiles: dictionary of dotfiles configuration
 #   - base_user_run_setup: boolean to setup a user
 #   - base_postfix: dictionary of postfix configuration
 #   - base_timezone: timezone to set
@@ -76,9 +75,13 @@
   tags:
     - base
 
-# setup the user when the flag is set
-- name: Setup the user
+# setup each user when the flag is set
+- name: Setup user {{ base_user.name }}
   ansible.builtin.include_tasks: setup_user.yaml
+  loop: "{{ base_users }}"
+  loop_control:
+    loop_var: base_user
+    label: "{{ base_user.name }}"
   when: base_user_run_setup is true
   tags:
     - base
@@ -96,14 +99,6 @@
     - base
     - base.docker
     - docker
-
-# setup dotfiles when the flag is set
-- name: Setup dotfiles
-  ansible.builtin.include_tasks: setup_dotfiles.yaml
-  when: base_dotfiles['install'] is true
-  tags:
-    - base
-    - base.dotfiles
 
 # Configure journald
 - name: Configure journald
@@ -133,6 +128,7 @@
     label: "{{ service.name }}"
   become: true
   when: ansible_facts['os_family'] == "Debian"
+  ignore_errors: "{{ ansible_check_mode }}"
   notify: Systemctl reset-failed
   tags:
     - base

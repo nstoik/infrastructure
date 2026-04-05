@@ -54,8 +54,6 @@
     - name: Run the base role
       ansible.builtin.include_role:
         name: base
-      vars:
-        base_user_add_ssh_keys: true
       tags:
         - base.apt
         - base.user
@@ -162,6 +160,8 @@
     - name: Run the base role
       ansible.builtin.include_role:
         name: base
+      vars:
+        base_user_run_setup: false
       tags:
         - base.apt
         - base.docker

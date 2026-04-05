@@ -3,9 +3,6 @@
 
 ansible_host: pbs.home.stechsolutions.ca
 
-base_user_additional_groups:
-  - backup
-
 fileserver_setup: true
 fileserver_setup_zfs: true
 

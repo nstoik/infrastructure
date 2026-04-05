@@ -12,8 +12,6 @@ all:
         docker-01.home.stechsolutions.ca:
           base_docker_install: true
           base_docker_config: true
-          base_dotfiles:
-            install: true
           network:
             ip: "10.10.5.24"
             gateway: "10.10.5.1"
@@ -64,8 +62,6 @@ all:
         docker-02.home.stechsolutions.ca:
           base_docker_install: true
           base_docker_config: true
-          base_dotfiles:
-            install: true
           network:
             ip: "10.10.5.27"
             gateway: "10.10.5.1"

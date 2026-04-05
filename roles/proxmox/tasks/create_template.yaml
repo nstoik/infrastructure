@@ -60,12 +60,20 @@
     - name: Create the VM template
       block:
 
+        # Assert that an SSH key exists for the default user before using it
+        - name: Assert SSH key exists for {{ default_user }}
+          ansible.builtin.assert:
+            that:
+              - secret_ssh_keys[default_user] is defined
+              - secret_ssh_keys[default_user] | length > 0
+            fail_msg: "secret_ssh_keys['{{ default_user }}'] is missing or empty in the vault. Add at least one SSH key for this user."
+
         # Create temp public-ssh-key file
         # only need to copy the first key, because the rest of the
         # keys will be added during the base role.
         - name: Create temp public-ssh-key file
           ansible.builtin.copy:
-            content: "{{ secret_ssh_keys[0].key }}"
+            content: "{{ secret_ssh_keys[default_user][0].key }}"
             dest: /tmp/public-ssh-key.pub
             mode: "0600"
 

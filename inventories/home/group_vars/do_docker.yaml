@@ -4,5 +4,3 @@
 # variables for the base and docker roles
 base_docker_install: true
 base_docker_config: true
-base_dotfiles:
-  install: true

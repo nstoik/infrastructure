@@ -11,8 +11,6 @@ all:
       hosts:
         storage.home.stechsolutions.ca:
           base_docker_install: false
-          base_dotfiles:
-            install: true
           base_postfix:
             install: true
             relayhost: "{{ smtp_host }}:{{ smtp_port }}"
@@ -78,8 +76,6 @@ all:
                 backup: 0
         vpn.home.stechsolutions.ca:
           base_docker_install: false
-          base_dotfiles:
-            install: true
           network:
             ip: "10.10.5.28"
             gateway: "10.10.5.1"

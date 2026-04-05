@@ -74,12 +74,12 @@
       remote_user: root
       ansible.builtin.lineinfile:
         path: /home/{{ default_user }}/.ssh/authorized_keys
-        line: "{{ authorized_keys.keys }}"
+        line: "{{ authorized_keys.key }}"
         state: present
         owner: "{{ default_user }}"
         group: "{{ default_user }}"
         mode: "0600"
-      loop: "{{ secret_ssh_keys }}"
+      loop: "{{ secret_ssh_keys[default_user] | default([]) }}"
       loop_control:
         loop_var: authorized_keys
         label: "{{ authorized_keys.name }}"

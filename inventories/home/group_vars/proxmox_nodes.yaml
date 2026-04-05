@@ -16,10 +16,15 @@ base_additional_packages:
   - "lshw"
   - "prometheus-node-exporter"
 
-base_user_run_setup: false
-
-base_dotfiles:
-  install: true
+base_users:
+  - name: "{{ default_user }}"
+    password_prehashed: "{{ secret_user_password_prehashed }}"
+    shell: /usr/bin/zsh
+    groups:
+      - sudo
+    add_ssh_keys: true
+    dotfiles:
+      install: true
 
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html

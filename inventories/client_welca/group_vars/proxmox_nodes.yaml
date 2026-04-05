@@ -9,11 +9,6 @@ base_additional_packages:
   - "lshw"
   - "prometheus-node-exporter"
 
-base_user_run_setup: true
-
-base_dotfiles:
-  install: false
-
 # Use apt dist-upgrade on proxmox nodes
 # see https://pve.proxmox.com/pve-docs/chapter-sysadmin.html
 base_apt_upgrade_packages: "dist"
@@ -30,6 +25,7 @@ security_ssh_permit_root_login: "yes"
 security_ssh_password_authentication: "yes"
 security_ssh_allowed_users:
   - "{{ default_user }}"
+  - "nelson"
   - "root"
 
 # Whether to install the Scrutiny collector on the proxmox nodes
