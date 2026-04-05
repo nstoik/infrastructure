@@ -5,6 +5,7 @@ ansible_host: pbs.home.stechsolutions.ca
 
 fileserver_setup: true
 fileserver_setup_zfs: true
+fileserver_setup_zfs_metrics: true
 
 sanoid_setup: true
 sanoid_healthcheck_script_path: /home/{{ default_user }}/sanoid_healthcheck.sh

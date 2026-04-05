@@ -17,8 +17,8 @@
         state: present
       become: true
 
-    # Ensure specific ZFS commands are allowed without password for {{ fileserver_zfs_syncoid_user }}
-    - name: Ensure specific ZFS commands are allowed without password for {{ fileserver_zfs_syncoid_user }}
+    # Ensure specific ZFS commands are allowed without password for {{ fileserver_zfs_syncoid_user | default(default_user) }}
+    - name: Ensure specific ZFS commands are allowed without password for {{ fileserver_zfs_syncoid_user | default(default_user) }}
       community.general.sudoers:
         name: "80_{{ default_user }}_zfs_commands"
         user: "{{ default_user }}"

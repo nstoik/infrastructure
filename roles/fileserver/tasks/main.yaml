@@ -96,10 +96,12 @@
     # Deploy ZFS snapshot metrics for Prometheus textfile collector
     - name: Setup ZFS snapshot metrics
       ansible.builtin.include_tasks: setup_zfs_snapshot_metrics.yaml
+      when: fileserver_setup_zfs_metrics is true
 
     # Deploy ZFS encryption key metrics for Prometheus textfile collector
     - name: Setup ZFS key metrics
       ansible.builtin.include_tasks: setup_zfs_key_metrics.yaml
+      when: fileserver_setup_zfs_metrics is true
 
 # Setup the NFS server
 - name: Setup the NFS server

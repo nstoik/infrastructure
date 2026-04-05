@@ -12,6 +12,7 @@ fileserver_setup_mergerfs: false
 fileserver_setup_snapraid: false
 fileserver_setup_nfs_server: true
 fileserver_setup_zfs: true
+fileserver_setup_zfs_metrics: true
 
 sanoid_setup: true
 sanoid_healthcheck_script_path: /home/{{ default_user }}/sanoid_healthcheck.sh
