@@ -1,0 +1,34 @@
+---
+# Docker host variables for video.internal.welca.ca
+
+docker_compose_subpath: "{{ inventory_dir }}/host_vars/video.internal.welca.ca/docker_compose"
+
+docker_mounts_subfolders:
+  - name: frigate_mosquitto_config
+    dest: /home/{{ default_user }}/docker_mounts/frigate/mosquitto/config
+    mode: '0775'
+    container_name: mosquitto
+  - name: frigate_mosquitto_data
+    dest: /home/{{ default_user }}/docker_mounts/frigate/mosquitto/data
+    mode: '0775'
+    container_name: mosquitto
+
+docker_configuration_files:
+  - name: frigate_config.yaml
+    src: "{{ inventory_dir }}/../../files/frigate/config.yaml.j2"
+    dest: /mnt/zfs/video/config/frigate/config.yaml
+    mode: '0664'
+    container_name: frigate
+  - name: mosquitto.conf
+    src: "{{ inventory_dir }}/../../files/frigate/mosquitto.conf.j2"
+    dest: /home/{{ default_user }}/docker_mounts/frigate/mosquitto/config/mosquitto.conf
+    mode: '0664'
+    container_name: mosquitto
+
+docker_compose_files:
+  - name: frigate-docker-compose.yaml
+    compose_name: frigate
+    state: present
+    src: "{{ docker_compose_subpath }}/frigate.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/frigate-docker-compose.yaml
+    mode: '0664'

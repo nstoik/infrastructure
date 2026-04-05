@@ -14,3 +14,6 @@ all:
         # Add Proxmox Backup Server hosts here
     proxmox_vms:
     proxmox_containers:
+    docker_hosts:
+      hosts:
+        video.internal.welca.ca:

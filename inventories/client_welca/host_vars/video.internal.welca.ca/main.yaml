@@ -6,6 +6,7 @@ ansible_host: 10.150.1.6
 
 base_additional_packages:
   - nmap
+  - ffmpeg
   - qemu-guest-agent
 
 # Configure the passed-through Intel I210 NIC (nic0 on PVE host, PCI 0000:02:00.0).

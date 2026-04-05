@@ -1,0 +1,107 @@
+---
+# Frigate NVR configuration for client_welca
+# https://docs.frigate.video/configuration/
+
+mqtt:
+  enabled: true
+  host: 127.0.0.1
+  port: 1883
+
+detectors:
+  cpu:
+    type: cpu
+    num_threads: 3
+
+# Default settings applied to all cameras unless overridden
+cameras:
+  camera_102:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.102/stream1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+  camera_103:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.103/stream1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+  camera_105:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.105/stream1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+  camera_106:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.106/stream1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+  camera_107:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.107/stream1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+  camera_110:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.110/stream1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+
+record:
+  enabled: true
+  retain:
+    days: 14
+    mode: all  # retain all footage (not just motion)
+  events:
+    retain:
+      default: 30  # keep event clips for 30 days
+
+snapshots:
+  enabled: true
+  retain:
+    default: 14
+
+objects:
+  track:
+    - person
+    - car

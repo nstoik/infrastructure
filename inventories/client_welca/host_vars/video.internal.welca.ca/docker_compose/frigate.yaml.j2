@@ -1,0 +1,26 @@
+---
+name: frigate
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0.22
+    container_name: mosquitto
+    network_mode: host
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/frigate/mosquitto/config:/mosquitto/config
+      - /home/{{ default_user }}/docker_mounts/frigate/mosquitto/data:/mosquitto/data
+    restart: unless-stopped
+
+  frigate:
+    image: ghcr.io/blakeblackshear/frigate:0.17.1
+    container_name: frigate
+    network_mode: host
+    privileged: true
+    shm_size: "320mb"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /mnt/zfs/video/config/frigate:/config
+      - /mnt/zfs/video/recordings:/media/frigate
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
