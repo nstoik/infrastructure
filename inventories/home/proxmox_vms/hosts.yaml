@@ -38,9 +38,9 @@ all:
                 scsi: "scsi1"
                 device: "/dev/disk/by-id/ata-ST12000NM0127_ZJV0P7MQ"
                 backup: 0
-              - comment: 12TB disk for ZFS storage1
+              - comment: 12TB WD disk for ZFS storage1 (replaced failed Seagate ZJV0PGT8 2026-04-05)
                 scsi: "scsi2"
-                device: "/dev/disk/by-id/ata-ST12000NM0127_ZJV0PGT8"
+                device: "/dev/disk/by-id/ata-WDC_WD120EFGX-68CPHN0_WD-B01BWJ2D"
                 backup: 0
               - comment: 8 TB disk for ZFS storage3
                 scsi: "scsi3"
