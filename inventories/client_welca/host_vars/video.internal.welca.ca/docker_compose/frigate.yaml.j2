@@ -16,7 +16,7 @@ services:
     container_name: frigate
     network_mode: host
     privileged: true
-    shm_size: "320mb"
+    shm_size: "512mb"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /mnt/zfs/video/config/frigate:/config

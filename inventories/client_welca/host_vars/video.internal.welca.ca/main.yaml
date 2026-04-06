@@ -31,6 +31,11 @@ sanoid_datasets:
 
 fileserver_setup: true
 fileserver_setup_zfs: true
+fileserver_setup_swap_file: true
+
+fileserver_swap_file:
+  path: /swapfile
+  size: 4G
 
 fileserver_zfs_pools:
   - pool_name: video
