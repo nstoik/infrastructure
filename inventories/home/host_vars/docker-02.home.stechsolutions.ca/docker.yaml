@@ -108,6 +108,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/scrutiny
     mode: '0775'
     container_name: scrutiny
+  # open-webui docker mounts
+  - name: ai_open_webui
+    dest: /home/{{ default_user }}/docker_mounts/ai/open-webui
+    mode: '0775'
+    container_name: open-webui
   # stirling-pdf docker mounts
   - name: files_stirling_pdf_tessdata
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/tessdata
@@ -181,4 +186,10 @@ docker_compose_files:
     state: present
     src: "{{ docker_compose_subpath }}/tools.yaml.j2"
     dest: /home/{{ default_user }}/docker_compose/tools-docker-compose.yaml
+    mode: '0664'
+  - name: ai-docker-compose.yaml
+    compose_name: ai
+    state: present
+    src: "{{ docker_compose_subpath }}/ai.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/ai-docker-compose.yaml
     mode: '0664'

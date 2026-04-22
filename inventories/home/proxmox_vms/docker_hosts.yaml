@@ -104,3 +104,7 @@ all:
                 scsi: "scsi6"
                 device: "data:5,discard=on"
                 backup: 1
+              - comment: 5 GB disk for docker compose ai volume
+                scsi: "scsi7"
+                device: "data:5,discard=on"
+                backup: 1
