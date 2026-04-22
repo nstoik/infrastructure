@@ -22,6 +22,40 @@ Once the FileStash docker container is running, the configuration needs to be do
    - `storage.home.stechsolutions.ca/mnt/zfs`
 4. Use the default user as the username and the private key for the user as the password (typically the key from a desktop system that already has access configured).
 
+## Open WebUI
+
+Open WebUI provides a web interface for Ollama (local LLM backend at `10.10.1.100:11434`).
+
+### Before first deploy — vault secrets
+
+Four secrets are required before deploying:
+
+```yaml
+# In inventories/home/group_vars/all/vault.yaml
+secret_openwebui_secret_key: <random string>     # signs all JWTs; generate with: openssl rand -hex 32
+secret_openwebui_admin_email: <admin email>      # auto-created admin account email
+secret_openwebui_admin_password: <password>      # auto-created admin account password
+secret_openwebui_homepage_key: <leave blank>     # filled in after first deploy (see below)
+```
+
+Encrypt after editing:
+```bash
+ansible-vault encrypt inventories/home/group_vars/all/vault.yaml \
+  --vault-id home@./vault_pass.txt --encrypt-vault-id home
+```
+
+### After first deploy — generate homepage API key
+
+The admin account is created automatically on first startup. API keys are enabled by default.
+
+1. Navigate to [Open WebUI](https://openwebui.home.stechsolutions.ca) and log in with the vault credentials.
+2. Go to **Settings → Account → API Keys** and generate a new key.
+3. Add the key to the vault as `secret_openwebui_homepage_key`.
+4. Redeploy homepage to apply the key to the widget:
+   ```bash
+   ansible-playbook playbooks/hosts_configure.yaml --limit=docker-02 --tags=docker.compose
+   ```
+
 ## Ntfy
 
 The subscribed topics need to be added manually in the Ntfy clients (web or iOS app). The list of topics to subscribe to:
