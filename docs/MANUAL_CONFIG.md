@@ -28,13 +28,11 @@ Open WebUI provides a web interface for Ollama (local LLM backend at `10.10.1.10
 
 ### Before first deploy — vault secrets
 
-Four secrets are required before deploying:
+Two secrets are required before deploying:
 
 ```yaml
 # In inventories/home/group_vars/all/vault.yaml
 secret_openwebui_secret_key: <random string>     # signs all JWTs; generate with: openssl rand -hex 32
-secret_openwebui_admin_email: <admin email>      # auto-created admin account email
-secret_openwebui_admin_password: <password>      # auto-created admin account password
 secret_openwebui_homepage_key: <leave blank>     # filled in after first deploy (see below)
 ```
 
@@ -46,9 +44,9 @@ ansible-vault encrypt inventories/home/group_vars/all/vault.yaml \
 
 ### After first deploy — generate homepage API key
 
-The admin account is created automatically on first startup. API keys are enabled by default.
+The first account created through the UI becomes admin. API keys are enabled by default.
 
-1. Navigate to [Open WebUI](https://openwebui.home.stechsolutions.ca) and log in with the vault credentials.
+1. Navigate to [Open WebUI](https://openwebui.home.stechsolutions.ca) and create your admin account.
 2. Go to **Settings → Account → API Keys** and generate a new key.
 3. Add the key to the vault as `secret_openwebui_homepage_key`.
 4. Redeploy homepage to apply the key to the widget:

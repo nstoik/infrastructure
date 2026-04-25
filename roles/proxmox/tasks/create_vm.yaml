@@ -60,6 +60,18 @@
       become: true
       changed_when: false
 
+    # Set CPU type. Use "host" for max performance on a single node.
+    # For live migration across multiple nodes, use the lowest common CPU generation
+    # (e.g. "IvyBridge" for E5-2697 v2). See: https://pve.proxmox.com/wiki/CPU_Models
+    - name: Set CPU type
+      ansible.builtin.command:
+        cmd: >
+          qm set {{ proxmox_vm.id }}
+          --cpu {{ proxmox_vm.cpu }}
+      when: proxmox_vm.cpu is defined
+      become: true
+      changed_when: false
+
     # Set memory configuration
     - name: Set memory configuration
       ansible.builtin.command:

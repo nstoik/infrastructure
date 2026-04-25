@@ -73,6 +73,7 @@ all:
             name: "{{ inventory_hostname.split('.')[0] }}"
             name_fqdn: "{{ inventory_hostname }}"
             start_onboot: true
+            cpu: host # "host" = max perf, single node only. Use "IvyBridge" if adding a second node for live migration.
             disk_size: 40G
             net0: virtio,bridge=vmbr0
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"

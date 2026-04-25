@@ -23,6 +23,9 @@ layout:
   Media Requests:
     tab: Media
     style: column
+  AI Tools:
+    tab: Tools
+    style: column
   3DPrinting:
     tab: Tools
     style: column
