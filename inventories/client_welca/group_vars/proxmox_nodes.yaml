@@ -35,6 +35,9 @@ scrutiny_collector_install: false
 # Set to false if the controller cannot resolve the proxmox hostnames (e.g. .internal DNS zones).
 proxmox_update_known_hosts: false
 
+# Comment added to the known_hosts_ansible file for welca proxmox hosts
+proxmox_known_hosts_comment: "Proxmox Host: {{ ansible_hostname }}-welca"
+
 # Override default storage (home uses 'data', welca uses 'local-lvm')
 proxmox_import_storage: local-lvm
 

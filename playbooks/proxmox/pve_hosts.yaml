@@ -37,7 +37,7 @@
       vars:
         base_hostname: "{{ item }}"
         base_state: present
-        base_comment: "Proxmox Host: {{ ansible_hostname }}"
+        base_comment: "{{ proxmox_known_hosts_comment | default('Proxmox Host: ' + ansible_hostname) }}"
       loop:
         - "{{ ansible_default_ipv4.address }}"
         - "{{ ansible_hostname }}"
