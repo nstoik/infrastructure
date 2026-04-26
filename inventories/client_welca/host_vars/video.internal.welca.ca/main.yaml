@@ -6,6 +6,7 @@ ansible_host: 10.150.1.6
 
 base_additional_packages:
   - nmap
+  - ffmpeg
   - qemu-guest-agent
 
 # Configure the passed-through Intel I210 NIC (nic0 on PVE host, PCI 0000:02:00.0).
@@ -30,6 +31,11 @@ sanoid_datasets:
 
 fileserver_setup: true
 fileserver_setup_zfs: true
+fileserver_setup_swap_file: true
+
+fileserver_swap_file:
+  path: /swapfile
+  size: 4G
 
 fileserver_zfs_pools:
   - pool_name: video

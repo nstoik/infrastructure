@@ -1,0 +1,77 @@
+---
+# Frigate NVR configuration for client_welca
+# https://docs.frigate.video/configuration/
+
+mqtt:
+  enabled: true
+  host: 127.0.0.1
+  port: 1883
+
+# No detector defined — CPU detection disabled until a GPU/coral is added.
+# Cameras record continuously but object detection is off.
+
+cameras:
+  camera_102:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.102/stream1
+          roles:
+            - record
+    detect:
+      enabled: false
+  camera_103:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.103/stream1
+          roles:
+            - record
+    detect:
+      enabled: false
+  camera_105:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.105/stream1
+          roles:
+            - record
+    detect:
+      enabled: false
+  camera_106:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.106/stream1
+          roles:
+            - record
+    detect:
+      enabled: false
+  camera_107:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.107/stream1
+          roles:
+            - record
+    detect:
+      enabled: false
+  camera_110:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{{ secret_camera_password }}@192.168.10.110/stream1
+          roles:
+            - record
+    detect:
+      enabled: false
+
+record:
+  enabled: true
+  retain:
+    days: 14
+    mode: all  # retain all footage (not just motion)
+  events:
+    retain:
+      default: 30  # keep event clips for 30 days
+
+snapshots:
+  enabled: true
+  retain:
+    default: 14
+
+# objects tracking re-enable when detector is added

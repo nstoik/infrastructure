@@ -30,8 +30,8 @@ all:
             net0: "virtio,bridge=vmbr0"
             ipconfig0: "ip={{ network.ip }}/24,gw={{ network.gateway }}"
             cores: 4
-            memory: 4096
-            balloon: 1024
+            memory: 12288
+            balloon: 2048
             # NIC passthrough — enp2s0 on the Proxmox host.
             # Find PCI ID with: ethtool -i enp2s0 | grep bus-info
             pci_devices:
