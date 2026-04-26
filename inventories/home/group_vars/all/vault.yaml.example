@@ -125,6 +125,13 @@ secret_qbittorrentvpn_webui_password: change_me
 secret_qbittorrentvpn_wg_private_key: change_me
 secret_qbittorrentvpn_wg_public_key: change_me
 
+# Open WebUI secrets
+secret_openwebui_secret_key: generate with 'openssl rand -hex 32'
+secret_openwebui_homepage_key: get from Open WebUI Settings > Account > API Keys after first deploy
+
+# SearXNG secrets
+secret_searxng_secret_key: generate with 'openssl rand -hex 32'
+
 # *arr secrets
 secret_prowlarr_api_key: change_me
 secret_radarr_api_key: change_me

@@ -22,6 +22,41 @@ Once the FileStash docker container is running, the configuration needs to be do
    - `storage.home.stechsolutions.ca/mnt/zfs`
 4. Use the default user as the username and the private key for the user as the password (typically the key from a desktop system that already has access configured).
 
+## Open WebUI
+
+Open WebUI provides a web interface for Ollama (local LLM backend at `10.10.1.100:11434`).
+
+### Before first deploy — vault secrets
+
+Two secrets are required before deploying:
+
+```yaml
+# In inventories/home/group_vars/all/vault.yaml
+secret_openwebui_secret_key: <random string>     # signs all JWTs; generate with: openssl rand -hex 32
+secret_openwebui_homepage_key: <leave blank>     # filled in after first deploy (see below)
+```
+
+Encrypt after editing:
+```bash
+ansible-vault encrypt inventories/home/group_vars/all/vault.yaml \
+  --vault-id home@./vault_pass.txt --encrypt-vault-id home
+```
+
+### After first deploy
+
+The first account created through the UI becomes admin. API keys are enabled by default.
+
+1. Navigate to [Open WebUI](https://openwebui.home.stechsolutions.ca) and create your admin account.
+2. Go to **Settings → Account → API Keys** and generate a new key.
+3. Add the key to the vault as `secret_openwebui_homepage_key`.
+4. Redeploy homepage to apply the key to the widget:
+   ```bash
+   ansible-playbook playbooks/hosts_configure.yaml --limit=docker-02 --tags=docker.compose
+   ```
+5. Go to **Admin Panel → Settings → Web Search**, enable web search, set the search engine to **SearXNG** with URL `http://searxng:8080`, and set the function calling mode to **Native**.
+6. Go to **Admin Panel → Settings → Interface** and set **Task Model (Local)** to the same model as your chat model (e.g. `qwen2.5:14b`). This reuses the already-loaded model for background tasks (title generation, tags, follow-up suggestions) and avoids VRAM thrashing. Using a different model only makes sense if both fit in VRAM simultaneously — with a 16 GB card and qwen2.5:14b (12.3 GiB), there is no room for a second large model.
+7. Go to **Admin Panel → Models → qwen2.5:14b → Advanced Params** and set `num_ctx` to `8192` or `16384` to reduce KV cache size and keep the model fully in VRAM (RX 7600 XT has 16GB).
+
 ## Ntfy
 
 The subscribed topics need to be added manually in the Ntfy clients (web or iOS app). The list of topics to subscribe to:

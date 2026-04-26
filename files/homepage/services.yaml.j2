@@ -1,4 +1,36 @@
 ---
+- AI Tools:
+    - Ollama:
+        icon: ollama.png
+        description: AI Backend
+        widget:
+          type: customapi
+          url: http://10.10.1.100:11434/api/ps
+          method: GET
+          mappings:
+            - field: models[0].name
+              label: "Running Model"
+              format: text
+            - field: models[0].size
+              label: "Model Size"
+              format: bytes
+            - field: models[0].size_vram
+              label: "VRAM Used"
+              format: bytes
+    - Open WebUI:
+        href: https://openwebui.home.stechsolutions.ca
+        description: AI Frontend
+        icon: open-webui.png
+        siteMonitor: https://openwebui.home.stechsolutions.ca
+        widget:
+          type: customapi
+          url: https://openwebui.home.stechsolutions.ca/api/models
+          headers:
+            Authorization: "Bearer {{ secret_openwebui_homepage_key }}"
+          mappings:
+            - field: data
+              label: Total Models
+              format: size
 - 3DPrinting:
     - Mainsail:
         href: http://mainsail.home.stechsolutions.ca

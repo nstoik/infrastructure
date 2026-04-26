@@ -1,0 +1,50 @@
+---
+name: ai
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:v0.9.2
+    container_name: open-webui
+    networks:
+      - traefik
+      - ai
+    environment:
+      - TZ=America/Edmonton
+      - OLLAMA_BASE_URL=http://10.10.1.100:11434
+      - WEBUI_SECRET_KEY={{ secret_openwebui_secret_key }}
+      - ENABLE_API_KEYS=True
+      - RAG_EMBEDDING_ENGINE=ollama
+      - RAG_EMBEDDING_MODEL=nomic-embed-text
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/ai/open-webui:/app/backend/data
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.open-webui.rule=Host(`openwebui.home.stechsolutions.ca`)"
+      - "traefik.http.services.open-webui.loadbalancer.server.port=8080"
+      - "traefik.http.routers.open-webui.entrypoints=websecure"
+      - "traefik.http.routers.open-webui.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.open-webui.middlewares=open-webui-sse@docker"
+      - "traefik.http.middlewares.open-webui-sse.headers.customResponseHeaders.X-Accel-Buffering=no"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/open-webui/open-webui/releases"
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    networks:
+      - ai
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/ai/searxng:/etc/searxng
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^\\d{4}\\.\\d{2}\\.\\d{2}-\\d+$"
+      - "wud.link.template=https://github.com/searxng/searxng/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
+  ai:
+    name: ai
