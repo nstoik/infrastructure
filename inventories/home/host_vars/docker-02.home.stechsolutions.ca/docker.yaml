@@ -66,6 +66,12 @@ docker_configuration_files:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/ntfy-alertmanager/config
     mode: '0664'
     container_name: ntfy-alertmanager
+  # searxng configuration files
+  - name: searxng_settings.yml
+    src: "{{ inventory_dir }}/../../files/searxng/settings.yml.j2"
+    dest: /home/{{ default_user }}/docker_mounts/ai/searxng/settings.yml
+    mode: '0664'
+    container_name: searxng
   # scrutiny configuration files
   - name: scrutiny_config.yaml
     src: "{{ inventory_dir }}/../../files/scrutiny/scrutiny.yaml.j2"
@@ -113,6 +119,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/ai/open-webui
     mode: '0775'
     container_name: open-webui
+  # searxng docker mounts
+  - name: ai_searxng
+    dest: /home/{{ default_user }}/docker_mounts/ai/searxng
+    mode: '0775'
+    container_name: searxng
   # stirling-pdf docker mounts
   - name: files_stirling_pdf_tessdata
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/tessdata

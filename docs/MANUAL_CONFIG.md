@@ -42,7 +42,7 @@ ansible-vault encrypt inventories/home/group_vars/all/vault.yaml \
   --vault-id home@./vault_pass.txt --encrypt-vault-id home
 ```
 
-### After first deploy — generate homepage API key
+### After first deploy
 
 The first account created through the UI becomes admin. API keys are enabled by default.
 
@@ -53,6 +53,9 @@ The first account created through the UI becomes admin. API keys are enabled by 
    ```bash
    ansible-playbook playbooks/hosts_configure.yaml --limit=docker-02 --tags=docker.compose
    ```
+5. Go to **Admin Panel → Settings → Web Search**, enable web search, set the search engine to **SearXNG** with URL `http://searxng:8080`, and set the function calling mode to **Native**.
+6. Go to **Admin Panel → Settings → Interface** and set **Task Model (Local)** to the same model as your chat model (e.g. `qwen2.5:14b`). This reuses the already-loaded model for background tasks (title generation, tags, follow-up suggestions) and avoids VRAM thrashing. Using a different model only makes sense if both fit in VRAM simultaneously — with a 16 GB card and qwen2.5:14b (12.3 GiB), there is no room for a second large model.
+7. Go to **Admin Panel → Models → qwen2.5:14b → Advanced Params** and set `num_ctx` to `8192` or `16384` to reduce KV cache size and keep the model fully in VRAM (RX 7600 XT has 16GB).
 
 ## Ntfy
 
