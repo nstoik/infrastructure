@@ -1,9 +1,4 @@
 ---
-# Additional packages to be installed on this host
-# Main list is the same as proxmox_vms group vars
-# Need the nvidia drivers for GPU passthrough
-base_additional_packages:
-  - qemu-guest-agent
-  - prometheus-node-exporter
+base_host_additional_packages:
   - nvidia-driver-550
   - nvidia-utils-550

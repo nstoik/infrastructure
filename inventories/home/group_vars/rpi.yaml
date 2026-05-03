@@ -4,5 +4,5 @@ ansible_become_password: "{{ secret_become_pass }}"
 
 ansible_ssh_pass: "{{ secret_become_pass }}"
 
-base_additional_packages:
+base_group_additional_packages:
   - "iw"

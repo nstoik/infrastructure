@@ -7,6 +7,9 @@
 # Enable ZFS collector for prometheus-node-exporter
 base_node_exporter_zfs_collector: true
 
+base_host_additional_packages:
+  - unrar
+
 fileserver_setup: true
 fileserver_setup_mergerfs: false
 fileserver_setup_snapraid: false

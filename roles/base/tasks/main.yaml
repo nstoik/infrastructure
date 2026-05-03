@@ -2,7 +2,8 @@
 # tasks file for base
 #
 # inputs:
-#   - base_additional_packages: list of additional packages to install
+#   - base_group_additional_packages: list of group-level additional packages to install
+#   - base_host_additional_packages: list of host-level additional packages to install
 #   - base_additional_services: list of additional services to enable and start
 #   - base_reboot_host_if_required: boolean to reboot the host if required
 #   - base_apt_upgrade_packages: if or how to upgrade apt packages
@@ -32,7 +33,7 @@
 - name: Install base packages
   ansible.builtin.apt:
     # append the list of packages to install with optional additional packages
-    name: "{{ base_packages + (base_additional_packages | default([])) }}"
+    name: "{{ base_packages + (base_group_additional_packages | default([])) + (base_host_additional_packages | default([])) }}"
     state: present
   become: true
   tags:
