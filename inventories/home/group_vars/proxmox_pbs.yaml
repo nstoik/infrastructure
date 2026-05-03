@@ -17,7 +17,7 @@ base_users:
       install: true
 
 # The proxmox nodes need sudo to be installed
-base_additional_packages:
+base_group_additional_packages:
   - "sudo"
   - "lshw"
   - "prometheus-node-exporter"

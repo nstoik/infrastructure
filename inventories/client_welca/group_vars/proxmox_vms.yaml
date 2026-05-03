@@ -2,7 +2,7 @@
 # group_vars for the proxmox_vms group (client_welca inventory)
 ansible_become_password: "{{ secret_become_pass }}"
 
-base_additional_packages:
+base_group_additional_packages:
   - "qemu-guest-agent"
 
 base_additional_services:

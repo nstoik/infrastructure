@@ -12,7 +12,7 @@ base_users:
     dotfiles:
       install: true
 
-base_additional_packages:
+base_group_additional_packages:
   - "qemu-guest-agent"
   - prometheus-node-exporter
 

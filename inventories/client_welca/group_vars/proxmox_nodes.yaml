@@ -4,7 +4,7 @@
 ansible_become_password: "{{ secret_become_pass }}"
 
 # The proxmox nodes need sudo to be installed
-base_additional_packages:
+base_group_additional_packages:
   - "sudo"
   - "lshw"
   - "prometheus-node-exporter"
