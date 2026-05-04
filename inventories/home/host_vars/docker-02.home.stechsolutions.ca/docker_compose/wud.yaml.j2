@@ -3,7 +3,7 @@ name: wud
 
 services:
   wud:
-    image: getwud/wud:8.1.1
+    image: getwud/wud:8.2.2
     networks:
       - traefik
       - docker-proxy
@@ -14,8 +14,7 @@ services:
         - WUD_TRIGGER_NTFY_SELFHOSTED_URL={{ wud_trigger_ntfy_sh_url }}
         - WUD_TRIGGER_NTFY_SELFHOSTED_TOPIC={{ wud_trigger_ntfy_sh_topic }}
         - WUD_TRIGGER_NTFY_SELFHOSTED_PRIORITY={{ wud_trigger_ntfy_sh_priority }}
-        - WUD_TRIGGER_NTFY_SELFHOSTED_AUTH_USER={{ wud_trigger_ntfy_sh_auth_user }}
-        - WUD_TRIGGER_NTFY_SELFHOSTED_AUTH_PASSWORD={{ wud_trigger_ntfy_sh_auth_password }}
+        - WUD_TRIGGER_NTFY_SELFHOSTED_AUTH_TOKEN={{ wud_trigger_ntfy_sh_auth_token }}
         - WUD_TRIGGER_NTFY_SELFHOSTED_MODE=batch
         - WUD_TRIGGER_NTFY_SELFHOSTED_ONCE=true
         - WUD_WATCHER_LOCAL_HOST=docker-socket-proxy
