@@ -145,8 +145,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
   prometheus-pihole-exporter:
-    # Use the latest version to get the --skip_tls_verification option. Once a new version is released, update the image tag.
-    image: ekofr/pihole-exporter:latest
+    image: ekofr/pihole-exporter:v1.2.0
     networks:
       - prometheus_exporter
     container_name: prometheus-pihole-exporter
