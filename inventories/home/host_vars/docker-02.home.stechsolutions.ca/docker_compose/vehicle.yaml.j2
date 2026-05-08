@@ -29,7 +29,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+(\\.\\d+)?$"
       - "wud.link.template=https://www.postgresql.org/docs/release/"
   lubelogger:
-    image: hargata/lubelogger:v1.5.4
+    image: hargata/lubelogger:v1.6.4
     user: 1000:1000
     networks:
       - traefik
@@ -42,7 +42,7 @@ services:
         - LUBELOGGER_DOMAIN=lubelogger.home.stechsolutions.ca
     volumes:
         - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/data:/App/data
-        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/keys:/root/.aspnet/DataProtection-Keys
+        - /home/{{ default_user }}/docker_mounts/vehicle/lubelogger/keys:/home/ubuntu/.aspnet/DataProtection-Keys
     depends_on:
         - postgres_vehicle_db
     restart: unless-stopped
