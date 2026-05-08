@@ -3,7 +3,7 @@ name: monitoring
 
 services:
   prometheus:
-    image: prom/prometheus:v3.7.3
+    image: prom/prometheus:v3.11.3
     user: 1000:1000
     networks:
       - traefik
@@ -131,7 +131,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/google/cadvisor/releases"
   prometheus-pve-exporter:
-    image: prompve/prometheus-pve-exporter:3.5.5
+    image: prompve/prometheus-pve-exporter:3.8.3
     networks:
       - prometheus_exporter
     container_name: prometheus-pve-exporter
@@ -166,7 +166,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/eko/pihole-exporter/releases"
   prometheus-nut-exporter:
-    image: ghcr.io/druggeri/nut_exporter:3.2.2
+    image: ghcr.io/druggeri/nut_exporter:3.2.5
     networks:
       - prometheus_exporter
     container_name: prometheus-nut-exporter
@@ -180,7 +180,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/druggeri/nut_exporter/releases"
   prometheus-tailscale-exporter:
-    image: adinhodovic/tailscale-exporter:0.3.0
+    image: adinhodovic/tailscale-exporter:0.5.0
     networks:
       - prometheus_exporter
     container_name: prometheus-tailscale-exporter
