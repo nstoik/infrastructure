@@ -16,10 +16,8 @@ The [3D Printer Repo](https://github.com/nstoik/3D-printer) stores the configura
 Once the FileStash docker container is running, the configuration needs to be done manually.
 
 1. Navigate to the [web interface](https://filestash.home.stechsolutions.ca) and set the admin password that is saved in Bitwarden.
-2. Navigate to the [Admin Console](https://filestash.home.stechsolutions.ca/admin/backend).
-3. Add two `SFTP` backends and configure them to connect to:
-   - `storage.home.stechsolutions.ca/mnt/storage`
-   - `storage.home.stechsolutions.ca/mnt/zfs`
+2. Navigate to the [Admin Console](https://filestash.home.stechsolutions.ca/admin/storage).
+3. Add one `SFTP` backend and configure it to connect to `storage.home.stechsolutions.ca` with path `/export`.
 4. Use the default user as the username and the private key for the user as the password (typically the key from a desktop system that already has access configured).
 
 ## Open WebUI
