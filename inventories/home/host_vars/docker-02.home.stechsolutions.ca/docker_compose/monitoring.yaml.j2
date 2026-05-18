@@ -98,7 +98,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.xenrox.net/~xenrox/ntfy-alertmanager/"
   cadvisor:
-    image: ghcr.io/google/cadvisor:0.56.2
+    image: ghcr.io/google/cadvisor:0.57.0
     networks:
       - traefik
     container_name: cadvisor
