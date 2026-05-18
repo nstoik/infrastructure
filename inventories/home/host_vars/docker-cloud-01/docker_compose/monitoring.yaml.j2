@@ -173,7 +173,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/louislam/uptime-kuma/releases"
   cadvisor:
-    image: ghcr.io/google/cadvisor:0.57.0
+    image: ghcr.io/google/cadvisor:v0.57.0
     pid: host
     networks:
       - traefik
