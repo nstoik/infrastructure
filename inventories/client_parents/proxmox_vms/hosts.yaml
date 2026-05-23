@@ -1,0 +1,14 @@
+---
+# Hosts that are proxmox VMs and their configuration
+#
+# Before running proxmox_vms_add.yaml:
+#   1. Find disk IDs on the Proxmox host:
+#      ls -la /dev/disk/by-id/ | grep -v part
+#   2. Find iGPU PCI address on pve2:
+#      lspci -nn | grep -i vga
+
+all:
+  children:
+    proxmox_vms:
+      hosts:
+        # frigate added in Plan C.2

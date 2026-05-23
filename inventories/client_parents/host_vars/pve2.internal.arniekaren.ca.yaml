@@ -1,0 +1,33 @@
+---
+# Host variables for pve2.internal.arniekaren.ca (shop)
+# Not yet installed — physical setup required before Ansible can run against this host.
+
+ansible_host: 10.200.1.5
+
+# neofetch removed from Debian 13 (Trixie) / Proxmox 9 repos
+base_packages:
+  - git
+  - jq
+  - vnstat
+  - wireguard
+  - wireguard-tools
+
+proxmox_nut_configure: false
+
+# iGPU passthrough for Frigate (Plan C.2) — manual prerequisites before running:
+#   1. BIOS: enable VT-d / VT-x
+#   2. GRUB: add 'intel_iommu=on iommu=pt' to GRUB_CMDLINE_LINUX_DEFAULT
+#   3. Blacklist i915: echo 'blacklist i915' >> /etc/modprobe.d/blacklist.conf
+#   4. Bind iGPU to vfio-pci and update-initramfs -u
+#   Verify with: lspci -nnk | grep vfio-pci
+
+# No PBS configured yet. Uncomment and populate in Plan C.3:
+# proxmox_storage:
+#   - storage: "pbs"
+#     type: "pbs"
+#     state: "present"
+#     server: "pbs.internal.arniekaren.ca"
+#     datastore: "pbs"
+#     namespace: "proxmox-vms"
+#     username: "backup@pbs"
+#     password: "{{ secret_user_password }}"

@@ -1,0 +1,26 @@
+---
+# Host variables for pve1.internal.arniekaren.ca (house)
+# System hostname is 'pve' — no rename needed; inventory uses pve1 with ansible_host.
+
+ansible_host: 10.200.1.4
+
+# neofetch removed from Debian 13 (Trixie) / Proxmox 9 repos
+base_packages:
+  - git
+  - jq
+  - vnstat
+  - wireguard
+  - wireguard-tools
+
+proxmox_nut_configure: false
+
+# No PBS configured yet. Uncomment and populate in Plan C.3:
+# proxmox_storage:
+#   - storage: "pbs"
+#     type: "pbs"
+#     state: "present"
+#     server: "pbs.internal.arniekaren.ca"
+#     datastore: "pbs"
+#     namespace: "proxmox-vms"
+#     username: "backup@pbs"
+#     password: "{{ secret_user_password }}"

@@ -1,0 +1,22 @@
+---
+# Host variables for vpn.parents (Nelson's Tailscale subnet router at parents' site)
+# This VM is Nelson's infrastructure — managed from the home inventory.
+# It advertises 10.200.1.0/24 so Ansible can reach pve1/pve2 in client_parents.
+#
+# TODO: Rename VM from 'vpn.arnie-karen' to 'vpn.parents':
+#   1. SSH in: sudo hostnamectl set-hostname vpn.parents
+#   2. Rename the machine in Tailscale admin console (https://login.tailscale.com/admin/machines)
+#   3. Update ansible_host below if Tailscale IP changes
+
+ansible_host: 10.50.50.3
+
+# TODO: VM currently bootstrapped with 'arnie' user. Migrate to 'nelson':
+#   1. Run the base role against this host (creates nelson user + SSH key)
+#   2. Confirm SSH access as nelson works
+#   3. Remove the two overrides below (ansible_user/ansible_become_password)
+#      so they inherit default_user=nelson from group_vars/all/main.yaml
+#   4. Remove secret_become_pass_arnie from home vault
+ansible_user: arnie
+ansible_become_password: "{{ secret_become_pass_arnie }}"
+
+base_setup: true

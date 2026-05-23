@@ -1,0 +1,18 @@
+---
+# Client Parents inventory
+all:
+  hosts:
+    pve1.internal.arniekaren.ca:
+    pve2.internal.arniekaren.ca:
+    ha:  # HAOS — not in proxmox_vms (no SSH); declared here for tracking only
+
+  children:
+    proxmox_nodes:
+      hosts:
+        pve1.internal.arniekaren.ca:
+        pve2.internal.arniekaren.ca:
+    proxmox_pbs:
+      hosts:
+        # Add Proxmox Backup Server host here (Plan C.3)
+    proxmox_vms:
+    proxmox_containers:

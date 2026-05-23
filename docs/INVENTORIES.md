@@ -3,6 +3,7 @@
 This repository supports multiple independent inventory sets, each managing different infrastructure environments. For example:
 - `home` - Home lab and local StechSolutions infrastructure
 - `client_welca` - Client site infrastructure (Proxmox host on remote site)
+- `client_parents` - Parents' site infrastructure (two Proxmox nodes, Frigate NVR, PBS)
 
 Each inventory has its own:
 - Inventory files (`inventory.yaml`, `group_vars/`, `host_vars/`)
