@@ -210,6 +210,8 @@ services:
       - "traefik.http.services.peanut.loadbalancer.server.port=8080"
       - "traefik.http.routers.peanut.entrypoints=websecure"
       - "traefik.http.routers.peanut.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.peanut-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+      - "traefik.http.routers.peanut.middlewares=peanut-IPAllowList"
       - "homepage.group=Monitoring"
       - "homepage.name=MyUPS"
       - "homepage.description=NUT Monitoring"
