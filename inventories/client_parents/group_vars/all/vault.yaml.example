@@ -9,12 +9,16 @@ secret_nelson_password: change_me
 secret_nelson_password_prehashed: hashed version of 'secret_nelson_password'
 
 secret_ssh_keys:
-  arnie:
-    - name: "Nelson Arnie"
+  parents:
+    - name: "Nelson Parents"
       key: "ssh-ed25519 change_me"
   nelson:
-    - name: "Nelson Personal"
-      key: "ssh-ed25519 change_me"
+    - name: "Nelson's Desktop"
+      key: "ssh-rsa change_me"
+    - name: "Nelson's Laptop"
+      key: "ssh-rsa change_me"
+    - name: "Termius FaceID iOS App"
+      key: "ecdsa-sha2-nistp256 change_me"
 
 secret_ntfy_tokens:
   Proxmox: tk_change_me
