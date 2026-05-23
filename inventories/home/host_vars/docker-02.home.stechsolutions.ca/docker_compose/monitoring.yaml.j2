@@ -3,7 +3,7 @@ name: monitoring
 
 services:
   prometheus:
-    image: prom/prometheus:v3.7.3
+    image: prom/prometheus:v3.11.3
     user: 1000:1000
     networks:
       - traefik
@@ -41,7 +41,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/prometheus/releases"
   alertmanager:
-    image: prom/alertmanager:v0.29.0
+    image: prom/alertmanager:v0.32.1
     user: 1000:1000
     networks:
       - traefik
@@ -80,7 +80,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/alertmanager/releases"
   ntfy-alertmanager:
-    image: xenrox/ntfy-alertmanager:0.5.0
+    image: xenrox/ntfy-alertmanager:1.0.0
     networks:
       - traefik
       - prometheus_exporter
@@ -98,7 +98,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.xenrox.net/~xenrox/ntfy-alertmanager/"
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.52.1
+    image: ghcr.io/google/cadvisor:v0.57.0
     networks:
       - traefik
     container_name: cadvisor
@@ -131,7 +131,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/google/cadvisor/releases"
   prometheus-pve-exporter:
-    image: prompve/prometheus-pve-exporter:3.5.5
+    image: prompve/prometheus-pve-exporter:3.9.0
     networks:
       - prometheus_exporter
     container_name: prometheus-pve-exporter
@@ -145,8 +145,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
   prometheus-pihole-exporter:
-    # Use the latest version to get the --skip_tls_verification option. Once a new version is released, update the image tag.
-    image: ekofr/pihole-exporter:latest
+    image: ekofr/pihole-exporter:v1.2.0
     networks:
       - prometheus_exporter
     container_name: prometheus-pihole-exporter
@@ -167,7 +166,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/eko/pihole-exporter/releases"
   prometheus-nut-exporter:
-    image: ghcr.io/druggeri/nut_exporter:3.2.2
+    image: ghcr.io/druggeri/nut_exporter:3.3.0
     networks:
       - prometheus_exporter
     container_name: prometheus-nut-exporter
@@ -181,7 +180,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/druggeri/nut_exporter/releases"
   prometheus-tailscale-exporter:
-    image: adinhodovic/tailscale-exporter:0.3.0
+    image: adinhodovic/tailscale-exporter:0.6.1
     networks:
       - prometheus_exporter
     container_name: prometheus-tailscale-exporter
@@ -194,11 +193,13 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/adinhodovic/tailscale-exporter/releases"
   peanut:
-    image: brandawg93/peanut:5.17.0
+    image: brandawg93/peanut:6.0.0
     networks:
       - traefik
       - prometheus_exporter
     container_name: peanut
+    environment:
+      - AUTH_DISABLED=true
     volumes:
       - /home/{{ default_user }}/docker_mounts/monitoring/peanut:/config
     restart: unless-stopped
@@ -209,6 +210,8 @@ services:
       - "traefik.http.services.peanut.loadbalancer.server.port=8080"
       - "traefik.http.routers.peanut.entrypoints=websecure"
       - "traefik.http.routers.peanut.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.peanut-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+      - "traefik.http.routers.peanut.middlewares=peanut-IPAllowList"
       - "homepage.group=Monitoring"
       - "homepage.name=MyUPS"
       - "homepage.description=NUT Monitoring"
@@ -223,7 +226,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/brandawg93/peanut/releases"
   grafana:
-    image: grafana/grafana:12.3.0
+    image: grafana/grafana:13.0.1
     networks:
       - traefik
       - prometheus_exporter

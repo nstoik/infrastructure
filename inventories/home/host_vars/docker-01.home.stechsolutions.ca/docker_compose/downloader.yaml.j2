@@ -3,7 +3,7 @@ name: downloader
 
 services:
   downloader:
-    image: nstoik/qbittorrent-vpn:1.1.1
+    image: nstoik/qbittorrent-vpn:1.3.0
     networks:
       - traefik
     container_name: qbittorrentvpn
@@ -43,7 +43,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.docker.com/r/nstoik/qbittorrent-vpn/tags"
   qbit_manage:
-    image: ghcr.io/stuffanthings/qbit_manage:v4.6.4
+    image: ghcr.io/stuffanthings/qbit_manage:v4.7.1
     network_mode: "service:downloader"
     container_name: qbit_manage
     environment:
@@ -66,7 +66,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/stuffanthings/qbit_manage/releases"
   prowlarr:
-    image: ghcr.io/hotio/prowlarr:release-2.3.0.5236
+    image: ghcr.io/hotio/prowlarr:release-2.3.5.5327
     networks:
       - arr_network
       - traefik
@@ -97,7 +97,7 @@ services:
       - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Prowlarr/Prowlarr/releases"
   flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:v3.4.5
+    image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
     networks:
       - arr_network
       - traefik
@@ -124,7 +124,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/FlareSolverr/FlareSolverr/releases"
   profilarr:
-    image: santiagosayshey/profilarr:beta
+    image: santiagosayshey/profilarr:v1.1.4
     networks:
       - arr_network
       - traefik
@@ -154,7 +154,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Dictionarry-Hub/profilarr/releases"
   radarr:
-    image: ghcr.io/hotio/radarr:release-6.0.4.10291
+    image: ghcr.io/hotio/radarr:release-6.1.1.10360
     networks:
       - arr_network
       - traefik
@@ -188,7 +188,7 @@ services:
       - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Radarr/Radarr/releases"
   sonarr:
-    image: ghcr.io/hotio/sonarr:release-4.0.16.2944
+    image: ghcr.io/hotio/sonarr:release-4.0.17.2952
     networks:
       - arr_network
       - traefik

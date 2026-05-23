@@ -3,7 +3,7 @@ name: monitoring
 
 services:
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.52.1
+    image: ghcr.io/google/cadvisor:v0.57.0
     networks:
       - traefik
     container_name: cadvisor

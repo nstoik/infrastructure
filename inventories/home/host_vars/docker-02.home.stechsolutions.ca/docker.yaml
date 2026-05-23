@@ -16,8 +16,7 @@ wud_registry_hub_public_password: "{{ secret_docker_hub_wud_access_token }}"
 wud_trigger_ntfy_sh_url: https://ntfy.stechsolutions.ca
 wud_trigger_ntfy_sh_topic: wud
 wud_trigger_ntfy_sh_priority: 2
-wud_trigger_ntfy_sh_auth_user: "{{ default_user }}"
-wud_trigger_ntfy_sh_auth_password: "{{ secret_ntfy_password }}"
+wud_trigger_ntfy_sh_auth_token: "{{ secret_ntfy_tokens.WUD }}"
 
 # docker container paths. All found files will be processed and copied to the docker host
 docker_configuration_paths:
