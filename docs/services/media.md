@@ -80,13 +80,12 @@ Prowlarr is configured via its web interface.
 
 ### Profilarr
 Profilarr is configured via its web interface.
-- Access the web UI and set the initial username and password (stored in Bitwarden).
-- Add the database (Dictionary/Database)
-- Connect Radarr to Profilarr via the API key.
-- Connect Sonarr to Profilarr via the API key.
+- On first run, navigate to the web UI — it redirects to `/auth/setup` to create the admin account. Store credentials in Bitwarden.
+- Link the Dictionarry database: **Settings → Databases → Add Database**.
+- Add arr instances: **Settings → Arr Instances** → add Radarr and Sonarr with their API keys.
 - Confirm Media Management settings are correct (naming, folders, etc).
-- Select the desired profiles to manage.
-    - Starting with default 1080p Efficient as a start.
+- Select the desired profiles to sync — start with the default 1080p Efficient profile.
+- Configure ntfy notifications: **Settings → Notifications → Add** → select ntfy, set topic to `media-health`, enable for failures only.
 
 ### Tautulli
 Tautulli is configured via its web interface.

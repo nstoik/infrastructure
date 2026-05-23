@@ -124,7 +124,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/FlareSolverr/FlareSolverr/releases"
   profilarr:
-    image: santiagosayshey/profilarr:v1.1.4
+    image: ghcr.io/dictionarry-hub/profilarr:2.0.4
     networks:
       - arr_network
       - traefik
@@ -132,7 +132,9 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      - UMASK=022
       - TZ=America/Edmonton
+      - ORIGIN=https://profilarr.home.stechsolutions.ca
     volumes:
       - /home/{{ default_user }}/docker_mounts/downloader/profilarr:/config
     depends_on:
