@@ -27,8 +27,15 @@
         state: present
       become: true
 
+    - name: Download starship install script
+      ansible.builtin.get_url:
+        url: https://starship.rs/install.sh
+        dest: /tmp/starship-install.sh
+        mode: "0755"
+      become: true
+
     - name: Install starship prompt
-      ansible.builtin.shell: curl -sS https://starship.rs/install.sh | sh -s -- --yes
+      ansible.builtin.command: /tmp/starship-install.sh --yes
       args:
         creates: /usr/local/bin/starship
       become: true
