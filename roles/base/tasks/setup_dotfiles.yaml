@@ -27,6 +27,12 @@
         state: present
       become: true
 
+    - name: Install starship prompt
+      ansible.builtin.shell: curl -sS https://starship.rs/install.sh | sh -s -- --yes
+      args:
+        creates: /usr/local/bin/starship
+      become: true
+
     - name: Make the directory for the dotfiles
       ansible.builtin.file:
         path: "{{ dotfiles_dir }}"
