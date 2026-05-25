@@ -13,6 +13,11 @@
     path: "/usr/local/share/{{ base_github_binary.name }}.url"
   register: base_github_binary_marker_stat
 
+- name: Check dest binary exists for {{ base_github_binary.name }}
+  ansible.builtin.stat:
+    path: "{{ base_github_binary.dest }}"
+  register: base_github_binary_dest_stat
+
 - name: Read URL marker for {{ base_github_binary.name }}
   ansible.builtin.slurp:
     src: "/usr/local/share/{{ base_github_binary.name }}.url"
@@ -23,7 +28,8 @@
 - name: Set install flag for {{ base_github_binary.name }}
   ansible.builtin.set_fact:
     base_github_binary_needs_install: >-
-      {{ not base_github_binary_marker_stat.stat.exists or
+      {{ not base_github_binary_dest_stat.stat.exists or
+         not base_github_binary_marker_stat.stat.exists or
          (base_github_binary_marker_content.content | b64decode | trim) != base_github_binary.url }}
 
 - name: Download archive for {{ base_github_binary.name }}
@@ -58,3 +64,11 @@
     mode: "0644"
   become: true
   when: base_github_binary_needs_install
+
+- name: Set capabilities for {{ base_github_binary.name }}
+  community.general.capabilities:
+    path: "{{ base_github_binary.dest }}"
+    capability: "{{ base_github_binary.capabilities }}"
+    state: present
+  become: true
+  when: base_github_binary.capabilities is defined
