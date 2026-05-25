@@ -2,3 +2,5 @@
 base_host_additional_packages:
   - nvidia-driver-550
   - nvidia-utils-550
+  - wireguard
+  - wireguard-tools

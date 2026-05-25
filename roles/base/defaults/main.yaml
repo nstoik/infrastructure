@@ -15,11 +15,10 @@ base_reboot_host_if_required: true
 # the base packages to install
 base_packages:
   - git
+  - inxi
   - jq
   - neofetch
   - vnstat
-  - wireguard
-  - wireguard-tools
 
 # the base services to enable and start
 # eg format will include the service name, state, and optional enabled state
