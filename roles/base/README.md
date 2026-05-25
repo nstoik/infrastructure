@@ -18,14 +18,14 @@ Binaries not available in apt can be installed from GitHub releases via the `bas
 
 | Variable | Default | Description |
 |---|---|---|
-| `base_github_binaries` | `[gping, trippy]` | List of GitHub-released binaries to install |
+| `base_github_binaries` | see `defaults/main.yaml` | List of GitHub-released binaries to install (defaults include gping and trippy) |
 
 Each entry in `base_github_binaries` supports:
 
 | Key | Required | Description |
 |---|---|---|
-| `name` | yes | Binary name, used for the /tmp archive filename and marker file |
-| `url` | yes | Download URL for the release archive (may reference `ansible_architecture`) |
+| `name` | yes | Binary name, used for the URL marker file at `/usr/local/share/<name>.url` |
+| `url` | yes | Download URL for the release archive (may reference `ansible_facts['architecture']`, `base_gping_arch`, or `base_trippy_arch`) |
 | `dest` | yes | Final installed binary path (e.g. `/usr/local/bin/gping`) |
 | `archive_binary` | yes | Path to the binary inside the extracted archive |
 | `capabilities` | no | Linux capability string to set on the binary (e.g. `cap_net_raw+ep`) |
