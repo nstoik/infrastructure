@@ -27,6 +27,19 @@
         state: present
       become: true
 
+    - name: Download starship install script
+      ansible.builtin.get_url:
+        url: https://starship.rs/install.sh
+        dest: /tmp/starship-install.sh
+        mode: "0755"
+      become: true
+
+    - name: Install starship prompt
+      ansible.builtin.command: /tmp/starship-install.sh --yes
+      args:
+        creates: /usr/local/bin/starship
+      become: true
+
     - name: Make the directory for the dotfiles
       ansible.builtin.file:
         path: "{{ dotfiles_dir }}"
