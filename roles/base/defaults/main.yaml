@@ -12,6 +12,22 @@ base_apt_update_packages: true
 # variables for rebooting the host
 base_reboot_host_if_required: true
 
+# GitHub-released binaries to install on all hosts.
+# Each entry requires:
+#   name: used as the archive filename in /tmp
+#   url: download URL (may reference ansible_architecture)
+#   dest: final binary path (used to check if already installed)
+#   archive_binary: path to the binary inside the extracted archive
+base_github_binaries:
+  - name: gping
+    url: "https://github.com/orf/gping/releases/download/gping-v1.20.1/gping-Linux-musl-{{ 'arm64' if ansible_architecture == 'aarch64' else 'x86_64' }}.tar.gz"
+    dest: /usr/local/bin/gping
+    archive_binary: gping
+  - name: trippy
+    url: "https://github.com/fujiapple852/trippy/releases/download/0.13.0/trippy-0.13.0-{{ ansible_architecture }}-unknown-linux-musl.tar.gz"
+    dest: /usr/local/bin/trip
+    archive_binary: "trippy-0.13.0-{{ ansible_architecture }}-unknown-linux-musl/trip"
+
 # the base packages to install
 base_packages:
   - git

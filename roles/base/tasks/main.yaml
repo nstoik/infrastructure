@@ -40,6 +40,14 @@
     - base
     - base.apt
 
+# Install GitHub-released binaries
+- name: Install GitHub-released binaries
+  ansible.builtin.include_tasks: setup_github_binaries.yaml
+  when: ansible_facts['os_family'] == "Debian"
+  tags:
+    - base
+    - base.binaries
+
 # set the timezone
 - name: Set the timezone
   community.general.timezone:

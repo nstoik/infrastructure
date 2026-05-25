@@ -1,0 +1,16 @@
+---
+# Install GitHub-released binaries defined in base_github_binaries.
+# Called from main.yaml on Debian-family hosts.
+# Uses a URL marker file to detect version changes and reinstall when the URL changes.
+
+- name: Block for GitHub binary installs
+  tags:
+    - base
+    - base.binaries
+  block:
+    - name: Install GitHub binary
+      ansible.builtin.include_tasks: install_github_binary.yaml
+      loop: "{{ base_github_binaries }}"
+      loop_control:
+        loop_var: base_github_binary
+        label: "{{ base_github_binary.name }}"
