@@ -12,6 +12,7 @@ ansible-playbook playbooks/hosts_configure.yaml --tags=base
 
 - `base` - Base role and all base tasks
 - `base.apt` - Configure apt package manager and install packages
+- `base.binaries` - Install GitHub-released binaries defined in `base_github_binaries`
 - `base.docker` - Configure Docker repositor
 - `base.dotfiles` - Configure dotfiles
 - `base.known_hosts` - Configure known_hosts file on the local machine

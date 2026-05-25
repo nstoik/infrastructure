@@ -12,6 +12,34 @@ Sets up the base configuration for all managed hosts: packages, users, dotfiles,
 | `base_apt_update_packages` | `true` | Run apt update before installing packages |
 | `base_packages` | `[git, jq, neofetch, ...]` | Additional packages to install |
 
+### GitHub Binary Installs
+
+Binaries not available in apt can be installed from GitHub releases via the `base_github_binaries` list. Each entry is downloaded, extracted, and installed idempotently. A URL marker file at `/usr/local/share/<name>.url` tracks the installed version — the binary is reinstalled automatically when the URL changes. Deleting the marker file forces a reinstall without changing the URL.
+
+| Variable | Default | Description |
+|---|---|---|
+| `base_github_binaries` | `[gping, trippy]` | List of GitHub-released binaries to install |
+
+Each entry in `base_github_binaries` supports:
+
+| Key | Required | Description |
+|---|---|---|
+| `name` | yes | Binary name, used for the /tmp archive filename and marker file |
+| `url` | yes | Download URL for the release archive (may reference `ansible_architecture`) |
+| `dest` | yes | Final installed binary path (e.g. `/usr/local/bin/gping`) |
+| `archive_binary` | yes | Path to the binary inside the extracted archive |
+| `capabilities` | no | Linux capability string to set on the binary (e.g. `cap_net_raw+ep`) |
+
+Example — adding a new binary:
+
+```yaml
+base_github_binaries:
+  - name: myapp
+    url: "https://github.com/org/myapp/releases/download/v1.0.0/myapp-{{ ansible_facts['architecture'] }}-linux.tar.gz"
+    dest: /usr/local/bin/myapp
+    archive_binary: myapp
+```
+
 ### User Configuration
 
 | Variable | Default | Description |
