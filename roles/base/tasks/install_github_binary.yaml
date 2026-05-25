@@ -35,14 +35,14 @@
 - name: Download archive for {{ base_github_binary.name }}
   ansible.builtin.get_url:
     url: "{{ base_github_binary.url }}"
-    dest: "/tmp/{{ base_github_binary.name }}.tar.gz"
+    dest: "/tmp/{{ base_github_binary.url | basename }}"
     mode: "0644"
   become: true
   when: base_github_binary_needs_install
 
 - name: Extract archive to /tmp for {{ base_github_binary.name }}
   ansible.builtin.unarchive:
-    src: "/tmp/{{ base_github_binary.name }}.tar.gz"
+    src: "/tmp/{{ base_github_binary.url | basename }}"
     dest: /tmp
     remote_src: true
   become: true
