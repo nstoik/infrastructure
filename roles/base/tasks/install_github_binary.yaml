@@ -1,0 +1,74 @@
+---
+# Install or update a single GitHub-released binary.
+# Called from setup_github_binaries.yaml in a loop.
+#
+# inputs (via loop_var base_github_binary):
+#   - base_github_binary.name: used for archive filename and marker file
+#   - base_github_binary.url: download URL; reinstall is triggered when this changes
+#   - base_github_binary.dest: final binary path
+#   - base_github_binary.archive_binary: path to the binary inside the extracted archive
+
+- name: Check URL marker for {{ base_github_binary.name }}
+  ansible.builtin.stat:
+    path: "/usr/local/share/{{ base_github_binary.name }}.url"
+  register: base_github_binary_marker_stat
+
+- name: Check dest binary exists for {{ base_github_binary.name }}
+  ansible.builtin.stat:
+    path: "{{ base_github_binary.dest }}"
+  register: base_github_binary_dest_stat
+
+- name: Read URL marker for {{ base_github_binary.name }}
+  ansible.builtin.slurp:
+    src: "/usr/local/share/{{ base_github_binary.name }}.url"
+  register: base_github_binary_marker_content
+  become: true
+  when: base_github_binary_marker_stat.stat.exists
+
+- name: Set install flag for {{ base_github_binary.name }}
+  ansible.builtin.set_fact:
+    base_github_binary_needs_install: >-
+      {{ not base_github_binary_dest_stat.stat.exists or
+         not base_github_binary_marker_stat.stat.exists or
+         (base_github_binary_marker_content.content | b64decode | trim) != base_github_binary.url }}
+
+- name: Download archive for {{ base_github_binary.name }}
+  ansible.builtin.get_url:
+    url: "{{ base_github_binary.url }}"
+    dest: "/tmp/{{ base_github_binary.url | basename }}"
+    mode: "0644"
+  become: true
+  when: base_github_binary_needs_install
+
+- name: Extract archive to /tmp for {{ base_github_binary.name }}
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ base_github_binary.url | basename }}"
+    dest: /tmp
+    remote_src: true
+  become: true
+  when: base_github_binary_needs_install
+
+- name: Install binary to destination for {{ base_github_binary.name }}
+  ansible.builtin.copy:
+    src: "/tmp/{{ base_github_binary.archive_binary }}"
+    dest: "{{ base_github_binary.dest }}"
+    mode: "0755"
+    remote_src: true
+  become: true
+  when: base_github_binary_needs_install
+
+- name: Write URL marker for {{ base_github_binary.name }}
+  ansible.builtin.copy:
+    content: "{{ base_github_binary.url }}"
+    dest: "/usr/local/share/{{ base_github_binary.name }}.url"
+    mode: "0644"
+  become: true
+  when: base_github_binary_needs_install
+
+- name: Set capabilities for {{ base_github_binary.name }}
+  community.general.capabilities:
+    path: "{{ base_github_binary.dest }}"
+    capability: "{{ base_github_binary.capabilities }}"
+    state: present
+  become: true
+  when: base_github_binary.capabilities is defined

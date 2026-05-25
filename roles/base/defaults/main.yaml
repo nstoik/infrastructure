@@ -12,11 +12,35 @@ base_apt_update_packages: true
 # variables for rebooting the host
 base_reboot_host_if_required: true
 
+# Architecture strings used in GitHub release URLs.
+# gping uses arm64 for aarch64; trippy uses the native architecture name.
+base_gping_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}"
+base_trippy_arch: "{{ ansible_facts['architecture'] }}"
+
+# GitHub-released binaries to install on all hosts.
+# Each entry requires:
+#   name: used for the URL marker file
+#   url: download URL (may reference base_gping_arch / base_trippy_arch)
+#   dest: final binary path (checked on each run; reinstall triggered if missing)
+#   archive_binary: path to the binary inside the extracted archive
+base_github_binaries:
+  - name: gping
+    url: "https://github.com/orf/gping/releases/download/gping-v1.20.1/gping-Linux-musl-{{ base_gping_arch }}.tar.gz"
+    dest: /usr/local/bin/gping
+    archive_binary: gping
+    capabilities: cap_net_raw+ep
+  - name: trippy
+    url: "https://github.com/fujiapple852/trippy/releases/download/0.13.0/trippy-0.13.0-{{ base_trippy_arch }}-unknown-linux-musl.tar.gz"
+    dest: /usr/local/bin/trip
+    archive_binary: "trippy-0.13.0-{{ base_trippy_arch }}-unknown-linux-musl/trip"
+    capabilities: cap_net_raw+ep
+
 # the base packages to install
 base_packages:
   - git
   - inxi
   - jq
+  - libcap2-bin  # required by community.general.capabilities to set/get binary capabilities (e.g. cap_net_raw for gping/trippy)
   - neofetch
   - vnstat
 
