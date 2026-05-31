@@ -1,6 +1,7 @@
 ---
 collections:
   - name: community.general
+    version: ">=12.5.0"
   - name: community.docker
     version: ">=3.6.0"
   - name: community.digitalocean
