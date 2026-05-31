@@ -11,6 +11,7 @@ ansible-playbook playbooks/hosts_configure.yaml --tags=base
 ```
 
 - `base` - Base role and all base tasks
+- `base.alloy` - Install and configure Grafana Alloy log shipping agent (when `base_alloy_setup` is true)
 - `base.apt` - Configure apt package manager and install packages
 - `base.binaries` - Install GitHub-released binaries defined in `base_github_binaries` (Debian-family hosts only)
 - `base.docker` - Configure Docker repositor

@@ -214,12 +214,12 @@ upscmd -u admin -p REPLACE_PASSWORD myups@localhost test.battery.start.deep
 ### Web Interface
 Access the NUT web interface (Peanut) at [peanut.home.stechsolutions.ca](https://peanut.home.stechsolutions.ca).
 
-## Prometheus & Grafana
+## Prometheus, Grafana & Loki
 
-Prometheus and Grafana are configured via Ansible. However, some additional manual steps may be needed:
+Prometheus (metrics), Loki (logs), and Grafana (visualization) are configured via Ansible. However, some additional manual steps may be needed:
 
 ### Grafana Datasources
-Check that Prometheus is configured as a datasource (should be auto-provisioned from [files/grafana/provisioning/](../files/grafana/provisioning/)).
+Check that **Prometheus** (metrics) and **Loki** (logs) are configured as datasources (both should be auto-provisioned from [files/grafana/provisioning/datasources/](../files/grafana/provisioning/datasources/)).
 
 ### Grafana Dashboards
 Dashboards in `files/grafana/provisioning/dashboards_json/` are **auto-provisioned** on deploy — no manual import needed. Current dashboards include:
