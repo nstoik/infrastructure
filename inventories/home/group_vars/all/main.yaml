@@ -39,6 +39,10 @@ ntfy_alertmanager_base_url: "https://{{ ntfy_alertmanager_domain }}"
 grafana_domain: "grafana.home.stechsolutions.ca"
 grafana_base_url: "https://{{ grafana_domain }}"
 
+# loki variables
+loki_domain: "loki.home.stechsolutions.ca"
+loki_push_url: "https://{{ loki_domain }}/loki/api/v1/push"
+
 # geerlingguy.security role variables
 # https://galaxy.ansible.com/geerlingguy/security
 security_ssh_port: 22

@@ -259,6 +259,36 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://grafana.com/docs/grafana/latest/whatsnew/"
 
+  loki:
+    image: grafana/loki:3.5.0
+    user: 1000:1000
+    networks:
+      - traefik
+      - prometheus_exporter
+    container_name: loki
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/monitoring/loki:/loki
+      - /home/{{ default_user }}/docker_mounts/monitoring/loki/config/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+    command: -config.file=/etc/loki/loki-config.yaml
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --tries=1 http://localhost:3100/ready -O - | grep -q 'ready' || exit 1"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.loki.rule=Host(`{{ loki_domain }}`)"
+      - "traefik.http.services.loki.loadbalancer.server.port=3100"
+      - "traefik.http.routers.loki.entrypoints=websecure"
+      - "traefik.http.routers.loki.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.loki-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+      - "traefik.http.routers.loki.middlewares=loki-IPAllowList"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/grafana/loki/releases"
+
 networks:
   traefik:
     name: traefik
