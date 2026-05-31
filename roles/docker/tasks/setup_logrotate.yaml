@@ -19,6 +19,5 @@
   loop: "{{ docker_logrotate_configs }}"
   loop_control:
     label: "{{ item.name }}"
-  when: docker_logrotate_configs is defined
   tags:
     - docker
