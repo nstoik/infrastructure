@@ -10,3 +10,11 @@
     - docker
     - docker.compose
     - plex
+
+# Set up logrotate configs for Docker container log files
+- name: Set up logrotate configs
+  ansible.builtin.include_tasks: setup_logrotate.yaml
+  when: docker_logrotate_configs is defined
+  tags:
+    - docker
+    - docker.compose

@@ -1,0 +1,24 @@
+---
+# Set up logrotate configs for Docker container log files.
+# Input: docker_logrotate_configs (list of logrotate config entries)
+
+- name: Set up logrotate configs for Docker containers
+  community.general.logrotate:
+    name: "{{ item.name }}"
+    paths: "{{ item.paths }}"
+    rotation_period: "{{ item.rotation_period | default(omit) }}"
+    rotate_count: "{{ item.rotate_count | default(omit) }}"
+    size: "{{ item.size | default(omit) }}"
+    compress: "{{ item.compress | default(omit) }}"
+    delay_compress: "{{ item.delay_compress | default(omit) }}"
+    missing_ok: "{{ item.missing_ok | default(omit) }}"
+    not_if_empty: "{{ item.not_if_empty | default(omit) }}"
+    copy_truncate: "{{ item.copy_truncate | default(omit) }}"
+    state: present
+  become: true
+  loop: "{{ docker_logrotate_configs }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: docker_logrotate_configs is defined
+  tags:
+    - docker
