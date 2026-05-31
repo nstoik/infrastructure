@@ -1,0 +1,45 @@
+// {{ ansible_managed }}
+// Grafana Alloy configuration - log shipping to Loki.
+// Log sources are driven by the alloy_log_sources variable.
+
+loki.write "default" {
+  endpoint {
+    url = "{{ loki_push_url }}"
+  }
+  external_labels = {
+    host = "{{ inventory_hostname }}",
+  }
+}
+{% for src in base_alloy_log_sources %}
+
+local.file_match "{{ src.name }}" {
+  path_targets = [{"__path__" = "{{ src.path }}", "job" = "{{ src.job }}"}]
+}
+
+loki.source.file "{{ src.name }}" {
+  targets    = local.file_match.{{ src.name }}.targets
+  forward_to = [loki.process.{{ src.name }}.receiver]
+}
+
+loki.process "{{ src.name }}" {
+{% if src.json_expressions is defined %}
+  stage.json {
+    expressions = {
+{% for key, value in src.json_expressions.items() %}
+      {{ key }} = "{{ value }}",
+{% endfor %}
+    }
+  }
+{% endif %}
+{% if src.label_keys is defined %}
+  stage.labels {
+    values = {
+{% for label in src.label_keys %}
+      {{ label }} = "",
+{% endfor %}
+    }
+  }
+{% endif %}
+  forward_to = [loki.write.default.receiver]
+}
+{% endfor %}
