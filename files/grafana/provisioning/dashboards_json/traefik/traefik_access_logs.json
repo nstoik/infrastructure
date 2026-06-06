@@ -1,0 +1,227 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 5, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false }, "textMode": "auto" },
+      "pluginVersion": "13.0.1",
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "sum(count_over_time({job=\"traefik\", host=~\"$host\"} [$__range]))", "queryType": "instant", "refId": "A" }
+      ],
+      "title": "Total requests",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 1 }] }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 5, "x": 5, "y": 0 },
+      "id": 2,
+      "options": { "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false }, "textMode": "auto" },
+      "pluginVersion": "13.0.1",
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "sum(count_over_time({job=\"traefik\", host=~\"$host\", status=~\"4..\"} [$__range]))", "queryType": "instant", "refId": "A" }
+      ],
+      "title": "4xx responses",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 5, "x": 10, "y": 0 },
+      "id": 3,
+      "options": { "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false }, "textMode": "auto" },
+      "pluginVersion": "13.0.1",
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "sum(count_over_time({job=\"traefik\", host=~\"$host\", status=~\"5..\"} [$__range]))", "queryType": "instant", "refId": "A" }
+      ],
+      "title": "5xx responses",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] }, "unit": "reqps" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 15, "y": 0 },
+      "id": 4,
+      "options": { "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "pluginVersion": "13.0.1",
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "sum(rate({job=\"traefik\", host=~\"$host\"} [$__auto]))", "queryType": "range", "refId": "A" }
+      ],
+      "title": "Request rate",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }, "unit": "ms" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 5, "x": 19, "y": 0 },
+      "id": 5,
+      "options": { "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "pluginVersion": "13.0.1",
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "quantile_over_time(0.95, {job=\"traefik\", host=~\"$host\", status=~\"[1-5]..\"} | json duration_ns=\"Duration\" | unwrap duration_ns [$__auto]) by () / 1e6", "queryType": "range", "refId": "A" }
+      ],
+      "title": "p95 latency (current)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 20, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "lineInterpolation": "smooth", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "never", "spanNulls": false, "stacking": { "group": "A", "mode": "normal" }, "thresholdsStyle": { "mode": "off" } }, "unit": "reqps" }, "overrides": [] },
+      "gridPos": { "h": 9, "w": 16, "x": 0, "y": 4 },
+      "id": 6,
+      "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "right", "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "sum by (status) (rate({job=\"traefik\", host=~\"$host\"} [$__auto]))", "legendFormat": "{{status}}", "queryType": "range", "refId": "A" }
+      ],
+      "title": "Request rate by status code",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 9, "w": 8, "x": 16, "y": 4 },
+      "id": 7,
+      "options": { "displayLabels": ["percent"], "legend": { "displayMode": "list", "placement": "right", "showLegend": true, "values": ["value"] }, "pieType": "donut", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false }, "tooltip": { "mode": "single", "sort": "desc" } },
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "sum by (status) (count_over_time({job=\"traefik\", host=~\"$host\"} [$__auto]))", "legendFormat": "{{status}}", "queryType": "range", "refId": "A" }
+      ],
+      "title": "Status code distribution",
+      "type": "piechart"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "lineInterpolation": "smooth", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "never", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } }, "unit": "ms" }, "overrides": [] },
+      "gridPos": { "h": 9, "w": 16, "x": 0, "y": 13 },
+      "id": 8,
+      "options": { "legend": { "calcs": ["last"], "displayMode": "table", "placement": "right", "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "quantile_over_time(0.50, {job=\"traefik\", host=~\"$host\", status=~\"[1-5]..\"} | json duration_ns=\"Duration\" | unwrap duration_ns [$__auto]) by (host) / 1e6", "legendFormat": "p50 {{host}}", "queryType": "range", "refId": "A" },
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "quantile_over_time(0.95, {job=\"traefik\", host=~\"$host\", status=~\"[1-5]..\"} | json duration_ns=\"Duration\" | unwrap duration_ns [$__auto]) by (host) / 1e6", "legendFormat": "p95 {{host}}", "queryType": "range", "refId": "B" },
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "quantile_over_time(0.99, {job=\"traefik\", host=~\"$host\", status=~\"[1-5]..\"} | json duration_ns=\"Duration\" | unwrap duration_ns [$__auto]) by (host) / 1e6", "legendFormat": "p99 {{host}}", "queryType": "range", "refId": "C" }
+      ],
+      "title": "Request latency (p50/p95/p99)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 9, "w": 8, "x": 16, "y": 13 },
+      "id": 9,
+      "options": { "displayLabels": ["percent"], "legend": { "displayMode": "list", "placement": "right", "showLegend": true, "values": ["value"] }, "pieType": "pie", "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false }, "tooltip": { "mode": "single", "sort": "desc" } },
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "sum by (method) (count_over_time({job=\"traefik\", host=~\"$host\"} [$__auto]))", "legendFormat": "{{method}}", "queryType": "range", "refId": "A" }
+      ],
+      "title": "Requests by method",
+      "type": "piechart"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "custom": { "align": "auto", "cellOptions": { "type": "auto" }, "inspect": false }, "unit": "short" }, "overrides": [{ "matcher": { "id": "byName", "options": "Requests" }, "properties": [{ "id": "custom.cellOptions", "value": { "mode": "gradient", "type": "gauge" } }, { "id": "custom.width", "value": 160 }] }] },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 22 },
+      "id": 10,
+      "options": { "cellHeight": "sm", "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false }, "showHeader": true },
+      "pluginVersion": "13.0.1",
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "topk(15, sum by (request_host) (count_over_time({job=\"traefik\", host=~\"$host\"} | json request_host=\"RequestHost\" | request_host != \"\" | drop status, method, geoip_country_code [$__range])))", "format": "table", "queryType": "instant", "refId": "A" }
+      ],
+      "title": "Top requested hosts",
+      "transformations": [
+        { "id": "organize", "options": { "excludeByName": { "Time": true }, "includeByName": {}, "indexByName": {}, "renameByName": { "request_host": "Host", "Value #A": "Requests", "Value": "Requests" } } },
+        { "id": "sortBy", "options": { "fields": {}, "sort": [{ "desc": true, "field": "Requests" }] } }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": { "custom": { "align": "auto", "cellOptions": { "type": "auto" }, "inspect": false }, "unit": "short" }, "overrides": [{ "matcher": { "id": "byName", "options": "Requests" }, "properties": [{ "id": "custom.cellOptions", "value": { "mode": "gradient", "type": "gauge" } }, { "id": "custom.width", "value": 160 }] }] },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 22 },
+      "id": 11,
+      "options": { "cellHeight": "sm", "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false }, "showHeader": true },
+      "pluginVersion": "13.0.1",
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "topk(15, sum by (request_path) (count_over_time({job=\"traefik\", host=~\"$host\"} | json request_path=\"RequestPath\" | label_format request_path=`{{ regexReplaceAll \"\\\\?.*\" .request_path \"\" }}` | request_path != \"\" | drop status, method, geoip_country_code [$__range])))", "format": "table", "queryType": "instant", "refId": "A" }
+      ],
+      "title": "Top requested paths",
+      "transformations": [
+        { "id": "organize", "options": { "excludeByName": { "Time": true }, "includeByName": {}, "indexByName": {}, "renameByName": { "request_path": "Path", "Value #A": "Requests", "Value": "Requests" } } },
+        { "id": "sortBy", "options": { "fields": {}, "sort": [{ "desc": true, "field": "Requests" }] } }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${datasource}" },
+      "gridPos": { "h": 11, "w": 24, "x": 0, "y": 31 },
+      "id": 12,
+      "options": { "dedupStrategy": "none", "enableLogDetails": true, "prettifyLogMessage": true, "showCommonLabels": false, "showLabels": false, "showTime": true, "sortOrder": "Descending", "wrapLogMessage": false },
+      "targets": [
+        { "datasource": { "type": "loki", "uid": "${datasource}" }, "editorMode": "code", "expr": "{job=\"traefik\", host=~\"$host\"} | json", "queryType": "range", "refId": "A" }
+      ],
+      "title": "Access log",
+      "type": "logs"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["traefik", "loki", "logs"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": false,
+        "label": "Loki datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "loki",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": ".+",
+        "current": {},
+        "datasource": { "type": "loki", "uid": "${datasource}" },
+        "definition": "label_values({job=\"traefik\"}, host)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Host",
+        "multi": true,
+        "name": "host",
+        "options": [],
+        "query": { "label": "host", "refId": "LokiVariableQueryEditor-VariableQuery", "stream": "{job=\"traefik\"}", "type": 1 },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-3h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Traefik Access Logs",
+  "uid": "traefik-access-logs",
+  "weekStart": ""
+}
