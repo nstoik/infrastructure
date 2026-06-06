@@ -1,7 +1,7 @@
 ---
 # Install and configure Grafana Alloy as a host-level log shipping agent.
 # Installed from Grafana's apt repo (same keyring + signed-by pattern as the
-# tailscale role). Ships logs defined in alloy_log_sources to Loki.
+# tailscale role). Ships logs defined in base_alloy_log_sources to Loki.
 #
 # inputs:
 #   - base_alloy_log_sources: list of log sources to scrape and forward to Loki
