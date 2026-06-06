@@ -142,5 +142,26 @@ base_alloy_apt_keyring_path: /usr/share/keyrings/grafana.gpg
 base_alloy_apt_repository: "deb [signed-by={{ base_alloy_apt_keyring_path }}] https://apt.grafana.com stable main"
 
 # Log sources for Alloy to scrape and forward to Loki.
-# Each entry: name, path, job, optional json_expressions (map), optional label_keys (list).
+# Each entry: name, path, job, optional json_expressions (map), optional label_keys
+# (list), and optional geoip_source (the extracted field holding the client IP to
+# geolocate). When any source sets geoip_source, the DB-IP database is deployed.
 base_alloy_log_sources: []
+
+# Offline GeoIP database (DB-IP City Lite, MaxMind-compatible .mmdb, no account
+# required). DB-IP publishes a fresh build monthly; the updater script appends the
+# current YYYY-MM to the base URL at run time, so the cron always fetches the
+# latest month. Ansible only deploys the script + cron; the host owns the refresh.
+base_alloy_geoip_db_path: /etc/alloy/geoip/dbip-city-lite.mmdb
+base_alloy_geoip_db_baseurl: "https://download.db-ip.com/free/dbip-city-lite"
+base_alloy_geoip_update_script: /usr/local/bin/update-geoip-db.sh
+
+# Monthly refresh schedule (day-of-month); DB-IP publishes around the 1st.
+base_alloy_geoip_update_cron_minute: "30"
+base_alloy_geoip_update_cron_hour: "4"
+base_alloy_geoip_update_cron_day: "5"
+
+# Optional Healthchecks ping (set _hc_uuid to enable). Mirrors rclone/sanoid:
+#   base_alloy_geoip_hc_url:  "https://hc.stechsolutions.ca/ping/"
+#   base_alloy_geoip_hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/geoip-<host>"
+base_alloy_geoip_hc_url: ""
+base_alloy_geoip_hc_uuid: ""

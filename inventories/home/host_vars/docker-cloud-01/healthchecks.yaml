@@ -112,3 +112,13 @@ hc_checks:
     timeout: 86400
     grace: 43200
     channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"
+  # Check for the monthly Alloy GeoIP database update (cron: 5th of month)
+  # timeout 31d + grace 2d exceeds the longest month-to-month gap, so a normal
+  # monthly run never false-alarms, but a genuinely missed run alerts within ~2 days.
+  - project: "{{ hc_projects[0].name }}"
+    name: Alloy GeoIP Update
+    slug: geoip-docker-cloud-01
+    desc: Monthly DB-IP GeoIP database refresh for Alloy
+    timeout: 2678400
+    grace: 172800
+    channels: "{{ hc_channels[0].name }},{{ hc_channels[1].name }}"

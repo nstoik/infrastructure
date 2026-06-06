@@ -1,0 +1,56 @@
+#!/bin/bash
+# {{ ansible_managed }}
+#
+# Grafana Alloy GeoIP database updater.
+# Downloads the current month's DB-IP City Lite database, sanity-checks it,
+# atomically installs it, restarts Alloy, and (optionally) pings Healthchecks
+# (start / success / fail). Intended to run monthly from cron as root.
+
+set -uo pipefail
+
+DB_PATH="{{ base_alloy_geoip_db_path }}"
+DB_URL="{{ base_alloy_geoip_db_baseurl }}-$(date +%Y-%m).mmdb.gz"
+HC_URL="{{ base_alloy_geoip_hc_url }}{{ base_alloy_geoip_hc_uuid }}"
+HC_ENABLED="{{ 'true' if base_alloy_geoip_hc_uuid | default('') | length > 0 else 'false' }}"
+LOGFILE="/tmp/geoip_update_$(date +%Y-%m-%d).log"
+
+log() {
+  printf '%s - %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$1" | tee -a "$LOGFILE"
+}
+
+# $1 = start | fail | (empty for success). No-op when Healthchecks isn't configured.
+hc_ping() {
+  [ "$HC_ENABLED" = "true" ] || return 0
+  curl -fsS -m 10 --retry 3 --data-raw "$(tail -n 20 "$LOGFILE" 2>/dev/null)" \
+    "${HC_URL}${1:+/$1}" >/dev/null 2>&1 || log "Healthcheck ping '${1:-success}' failed."
+}
+
+fail() {
+  log "ERROR: $1"
+  hc_ping fail
+  exit 1
+}
+
+hc_ping start
+log "Downloading GeoIP database from $DB_URL"
+
+TMP_GZ="$(mktemp --suffix=.mmdb.gz)"
+trap 'rm -f "$TMP_GZ" "${TMP_GZ%.gz}"' EXIT
+
+curl -fsS -m 180 --retry 3 -o "$TMP_GZ" "$DB_URL" || fail "Download failed from $DB_URL"
+gunzip -f "$TMP_GZ" || fail "Decompression failed."
+TMP_DB="${TMP_GZ%.gz}"
+
+# A valid database is tens of MB; bail before clobbering a good db with a bad one.
+if [ ! -s "$TMP_DB" ] || [ "$(stat -c '%s' "$TMP_DB")" -lt 1000000 ]; then
+  fail "Downloaded database looks invalid (smaller than 1 MB)."
+fi
+
+install -o root -g root -m 0644 "$TMP_DB" "$DB_PATH" || fail "Failed to install database to $DB_PATH."
+log "Installed refreshed database to $DB_PATH ($(stat -c '%s' "$DB_PATH") bytes)."
+
+systemctl restart alloy || fail "Failed to restart alloy."
+log "Alloy restarted with refreshed GeoIP database."
+
+hc_ping
+log "GeoIP database update completed successfully."

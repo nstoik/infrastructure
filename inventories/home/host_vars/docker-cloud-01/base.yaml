@@ -10,6 +10,12 @@ base_alloy_log_sources:
       status: DownstreamStatus
       method: RequestMethod
       path: RequestPath
+      client: ClientHost
+    geoip_source: client
     label_keys:
       - status
       - method
+
+# Monthly GeoIP database refresh pings Healthchecks (this host runs the HC server).
+base_alloy_geoip_hc_url: "https://hc.stechsolutions.ca/ping/"
+base_alloy_geoip_hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/geoip-docker-cloud-01"

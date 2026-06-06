@@ -31,12 +31,36 @@ loki.process "{{ src.name }}" {
     }
   }
 {% endif %}
-{% if src.label_keys is defined %}
+{% if src.geoip_source is defined %}
+  // Enrich the client IP with geo data from the offline DB-IP database.
+  // Private/internal IPs simply yield no geo fields (left empty).
+  stage.geoip {
+    source  = "{{ src.geoip_source }}"
+    db      = "{{ base_alloy_geoip_db_path }}"
+    db_type = "city"
+  }
+{% endif %}
+{% if src.label_keys is defined or src.geoip_source is defined %}
   stage.labels {
     values = {
-{% for label in src.label_keys %}
+{% for label in src.label_keys | default([]) %}
       {{ label }} = "",
 {% endfor %}
+{% if src.geoip_source is defined %}
+      geoip_country_code = "",
+{% endif %}
+    }
+  }
+{% endif %}
+{% if src.geoip_source is defined %}
+  // High-cardinality geo fields stay as structured metadata, never labels.
+  stage.structured_metadata {
+    values = {
+      {{ src.geoip_source }} = "",
+      geoip_country_name = "",
+      geoip_city_name = "",
+      geoip_location_latitude = "",
+      geoip_location_longitude = "",
     }
   }
 {% endif %}

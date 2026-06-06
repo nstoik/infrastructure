@@ -54,54 +54,73 @@
     - base
     - base.alloy
 
-# The systemd drop-in must be root-owned (systemd ignores non-root unit files);
-# its User=/Group= directives make the Alloy *process* run as default_user, so it
-# can traverse /home/{{ default_user }} and read the (root-owned, world-readable)
-# Traefik access.log without the process running as root.
-- name: Create Alloy systemd override directory
+# Deploy the offline GeoIP database when any log source requests geo enrichment.
+# Must land before the config is rendered/restarted, since stage.geoip fails to
+# load if the db file is missing.
+- name: Create Alloy GeoIP database directory
   ansible.builtin.file:
-    path: /etc/systemd/system/alloy.service.d
+    path: "{{ base_alloy_geoip_db_path | dirname }}"
     state: directory
     owner: root
     group: root
     mode: "0755"
   become: true
+  when: base_alloy_log_sources | selectattr('geoip_source', 'defined') | list | length > 0
   tags:
     - base
     - base.alloy
 
-- name: Deploy Alloy systemd override (sets process User/Group to default_user)
+- name: Deploy GeoIP database updater script
   ansible.builtin.template:
-    src: alloy_override.conf.j2
-    dest: /etc/systemd/system/alloy.service.d/override.conf
+    src: update-geoip-db.sh.j2
+    dest: "{{ base_alloy_geoip_update_script }}"
     owner: root
     group: root
-    mode: "0644"
+    mode: "0755"
   become: true
-  notify: Restart alloy
+  when: base_alloy_log_sources | selectattr('geoip_source', 'defined') | list | length > 0
   tags:
     - base
     - base.alloy
 
-- name: Ensure Alloy data directory is owned by default_user
-  ansible.builtin.file:
-    path: /var/lib/alloy
-    state: directory
-    owner: "{{ default_user }}"
-    group: "{{ default_user }}"
-    mode: "0750"
-    recurse: true
+# Bootstrap the database on first install so stage.geoip has a db to load before
+# the first scheduled run. Idempotent via creates; the monthly cron owns refresh.
+- name: Populate GeoIP database on first install
+  ansible.builtin.command:
+    cmd: "{{ base_alloy_geoip_update_script }}"
+    creates: "{{ base_alloy_geoip_db_path }}"
   become: true
+  when: base_alloy_log_sources | selectattr('geoip_source', 'defined') | list | length > 0
   tags:
     - base
     - base.alloy
 
+- name: Schedule monthly GeoIP database update
+  ansible.builtin.cron:
+    name: Update Alloy GeoIP database
+    minute: "{{ base_alloy_geoip_update_cron_minute }}"
+    hour: "{{ base_alloy_geoip_update_cron_hour }}"
+    day: "{{ base_alloy_geoip_update_cron_day }}"
+    user: root
+    job: "{{ base_alloy_geoip_update_script }}"
+    state: present
+  become: true
+  when: base_alloy_log_sources | selectattr('geoip_source', 'defined') | list | length > 0
+  tags:
+    - base
+    - base.alloy
+
+# Alloy runs as its packaged, low-privilege `alloy` system user (the service
+# default). No run-as-user override is needed: /home/{{ default_user }} is
+# world-traversable (0755) and the Traefik access.log is world-readable, so the
+# alloy user can read it without elevated privileges or ownership changes. The
+# package owns /etc/alloy and /var/lib/alloy; we only template the config in.
 - name: Deploy Alloy configuration
   ansible.builtin.template:
     src: config.alloy.j2
     dest: /etc/alloy/config.alloy
-    owner: "{{ default_user }}"
-    group: "{{ default_user }}"
+    owner: root
+    group: root
     mode: "0644"
   become: true
   notify: Restart alloy
