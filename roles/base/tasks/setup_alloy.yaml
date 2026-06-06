@@ -49,6 +49,7 @@
   ansible.builtin.apt:
     name: alloy
     state: present
+    update_cache: true
   become: true
   tags:
     - base
