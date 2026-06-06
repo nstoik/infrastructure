@@ -11,6 +11,7 @@ loki.write "default" {
   }
 }
 {% for src in base_alloy_log_sources %}
+{% set geo = src.geoip_source is defined %}
 
 local.file_match "{{ src.name }}" {
   path_targets = [{"__path__" = "{{ src.path }}", "job" = "{{ src.job }}"}]
@@ -31,7 +32,7 @@ loki.process "{{ src.name }}" {
     }
   }
 {% endif %}
-{% if src.geoip_source is defined %}
+{% if geo %}
   // Enrich the client IP with geo data from the offline DB-IP database.
   // Private/internal IPs simply yield no geo fields (left empty).
   stage.geoip {
@@ -40,19 +41,19 @@ loki.process "{{ src.name }}" {
     db_type = "city"
   }
 {% endif %}
-{% if src.label_keys is defined or src.geoip_source is defined %}
+{% if src.label_keys is defined or geo %}
   stage.labels {
     values = {
 {% for label in src.label_keys | default([]) %}
       {{ label }} = "",
 {% endfor %}
-{% if src.geoip_source is defined %}
+{% if geo %}
       geoip_country_code = "",
 {% endif %}
     }
   }
 {% endif %}
-{% if src.geoip_source is defined %}
+{% if geo %}
   // High-cardinality geo fields stay as structured metadata, never labels.
   stage.structured_metadata {
     values = {

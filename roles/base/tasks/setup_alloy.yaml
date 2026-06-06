@@ -56,59 +56,46 @@
 
 # Deploy the offline GeoIP database when any log source requests geo enrichment.
 # Must land before the config is rendered/restarted, since stage.geoip fails to
-# load if the db file is missing.
-- name: Create Alloy GeoIP database directory
-  ansible.builtin.file:
-    path: "{{ base_alloy_geoip_db_path | dirname }}"
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
+# load if the db file is missing. Block-level when/become/tags apply to all tasks.
+- name: Set up GeoIP database enrichment
   become: true
   when: base_alloy_log_sources | selectattr('geoip_source', 'defined') | list | length > 0
   tags:
     - base
     - base.alloy
+  block:
+    - name: Create Alloy GeoIP database directory
+      ansible.builtin.file:
+        path: "{{ base_alloy_geoip_db_path | dirname }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
 
-- name: Deploy GeoIP database updater script
-  ansible.builtin.template:
-    src: update-geoip-db.sh.j2
-    dest: "{{ base_alloy_geoip_update_script }}"
-    owner: root
-    group: root
-    mode: "0755"
-  become: true
-  when: base_alloy_log_sources | selectattr('geoip_source', 'defined') | list | length > 0
-  tags:
-    - base
-    - base.alloy
+    - name: Deploy GeoIP database updater script
+      ansible.builtin.template:
+        src: update-geoip-db.sh.j2
+        dest: "{{ base_alloy_geoip_update_script }}"
+        owner: root
+        group: root
+        mode: "0755"
 
-# Bootstrap the database on first install so stage.geoip has a db to load before
-# the first scheduled run. Idempotent via creates; the monthly cron owns refresh.
-- name: Populate GeoIP database on first install
-  ansible.builtin.command:
-    cmd: "{{ base_alloy_geoip_update_script }}"
-    creates: "{{ base_alloy_geoip_db_path }}"
-  become: true
-  when: base_alloy_log_sources | selectattr('geoip_source', 'defined') | list | length > 0
-  tags:
-    - base
-    - base.alloy
+    # Bootstrap the database on first install so stage.geoip has a db to load
+    # before the first scheduled run. Idempotent via creates; cron owns refresh.
+    - name: Populate GeoIP database on first install
+      ansible.builtin.command:
+        cmd: "{{ base_alloy_geoip_update_script }}"
+        creates: "{{ base_alloy_geoip_db_path }}"
 
-- name: Schedule monthly GeoIP database update
-  ansible.builtin.cron:
-    name: Update Alloy GeoIP database
-    minute: "{{ base_alloy_geoip_update_cron_minute }}"
-    hour: "{{ base_alloy_geoip_update_cron_hour }}"
-    day: "{{ base_alloy_geoip_update_cron_day }}"
-    user: root
-    job: "{{ base_alloy_geoip_update_script }}"
-    state: present
-  become: true
-  when: base_alloy_log_sources | selectattr('geoip_source', 'defined') | list | length > 0
-  tags:
-    - base
-    - base.alloy
+    - name: Schedule monthly GeoIP database update
+      ansible.builtin.cron:
+        name: Update Alloy GeoIP database
+        minute: "{{ base_alloy_geoip_update_cron_minute }}"
+        hour: "{{ base_alloy_geoip_update_cron_hour }}"
+        day: "{{ base_alloy_geoip_update_cron_day }}"
+        user: root
+        job: "{{ base_alloy_geoip_update_script }}"
+        state: present
 
 # Alloy runs as its packaged, low-privilege `alloy` system user (the service
 # default). No run-as-user override is needed: /home/{{ default_user }} is

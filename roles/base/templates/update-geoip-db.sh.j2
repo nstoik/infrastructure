@@ -42,12 +42,13 @@ gunzip -f "$TMP_GZ" || fail "Decompression failed."
 TMP_DB="${TMP_GZ%.gz}"
 
 # A valid database is tens of MB; bail before clobbering a good db with a bad one.
-if [ ! -s "$TMP_DB" ] || [ "$(stat -c '%s' "$TMP_DB")" -lt 1000000 ]; then
+DB_SIZE="$(stat -c '%s' "$TMP_DB" 2>/dev/null || echo 0)"
+if [ "$DB_SIZE" -lt 1000000 ]; then
   fail "Downloaded database looks invalid (smaller than 1 MB)."
 fi
 
 install -o root -g root -m 0644 "$TMP_DB" "$DB_PATH" || fail "Failed to install database to $DB_PATH."
-log "Installed refreshed database to $DB_PATH ($(stat -c '%s' "$DB_PATH") bytes)."
+log "Installed refreshed database to $DB_PATH ($DB_SIZE bytes)."
 
 systemctl restart alloy || fail "Failed to restart alloy."
 log "Alloy restarted with refreshed GeoIP database."
