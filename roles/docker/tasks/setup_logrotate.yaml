@@ -2,6 +2,14 @@
 # Set up logrotate configs for Docker container log files.
 # Input: docker_logrotate_configs (list of logrotate config entries)
 
+- name: Install logrotate
+  ansible.builtin.apt:
+    name: logrotate
+    state: present
+  become: true
+  tags:
+    - docker
+
 - name: Set up logrotate configs for Docker containers
   community.general.logrotate:
     name: "{{ item.name }}"
