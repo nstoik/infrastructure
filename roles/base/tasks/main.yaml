@@ -15,6 +15,8 @@
 #   - base_netplan: dictionary of netplan configuration
 #   - base_node_exporter_zfs_collector: boolean to enable ZFS collector for node_exporter
 #   - base_node_exporter_textfile_dir: path for textfile collector (default: /var/lib/prometheus/node-exporter)
+#   - base_alloy_setup: boolean to install and configure Grafana Alloy log shipping agent
+#   - base_alloy_log_sources: list of log sources for Alloy to ship to Loki
 
 
 # Update and upgrade apt packages
@@ -124,6 +126,14 @@
   tags:
     - base
     - base.node_exporter
+
+# Install and configure Grafana Alloy when the flag is set
+- name: Configure Grafana Alloy
+  ansible.builtin.include_tasks: setup_alloy.yaml
+  when: base_alloy_setup is true
+  tags:
+    - base
+    - base.alloy
 
 # set specified systemd services to the specified state and status
 - name: Set specified systemd services to the specified state and status

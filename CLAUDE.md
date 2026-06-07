@@ -54,9 +54,10 @@ files/                      # Jinja2 templates and static config files
   grafana/provisioning/
     dashboards/             # Grafana dashboard provisioning config (points to dashboards_json/)
     dashboards_json/        # Auto-provisioned Grafana dashboard JSON files
-    datasources/            # Grafana datasource config (Prometheus)
+    datasources/            # Grafana datasource config (Prometheus, Loki)
   homepage/                 # Internal homepage (gethomepage) config — internal dashboard
   homepage_media/           # External media homepage config — public-facing at media.stechsolutions.ca
+  loki/                     # Loki server config (log aggregation; runs on docker-02)
   ntfy/                     # Ntfy notification server config
   ntfy-alertmanager/        # ntfy-alertmanager bridge config (receives from Alertmanager, sends to ntfy)
   peanut/                   # Peanut NUT web interface config
@@ -106,6 +107,11 @@ Variables follow role-name prefixes: `docker_*`, `fileserver_*`, `base_*`, `secr
 - Each inventory has an independent vault at `inventories/<name>/group_vars/all/vault.yaml` with a matching vault ID label (e.g., `home@./vault_pass.txt`)
 - Vault files are AES-256 encrypted and safe to commit; only password files (`vault_pass*.txt`) are gitignored
 
+### Monitoring & logging
+
+- **Metrics**: `prometheus-node-exporter` (apt, host-level) on every host → Prometheus on docker-02 → Grafana.
+- **Logs**: **Grafana Alloy** (host-level, installed by the base role via `base_alloy_setup`) ships log files defined in `base_alloy_log_sources` to **Loki** (a container on docker-02) → queried in Grafana via the auto-provisioned Loki datasource. Alloy is host-level (a systemd service, like node_exporter) rather than a container, so it reads logs directly and generalizes to any host type. Traefik `access.log` is the first source; it is filtered (in the Traefik static config) and rotated via the docker role's `docker_logrotate_configs`.
+
 ### Vault security
 
 A pre-commit hook (installed by `./git-init.sh`) blocks committing unencrypted vault files. Run `./git-init.sh` once after cloning to install it.
@@ -125,7 +131,7 @@ A pre-commit hook (installed by `./git-init.sh`) blocks committing unencrypted v
 
 Tags follow a `role` and `role.subtask` pattern. Key tags for `hosts_configure.yaml`:
 
-- `base`, `base.apt`, `base.dotfiles`, `base.user`, `base.geerlingguy.security`
+- `base`, `base.apt`, `base.dotfiles`, `base.user`, `base.geerlingguy.security`, `base.alloy`
 - `docker`, `docker.compose`, `docker.prune`
 - `fileserver`, `fileserver.zfs`, `fileserver.nfs-server`, `fileserver.nfs-client`, `fileserver.mergerfs`, `fileserver.snapraid`
 - `proxmox`, `proxmox.pve`, `proxmox.vm`, `proxmox.container`

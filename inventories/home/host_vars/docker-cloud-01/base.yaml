@@ -1,10 +1,4 @@
 ---
-base_host_additional_packages:
-  - nvidia-driver-550
-  - nvidia-utils-550
-  - wireguard
-  - wireguard-tools
-
 # Install Grafana Alloy to ship Traefik access logs to Loki
 base_alloy_setup: true
 
@@ -16,6 +10,12 @@ base_alloy_log_sources:
       status: DownstreamStatus
       method: RequestMethod
       path: RequestPath
+      client: ClientHost
+    geoip_source: client
     label_keys:
       - status
       - method
+
+# Monthly GeoIP database refresh pings Healthchecks (this host runs the HC server).
+base_alloy_geoip_hc_url: "https://hc.stechsolutions.ca/ping/"
+base_alloy_geoip_hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/geoip-docker-cloud-01"

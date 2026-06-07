@@ -17,6 +17,10 @@ entryPoints:
 accessLog:
   filepath: /etc/traefik/access.log
   format: json
+  bufferingSize: 100
+  filters:
+    retryAttempts: true
+    minDuration: "10ms"
   fields:
     defaultMode: keep
     names:

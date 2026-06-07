@@ -1,0 +1,70 @@
+// {{ ansible_managed }}
+// Grafana Alloy configuration - log shipping to Loki.
+// Log sources are driven by the base_alloy_log_sources variable.
+
+loki.write "default" {
+  endpoint {
+    url = "{{ loki_push_url }}"
+  }
+  external_labels = {
+    host = "{{ inventory_hostname }}",
+  }
+}
+{% for src in base_alloy_log_sources %}
+{% set geo = src.geoip_source is defined %}
+
+local.file_match "{{ src.name }}" {
+  path_targets = [{"__path__" = "{{ src.path }}", "job" = "{{ src.job }}"}]
+}
+
+loki.source.file "{{ src.name }}" {
+  targets    = local.file_match.{{ src.name }}.targets
+  forward_to = [loki.process.{{ src.name }}.receiver]
+}
+
+loki.process "{{ src.name }}" {
+{% if src.json_expressions is defined %}
+  stage.json {
+    expressions = {
+{% for key, value in src.json_expressions.items() %}
+      {{ key }} = "{{ value }}",
+{% endfor %}
+    }
+  }
+{% endif %}
+{% if geo %}
+  // Enrich the client IP with geo data from the offline DB-IP database.
+  // Private/internal IPs simply yield no geo fields (left empty).
+  stage.geoip {
+    source  = "{{ src.geoip_source }}"
+    db      = "{{ base_alloy_geoip_db_path }}"
+    db_type = "city"
+  }
+{% endif %}
+{% if src.label_keys is defined or geo %}
+  stage.labels {
+    values = {
+{% for label in src.label_keys | default([]) %}
+      {{ label }} = "",
+{% endfor %}
+{% if geo %}
+      geoip_country_code = "",
+{% endif %}
+    }
+  }
+{% endif %}
+{% if geo %}
+  // High-cardinality geo fields stay as structured metadata, never labels.
+  stage.structured_metadata {
+    values = {
+      {{ src.geoip_source }} = "",
+      geoip_country_name = "",
+      geoip_city_name = "",
+      geoip_location_latitude = "",
+      geoip_location_longitude = "",
+    }
+  }
+{% endif %}
+  forward_to = [loki.write.default.receiver]
+}
+{% endfor %}

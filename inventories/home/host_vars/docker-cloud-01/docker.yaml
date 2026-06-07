@@ -1,6 +1,19 @@
 ---
 # Host variables for docker-cloud-01 host.
 
+docker_logrotate_configs:
+  - name: traefik
+    paths:
+      - "/home/{{ default_user }}/docker_mounts/proxy/traefik/access.log"
+    rotation_period: daily
+    rotate_count: 14
+    size: "100M"
+    compress: true
+    delay_compress: true
+    missing_ok: true
+    not_if_empty: true
+    copy_truncate: true
+
 # docker container paths. All found files will be processed and copied to the docker host
 docker_configuration_paths:
   - name: homepage_media

@@ -35,3 +35,11 @@
     daemon_reload: true
   changed_when: true
   become: true
+
+# Restart alloy
+- name: Restart alloy
+  ansible.builtin.systemd:
+    name: alloy
+    state: restarted
+    daemon_reload: true
+  become: true
