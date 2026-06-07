@@ -11,7 +11,7 @@ set -uo pipefail
 DB_PATH="{{ base_alloy_geoip_db_path }}"
 DB_URL="{{ base_alloy_geoip_db_baseurl }}-$(date +%Y-%m).mmdb.gz"
 HC_URL="{{ base_alloy_geoip_hc_url }}{{ base_alloy_geoip_hc_uuid }}"
-HC_ENABLED="{{ 'true' if base_alloy_geoip_hc_uuid | default('') | length > 0 else 'false' }}"
+HC_ENABLED="{{ 'true' if (base_alloy_geoip_hc_uuid | default('') | length > 0) and (base_alloy_geoip_hc_url | default('') | length > 0) else 'false' }}"
 LOGFILE="/tmp/geoip_update_$(date +%Y-%m-%d).log"
 
 log() {
