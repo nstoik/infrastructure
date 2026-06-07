@@ -3,6 +3,9 @@
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/video.internal.welca.ca/docker_compose"
 
+docker_extra_users:
+  - nelson
+
 docker_mounts_subfolders:
   - name: frigate_mosquitto_config
     dest: /home/{{ default_user }}/docker_mounts/frigate/mosquitto/config

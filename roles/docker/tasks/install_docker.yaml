@@ -21,13 +21,14 @@
       when: docker_config_nvidia_gpu | bool
       become: true
 
-    # add the user to the docker group
-    - name: Add user to docker group
+    # add users to the docker group
+    - name: Add users to docker group
       ansible.builtin.user:
-        name: "{{ default_user }}"
+        name: "{{ item }}"
         groups: docker
         append: true
       become: true
+      loop: "{{ ([default_user] + (docker_extra_users | default([]))) | unique }}"
       notify: Restart docker
 
     # create the docker config directory
