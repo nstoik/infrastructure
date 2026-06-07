@@ -21,7 +21,10 @@ base_packages:
 # No UPS attached to this host
 proxmox_nut_configure: false
 
-# No Proxmox Backup Server configured yet.
+# No PBS configured — disable local-storage backup jobs to prevent disk fill.
+# Delete the existing job manually: pvesh delete cluster/backup/backup-daily
+proxmox_backups: []
+
 # Add proxmox_storage here when a PBS is available, e.g.:
 # proxmox_storage:
 #   - storage: "pbs"
