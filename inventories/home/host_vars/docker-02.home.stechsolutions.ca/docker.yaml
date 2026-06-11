@@ -172,6 +172,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/pipeline
     mode: '0775'
     container_name: stirling-pdf
+  # tududi docker mounts
+  - name: files_tududi
+    dest: /home/{{ default_user }}/docker_mounts/files/tududi
+    mode: '0775'
+    container_name: tududi
 
 docker_compose_subpath: "{{ inventory_dir }}/host_vars/docker-02.home.stechsolutions.ca/docker_compose"
 
@@ -230,4 +235,10 @@ docker_compose_files:
     state: present
     src: "{{ docker_compose_subpath }}/ai.yaml.j2"
     dest: /home/{{ default_user }}/docker_compose/ai-docker-compose.yaml
+    mode: '0664'
+  - name: tududi-docker-compose.yaml
+    compose_name: tududi
+    state: present
+    src: "{{ docker_compose_subpath }}/tududi.yaml.j2"
+    dest: /home/{{ default_user }}/docker_compose/tududi-docker-compose.yaml
     mode: '0664'
