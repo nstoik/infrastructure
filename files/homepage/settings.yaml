@@ -44,6 +44,9 @@ layout:
   Developer Tools:
     tab: Tools
     style: column
+  Productivity:
+    tab: Tools
+    style: column
   Vehicle:
     tab: Tools
     style: column
