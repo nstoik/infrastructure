@@ -135,6 +135,14 @@
     - base
     - base.alloy
 
+# Set up swap file when the flag is set
+- name: Set up swap file
+  ansible.builtin.include_tasks: setup_swap_file.yaml
+  when: base_swap_file_setup is true
+  tags:
+    - base
+    - base.swap
+
 # Set up zram compressed swap when the flag is set
 - name: Set up zram compressed swap
   ansible.builtin.include_tasks: setup_zram.yaml
