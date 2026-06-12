@@ -165,3 +165,7 @@ base_alloy_geoip_update_cron_day: "5"
 #   base_alloy_geoip_hc_uuid: "{{ secret_hc_projects['Stechsolutions'].ping_key }}/geoip-<host>"
 base_alloy_geoip_hc_url: ""
 base_alloy_geoip_hc_uuid: ""
+
+# zram compressed swap
+base_zram_setup: false
+base_zram_size_percent: 25

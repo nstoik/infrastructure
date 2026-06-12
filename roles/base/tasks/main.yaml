@@ -135,6 +135,14 @@
     - base
     - base.alloy
 
+# Set up zram compressed swap when the flag is set
+- name: Set up zram compressed swap
+  ansible.builtin.include_tasks: setup_zram.yaml
+  when: base_zram_setup is true
+  tags:
+    - base
+    - base.zram
+
 # set specified systemd services to the specified state and status
 - name: Set specified systemd services to the specified state and status
   ansible.builtin.service:

@@ -43,3 +43,10 @@
     state: restarted
     daemon_reload: true
   become: true
+
+# Restart zramswap
+- name: Restart zramswap
+  ansible.builtin.systemd:
+    name: zramswap
+    state: restarted
+  become: true
