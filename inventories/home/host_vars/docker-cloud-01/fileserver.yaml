@@ -1,4 +1,0 @@
----
-# fileserver vars for docker-cloud-01
-
-fileserver_setup: true
