@@ -21,8 +21,10 @@ ansible-playbook playbooks/hosts_configure.yaml --tags=base
 - `base.geerlingguy.security` - Configure security settings using the geerlingguy.security role
 - `base.user` - Configure the default user
 - `base.postfix` - Configure postfix mail server
+- `base.swap` - Configure swap file (when `base_swap_file_setup` is true)
 - `base.timezone` - Configure the system timezone
 - `base.netplan` - Configure netplan networking
+- `base.zram` - Configure zram compressed swap (when `base_zram_setup` is true)
 
 ## Cloudflare Tags
 
@@ -77,7 +79,6 @@ ansible-playbook playbooks/hosts_configure.yaml --tags=fileserver
 - `fileserver.zfs` - Configure ZFS pools and datasets
 - `fileserver.nfs-server` - Configure NFS server
 - `fileserver.nfs-client` - Configure NFS client mounts
-- `fileserver.swap` - Configure swap file
 
 ## Additional Service Tags
 
