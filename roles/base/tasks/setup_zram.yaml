@@ -10,9 +10,11 @@
     - base
     - base.zram
   block:
-    - name: Install zram-tools
+    - name: Install zram-tools and kernel modules
       ansible.builtin.apt:
-        name: zram-tools
+        name:
+          - zram-tools
+          - linux-modules-extra-generic
         state: present
 
     - name: Configure zram size
