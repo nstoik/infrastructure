@@ -14,7 +14,7 @@
       ansible.builtin.apt:
         name:
           - zram-tools
-          - "linux-modules-extra-{{ ansible_kernel }}"
+          - "linux-modules-extra-{{ ansible_facts['kernel'] }}"
         state: present
 
     - name: Configure zram size
