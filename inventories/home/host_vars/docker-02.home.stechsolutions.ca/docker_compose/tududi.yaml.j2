@@ -3,7 +3,7 @@ name: tududi
 
 services:
   tududi:
-    image: chrisvel/tududi:1.1.0
+    image: chrisvel/tududi:1.1.1
     container_name: tududi
     networks:
       - traefik
@@ -32,7 +32,7 @@ services:
       - "homepage.href=https://tududi.home.stechsolutions.ca"
       - "homepage.siteMonitor=https://tududi.home.stechsolutions.ca"
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
-      - "wud.link.template=https://hub.docker.com/r/chrisvel/tududi/tags"
+      - "wud.link.template=https://github.com/chrisvel/tududi/releases"
 
 networks:
   traefik:
