@@ -1,0 +1,29 @@
+---
+# Tasks to set up zram compressed swap
+#
+# inputs:
+#   - base_zram_size_percent: percentage of total RAM to use for zram (default: 25)
+
+- name: Set up zram compressed swap
+  become: true
+  tags:
+    - base
+    - base.zram
+  block:
+    - name: Install zram-tools
+      ansible.builtin.apt:
+        name: zram-tools
+        state: present
+
+    - name: Configure zram size
+      ansible.builtin.lineinfile:
+        path: /etc/default/zramswap
+        regexp: '^#?PERCENT='
+        line: "PERCENT={{ base_zram_size_percent }}"
+      notify: Restart zramswap
+
+    - name: Ensure zramswap service is enabled and started
+      ansible.builtin.systemd:
+        name: zramswap
+        enabled: true
+        state: started

@@ -9,7 +9,6 @@
 #   - fileserver_setup_zfs: boolean
 #   - base_node_exporter_textfile_dir: path to node_exporter textfile directory (from base role)
 #   - fileserver_setup_attached_disks: boolean
-#   - fileserver_setup_swap_file: boolean
 
 # Setup attached disks with ext4 filesystem
 # These are typically the virtual disks attached to the VM
@@ -19,14 +18,6 @@
     - fileserver
     - fileserver.ext4
   when: fileserver_setup_attached_disks is true
-
-# Setup swap file
-- name: Setup swap file
-  ansible.builtin.include_tasks: setup_swap_file.yaml
-  tags:
-    - fileserver
-    - fileserver.swap
-  when: fileserver_setup_swap_file is true
 
 # Setup mergerfs
 # This would typically be real disks passed through to the VM
