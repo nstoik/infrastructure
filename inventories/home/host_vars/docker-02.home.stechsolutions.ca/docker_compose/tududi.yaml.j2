@@ -1,0 +1,40 @@
+---
+name: tududi
+
+services:
+  tududi:
+    image: chrisvel/tududi:1.1.1
+    container_name: tududi
+    networks:
+      - traefik
+    environment:
+      - TUDUDI_USER_EMAIL={{ default_user_email }}
+      - TUDUDI_USER_PASSWORD={{ secret_tududi_user_password }}
+      - TUDUDI_SESSION_SECRET={{ secret_tududi_session_secret }}
+      - TUDUDI_ALLOWED_ORIGINS=https://tududi.home.stechsolutions.ca
+      - TUDUDI_TRUST_PROXY=true
+      - TUDUDI_UPLOAD_PATH=/app/backend/uploads
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/files/tududi/db:/app/backend/db
+      - /home/{{ default_user }}/docker_mounts/files/tududi/uploads:/app/backend/uploads
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tududi.rule=Host(`tududi.home.stechsolutions.ca`)"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.services.tududi.loadbalancer.server.port=3002"
+      - "traefik.http.routers.tududi.entrypoints=websecure"
+      - "traefik.http.routers.tududi.tls.certresolver=letsencrypt"
+      - "homepage.group=Productivity"
+      - "homepage.name=Tududi"
+      - "homepage.description=Task and project management"
+      - "homepage.icon=tududi.png"
+      - "homepage.href=https://tududi.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://tududi.home.stechsolutions.ca"
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/chrisvel/tududi/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true
