@@ -9,6 +9,7 @@ base_node_exporter_zfs_collector: true
 
 base_host_additional_packages:
   - unrar
+  - ffmpeg
 
 fileserver_setup: true
 fileserver_setup_mergerfs: false
