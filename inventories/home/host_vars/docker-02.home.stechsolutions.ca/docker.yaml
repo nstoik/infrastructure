@@ -173,8 +173,12 @@ docker_mounts_subfolders:
     mode: '0775'
     container_name: stirling-pdf
   # tududi docker mounts
-  - name: files_tududi
-    dest: /home/{{ default_user }}/docker_mounts/files/tududi
+  - name: files_tududi_db
+    dest: /home/{{ default_user }}/docker_mounts/files/tududi/db
+    mode: '0775'
+    container_name: tududi
+  - name: files_tududi_uploads
+    dest: /home/{{ default_user }}/docker_mounts/files/tududi/uploads
     mode: '0775'
     container_name: tududi
 
