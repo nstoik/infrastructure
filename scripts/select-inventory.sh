@@ -20,6 +20,11 @@ case "$INV_NAME" in
     export ANSIBLE_VAULT_IDENTITY_LIST="client_welca@./vault_pass_client_welca.txt"
     echo "Selected inventory: client_welca (./inventories/client_welca)"
     ;;
+  workstations)
+    export ANSIBLE_INVENTORY="./inventories/workstations"
+    export ANSIBLE_VAULT_IDENTITY_LIST="workstations@./vault_pass_workstations.txt"
+    echo "Selected inventory: workstations (./inventories/workstations)"
+    ;;
   *)
     echo "Unknown inventory: $INV_NAME"
     return 1 2>/dev/null || exit 1

@@ -140,6 +140,12 @@ ls /tmp/glacier_restore
 
 ## Tailscale
 
+### WSL
+
+Tailscale on WSL is installed as a Windows GUI application, not via Ansible. Download and install the [Tailscale Windows client](https://tailscale.com/download/windows). Once installed, WSL automatically routes through the Windows Tailscale client — no separate WSL installation is required.
+
+### Linux servers
+
 Some Tailscale configuration is done manually via the Tailscale admin console at [Tailscale Admin Console](https://login.tailscale.com/admin).
 
 ### Access Control

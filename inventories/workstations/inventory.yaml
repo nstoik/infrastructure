@@ -1,0 +1,9 @@
+---
+all:
+  children:
+    wsl:
+      hosts:
+        DESKTOP-SJ8NAUC:  # Nelson's desktop (WSL)
+        DESKTOP-3PU4LF6:  # Nelson's laptop (WSL)
+    linux:
+      hosts:  # Native Linux desktops/laptops (future)
