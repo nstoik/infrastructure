@@ -78,7 +78,7 @@ Start with [Installation & Setup](docs/SETUP.md) for step-by-step instructions.
 
 ```bash
 # Setup environment
-source setenv.sh                              # Load env vars from .env
+source scripts/setenv.sh                      # Load env vars from .env
 source scripts/select-inventory.sh home       # Select which inventory to use
 
 # Install Ansible collections

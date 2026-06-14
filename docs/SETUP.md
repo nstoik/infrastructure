@@ -47,8 +47,8 @@ There is a pre-commit hook to ensure that vault files are not accidentally commi
 
 #### For the home inventory (default):
 ```bash
-chmod +x git-init.sh
-./git-init.sh
+chmod +x scripts/git-init.sh
+./scripts/git-init.sh
 ```
 
 The `vault_pass.txt` file contains the password for the home vault. It is not checked into git; the actual password is stored in Bitwarden and can be read from there.
@@ -101,8 +101,8 @@ The required values are stored in the ansible vault file `inventories/home/group
 Set environment variables in your shell before running playbooks:
 
 ```bash
-chmod +x setenv.sh
-source setenv.sh
+chmod +x scripts/setenv.sh
+source scripts/setenv.sh
 ```
 
 ## Inventory Management
