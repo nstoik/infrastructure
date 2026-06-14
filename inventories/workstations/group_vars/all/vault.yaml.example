@@ -5,5 +5,6 @@
 #     --vault-id workstations@./vault_pass_workstations.txt \
 #     --encrypt-vault-id workstations
 
+secret_user_password: "your password"
 secret_user_password_prehashed: "hashed version of your password (run: openssl passwd -6 'your_password')"
 secret_become_pass: "your sudo password"
