@@ -31,16 +31,14 @@ ansible-vault encrypt inventories/workstations/group_vars/all/vault.yaml \
 
 ### Running the Playbook
 
+WSL hosts use `ansible_connection: local`, so the playbook runs on whichever
+machine executes it. Always use `--limit=$(hostname)` so each machine
+configures itself:
+
 ```bash
 source scripts/setenv.sh
 source scripts/select-inventory.sh workstations
-ansible-playbook playbooks/workstations.yaml
-```
-
-To limit to a single host:
-
-```bash
-ansible-playbook playbooks/workstations.yaml --limit=DESKTOP-SJ8NAUC
+ansible-playbook playbooks/workstations.yaml --limit=$(hostname)
 ```
 
 ### What the Playbook Does

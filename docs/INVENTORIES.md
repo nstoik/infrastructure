@@ -1,7 +1,8 @@
 # Inventory Management
 
-This repository supports multiple independent inventory sets, each managing different infrastructure environments. For example:
-- `home` - Home lab and local StechSolutions infrastructure
+This repository supports multiple independent inventory sets, each managing different infrastructure environments:
+- `home` - Home lab and local StechSolutions infrastructure (default)
+- `workstations` - Personal desktops and laptops (WSL and native Linux)
 - `client_welca` - Client site infrastructure (Proxmox host on remote site)
 
 Each inventory has its own:
@@ -23,6 +24,16 @@ infrastructure/
 │   │   │   │   └── vault.yaml.example
 │   │   │   └── <group>.yaml
 │   │   └── host_vars/
+│   ├── workstations/              # Workstations inventory (desktops, laptops, WSL)
+│   │   ├── inventory.yaml
+│   │   ├── group_vars/
+│   │   │   ├── all/
+│   │   │   │   ├── main.yaml
+│   │   │   │   ├── vault.yaml     # Encrypted secrets (auto-loaded)
+│   │   │   │   └── vault.yaml.example
+│   │   │   └── wsl.yaml
+│   │   ├── host_vars/
+│   │   └── README.md
 │   ├── client_welca/              # Client site inventory
 │   │   ├── inventory.yaml
 │   │   ├── group_vars/

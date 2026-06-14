@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repository Does
 
-Ansible-based infrastructure-as-code managing a homelab (`home` inventory) and client sites (e.g., `client_welca`) across Proxmox VMs, Docker hosts, Raspberry Pis, and DigitalOcean cloud instances.
+Ansible-based infrastructure-as-code managing a homelab (`home` inventory), personal workstations (`workstations` inventory), and client sites (e.g., `client_welca`) across Proxmox VMs, Docker hosts, Raspberry Pis, DigitalOcean cloud instances, and WSL desktops/laptops.
 
 ## Common Commands
 
