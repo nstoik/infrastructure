@@ -1,0 +1,28 @@
+---
+# group_vars for all workstations
+ansible_become_password: "{{ secret_become_pass }}"
+
+default_user: "nelson"
+default_user_email: "nstoik@stechsolutions.ca"
+
+base_timezone: "America/Edmonton"
+base_controller_user: "{{ default_user }}"
+known_hosts_ansible_file: "/home/{{ base_controller_user }}/.ssh/known_hosts_ansible"
+
+# Don't reboot workstations via Ansible
+base_reboot_host_if_required: false
+
+# Desktop-specific additional packages
+base_group_additional_packages:
+  - qrencode
+
+base_users:
+  - name: "{{ default_user }}"
+    password_prehashed: "{{ secret_user_password_prehashed }}"
+    shell: /usr/bin/zsh
+    groups:
+      - sudo
+    add_ssh_keys: false
+    dotfiles:
+      install: true
+      profile: desktop

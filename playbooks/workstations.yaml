@@ -1,0 +1,24 @@
+---
+# Playbook for configuring workstations (desktops, laptops, WSL)
+# Run with: ansible-playbook playbooks/workstations.yaml
+# Select inventory first: source scripts/select-inventory.sh workstations
+
+- name: Configure workstations
+  hosts: all
+
+  pre_tasks:
+    - name: Gather facts
+      ansible.builtin.setup:
+      tags: always
+
+  tasks:
+    - name: Import base role
+      ansible.builtin.import_role:
+        name: base
+      tags:
+        - base
+        - base.apt
+        - base.binaries
+        - base.dotfiles
+        - base.timezone
+        - base.user

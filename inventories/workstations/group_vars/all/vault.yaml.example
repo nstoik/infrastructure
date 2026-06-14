@@ -1,0 +1,9 @@
+---
+# Vault secrets for the workstations inventory (example — do not commit real values)
+# Copy to vault.yaml, fill in real values, then encrypt:
+#   ansible-vault encrypt inventories/workstations/group_vars/all/vault.yaml \
+#     --vault-id workstations@./vault_pass_workstations.txt \
+#     --encrypt-vault-id workstations
+
+secret_user_password_prehashed: "hashed version of your password (run: openssl passwd -6 'your_password')"
+secret_become_pass: "your sudo password"
