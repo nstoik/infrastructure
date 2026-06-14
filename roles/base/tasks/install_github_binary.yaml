@@ -47,6 +47,7 @@
     remote_src: true
   become: true
   when: base_github_binary_needs_install
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Install binary to destination for {{ base_github_binary.name }}
   ansible.builtin.copy:
@@ -56,6 +57,7 @@
     remote_src: true
   become: true
   when: base_github_binary_needs_install
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Write URL marker for {{ base_github_binary.name }}
   ansible.builtin.copy:
@@ -64,6 +66,7 @@
     mode: "0644"
   become: true
   when: base_github_binary_needs_install
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Set capabilities for {{ base_github_binary.name }}
   community.general.capabilities:
@@ -72,3 +75,4 @@
     state: present
   become: true
   when: base_github_binary.capabilities is defined
+  ignore_errors: "{{ ansible_check_mode }}"
