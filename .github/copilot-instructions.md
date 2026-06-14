@@ -64,11 +64,10 @@ From `../requirements.yaml`:
 
 ## Secrets & Vault Management
 
-- **File**: `../vaults/<inventory>/vault.yaml` (encrypted, committed to git)
-- **Reference**: `../vaults/home/vault.yaml.example` for structure
+- **File**: `../inventories/<inventory>/group_vars/all/vault.yaml` (encrypted, committed to git)
 - **Common secrets**: SSH keys, DO/Cloudflare tokens, passwords, IPMI credentials
-- **Usage**: Include in playbooks via `vars_files: - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"` — automatically resolves to the correct vault for whichever inventory is active
-- **Pre-commit hook**: `../git-init.sh` prevents unencrypted vault commits
+- **Usage**: Auto-loaded by Ansible via `group_vars/all/` — no `vars_files` needed in playbooks; variables are available in every play for the active inventory
+- **Pre-commit hook**: `../scripts/git-init.sh` prevents unencrypted vault commits
 - **Ansible config** (`../ansible.cfg`): `vault_identity_list = home@./vault_pass.txt`
 
 ## Playbook Invocation
@@ -91,7 +90,7 @@ From `../requirements.yaml`:
 
 ## Development Workflow
 
-1. **Environment setup**: `chmod +x setenv.sh && source setenv.sh` (loads vault password from `.env`)
+1. **Environment setup**: `chmod +x scripts/setenv.sh && source scripts/setenv.sh` (loads vault password from `.env`)
 2. **Install collections**: `ansible-galaxy install -r requirements.yaml`
 3. **Validate**: `ansible-lint playbooks/*.yaml` and `yamllint inventories/`
 4. **Dry run**: `ansible-playbook playbooks/hosts_configure.yaml --check`

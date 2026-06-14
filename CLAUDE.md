@@ -10,7 +10,7 @@ Ansible-based infrastructure-as-code managing a homelab (`home` inventory) and c
 
 ```bash
 # Environment setup (required before running playbooks)
-source setenv.sh                              # Load .env into shell
+source scripts/setenv.sh                      # Load .env into shell
 source scripts/select-inventory.sh home       # Set inventory + vault identity (must be sourced, not executed)
 
 # Install Galaxy collections
@@ -72,7 +72,7 @@ files/                      # Jinja2 templates and static config files
   sonarr/                   # Sonarr config template
   tailscale/                # Tailscale ACL backup
   traefik/                  # Traefik reverse proxy static configs (dev, prod) and dynamic rules
-scripts/select-inventory.sh # Helper to switch active inventory + vault
+scripts/                    # Helper scripts (setenv.sh, git-init.sh, select-inventory.sh)
 ```
 
 ## Architecture: How It All Fits Together
@@ -114,7 +114,7 @@ Variables follow role-name prefixes: `docker_*`, `fileserver_*`, `base_*`, `secr
 
 ### Vault security
 
-A pre-commit hook (installed by `./git-init.sh`) blocks committing unencrypted vault files. Run `./git-init.sh` once after cloning to install it.
+A pre-commit hook (installed by `./scripts/git-init.sh`) blocks committing unencrypted vault files. Run `./scripts/git-init.sh` once after cloning to install it.
 
 ## Key Playbooks
 

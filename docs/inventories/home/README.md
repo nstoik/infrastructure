@@ -22,7 +22,7 @@ This inventory includes:
 The home inventory is the default. When `ansible.cfg` points to `./inventories/home`, you can run playbooks without specifying an inventory:
 
 ```bash
-source setenv.sh
+source scripts/setenv.sh
 ansible-playbook playbooks/hosts_configure.yaml
 ```
 

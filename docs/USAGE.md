@@ -5,7 +5,7 @@
 Before running any playbook, ensure your shell environment is set up:
 
 ```bash
-source setenv.sh
+source scripts/setenv.sh
 source scripts/select-inventory.sh home  # or your chosen inventory
 ```
 
@@ -183,8 +183,8 @@ ansible-inventory --host <hostname>
 
 ```bash
 # Setup environment
-chmod +x setenv.sh git-init.sh scripts/select-inventory.sh
-source setenv.sh
+chmod +x scripts/setenv.sh scripts/git-init.sh scripts/select-inventory.sh
+source scripts/setenv.sh
 source scripts/select-inventory.sh home
 
 # Install collections
