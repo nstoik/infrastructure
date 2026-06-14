@@ -11,6 +11,16 @@
       ansible.builtin.setup:
       tags: always
 
+    - name: Assert playbook is limited to the current host
+      ansible.builtin.assert:
+        that:
+          - ansible_play_hosts | length == 1
+          - inventory_hostname == ansible_hostname
+        fail_msg: >
+          WSL hosts use ansible_connection=local and must be targeted individually.
+          Run with: ansible-playbook playbooks/workstations.yaml --limit=$(hostname)
+      tags: always
+
   tasks:
     - name: Import base role
       ansible.builtin.import_role:
