@@ -25,4 +25,4 @@ base_users:
     add_ssh_keys: false
     dotfiles:
       install: true
-      profile: desktop
+      profile: workstation

@@ -47,7 +47,7 @@ ansible-playbook playbooks/workstations.yaml --limit=DESKTOP-SJ8NAUC
 
 - Installs base packages (`git`, `jq`, `inxi`, `qrencode`, etc.)
 - Installs GitHub-released binaries: `gping`, `trippy`
-- Sets up the user and dotfiles (desktop profile)
+- Sets up the user and dotfiles (workstation profile)
 - Sets timezone
 
 ## Manual Installs — Windows
