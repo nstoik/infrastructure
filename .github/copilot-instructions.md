@@ -64,10 +64,9 @@ From `../requirements.yaml`:
 
 ## Secrets & Vault Management
 
-- **File**: `../vaults/<inventory>/vault.yaml` (encrypted, committed to git)
-- **Reference**: `../vaults/home/vault.yaml.example` for structure
+- **File**: `../inventories/<inventory>/group_vars/all/vault.yaml` (encrypted, committed to git)
 - **Common secrets**: SSH keys, DO/Cloudflare tokens, passwords, IPMI credentials
-- **Usage**: Include in playbooks via `vars_files: - "{{ inventory_dir }}/../../vaults/{{ inventory_dir | basename }}/vault.yaml"` — automatically resolves to the correct vault for whichever inventory is active
+- **Usage**: Auto-loaded by Ansible via `group_vars/all/` — no `vars_files` needed in playbooks; variables are available in every play for the active inventory
 - **Pre-commit hook**: `../scripts/git-init.sh` prevents unencrypted vault commits
 - **Ansible config** (`../ansible.cfg`): `vault_identity_list = home@./vault_pass.txt`
 
