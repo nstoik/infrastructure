@@ -1,2 +1,13 @@
 ---
-# DESKTOP-SJ8NAUC — Nelson's WSL workstation
+# DESKTOP-SJ8NAUC — Nelson's desktop (WSL)
+base_users:
+  - name: "nelson"
+    password_prehashed: "{{ secret_user_password_prehashed }}"
+    shell: /usr/bin/zsh
+    groups:
+      - sudo
+    add_ssh_keys: false
+    dotfiles:
+      install: true
+      profile: workstation
+      dir: /home/nelson/GitHub/dotfiles
