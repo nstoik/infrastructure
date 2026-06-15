@@ -47,7 +47,7 @@
       loop_control:
         label: "{{ item.name }}"
       register: pipx_result
-      changed_when: pipx_result.rc == 0
+      changed_when: "'already seems to be installed' not in pipx_result.stdout"
       failed_when: pipx_result.rc != 0 and 'already seems to be installed' not in pipx_result.stdout
       become: true
       become_user: "{{ default_user }}"
