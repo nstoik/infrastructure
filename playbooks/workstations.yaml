@@ -2,6 +2,10 @@
 # Playbook for configuring workstations (desktops, laptops, WSL)
 # Run with: ansible-playbook playbooks/workstations.yaml
 # Select inventory first: source scripts/select-inventory.sh workstations
+#
+# Variables (defined in inventories/workstations/group_vars/all/main.yaml):
+#   workstation_pipx_packages: list of pipx apps to install for default_user
+#     each entry: { name: <package> }
 
 - name: Configure workstations
   hosts: all
@@ -15,7 +19,7 @@
       ansible.builtin.assert:
         that:
           - ansible_play_hosts | length == 1
-          - inventory_hostname == ansible_hostname
+          - inventory_hostname == ansible_facts["hostname"]
         fail_msg: >
           WSL hosts use ansible_connection=local and must be targeted individually.
           Run with: ansible-playbook playbooks/workstations.yaml --limit=$(hostname)
@@ -32,3 +36,21 @@
         - base.dotfiles
         - base.timezone
         - base.user
+
+    # TODO: migrate to community.general.pipx with state: latest once workstations
+    # are on Ubuntu 26.04 (ships pipx 1.8, meets module's 1.7.0 minimum).
+    # See https://github.com/nstoik/infrastructure/issues/203
+    - name: Install pipx packages
+      ansible.builtin.command:
+        cmd: "pipx install {{ item.name }}"
+      loop: "{{ workstation_pipx_packages }}"
+      loop_control:
+        label: "{{ item.name }}"
+      register: pipx_result
+      changed_when: pipx_result.rc == 0
+      failed_when: pipx_result.rc != 0 and 'already seems to be installed' not in pipx_result.stdout
+      become: true
+      become_user: "{{ default_user }}"
+      tags:
+        - workstation
+        - workstation.pipx

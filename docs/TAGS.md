@@ -80,6 +80,17 @@ ansible-playbook playbooks/hosts_configure.yaml --tags=fileserver
 - `fileserver.nfs-server` - Configure NFS server
 - `fileserver.nfs-client` - Configure NFS client mounts
 
+## Workstation Tags
+
+Configure workstations (desktops, laptops, WSL). Used with `playbooks/workstations.yaml`.
+
+```bash
+ansible-playbook playbooks/workstations.yaml --limit=$(hostname) --tags=workstation
+```
+
+- `workstation` - All workstation-specific tasks
+- `workstation.pipx` - Install pipx packages defined in `workstation_pipx_packages`
+
 ## Additional Service Tags
 
 - `healthchecks` - Configure Healthchecks.io monitoring
