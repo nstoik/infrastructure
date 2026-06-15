@@ -50,6 +50,21 @@ Update dotfiles on all hosts:
 ansible-playbook playbooks/dotfiles_update.yaml
 ```
 
+### Workstations
+Configure workstations (desktops, laptops, WSL). Must be run one host at a time:
+
+```bash
+source scripts/select-inventory.sh workstations
+ansible-playbook playbooks/workstations.yaml --limit=$(hostname)
+```
+
+Run only pipx package installation:
+```bash
+ansible-playbook playbooks/workstations.yaml --limit=$(hostname) --tags=workstation.pipx
+```
+
+Pipx packages are defined in `inventories/workstations/group_vars/all/main.yaml` under `workstation_pipx_packages`.
+
 ### Service-Specific Playbooks
 Configure services managed through dedicated playbooks:
 

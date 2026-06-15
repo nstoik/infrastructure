@@ -22,7 +22,17 @@ base_packages:
 
 # Desktop-specific additional packages
 base_group_additional_packages:
+  - pipx
   - qrencode
+
+workstation_pipx_packages:
+  - name: ansible-core
+  - name: ansible-lint
+  - name: asciinema
+  - name: pipenv
+  - name: python-kasa
+  - name: ruff
+  - name: yamllint
 
 base_users:
   - name: "{{ default_user }}"
