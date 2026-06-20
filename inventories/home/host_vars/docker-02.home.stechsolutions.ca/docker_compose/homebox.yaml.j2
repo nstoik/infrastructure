@@ -11,6 +11,7 @@ services:
       - HBOX_LOG_LEVEL=info
       - HBOX_OPTIONS_ALLOW_REGISTRATION=false
       - HBOX_OPTIONS_ALLOW_ANALYTICS=false
+      - HBOX_AUTH_API_KEY_PEPPER={{ secret_homebox_api_key_pepper }}
     volumes:
       - /home/{{ default_user }}/docker_mounts/files/homebox/data:/data
     restart: unless-stopped
