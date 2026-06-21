@@ -1,0 +1,37 @@
+---
+name: homebox
+
+services:
+  homebox:
+    image: ghcr.io/sysadminsmedia/homebox:0.26.2
+    container_name: homebox
+    networks:
+      - traefik
+    environment:
+      - HBOX_LOG_LEVEL=info
+      - HBOX_OPTIONS_ALLOW_REGISTRATION=false
+      - HBOX_OPTIONS_ALLOW_ANALYTICS=false
+      - HBOX_AUTH_API_KEY_PEPPER={{ secret_homebox_api_key_pepper }}
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/files/homebox/data:/data
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homebox.rule=Host(`homebox.home.stechsolutions.ca`)"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.services.homebox.loadbalancer.server.port=7745"
+      - "traefik.http.routers.homebox.entrypoints=websecure"
+      - "traefik.http.routers.homebox.tls.certresolver=letsencrypt"
+      - "homepage.group=Productivity"
+      - "homepage.name=Homebox"
+      - "homepage.description=Home inventory and organization"
+      - "homepage.icon=homebox.png"
+      - "homepage.href=https://homebox.home.stechsolutions.ca"
+      - "homepage.siteMonitor=https://homebox.home.stechsolutions.ca"
+      - "wud.tag.include=^\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/sysadminsmedia/homebox/releases"
+
+networks:
+  traefik:
+    name: traefik
+    external: true

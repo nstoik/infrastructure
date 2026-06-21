@@ -55,6 +55,12 @@ The first account created through the UI becomes admin. API keys are enabled by 
 6. Go to **Admin Panel → Settings → Interface** and set **Task Model (Local)** to the same model as your chat model (e.g. `qwen2.5:14b`). This reuses the already-loaded model for background tasks (title generation, tags, follow-up suggestions) and avoids VRAM thrashing. Using a different model only makes sense if both fit in VRAM simultaneously — with a 16 GB card and qwen2.5:14b (12.3 GiB), there is no room for a second large model.
 7. Go to **Admin Panel → Models → qwen2.5:14b → Advanced Params** and set `num_ctx` to `8192` or `16384` to reduce KV cache size and keep the model fully in VRAM (RX 7600 XT has 16GB).
 
+## Homebox
+
+The Homebox admin account password is saved in Bitwarden.
+
+To invite additional users without re-enabling open registration (`HBOX_OPTIONS_ALLOW_REGISTRATION`), generate an invite link from the collection page in the Homebox web UI and share it — invited users join the collection directly.
+
 ## Ntfy
 
 The subscribed topics need to be added manually in the Ntfy clients (web or iOS app). The list of topics to subscribe to:
