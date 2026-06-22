@@ -52,6 +52,21 @@ scrape_configs:
       - target_label: __address__
         replacement: prometheus-pve-exporter:9221  # PVE exporter
 
+  - job_name: 'pbs'
+    file_sd_configs:
+      - files:
+          - '/etc/prometheus/targets/pbs.yaml'
+    metrics_path: /metrics
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+      - source_labels: [__address__]
+        regex: (.*)
+        target_label: __param_target
+        replacement: https://$1:8007
+      - target_label: __address__
+        replacement: prometheus-pbs-exporter:10019  # PBS exporter
+
   - job_name: 'pihole'
     static_configs:
       - targets:

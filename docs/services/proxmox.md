@@ -37,6 +37,10 @@ The following steps are required to setup a new proxmox host manually.
             - For Proxmox, it needs to have the `PVEAuditor` role on the `/` path.
             - For PBS, it needs to have the `Audit` role on the `/` path.
         - Then rerun the ansible playbook to apply the token to the HomePage docker container.
+    - For Prometheus PBS scraping, create an API token named `prometheus` for the `prometheus@pbs` user (created by the `proxmox_pbs_users` config).
+        - Give the token the `Audit` role on the `/` path.
+        - Enter the token secret into `inventories/home/group_vars/all/vault.yaml` as `secret_pbs_prometheus_token`.
+        - Then rerun the ansible playbook to apply the token to the `prometheus-pbs-exporter` docker container.
     - Add the PBS public key for the default user to the `authorized_keys` file in the `dotfiles` repository. This is then synced to the other hosts via the `base` role so the PBS host can pull backups as required.
 
 ## Proxmox Hosts Ansible Configuration
