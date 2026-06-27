@@ -89,6 +89,9 @@ secret_pve_homepage_token: change_me
 secret_pbs_homepage_user_password: change_me
 # token available through the Proxmox PBS GUI
 secret_pbs_homepage_token: change_me
+secret_pbs_prometheus_user_password: change_me
+# token available through the Proxmox PBS GUI
+secret_pbs_prometheus_token: change_me
 
 # Grafana secrets
 secret_grafana_password: change_me

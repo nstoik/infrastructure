@@ -1,0 +1,8 @@
+---
+- labels:
+    job: pbs
+    location: 'home'
+  targets:
+{% for host in groups['proxmox_pbs'] | sort %}
+    - {{ host }}
+{% endfor %}

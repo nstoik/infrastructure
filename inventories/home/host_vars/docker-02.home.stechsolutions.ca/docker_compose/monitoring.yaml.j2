@@ -144,6 +144,21 @@ services:
     labels:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
+  prometheus-pbs-exporter:
+    image: ghcr.io/natrontech/pbs-exporter:v0.9.1
+    networks:
+      - prometheus_exporter
+    container_name: prometheus-pbs-exporter
+    environment:
+      - PBS_USERNAME=prometheus@pbs
+      - PBS_API_TOKEN_NAME=prometheus
+      - PBS_API_TOKEN={{ secret_pbs_prometheus_token }}
+      # remove this when PBS is proxied via traefik
+      - PBS_INSECURE=true
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.link.template=https://github.com/natrontech/pbs-exporter/releases"
   prometheus-pihole-exporter:
     image: ekofr/pihole-exporter:v1.2.0
     networks:

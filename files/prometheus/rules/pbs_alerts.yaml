@@ -1,0 +1,53 @@
+---
+# yamllint disable rule:line-length
+
+groups:
+  - name: PBS Alerts
+    rules:
+      # pbs_up=0 means the exporter is running but cannot reach the PBS API.
+      # The generic PrometheusTargetMissing covers the exporter itself going down (up=0).
+      - alert: PbsDown
+        expr: pbs_up == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PBS exporter cannot reach PBS API (instance {{ $labels.instance }})"
+          description: "The PBS exporter on {{ $labels.instance }} is running but the PBS API is returning errors. Check PBS health and API token permissions.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: PbsDatastoreHighUsage
+        expr: (pbs_used / pbs_size) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PBS datastore over 85% full (instance {{ $labels.instance }})"
+          description: "PBS datastore {{ $labels.datastore }} on {{ $labels.instance }} is {{ $value | humanize }}% full.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: PbsDatastoreCriticalUsage
+        expr: (pbs_used / pbs_size) * 100 > 95
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PBS datastore over 95% full (instance {{ $labels.instance }})"
+          description: "PBS datastore {{ $labels.datastore }} on {{ $labels.instance }} is {{ $value | humanize }}% full. Prune old snapshots immediately.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      # Alert when a VM's last PBS backup is more than 26 hours old (2-hour buffer over daily schedule).
+      - alert: PbsVmBackupMissed
+        expr: (time() - pbs_snapshot_vm_last_timestamp) > 93600
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PBS backup missed for VM {{ $labels.vm_name }} (instance {{ $labels.instance }})"
+          description: "VM {{ $labels.vm_name }} in datastore {{ $labels.datastore }} ({{ $labels.namespace }}) on {{ $labels.instance }} has not been backed up in {{ $value | humanizeDuration }}. Expected daily.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: PbsVmBackupOverdue
+        expr: (time() - pbs_snapshot_vm_last_timestamp) > 172800
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PBS backup overdue for VM {{ $labels.vm_name }} (instance {{ $labels.instance }})"
+          description: "VM {{ $labels.vm_name }} in datastore {{ $labels.datastore }} ({{ $labels.namespace }}) on {{ $labels.instance }} has not been backed up in {{ $value | humanizeDuration }}. Investigate the PBS backup job immediately.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

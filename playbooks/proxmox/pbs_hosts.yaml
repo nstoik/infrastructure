@@ -157,8 +157,12 @@
         - rclone
 
     # Run the base role
+    # Uses import_role (static) rather than include_role (dynamic) so that
+    # base role defaults (e.g. base_node_exporter_textfile_dir) are merged
+    # into this play's variable pool at parse time, making them available
+    # to the fileserver role's tasks earlier in this same play.
     - name: Run the base role
-      ansible.builtin.include_role:
+      ansible.builtin.import_role:
         name: base
       vars:
         base_user_run_setup: false
