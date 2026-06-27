@@ -35,19 +35,19 @@ groups:
 
       # Alert when a VM's last PBS backup is more than 26 hours old (2-hour buffer over daily schedule).
       - alert: PbsVmBackupMissed
-        expr: (time() - pbs_snapshot_vm_last_timestamp) / 3600 > 26
+        expr: (time() - pbs_snapshot_vm_last_timestamp) > 93600
         for: 10m
         labels:
           severity: warning
         annotations:
           summary: "PBS backup missed for VM {{ $labels.vm_name }} (instance {{ $labels.instance }})"
-          description: "VM {{ $labels.vm_name }} in datastore {{ $labels.datastore }} ({{ $labels.namespace }}) on {{ $labels.instance }} has not been backed up in {{ $value | humanize }} hours. Expected daily.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          description: "VM {{ $labels.vm_name }} in datastore {{ $labels.datastore }} ({{ $labels.namespace }}) on {{ $labels.instance }} has not been backed up in {{ $value | humanizeDuration }}. Expected daily.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
       - alert: PbsVmBackupOverdue
-        expr: (time() - pbs_snapshot_vm_last_timestamp) / 3600 > 48
+        expr: (time() - pbs_snapshot_vm_last_timestamp) > 172800
         for: 5m
         labels:
           severity: critical
         annotations:
           summary: "PBS backup overdue for VM {{ $labels.vm_name }} (instance {{ $labels.instance }})"
-          description: "VM {{ $labels.vm_name }} in datastore {{ $labels.datastore }} ({{ $labels.namespace }}) on {{ $labels.instance }} has not been backed up in {{ $value | humanize }} hours. Investigate the PBS backup job immediately.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          description: "VM {{ $labels.vm_name }} in datastore {{ $labels.datastore }} ({{ $labels.namespace }}) on {{ $labels.instance }} has not been backed up in {{ $value | humanizeDuration }}. Investigate the PBS backup job immediately.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
