@@ -31,16 +31,18 @@ The following steps are required to setup a new proxmox host manually.
         ```
     - Verify IOMMU is active after reboot: `dmesg | grep -e DMAR -e IOMMU | head -5`
 - After the ansible configuration is run, the following steps are required to complete the setup.
-    - For Homepage configuration, on both Proxmox and PBS, create an API token for the `homepage` user.
-        - Enter that token into the `inventories/home/group_vars/all/vault.yaml` file under the appropriate section.
-        - Then add the required permission to the token.
-            - For Proxmox, it needs to have the `PVEAuditor` role on the `/` path.
-            - For PBS, it needs to have the `Audit` role on the `/` path.
-        - Then rerun the ansible playbook to apply the token to the HomePage docker container.
-    - For Prometheus PBS scraping, create an API token named `prometheus` for the `prometheus@pbs` user (created by the `proxmox_pbs_users` config).
-        - Give the token the `Audit` role on the `/` path.
-        - Enter the token secret into `inventories/home/group_vars/all/vault.yaml` as `secret_pbs_prometheus_token`.
-        - Then rerun the ansible playbook to apply the token to the `prometheus-pbs-exporter` docker container.
+    - Several services require PBS API tokens. For each token below:
+        1. In **Configuration → Access Control → API Tokens**, create the token for the user.
+        2. In **Configuration → Access Control → Permissions**, add an `Audit` ACL on `/` for **both** the user (e.g. `homepage@pbs`) and the token (e.g. `homepage@pbs!homepage`). PBS tokens do not inherit user permissions automatically — the token auth ID must have its own ACL entry.
+        3. Enter the token secret into `inventories/home/group_vars/all/vault.yaml` under the appropriate key.
+        4. Rerun the ansible playbook to apply the token to the relevant service.
+
+        | Service | User | Token name | Token auth ID | Vault key |
+        |---|---|---|---|---|
+        | Homepage | `homepage@pbs` | `homepage` | `homepage@pbs!homepage` | `secret_pbs_homepage_token` |
+        | Prometheus | `prometheus@pbs` | `prometheus` | `prometheus@pbs!prometheus` | `secret_pbs_prometheus_token` |
+
+        Note: for **Proxmox PVE** (not PBS), the Homepage token (`homepage@pve!homepage`) uses the `PVEAuditor` role instead of `Audit`, and tokens do inherit user permissions on PVE — only a single ACL entry for the user is needed.
     - Add the PBS public key for the default user to the `authorized_keys` file in the `dotfiles` repository. This is then synced to the other hosts via the `base` role so the PBS host can pull backups as required.
 
 ## Proxmox Hosts Ansible Configuration
