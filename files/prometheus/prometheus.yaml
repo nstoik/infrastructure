@@ -125,6 +125,13 @@ scrape_configs:
       - source_labels: [__param_ups]
         target_label: instance
 
+  - job_name: 'ntfy'
+    static_configs:
+      - targets:
+          - 'docker-cloud-01.tailscale.stechsolutions.ca'
+    scheme: https
+    metrics_path: '/ntfymetrics'
+
   - job_name: 'tailscale-machine'
     static_configs:
       - targets:
