@@ -33,12 +33,6 @@ pihole_dns_entries:
     ip: 10.10.5.27
   - domain: "vpn.home.stechsolutions.ca"
     ip: 10.10.5.28
-  - domain: "youtube-dl.home.stechsolutions.ca"
-    ip: 10.10.5.120
-  - domain: "w10-testing.home.stechsolutions.ca"
-    ip: 10.10.5.182
-  - domain: "docker.home.stechsolutions.ca"
-    ip: 10.10.5.237
 
 # CNAME entries to add to Pi-hole
 # add_hostname: true will add the hostname as a CNAME entry
@@ -128,15 +122,6 @@ pihole_cname_entries:
     add_hostname: true
   - domain: "openwebui.home.stechsolutions.ca"
     target: "docker-02.home.stechsolutions.ca"
-    add_hostname: true
-  - domain: "downloader.home.stechsolutions.ca"
-    target: "docker.home.stechsolutions.ca"
-    add_hostname: true
-  - domain: "heimdall.home.stechsolutions.ca"
-    target: "docker.home.stechsolutions.ca"
-    add_hostname: true
-  - domain: "media.home.stechsolutions.ca"
-    target: "docker.home.stechsolutions.ca"
     add_hostname: true
   - domain: "fd1.farmmonitor.ca"
     target: "pi4-dev.home.stechsolutions.ca"
