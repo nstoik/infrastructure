@@ -15,6 +15,12 @@ entryPoints:
     address: ":443"
   metrics:
     address: ":8081"
+{% if plex_relay_enabled | default(false) %}
+  # TCP passthrough for the Plex Direct Connect Relay (docker-cloud-01 only).
+  # See docs/services/cloud_hosts.md#plex-direct-connect-relay-temporary-cgnat-workaround
+  plex:
+    address: ":32400"
+{% endif %}
 
 accessLog:
   filepath: /etc/traefik/access.log
