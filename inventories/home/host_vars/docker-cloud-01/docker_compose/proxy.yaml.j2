@@ -18,6 +18,9 @@ services:
         - "80:80"
         - "443:443"
         - "8081:8081"
+{% if plex_relay_enabled | default(false) %}
+        - "32400:32400"
+{% endif %}
     depends_on:
         - docker-socket-proxy
     healthcheck:

@@ -144,6 +144,7 @@ Ombi is configured via its web interface.
 ### Plex
 - Docker: expose port `32400` (eg. `-p 32400:32400/tcp`).
 - Router: forward TCP `32400` (or chosen external port) -> `<PLEX_HOST_IP>:32400`.
+  - Only works when the home network has a real public IP. If it's behind CGNAT (eg. Starlink), see [Plex Direct Connect Relay](./cloud_hosts.md#plex-direct-connect-relay-temporary-cgnat-workaround) for the VPS-forwarding workaround.
 - Claim: set `PLEX_CLAIM` env var for first-boot server claim if needed.
 - Plex UI: Settings → Server → Remote Access — enable manual port if not auto, enter external port, then retry until green.
 - Integrations: configure Tautulli and Ombi to point to the Plex server and use API keys stored in the Vault.

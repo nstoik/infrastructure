@@ -1,0 +1,15 @@
+---
+{% if plex_relay_enabled | default(false) %}
+tcp:
+  routers:
+    plex-router:
+      rule: HostSNI(`*`)
+      entryPoints:
+        - plex
+      service: plex-service
+  services:
+    plex-service:
+      loadBalancer:
+        servers:
+          - address: docker-01.home.stechsolutions.ca:32400
+{% endif %}

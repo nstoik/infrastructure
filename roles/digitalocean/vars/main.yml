@@ -21,6 +21,8 @@ digitalocean_tags:
     state: "present"
   - name: "Docker"
     state: "present"
+  - name: "Plex"
+    state: "present"
 
 # Tags that are added to all DigitalOcean Droplets managed by Ansible.
 digitalocean_default_tags:
@@ -82,6 +84,14 @@ digitalocean_firewall:
         sources:
           addresses: ["0.0.0.0/0", "::/0"]
       - ports: "80"
+        protocol: "tcp"
+        sources:
+          addresses: ["0.0.0.0/0", "::/0"]
+  - name: "StechSolutions-Plex"
+    state: "present"
+    tags: ["Plex"]
+    inbound_rules:
+      - ports: "32400"
         protocol: "tcp"
         sources:
           addresses: ["0.0.0.0/0", "::/0"]

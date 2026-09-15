@@ -32,7 +32,7 @@ cloud_droplets:
     size: 's-1vcpu-1gb'
     region: 'tor1'
     image: 'ubuntu-24-04-x64'
-    tags: ['HTTPS', 'Docker']
+    tags: ['HTTPS', 'Docker', 'Plex']
     cf_records:
       - name: 'docker-cloud-01'
         zone: 'stechsolutions.ca'
