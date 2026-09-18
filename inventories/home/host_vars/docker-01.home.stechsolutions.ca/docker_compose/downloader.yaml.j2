@@ -3,7 +3,7 @@ name: downloader
 
 services:
   downloader:
-    image: nstoik/qbittorrent-vpn:1.3.0
+    image: nstoik/qbittorrent-vpn:1.3.1
     networks:
       - traefik
     container_name: qbittorrentvpn
@@ -43,7 +43,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.docker.com/r/nstoik/qbittorrent-vpn/tags"
   qbit_manage:
-    image: ghcr.io/stuffanthings/qbit_manage:v4.7.1
+    image: ghcr.io/stuffanthings/qbit_manage:v4.13.0
     network_mode: "service:downloader"
     container_name: qbit_manage
     environment:
