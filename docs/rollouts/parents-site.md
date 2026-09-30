@@ -237,6 +237,7 @@ ansible-playbook playbooks/hosts_configure.yaml --check
 ## Open items
 
 - Confirm `vpn.arnie-karen` Tailscale IP once VM is back online.
+- Root cause of `vpn.arnie-karen` outage unknown — suspect bad network cable/plug at the house. Investigate on-site.
 - pve2 (shop): staged (OS, network, root access), physical rack-in pending.
 
 ---
