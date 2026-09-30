@@ -6,8 +6,8 @@
 ## Status summary
 
 - **Plan A — Barn renter VLAN**: ✅ Complete. Fiber run, switches installed, VLAN 30 + firewall rules configured.
-- **Plan B — `client_parents` inventory + new Proxmox nodes**: 🔲 Repo work not started. pve1 is physically up; pve2 (shop) not yet installed.
-- **Plan C — Frigate, PBS**: 🔲 Pending Plan B. C.1 VM migration physically done; Tailscale/Ansible verification pending.
+- **Plan B — `client_parents` inventory + new Proxmox nodes**: 🔲 Repo work not started. pve1 is physically up; pve2 OS staged/installed (ZFS, single disk), physical rack-in at the shop pending.
+- **Plan C — Frigate, PBS**: 🔲 Pending Plan B. C.1 VM migration physically done; Tailscale/Ansible verification pending. Old node already pulled out of service, ready to wipe for PBS (C.3).
 
 ## Shared facts
 
@@ -15,8 +15,8 @@
 - WiFi/user LAN: `10.200.2.0/24` (separate, not managed here).
 - Hosts:
   - `pve1.internal.arniekaren.ca` → `10.200.1.4` (house, up). System hostname is `pve`; inventory uses `pve1` with `ansible_host: 10.200.1.4` — no system rename needed.
-  - `pve2.internal.arniekaren.ca` → `10.200.1.5` (shop, not yet installed).
-  - PBS → TBD hostname and IP (old node, Plan C.3).
+  - `pve2.internal.arniekaren.ca` → `10.200.1.5` (shop; OS installed, not yet racked/networked on-site).
+  - PBS → TBD hostname and IP (old node — already pulled out of service, not yet wiped/reinstalled, Plan C.3).
   - `vpn.arnie-karen` → Tailscale address unknown (VM currently offline).
 - Domain `arniekaren.ca` not yet registered — internal names only for now.
 - Ansible reaches pve1/pve2 via Tailscale subnet routing through `vpn.arnie-karen`. **Blocked until `vpn.arnie-karen` is back online.**
@@ -49,11 +49,12 @@
   `proxmox_storage` blocks for `pve1.yaml` / `pve2.yaml` as commented-out blocks.
 
 ### On-site — remaining
-- Install pve2 (shop): rack, network, install Proxmox 9 with `local-zfs`, configure `vmbr0` on `10.200.1.0/24`, confirm root SSH.
+- ~~Install Proxmox 9 OS on pve2 (`local-zfs`, single disk)~~ — done, staged ahead of the shop visit.
+- Rack pve2 in the shop, cable network, configure `vmbr0` on `10.200.1.5/24`, confirm root SSH reachable.
 - pve2 BIOS: enable VT-d / VT-x for iGPU passthrough. After Proxmox is up, finish remotely (`intel_iommu=on iommu=pt` in GRUB, blacklist `i915`, bind iGPU to `vfio-pci`).
 - If recordings strategy is Option A: physically install recording drives in pve2.
 - Install the 4 new cameras (when they arrive / on a later visit).
-- Wipe-and-reinstall old node as PBS.
+- Wipe old node (already pulled out of service) and reinstall as PBS.
 
 ---
 
@@ -192,8 +193,8 @@ Remove `secret_become_pass_arnie` from both files.
    sudo tailscale up --advertise-routes=10.200.1.0/24 --advertise-exit-node=false …
    ```
    Then approve at <https://login.tailscale.com/admin/machines>.
-2. pve2 (shop): rack, install Proxmox 9 with `local-zfs` root, configure `vmbr0`
-   on `10.200.1.5/24`, confirm root SSH reachable.
+2. pve2 (shop): OS already installed (`local-zfs` root, single disk) — rack, cable
+   network, configure `vmbr0` on `10.200.1.5/24`, confirm root SSH reachable.
 3. pve2 iGPU passthrough: BIOS VT-d on, `intel_iommu=on iommu=pt` in GRUB,
    blacklist `i915`, bind iGPU to `vfio-pci`. Confirm with
    `lspci -nnk | grep vfio-pci`.
@@ -234,7 +235,7 @@ ansible-playbook playbooks/hosts_configure.yaml --check
 ## Open items
 
 - Confirm `vpn.arnie-karen` Tailscale IP once VM is back online.
-- pve2 (shop) physical install pending.
+- pve2 (shop): OS installed, physical rack-in/networking pending.
 
 ---
 
@@ -392,8 +393,8 @@ Each new camera as it's installed:
 
 ### Manual steps
 
-1. Confirm migrated VMs stable; power off and delete originals on old node.
-2. Wipe old node, install Proxmox Backup Server (see `docs/services/proxmox.md`).
+1. ~~Confirm migrated VMs stable; power off and delete originals on old node~~ — done, old node already pulled out of service.
+2. Wipe old node, install Proxmox Backup Server (see `docs/services/proxmox.md`; single disk is fine, no mirror needed).
 3. Configure datastore + networking on new IP.
 
 ### Files to add / modify
