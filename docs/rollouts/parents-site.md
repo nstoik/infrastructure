@@ -15,7 +15,7 @@
 - WiFi/user LAN: `10.200.2.0/24` (separate, not managed here).
 - Hosts:
   - `pve1.internal.arniekaren.ca` → `10.200.1.4` (house, up). System hostname is `pve`; inventory uses `pve1` with `ansible_host: 10.200.1.4` — no system rename needed.
-  - `pve2.internal.arniekaren.ca` → `10.200.1.5` (shop; OS + network + root access staged, not yet racked on-site).
+  - `pve2.internal.arniekaren.ca` → `10.200.1.5` (shop; OS + network + root access staged, BIOS VT-d enabled, not yet racked on-site).
   - `pbs.internal.arniekaren.ca` → `10.200.1.3` (old node — wiped, OS + network + root access staged, not yet racked on-site, Plan C.3).
   - `vpn.arnie-karen` → Tailscale address unknown (VM currently offline).
 - Domain `arniekaren.ca` not yet registered — internal names only for now.
@@ -50,11 +50,10 @@
   commented-out blocks.
 
 ### On-site — remaining
-- ~~Install Proxmox 9 OS on pve2 (`local-zfs`, single disk), configure `vmbr0` on `10.200.1.5/24`, confirm root SSH~~ — done, staged ahead of the shop visit.
-- ~~Wipe old node, install Proxmox Backup Server, configure networking, confirm root SSH~~ — done, staged ahead of the shop visit.
+pve2 and the PBS box are both staged (OS, network, root SSH) and pve2's BIOS VT-d
+is enabled — see Shared facts. Left to do:
 - Rack pve2 and the PBS box in the shop and cable network.
-- ~~pve2 BIOS: enable VT-d for iGPU passthrough~~ — done.
-- pve2 iGPU passthrough, remaining (do remotely once Proxmox is up): `intel_iommu=on iommu=pt` in GRUB, blacklist `i915`, bind iGPU to `vfio-pci`.
+- pve2 iGPU passthrough (once Proxmox is up, remotely): `intel_iommu=on iommu=pt` in GRUB, blacklist `i915`, bind iGPU to `vfio-pci`.
 - If recordings strategy is Option A: physically install recording drives in pve2.
 - Install the 4 new cameras (when they arrive / on a later visit).
 - Configure PBS datastore (layout still open — see Open Items).
@@ -196,11 +195,11 @@ Remove `secret_become_pass_arnie` from both files.
    sudo tailscale up --advertise-routes=10.200.1.0/24 --advertise-exit-node=false …
    ```
    Then approve at <https://login.tailscale.com/admin/machines>.
-2. pve2 (shop): OS, network (`vmbr0` on `10.200.1.5/24`), and root SSH already
-   staged (`local-zfs` root, single disk) — just needs racking and cabling on-site.
-3. pve2 iGPU passthrough: BIOS VT-d ~~on~~ done. Remaining (once Proxmox is up):
-   `intel_iommu=on iommu=pt` in GRUB, blacklist `i915`, bind iGPU to `vfio-pci`.
-   Confirm with `lspci -nnk | grep vfio-pci`.
+2. pve2 (shop): staged (OS, network on `10.200.1.5/24`, root SSH, `local-zfs`
+   single disk, BIOS VT-d) — just needs racking and cabling on-site.
+3. pve2 iGPU passthrough, remaining (once Proxmox is up): `intel_iommu=on iommu=pt`
+   in GRUB, blacklist `i915`, bind iGPU to `vfio-pci`. Confirm with
+   `lspci -nnk | grep vfio-pci`.
 
 ## Execution
 
@@ -396,9 +395,11 @@ Each new camera as it's installed:
 
 ### Manual steps
 
-1. ~~Confirm migrated VMs stable; power off and delete originals on old node~~ — done, old node already pulled out of service.
-2. ~~Wipe old node, install Proxmox Backup Server, configure networking on `10.200.1.3`, confirm root SSH~~ — done, staged ahead of the on-site visit (single disk, no mirror).
-3. Rack the PBS box on-site; configure datastore (layout still open — see Open Items).
+Old node already powered off/decommissioned, wiped, and reinstalled as PBS (single
+disk, no mirror) with networking on `10.200.1.3` and root SSH staged — see Shared
+facts. Left to do on-site:
+1. Rack the PBS box.
+2. Configure datastore (layout still open — see Open Items).
 
 ### Files to add / modify
 
