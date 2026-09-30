@@ -53,7 +53,8 @@
 - ~~Install Proxmox 9 OS on pve2 (`local-zfs`, single disk), configure `vmbr0` on `10.200.1.5/24`, confirm root SSH~~ — done, staged ahead of the shop visit.
 - ~~Wipe old node, install Proxmox Backup Server, configure networking, confirm root SSH~~ — done, staged ahead of the shop visit.
 - Rack pve2 and the PBS box in the shop and cable network.
-- pve2 BIOS: enable VT-d / VT-x for iGPU passthrough. After Proxmox is up, finish remotely (`intel_iommu=on iommu=pt` in GRUB, blacklist `i915`, bind iGPU to `vfio-pci`).
+- ~~pve2 BIOS: enable VT-d for iGPU passthrough~~ — done.
+- pve2 iGPU passthrough, remaining (do remotely once Proxmox is up): `intel_iommu=on iommu=pt` in GRUB, blacklist `i915`, bind iGPU to `vfio-pci`.
 - If recordings strategy is Option A: physically install recording drives in pve2.
 - Install the 4 new cameras (when they arrive / on a later visit).
 - Configure PBS datastore (layout still open — see Open Items).
@@ -197,9 +198,9 @@ Remove `secret_become_pass_arnie` from both files.
    Then approve at <https://login.tailscale.com/admin/machines>.
 2. pve2 (shop): OS, network (`vmbr0` on `10.200.1.5/24`), and root SSH already
    staged (`local-zfs` root, single disk) — just needs racking and cabling on-site.
-3. pve2 iGPU passthrough: BIOS VT-d on, `intel_iommu=on iommu=pt` in GRUB,
-   blacklist `i915`, bind iGPU to `vfio-pci`. Confirm with
-   `lspci -nnk | grep vfio-pci`.
+3. pve2 iGPU passthrough: BIOS VT-d ~~on~~ done. Remaining (once Proxmox is up):
+   `intel_iommu=on iommu=pt` in GRUB, blacklist `i915`, bind iGPU to `vfio-pci`.
+   Confirm with `lspci -nnk | grep vfio-pci`.
 
 ## Execution
 
