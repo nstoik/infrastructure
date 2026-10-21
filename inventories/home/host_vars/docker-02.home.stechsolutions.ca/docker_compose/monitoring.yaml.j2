@@ -145,6 +145,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
   prometheus-pbs-exporter:
+    # held at v0.9.1 until #206 is resolved (PBS 4.2 auth bug); bump together with PBS
     image: ghcr.io/natrontech/pbs-exporter:v0.9.1
     networks:
       - prometheus_exporter
