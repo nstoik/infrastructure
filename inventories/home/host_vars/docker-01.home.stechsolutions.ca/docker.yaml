@@ -68,7 +68,7 @@ docker_configuration_files:
   - name: qbittorrentvpn.conf
     src: "{{ inventory_dir }}/../../files/qbittorrentvpn/wireguard_conf.conf.j2"
     dest: /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn/wireguard/wg0.conf
-    mode: '0775'
+    mode: '0600'
     container_name: qbittorrentvpn
   - name: qbit_manage.yml
     src: "{{ inventory_dir }}/../../files/qbittorrentvpn/qbit_manage_config.yml.j2"

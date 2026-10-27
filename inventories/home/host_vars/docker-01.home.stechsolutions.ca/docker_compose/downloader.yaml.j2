@@ -3,7 +3,7 @@ name: downloader
 
 services:
   downloader:
-    image: nstoik/qbittorrent-vpn:1.3.1
+    image: nstoik/qbittorrent-vpn:1.3.3
     networks:
       - traefik
     container_name: qbittorrentvpn
@@ -22,6 +22,8 @@ services:
       - /home/{{ default_user }}/docker_mounts/downloader/qbittorrentvpn:/config
       - /mnt/nfs/downloads:/downloads
     restart: unless-stopped
+    # time for qBittorrent to save resume data on stop before Docker sends SIGKILL
+    stop_grace_period: 30s
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik"
