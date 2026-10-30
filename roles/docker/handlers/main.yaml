@@ -18,15 +18,66 @@
   become: true
 
 # restart docker container
-- name: Restart docker container
-  community.docker.docker_container:
-    name: "{{ container }}"
-    state: started
-    restart: true
+# Never use docker_container here: with only a name it compares the container
+# against an empty spec and may recreate it outside compose (see #222).
+# Compose-managed containers are restarted through their compose project, which
+# also restarts dependent services (e.g. network_mode: service:<name>).
+# Anything else gets a plain `docker restart`.
+# Containers compose created or recreated in this run already have the new
+# config, so they are skipped.
+- name: Get info for docker containers to restart
+  community.docker.docker_container_info:
+    name: "{{ container_name }}"
+  vars:
+    docker_compose_touched: >-
+      {{ docker_compose_up_results.results | default([])
+         | map(attribute='actions') | select('defined') | flatten
+         | selectattr('what', 'equalto', 'container')
+         | map(attribute='id') | list }}
   loop: "{{ docker_containers_to_restart }}"
   loop_control:
-    loop_var: container
-    label: "{{ container }}"
+    loop_var: container_name
+    label: "{{ container_name }}"
+  register: docker_restart_container_info
   become: true
-  when: docker_containers_to_restart is defined and
-        docker_restart_result is not defined
+  when:
+    - docker_containers_to_restart is defined
+    - docker_restart_result is not defined
+    - container_name not in docker_compose_touched
+  listen: Restart docker container
+
+- name: Restart compose managed docker containers
+  community.docker.docker_compose_v2:
+    project_src: "{{ docker_restart_labels['com.docker.compose.project.working_dir'] }}"
+    files: "{{ docker_restart_labels['com.docker.compose.project.config_files'] | split(',') }}"
+    project_name: "{{ docker_restart_labels['com.docker.compose.project'] }}"
+    services:
+      - "{{ docker_restart_labels['com.docker.compose.service'] }}"
+    state: restarted
+  vars:
+    docker_restart_labels: "{{ info.container.Config.Labels | default({}, true) }}"
+  loop: "{{ docker_restart_container_info.results | default([]) }}"
+  loop_control:
+    loop_var: info
+    label: "{{ info.container_name }}"
+  become: true
+  when:
+    - info.exists | default(false)
+    - "'com.docker.compose.project' in docker_restart_labels"
+  listen: Restart docker container
+
+- name: Restart non-compose docker containers
+  ansible.builtin.command:
+    cmd: docker restart {{ info.container_name | quote }}
+  vars:
+    docker_restart_labels: "{{ info.container.Config.Labels | default({}, true) }}"
+  loop: "{{ docker_restart_container_info.results | default([]) }}"
+  loop_control:
+    loop_var: info
+    label: "{{ info.container_name }}"
+  changed_when: true
+  become: true
+  when:
+    - info.exists | default(false)
+    - "'com.docker.compose.project' not in docker_restart_labels"
+  listen: Restart docker container

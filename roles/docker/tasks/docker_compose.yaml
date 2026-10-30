@@ -33,4 +33,5 @@
       loop_control:
         loop_var: compose
         label: "{{ compose.compose_name }}"
+      register: docker_compose_up_results
       become: true
