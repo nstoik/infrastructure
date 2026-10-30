@@ -62,6 +62,12 @@ curl http://<docker-cloud-01 public IP>:32400/identity
 
 A `200` response with an XML `MediaContainer` body containing your Plex server's `machineIdentifier` confirms the DO firewall, Traefik TCP router, and the Tailscale hop back to `docker-01` are all working. On a remote client, check the connection details show "Direct" rather than "Relayed".
 
+**Known issue — Plex treats relayed streams as local:** the subnet router (`vpn`, `10.10.5.28`) SNATs forwarded tailnet traffic to its own LAN IP, which is on the same subnet as `docker-01`. Plex therefore sees every relayed stream as coming from `10.10.5.28`, classifies it as a LAN client, and skips the remote bitrate limits. Clients then request original quality, saturate the home upload, and buffer/drop quality — it looks a lot like Plex Relay. This was observed during the Aug–Oct 2026 relay period. Traefik can't fix this (the rewrite happens at `vpn`), and the real viewer IP can't be preserved either (Traefik's TCP passthrough opens a new connection and Plex doesn't support PROXY protocol). Options if the relay is needed again:
+
+- **Recommended:** enroll `docker-01` in Tailscale directly (`tailscale_setup: true`, `tag:server`, without `--accept-routes`) and point `files/traefik/dynamic/plex.yaml.j2` at `docker-01`'s Tailscale name. Plex then sees `docker-cloud-01`'s `100.x` IP and treats the streams as remote. The existing `tag:server` → `tag:server` grant already allows it. Also set Plex → Settings → Network → LAN Networks explicitly to `10.10.1.0/24,10.10.5.0/24`, then confirm relayed streams show as remote in the Plex dashboard.
+- Disable SNAT on `vpn` (`--snat-subnet-routes=false`) and add a return route for `100.64.0.0/10` via `10.10.5.28` on the home router. Affects all tailnet access to the home network.
+- An iptables SNAT exemption on `vpn` for just this traffic, plus a host route on `docker-01`. Fragile — Tailscale rewrites its own iptables chains on restart.
+
 **Reverting once the server moves back home:**
 
 1. Set `plex_relay_enabled: false` in `inventories/home/host_vars/docker-cloud-01/docker.yaml` and run the command from [Toggling on/off](#toggling-onoff) above. This un-publishes port 32400 and removes the Traefik entrypoint/router — no need to delete the firewall or tag definitions.
