@@ -6,6 +6,16 @@ services:
     image: plexinc/pms-docker:1.43.4.10903-e5521bd8c
     container_name: plex
     gpus: all
+    # Pass the NVIDIA device nodes explicitly. Without this, a host
+    # `systemctl daemon-reload` (eg. from unattended-upgrades) drops the
+    # container's GPU access and transcodes fail with CUDA_ERROR_NO_DEVICE /
+    # "Failed to initialize NVML: Unknown Error" until the container restarts.
+    devices:
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-modeset:/dev/nvidia-modeset
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
     environment:
       - TZ=America/Edmonton
       - PLEX_UID=1000
