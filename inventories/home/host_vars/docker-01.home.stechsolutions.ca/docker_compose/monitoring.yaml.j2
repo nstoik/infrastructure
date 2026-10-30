@@ -31,7 +31,7 @@ services:
       - "traefik.http.routers.cadvisor.entrypoints=websecure"
       - "traefik.http.routers.cadvisor.tls.certresolver=letsencrypt"
       # Whitelist IPs for Tailscale, Docker, and local network
-      - "traefik.http.middlewares.cadvisor-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+      - "traefik.http.middlewares.cadvisor-IPAllowList.IPAllowList.sourcerange={{ traefik_private_cidrs }}"
       - "traefik.http.routers.cadvisor.middlewares=cadvisor-IPAllowList,cadvisor-replace-path"
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/google/cadvisor/releases"
