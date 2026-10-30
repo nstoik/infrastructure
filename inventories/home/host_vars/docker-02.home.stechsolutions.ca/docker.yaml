@@ -129,7 +129,7 @@ docker_mounts_subfolders:
     container_name: loki
   - name: monitoring_loki_config
     dest: /home/{{ default_user }}/docker_mounts/monitoring/loki/config
-    mode: '0775'
+    mode: '0755'
     container_name: loki
   # filestash docker mounts
   - name: files_filestash
@@ -149,7 +149,7 @@ docker_mounts_subfolders:
   # searxng docker mounts
   - name: ai_searxng
     dest: /home/{{ default_user }}/docker_mounts/ai/searxng
-    mode: '0775'
+    container_managed: true
     container_name: searxng
   # stirling-pdf docker mounts
   - name: files_stirling_pdf_tessdata
@@ -175,11 +175,11 @@ docker_mounts_subfolders:
   # tududi docker mounts
   - name: files_tududi_db
     dest: /home/{{ default_user }}/docker_mounts/files/tududi/db
-    mode: '0775'
+    container_managed: true
     container_name: tududi
   - name: files_tududi_uploads
     dest: /home/{{ default_user }}/docker_mounts/files/tududi/uploads
-    mode: '0775'
+    container_managed: true
     container_name: tududi
   # homebox docker mounts
   - name: files_homebox_data

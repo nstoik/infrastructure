@@ -5,6 +5,7 @@
 docker_install: false
 docker_config: false
 docker_config_nvidia_gpu: false
+docker_nvidia_apt_keyring_path: /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
 
 docker_data_dir: /home/{{ default_user }}/docker
 

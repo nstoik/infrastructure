@@ -11,31 +11,15 @@
     - name: Add NVIDIA container toolkit GPG key
       ansible.builtin.get_url:
         url: https://nvidia.github.io/libnvidia-container/gpgkey
-        dest: /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
+        dest: "{{ docker_nvidia_apt_keyring_path }}"
         mode: "0644"
-      become: true
-
-    - name: Convert NVIDIA GPG key to binary keyring
-      ansible.builtin.command:
-        cmd: >
-          gpg --dearmor
-          -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-          /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
-      args:
-        creates: /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-      become: true
-
-    - name: Remove armored NVIDIA GPG key
-      ansible.builtin.file:
-        path: /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
-        state: absent
       become: true
 
     # Add NVidia container toolkit repository
     - name: Add NVIDIA container toolkit repository
       ansible.builtin.apt_repository:
         repo: >
-          deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg]
+          deb [signed-by={{ docker_nvidia_apt_keyring_path }}]
           https://nvidia.github.io/libnvidia-container/stable/deb/amd64 /
         filename: nvidia-container-toolkit
         state: present

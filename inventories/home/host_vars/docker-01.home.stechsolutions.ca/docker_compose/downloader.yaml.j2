@@ -121,7 +121,7 @@ services:
       - "traefik.http.services.flaresolverr-metrics.loadbalancer.server.port=8192"
       - "traefik.http.routers.flaresolverr-metrics.entrypoints=websecure"
       - "traefik.http.routers.flaresolverr-metrics.tls.certresolver=letsencrypt"
-      - "traefik.http.middlewares.flaresolverr-metrics-IPAllowList.IPAllowList.sourcerange=100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+      - "traefik.http.middlewares.flaresolverr-metrics-IPAllowList.IPAllowList.sourcerange={{ traefik_private_cidrs }}"
       - "traefik.http.routers.flaresolverr-metrics.middlewares=flaresolverr-metrics-IPAllowList,flaresolverr-replace-path"
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/FlareSolverr/FlareSolverr/releases"

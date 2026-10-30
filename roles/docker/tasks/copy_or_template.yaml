@@ -9,11 +9,12 @@
 #   - container_name: the name of the docker container to restart if the file changes
 
 # Ensure the directory exists
-- name: Ensure the directory exists
+# No mode is set so containers that manage their own config dir permissions
+# (e.g. qbittorrent-vpn sets /config/wireguard to 0700) aren't reset every run
+- name: Ensure the directory exists  # noqa: risky-file-permissions
   ansible.builtin.file:
     path: "{{ docker_file.dest | dirname }}"
     state: directory
-    mode: '0755'
 
 - name: Copy file
   ansible.builtin.copy:

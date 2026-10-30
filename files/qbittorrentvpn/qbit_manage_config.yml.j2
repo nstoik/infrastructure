@@ -3,30 +3,30 @@
 
 commands:
   # The commands defined below will OVERRIDE any commands used in command line and docker env variables.
-  dry_run: False
-  recheck: True
-  cat_update: False
-  tag_update: True
-  rem_unregistered: True
-  tag_tracker_error: True
-  rem_orphaned: True
-  tag_nohardlinks: False
-  share_limits: True
-  skip_qb_version_check: False
-  skip_cleanup: False
+  dry_run: false
+  recheck: true
+  cat_update: false
+  tag_update: true
+  rem_unregistered: true
+  tag_tracker_error: true
+  rem_orphaned: true
+  tag_nohardlinks: false
+  share_limits: true
+  skip_qb_version_check: false
+  skip_cleanup: false
 
 qbt:
   # qBittorrent parameters
   # Pass environment variables to the config via !ENV tag
-  host: "qbittorrentvpn:8080"
-  user: "{{ default_user }}"
-  pass: "{{ secret_qbittorrentvpn_webui_password }}"
+  host: qbittorrentvpn:8080
+  user: {{ default_user }}
+  pass: {{ secret_qbittorrentvpn_webui_password }}
 
 settings:
-  force_auto_tmm: True # Will force qBittorrent to enable Automatic Torrent Management for each torrent.
+  force_auto_tmm: true # Will force qBittorrent to enable Automatic Torrent Management for each torrent.
   force_auto_tmm_ignore_tags: #Torrents with these tags will be ignored when force_auto_tmm is enabled.
-    - cross-seed
-    - Upload
+  - cross-seed
+  - Upload
   tracker_error_tag: issue # Will set the tag of any torrents that do not have a working tracker.
   nohardlinks_tag: noHL# Will set the tag of any torrents with no hardlinks.
   stalled_tag: stalledDL # Will set the tag of any torrents stalled downloading.
@@ -34,18 +34,20 @@ settings:
   share_limits_min_seeding_time_tag: MinSeedTimeNotReached # Tag to be added to torrents that have not yet reached the minimum seeding time
   share_limits_min_num_seeds_tag: MinSeedsNotMet # Tag to be added to torrents that have not yet reached the minimum number of seeds
   share_limits_last_active_tag: LastActiveLimitNotReached # Tag to be added to torrents that have not yet reached the last active limit
-  cat_filter_completed: True # Filters for completed torrents only when running cat_update command
-  share_limits_filter_completed: True # Filters for completed torrents only when running share_limits command
-  tag_nohardlinks_filter_completed: True # Filters for completed torrents only when running tag_nohardlinks command
-  rem_unregistered_filter_completed: False # Filters for completed torrents only when running rem_unregistered command
-  cat_update_all: True # Checks and updates all torrent categories if set to True when running cat_update command, otherwise only update torrents that are uncategorized
-  disable_qbt_default_share_limits: True # Allows QBM to handle share limits by disabling qBittorrents default Share limits. Only active when the share_limits command is set to True
-  tag_stalled_torrents: True # Tags any downloading torrents that are stalled with the `stalledDL` tag when running the tag_update command
+  cat_filter_completed: true # Filters for completed torrents only when running cat_update command
+  share_limits_filter_completed: true # Filters for completed torrents only when running share_limits command
+  tag_nohardlinks_filter_completed: true # Filters for completed torrents only when running tag_nohardlinks command
+  rem_unregistered_filter_completed: false # Filters for completed torrents only when running rem_unregistered command
+  cat_update_all: true # Checks and updates all torrent categories if set to True when running cat_update command, otherwise only update torrents that are uncategorized
+  disable_qbt_default_share_limits: true # Allows QBM to handle share limits by disabling qBittorrents default Share limits. Only active when the share_limits command is set to True
+  tag_stalled_torrents: true # Tags any downloading torrents that are stalled with the `stalledDL` tag when running the tag_update command
   rem_unregistered_ignore_list: # Ignores a list of words found in the status of the tracker when running rem_unregistered command and will not remove the torrent if matched
-    - example placeholder words
-    - ignore if found
+  - example placeholder words
+  - ignore if found
   rem_unregistered_grace_minutes: 10 # Grace period (minutes) to skip removing newly added torrents when unregistered with the tracker (Default is 10)
 
+  private_tag:
+  rem_unregistered_max_torrents: 10
 directory:
   # Do not remove these
   # root_dir var: </your/path/here/>  # Root downloads directory used to check for orphaned files, noHL, and RecycleBin.
@@ -55,11 +57,11 @@ directory:
   # <OPTIONAL> recycle_bin var: </your/path/here/>   # Path of the RecycleBin folder. Default location is set to remote_dir/.RecycleBin
   # <OPTIONAL> torrents_dir var: </your/path/here/>  # Path of the your qbittorrent torrents directory. Required for `save_torrents` attribute in recyclebin
   # <OPTIONAL> orphaned_dir var: </your/path/here/>  # Path of the the Orphaned Data folder. This is similar to RecycleBin, but only for orphaned data.
-  root_dir: "/downloads/"
+  root_dir: /downloads/
   # remote_dir: "/host/path/to/torrents/ifdocker/torrents/"
-  recycle_bin: "/downloads/.RecycleBin"
-  torrents_dir: "/downloads/"
-  orphaned_dir: "/downloads/orphaned_data"
+  recycle_bin: /downloads/.RecycleBin
+  torrents_dir: /downloads/
+  orphaned_dir: /downloads/orphaned_data
 
 cat:
   # Category & Path Parameters
@@ -68,12 +70,12 @@ cat:
   # You can use Unix filename pattern matching as well when specifying the save_path
   # <Category Name> : <save_path>  # Path of your save directory.
   #
-  radarr: "/downloads/temp/radarr/"
-  radarr-finished: "/downloads/radarr-finished/"
-  sonarr: "/downloads/temp/sonarr/"
-  sonarr-finished: "/downloads/sonarr-finished/"
-  prowlarr: "/downloads/temp/prowlarr/"
-  prowlarr-finished: "/downloads/prowlarr/"
+  radarr: /downloads/temp/radarr/
+  radarr-finished: /downloads/radarr-finished/
+  sonarr: /downloads/temp/sonarr/
+  sonarr-finished: /downloads/sonarr-finished/
+  prowlarr: /downloads/temp/prowlarr/
+  prowlarr-finished: /downloads/prowlarr/
 
 # cat_change:
 #   # This moves all the torrents from one category to another category. This executes on --cat-update
@@ -141,7 +143,7 @@ share_limits:
   private:
     priority: 1
     include_any_tags:
-      - private
+    - private
     max_ratio: 7
     min_seeding_time: 2w
     max_last_active: 15d
@@ -149,7 +151,7 @@ share_limits:
   public:
     priority: 100
     include_any_tags:
-      - public
+    - public
     max_ratio: 7
     min_seeding_time: 1w
     max_seeding_time: 4w
@@ -193,13 +195,13 @@ orphaned:
   min_file_age_minutes: 30
   # File patterns that will not be considered orphaned files. Handy for generated files that aren't part of the torrent but belong with the torrent's files
   exclude_patterns:
-    - "**/.DS_Store"
-    - "**/Thumbs.db"
-    - "**/@eaDir"
-    - "/data/torrents/temp/**"
-    - "**/*.!qB"
-    - "**/*_unpackerred"
-    - "/downloads/temp/**"
+  - '**/.DS_Store'
+  - '**/Thumbs.db'
+  - '**/@eaDir'
+  - /data/torrents/temp/**
+  - '**/*.!qB'
+  - '**/*_unpackerred'
+  - /downloads/temp/**
   # Set your desired threshold for the maximum number of orphaned files qbm will delete in a single run. (-1 to disable safeguards)
   # This will help reduce the number of accidental large amount orphaned deletions in a single run
   # WARNING: Setting this variable to -1 will not safeguard against any deletions
@@ -212,7 +214,7 @@ apprise:
   api_url: https://apprise.stechsolutions.ca
   # Mandatory to fill out the notification url/urls based on the notification services provided by apprise. https://github.com/caronc/apprise/wiki
   notify_url:
-    - ntfys://{{ ntfy_user }}:{{ secret_ntfy_password }}@{{ ntfy_base_domain }}/qbit
+  - ntfys://{{ ntfy_user }}:{{ secret_ntfy_password }}@{{ ntfy_base_domain }}/qbit
 
 # notifiarr:
 #   # Notifiarr integration with webhooks

@@ -43,6 +43,11 @@ grafana_base_url: "https://{{ grafana_domain }}"
 loki_domain: "loki.home.stechsolutions.ca"
 loki_push_url: "https://{{ loki_domain }}/loki/api/v1/push"
 
+# traefik variables
+# Source ranges for IPAllowList middlewares on private-only routes
+# (Tailscale CGNAT + RFC1918)
+traefik_private_cidrs: "100.64.0.0/10,10.0.0.0/8,172.16.0.0/12"
+
 # geerlingguy.security role variables
 # https://galaxy.ansible.com/geerlingguy/security
 security_ssh_port: 22
