@@ -43,6 +43,8 @@ docker_configuration_paths:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/prometheus
     mode: '0664'
     container_name: prometheus
+    # prometheus runs with --config.auto-reload and picks up config/rule changes itself
+    restart: false
   - name: grafana
     src: /home/nelson/GitHub/infrastructure/files/grafana
     dest: /home/{{ default_user }}/docker_mounts/monitoring/grafana

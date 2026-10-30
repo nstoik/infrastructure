@@ -7,6 +7,7 @@
 #   - dest: the destination file
 #   - mode: the mode of the file
 #   - container_name: the name of the docker container to restart if the file changes
+#   - restart: set to false to skip restarting the container when the file changes
 
 # Ensure the directory exists
 # No mode is set so containers that manage their own config dir permissions
@@ -38,5 +39,7 @@
 - name: Collect changed container names
   ansible.builtin.set_fact:
     docker_containers_to_restart: "{{ docker_containers_to_restart + [docker_file.container_name] }}"
-  when: docker_copy_results.changed or docker_template_results.changed
+  when:
+    - docker_copy_results.changed or docker_template_results.changed
+    - docker_file.restart | default(true)
   changed_when: false

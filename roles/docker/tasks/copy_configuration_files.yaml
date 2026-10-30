@@ -121,6 +121,7 @@
           dest: "{{ docker_configuration_file.dest }}"
           mode: "{{ docker_configuration_file.mode }}"
           container_name: "{{ docker_configuration_file.container_name }}"
+          restart: "{{ docker_configuration_file.restart | default(true) }}"
       loop: "{{ docker_configuration_files }}"
       loop_control:
         loop_var: docker_configuration_file
