@@ -3,7 +3,7 @@ name: monitoring
 
 services:
   prometheus:
-    image: prom/prometheus:v3.11.3
+    image: prom/prometheus:v3.15.1
     user: 1000:1000
     networks:
       - traefik
@@ -41,7 +41,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/prometheus/releases"
   alertmanager:
-    image: prom/alertmanager:v0.32.1
+    image: prom/alertmanager:v0.34.2
     user: 1000:1000
     networks:
       - traefik
@@ -80,7 +80,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/alertmanager/releases"
   ntfy-alertmanager:
-    image: xenrox/ntfy-alertmanager:1.0.0
+    image: xenrox/ntfy-alertmanager:1.0.1
     networks:
       - traefik
       - prometheus_exporter
@@ -98,7 +98,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.xenrox.net/~xenrox/ntfy-alertmanager/"
   cadvisor:
-    image: ghcr.io/google/cadvisor:v0.57.0
+    image: ghcr.io/google/cadvisor:v0.60.6
     networks:
       - traefik
     container_name: cadvisor
@@ -131,7 +131,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/google/cadvisor/releases"
   prometheus-pve-exporter:
-    image: prompve/prometheus-pve-exporter:3.9.0
+    image: prompve/prometheus-pve-exporter:3.10.2
     networks:
       - prometheus_exporter
     container_name: prometheus-pve-exporter
@@ -161,7 +161,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/natrontech/pbs-exporter/releases"
   prometheus-pihole-exporter:
-    image: ekofr/pihole-exporter:v1.2.0
+    image: ekofr/pihole-exporter:v1.3.0
     networks:
       - prometheus_exporter
     container_name: prometheus-pihole-exporter
@@ -196,7 +196,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/druggeri/nut_exporter/releases"
   prometheus-tailscale-exporter:
-    image: adinhodovic/tailscale-exporter:0.6.1
+    image: adinhodovic/tailscale-exporter:0.7.1
     networks:
       - prometheus_exporter
     container_name: prometheus-tailscale-exporter
@@ -209,7 +209,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/adinhodovic/tailscale-exporter/releases"
   peanut:
-    image: brandawg93/peanut:6.0.0
+    image: brandawg93/peanut:6.1.2
     networks:
       - traefik
       - prometheus_exporter
@@ -242,7 +242,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/brandawg93/peanut/releases"
   grafana:
-    image: grafana/grafana:13.0.1
+    image: grafana/grafana:13.3.0
     networks:
       - traefik
       - prometheus_exporter
@@ -276,7 +276,7 @@ services:
       - "wud.link.template=https://grafana.com/docs/grafana/latest/whatsnew/"
 
   loki:
-    image: grafana/loki:3.5.0
+    image: grafana/loki:3.7.9
     user: 1000:1000
     networks:
       - traefik
