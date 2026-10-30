@@ -45,7 +45,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://hub.docker.com/r/nstoik/qbittorrent-vpn/tags"
   qbit_manage:
-    image: ghcr.io/stuffanthings/qbit_manage:v4.13.0
+    image: ghcr.io/stuffanthings/qbit_manage:v4.14.0
     network_mode: "service:downloader"
     container_name: qbit_manage
     environment:
@@ -68,7 +68,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/stuffanthings/qbit_manage/releases"
   prowlarr:
-    image: ghcr.io/hotio/prowlarr:release-2.3.5.5327
+    image: ghcr.io/hotio/prowlarr:release-2.7.0.5723
     networks:
       - arr_network
       - traefik
@@ -99,7 +99,7 @@ services:
       - "wud.tag.include=^release-\\d+\\.\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Prowlarr/Prowlarr/releases"
   flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
+    image: ghcr.io/flaresolverr/flaresolverr:v3.5.2
     networks:
       - arr_network
       - traefik
@@ -126,7 +126,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/FlareSolverr/FlareSolverr/releases"
   profilarr:
-    image: ghcr.io/dictionarry-hub/profilarr:2.0.4
+    image: ghcr.io/dictionarry-hub/profilarr:2.3.1
     networks:
       - arr_network
       - traefik
@@ -158,7 +158,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Dictionarry-Hub/profilarr/releases"
   radarr:
-    image: ghcr.io/hotio/radarr:release-6.1.1.10360
+    image: ghcr.io/hotio/radarr:release-6.4.4.10685
     networks:
       - arr_network
       - traefik

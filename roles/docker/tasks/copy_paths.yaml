@@ -8,6 +8,7 @@
 #   - dest: the destination folder path
 #   - mode: the mode of the file
 #   - container_name: the name of the docker container to restart if the file changes
+#   - restart: set to false to skip restarting the container when a file changes
 #   - paths: a list of relative paths to the src that need to be copied or templated
 
 
@@ -23,6 +24,7 @@
       dest: "{{ docker_configuration_path.dest }}/{{ path }}"
       mode: "{{ docker_configuration_path.mode }}"
       container_name: "{{ docker_configuration_path.container_name }}"
+      restart: "{{ docker_configuration_path.restart | default(true) }}"
   loop: "{{ docker_configuration_path.paths }}"
   loop_control:
     loop_var: path
