@@ -34,16 +34,13 @@
          | map(attribute='actions') | select('defined') | flatten
          | selectattr('what', 'equalto', 'container')
          | map(attribute='id') | list }}
-  loop: "{{ docker_containers_to_restart }}"
+  loop: "{{ docker_containers_to_restart | difference(docker_compose_touched) }}"
   loop_control:
     loop_var: container_name
     label: "{{ container_name }}"
   register: docker_restart_container_info
   become: true
-  when:
-    - docker_containers_to_restart is defined
-    - docker_restart_result is not defined
-    - container_name not in docker_compose_touched
+  when: docker_restart_result is not defined
   listen: Restart docker container
 
 - name: Restart compose managed docker containers

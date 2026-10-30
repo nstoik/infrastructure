@@ -10,13 +10,15 @@
     - docker.compose
 
 # create any docker mounts subdirectories if required
+# container_managed: true leaves owner/group/mode alone for dirs the container
+# chowns itself (e.g. it runs as a different UID)
 - name: Create any docker mounts subdirectories if required
   ansible.builtin.file:
     path: "{{ folder.dest }}"
     state: directory
-    mode: "{{ folder.mode }}"
-    owner: "{{ folder.owner | default(default_user) }}"
-    group: "{{ folder.group | default(default_user) }}"
+    mode: "{{ omit if folder.container_managed | default(false) else folder.mode }}"
+    owner: "{{ omit if folder.container_managed | default(false) else folder.owner | default(default_user) }}"
+    group: "{{ omit if folder.container_managed | default(false) else folder.group | default(default_user) }}"
   loop: "{{ docker_mounts_subfolders }}"
   loop_control:
     loop_var: folder

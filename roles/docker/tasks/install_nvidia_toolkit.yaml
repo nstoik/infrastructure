@@ -11,13 +11,14 @@
     - name: Add NVIDIA container toolkit GPG key
       ansible.builtin.get_url:
         url: https://nvidia.github.io/libnvidia-container/gpgkey
-        dest: /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
+        dest: "{{ docker_nvidia_apt_keyring_path }}"
         mode: "0644"
       become: true
 
     # The key used to be dearmored to a .gpg keyring and the .asc deleted,
     # which re-downloaded the key (a change) on every run. apt reads armored
     # keys directly, so the .asc is kept and the old repo line and .gpg removed.
+    # TODO: remove these two migration tasks once all GPU hosts have converged.
     - name: Remove old NVIDIA container toolkit repository line
       ansible.builtin.apt_repository:
         repo: >
@@ -38,7 +39,7 @@
     - name: Add NVIDIA container toolkit repository
       ansible.builtin.apt_repository:
         repo: >
-          deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.asc]
+          deb [signed-by={{ docker_nvidia_apt_keyring_path }}]
           https://nvidia.github.io/libnvidia-container/stable/deb/amd64 /
         filename: nvidia-container-toolkit
         state: present
