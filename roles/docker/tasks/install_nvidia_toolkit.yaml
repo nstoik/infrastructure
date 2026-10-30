@@ -15,19 +15,22 @@
         mode: "0644"
       become: true
 
-    - name: Convert NVIDIA GPG key to binary keyring
-      ansible.builtin.command:
-        cmd: >
-          gpg --dearmor
-          -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-          /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
-      args:
-        creates: /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+    # The key used to be dearmored to a .gpg keyring and the .asc deleted,
+    # which re-downloaded the key (a change) on every run. apt reads armored
+    # keys directly, so the .asc is kept and the old repo line and .gpg removed.
+    - name: Remove old NVIDIA container toolkit repository line
+      ansible.builtin.apt_repository:
+        repo: >
+          deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg]
+          https://nvidia.github.io/libnvidia-container/stable/deb/amd64 /
+        filename: nvidia-container-toolkit
+        state: absent
+        update_cache: false
       become: true
 
-    - name: Remove armored NVIDIA GPG key
+    - name: Remove old binary NVIDIA GPG keyring
       ansible.builtin.file:
-        path: /usr/share/keyrings/nvidia-container-toolkit-keyring.asc
+        path: /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
         state: absent
       become: true
 
@@ -35,7 +38,7 @@
     - name: Add NVIDIA container toolkit repository
       ansible.builtin.apt_repository:
         repo: >
-          deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg]
+          deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.asc]
           https://nvidia.github.io/libnvidia-container/stable/deb/amd64 /
         filename: nvidia-container-toolkit
         state: present
