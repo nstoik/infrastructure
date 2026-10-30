@@ -37,7 +37,10 @@
       ansible.builtin.file:
         path: "{{ docker_data_dir }}"
         state: directory
-        mode: "0766"
+        owner: root
+        group: root
+        # matches what the docker daemon enforces on its data-root at startup
+        mode: "0710"
       become: true
 
     # create the docker daemon config file
