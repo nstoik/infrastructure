@@ -5,7 +5,7 @@
 # See docs/services/cloud_hosts.md#plex-direct-connect-relay-temporary-cgnat-workaround
 # Single flag: gates the Traefik :32400 entryPoint, the plex.yaml dynamic
 # router config, and the compose port publish below.
-plex_relay_enabled: true
+plex_relay_enabled: false
 
 docker_logrotate_configs:
   - name: traefik
