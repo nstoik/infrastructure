@@ -30,6 +30,8 @@
   register: scrutiny_collector_version_result
   failed_when: false
   changed_when: false
+  # read-only, so run it in --check too and dry runs only report real updates
+  check_mode: false
   tags:
     - scrutiny
 
@@ -49,16 +51,6 @@
   tags:
     - scrutiny
 
-# Determine if the Scrutiny collector binary needs to be updated
-- name: Determine if the Scrutiny collector binary needs to be updated
-  ansible.builtin.set_fact:
-    scrutiny_collector_update_needed: >-
-      {{
-        scrutiny_collector_current_version != scrutiny_version
-      }}
-  tags:
-    - scrutiny
-
 # download Scrutiny's collector binary from GitHub releases and place it in the appropriate directory
 # The version is pinned to scrutiny_version so it always matches the web container
 - name: Download Scrutiny's collector binary from GitHub releases
@@ -68,7 +60,7 @@
     mode: '0755'
     # get_url skips existing files unless forced; only runs when the version differs
     force: true
-  when: scrutiny_collector_update_needed
+  when: scrutiny_collector_current_version != scrutiny_version
   become: true
   tags:
     - scrutiny

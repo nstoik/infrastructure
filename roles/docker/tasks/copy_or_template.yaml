@@ -1,13 +1,8 @@
 ---
 # This task will copy files or filled out templates to the host for the docker containers
-# The input variable is a dictionary with the following keys:
-# docker_file:
-#   - name: the name of the docker container
-#   - src: the source file
-#   - dest: the destination file
-#   - mode: the mode of the file
-#   - container_name: the name of the docker container to restart if the file changes
-#   - restart: set to false to skip restarting the container when the file changes
+# Input: docker_file, one docker_configuration_files entry (or a
+# docker_configuration_paths entry with src/dest set to a single file);
+# see roles/docker/defaults/main.yaml for its keys
 
 # Ensure the directory exists
 # No mode is set so containers that manage their own config dir permissions

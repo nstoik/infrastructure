@@ -115,13 +115,7 @@
         name: docker
         tasks_from: copy_or_template
       vars:
-        docker_file:
-          name: "{{ docker_configuration_file.name }}"
-          src: "{{ docker_configuration_file.src }}"
-          dest: "{{ docker_configuration_file.dest }}"
-          mode: "{{ docker_configuration_file.mode }}"
-          container_name: "{{ docker_configuration_file.container_name }}"
-          restart: "{{ docker_configuration_file.restart | default(true) }}"
+        docker_file: "{{ docker_configuration_file }}"
       loop: "{{ docker_configuration_files }}"
       loop_control:
         loop_var: docker_configuration_file
