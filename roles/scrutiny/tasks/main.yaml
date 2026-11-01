@@ -49,40 +49,25 @@
   tags:
     - scrutiny
 
-# Get the latest version of Scrutiny's collector binary from GitHub releases
-- name: Get the latest version of Scrutiny's collector binary from GitHub releases
-  ansible.builtin.uri:
-    url: "https://api.github.com/repos/AnalogJ/scrutiny/releases/latest"
-    return_content: true
-  register: scrutiny_collector_latest_release
-  failed_when: scrutiny_collector_latest_release.status != 200
-  tags:
-    - scrutiny
-
-# Parse the latest version of Scrutiny's collector binary from GitHub releases
-- name: Parse the latest version of Scrutiny's collector binary from GitHub releases
-  ansible.builtin.set_fact:
-    scrutiny_collector_latest_version: "{{ scrutiny_collector_latest_release.json.tag_name }}"
-  tags:
-    - scrutiny
-
 # Determine if the Scrutiny collector binary needs to be updated
 - name: Determine if the Scrutiny collector binary needs to be updated
   ansible.builtin.set_fact:
     scrutiny_collector_update_needed: >-
       {{
-        scrutiny_collector_current_version == 'none' or
-        (scrutiny_collector_latest_version is version(scrutiny_collector_current_version, '>'))
+        scrutiny_collector_current_version != scrutiny_version
       }}
   tags:
     - scrutiny
 
 # download Scrutiny's collector binary from GitHub releases and place it in the appropriate directory
+# The version is pinned to scrutiny_version so it always matches the web container
 - name: Download Scrutiny's collector binary from GitHub releases
   ansible.builtin.get_url:
-    url: "https://github.com/AnalogJ/scrutiny/releases/download/{{ scrutiny_collector_latest_version }}/{{ scrutiny_collector_name }}"
+    url: "https://github.com/AnalogJ/scrutiny/releases/download/{{ scrutiny_version }}/{{ scrutiny_collector_name }}"
     dest: "{{ scrutiny_collector_path }}"
     mode: '0755'
+    # get_url skips existing files unless forced; only runs when the version differs
+    force: true
   when: scrutiny_collector_update_needed
   become: true
   tags:
