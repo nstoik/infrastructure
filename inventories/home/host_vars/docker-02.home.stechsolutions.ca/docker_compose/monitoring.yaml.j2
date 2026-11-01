@@ -167,7 +167,8 @@ services:
     container_name: prometheus-pihole-exporter
     command: ["./pihole-exporter", "-skip_tls_verification", "true"]
     healthcheck:
-      test: ["CMD", "wget", "--tries=1", "--spider", "http://localhost:9617/metrics"]
+      # image has no shell or wget since v1.3.0; use the exporter's own check
+      test: ["CMD", "./pihole-exporter", "-healthcheck"]
       interval: 300s
       retries: 5
       timeout: 10s
@@ -287,7 +288,8 @@ services:
       - /home/{{ default_user }}/docker_mounts/monitoring/loki/config/loki-config.yaml:/etc/loki/loki-config.yaml:ro
     command: -config.file=/etc/loki/loki-config.yaml
     healthcheck:
-      test: ["CMD-SHELL", "wget -q --tries=1 http://localhost:3100/ready -O - | grep -q 'ready' || exit 1"]
+      # image is distroless since 3.6; loki -health checks localhost:3100/ready
+      test: ["CMD", "/usr/bin/loki", "-health"]
       interval: 60s
       timeout: 10s
       retries: 3
