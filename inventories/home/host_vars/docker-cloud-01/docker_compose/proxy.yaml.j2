@@ -3,7 +3,7 @@ name: proxy
 
 services:
   traefik:
-    image: traefik:v3.7.15
+    image: traefik:v3.7.16
     networks:
       - traefik
       - docker-proxy
@@ -60,7 +60,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/traefik/traefik/releases"
   docker-socket-proxy:
-    image: tecnativa/docker-socket-proxy:v0.4.2
+    image: tecnativa/docker-socket-proxy:v0.5.0
     networks:
       - docker-proxy
     container_name: docker-socket-proxy

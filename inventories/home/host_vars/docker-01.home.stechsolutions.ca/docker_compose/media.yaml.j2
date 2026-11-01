@@ -3,7 +3,7 @@ name: media
 
 services:
   plex:
-    image: plexinc/pms-docker:1.43.4.10903-e5521bd8c
+    image: plexinc/pms-docker:1.43.5.11079-b3b13e506
     container_name: plex
     gpus: all
     # Pass the NVIDIA device nodes explicitly. Without this, a host
@@ -81,7 +81,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/Tautulli/Tautulli/releases"
   wrapperr:
-    image: ghcr.io/aunefyren/wrapperr:v3.2.10
+    image: ghcr.io/aunefyren/wrapperr:v3.3.1
     networks:
       - traefik
     container_name: wrapperr

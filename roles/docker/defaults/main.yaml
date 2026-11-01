@@ -16,3 +16,26 @@ docker_daemon_options:
   data-root: '{{ docker_data_dir }}'
   log-opts:
     max-size: "10m"
+
+# Per-host lists (set in host_vars, no defaults). Entry keys:
+#
+# docker_mounts_subfolders: directories created under docker_mounts
+#   - name: unique label
+#     dest: directory path
+#     mode: directory mode
+#     owner / group: optional, default to default_user
+#     container_managed: optional, set to true for dirs the container chowns
+#       itself (e.g. it runs as another UID). The dir is created if missing but
+#       owner/group/mode are never changed afterwards.
+#     container_name: container that uses the dir (informational)
+#
+# docker_configuration_files: single config files to copy (.j2 is templated)
+# docker_configuration_paths: every file under a src dir, copied to dest
+#   - name: unique label
+#     src: source file or directory
+#     dest: destination file or directory
+#     mode: file mode
+#     container_name: container restarted when a file changes (via its compose
+#       project, which also restarts dependent services)
+#     restart: optional, set to false to skip the restart when the container
+#       reloads its config itself (e.g. prometheus with --config.auto-reload)

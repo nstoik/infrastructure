@@ -115,6 +115,8 @@ If the service needs persistent storage, also add to `docker_mounts_subfolders` 
     container_name: <container-name>
 ```
 
+If the container runs as a different UID and chowns its own data dir, add `container_managed: true` (and drop `mode`) so the role creates the dir but never resets its ownership. See `roles/docker/defaults/main.yaml` for all entry keys, including `restart: false` for config files the container reloads itself.
+
 ---
 
 ## Step 4: Add PiHole CNAME entry
