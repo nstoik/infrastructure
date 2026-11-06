@@ -133,6 +133,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/loki/config
     mode: '0755'
     container_name: loki
+  # wud docker mounts
+  - name: monitoring_wud
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/wud
+    mode: '0775'
+    container_name: wud
   # filestash docker mounts
   - name: files_filestash
     dest: /home/{{ default_user }}/docker_mounts/files/filestash

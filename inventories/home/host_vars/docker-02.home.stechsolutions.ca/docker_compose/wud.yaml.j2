@@ -34,6 +34,9 @@ services:
         - WUD_WATCHER_DOCKERCLOUD01_WATCHEVENTS=false
         - WUD_WATCHER_DOCKERCLOUD01_WATCHATSTART=false
         - WUD_WATCHER_DOCKERCLOUD01_CRON=0 5 * * *   # Runs at 5:00 AM daily
+    volumes:
+        # SQLite store: users, API tokens, snoozes and update history
+        - /home/{{ default_user }}/docker_mounts/monitoring/wud:/store
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
