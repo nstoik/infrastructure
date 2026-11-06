@@ -133,6 +133,11 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/monitoring/loki/config
     mode: '0755'
     container_name: loki
+  # wud docker mounts
+  - name: monitoring_wud
+    dest: /home/{{ default_user }}/docker_mounts/monitoring/wud
+    mode: '0775'
+    container_name: wud
   # filestash docker mounts
   - name: files_filestash
     dest: /home/{{ default_user }}/docker_mounts/files/filestash
@@ -154,25 +159,22 @@ docker_mounts_subfolders:
     container_managed: true
     container_name: searxng
   # stirling-pdf docker mounts
-  - name: files_stirling_pdf_tessdata
-    dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/tessdata
-    mode: '0775'
-    container_name: stirling-pdf
+  # the container chowns and chmods these dirs on start
   - name: files_stirling_pdf_configs
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/configs
-    mode: '0775'
+    container_managed: true
     container_name: stirling-pdf
   - name: files_stirling_pdf_logs
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/logs
-    mode: '0775'
+    container_managed: true
     container_name: stirling-pdf
   - name: files_stirling_pdf_customfiles
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/customFiles
-    mode: '0775'
+    container_managed: true
     container_name: stirling-pdf
   - name: files_stirling_pdf_pipeline
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/pipeline
-    mode: '0775'
+    container_managed: true
     container_name: stirling-pdf
   # tududi docker mounts
   - name: files_tududi_db

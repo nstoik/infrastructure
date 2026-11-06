@@ -3,12 +3,17 @@ name: wud
 
 services:
   wud:
-    image: getwud/wud:8.2.2
+    image: getwud/wud:9.7.0
     networks:
       - traefik
       - docker-proxy
     container_name: wud
     environment:
+        # WUD 9+ requires authentication; this seeds the admin account on startup
+        - WUD_AUTH_ADMIN_USER={{ default_user }}
+        - WUD_AUTH_ADMIN_PASSWORD={{ secret_wud_admin_password }}
+        # Stable secret so browser sessions survive container recreation and upgrades
+        - WUD_AUTH_SESSION_SECRET={{ secret_wud_session_secret }}
         - WUD_REGISTRY_HUB_PUBLIC_LOGIN={{ wud_registry_hub_public_login }}
         - WUD_REGISTRY_HUB_PUBLIC_PASSWORD={{ wud_registry_hub_public_password }}
         - WUD_TRIGGER_NTFY_SELFHOSTED_URL={{ wud_trigger_ntfy_sh_url }}
@@ -29,6 +34,9 @@ services:
         - WUD_WATCHER_DOCKERCLOUD01_WATCHEVENTS=false
         - WUD_WATCHER_DOCKERCLOUD01_WATCHATSTART=false
         - WUD_WATCHER_DOCKERCLOUD01_CRON=0 5 * * *   # Runs at 5:00 AM daily
+    volumes:
+        # SQLite store: users, API tokens, snoozes and update history
+        - /home/{{ default_user }}/docker_mounts/monitoring/wud:/store
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -44,6 +52,8 @@ services:
       - "homepage.siteMonitor=https://wud.home.stechsolutions.ca"
       - "homepage.widget.type=whatsupdocker"
       - "homepage.widget.url=https://wud.home.stechsolutions.ca"
+      - "homepage.widget.username={{ default_user }}"
+      - "homepage.widget.password={{ secret_wud_admin_password }}"
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/getwud/wud/releases"
 

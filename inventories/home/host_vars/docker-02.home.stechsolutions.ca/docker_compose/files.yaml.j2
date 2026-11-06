@@ -26,7 +26,7 @@ services:
       - "wud.link.template=https://hub.docker.com/r/machines/filestash/tags"
 
   stirling-pdf:
-    image: stirlingtools/stirling-pdf:2.11.0
+    image: stirlingtools/stirling-pdf:3.3.0
     container_name: stirling-pdf
     networks:
       - traefik
@@ -37,7 +37,6 @@ services:
       - SYSTEM_GOOGLEVISIBILITY=false
       - SYSTEM_MAXFILESIZE=2000
     volumes:
-      - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/tessdata:/usr/share/tessdata
       - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/configs:/configs
       - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/logs:/logs
       - /home/{{ default_user }}/docker_mounts/files/stirling-pdf/customFiles:/customFiles
