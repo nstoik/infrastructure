@@ -96,8 +96,10 @@ secret_pbs_prometheus_token: change_me
 # Grafana secrets
 secret_grafana_password: change_me
 
-# WUD Docker Hub secrets
+# WUD secrets
 secret_docker_hub_wud_access_token: get_from_docker_hub
+secret_wud_admin_password: change_me  # no colons (WUD basic auth limitation)
+secret_wud_session_secret: generate_with_openssl_rand_hex_32  # at least 32 characters
 
 # Nut secrets
 secret_nut_admin_password: change_me
