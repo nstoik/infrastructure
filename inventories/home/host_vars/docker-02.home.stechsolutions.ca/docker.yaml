@@ -154,26 +154,26 @@ docker_mounts_subfolders:
     dest: /home/{{ default_user }}/docker_mounts/ai/searxng
     container_managed: true
     container_name: searxng
-  # stirling-pdf docker mounts
+  # stirling-pdf docker mounts (Stirling-PDF 3 resets the dirs it writes to 0755 on start)
   - name: files_stirling_pdf_tessdata
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/tessdata
     mode: '0775'
     container_name: stirling-pdf
   - name: files_stirling_pdf_configs
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/configs
-    mode: '0775'
+    mode: '0755'
     container_name: stirling-pdf
   - name: files_stirling_pdf_logs
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/logs
-    mode: '0775'
+    mode: '0755'
     container_name: stirling-pdf
   - name: files_stirling_pdf_customfiles
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/customFiles
-    mode: '0775'
+    mode: '0755'
     container_name: stirling-pdf
   - name: files_stirling_pdf_pipeline
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/pipeline
-    mode: '0775'
+    mode: '0755'
     container_name: stirling-pdf
   # tududi docker mounts
   - name: files_tududi_db
