@@ -305,6 +305,10 @@
                 ],
                 "operation": "aggregate"
               },
+              "backup_type": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
               "datastore": {
                 "aggregations": [],
                 "operation": "groupby"
@@ -333,16 +337,18 @@
           "options": {
             "excludeByName": {},
             "indexByName": {
-              "Value #A (lastNotNull)": 4,
-              "Value #B (lastNotNull)": 5,
-              "datastore": 2,
-              "namespace": 3,
+              "Value #A (lastNotNull)": 5,
+              "Value #B (lastNotNull)": 6,
+              "backup_type": 1,
+              "datastore": 3,
+              "namespace": 4,
               "vm_id": 0,
-              "vm_name": 1
+              "vm_name": 2
             },
             "renameByName": {
               "Value #A (lastNotNull)": "Last snapshot",
               "Value #B (lastNotNull)": "Verify state",
+              "backup_type": "Type",
               "datastore": "Datastore",
               "namespace": "Namespace",
               "vm_id": "VM ID",
@@ -641,6 +647,10 @@
                 ],
                 "operation": "aggregate"
               },
+              "backup_type": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
               "datastore": {
                 "aggregations": [],
                 "operation": "groupby"
@@ -661,13 +671,15 @@
           "options": {
             "excludeByName": {},
             "indexByName": {
-              "Value (lastNotNull)": 3,
-              "datastore": 2,
+              "Value (lastNotNull)": 4,
+              "backup_type": 1,
+              "datastore": 3,
               "vm_id": 0,
-              "vm_name": 1
+              "vm_name": 2
             },
             "renameByName": {
               "Value (lastNotNull)": "Snapshot count",
+              "backup_type": "Type",
               "datastore": "Datastore",
               "vm_id": "VM ID",
               "vm_name": "VM name"
