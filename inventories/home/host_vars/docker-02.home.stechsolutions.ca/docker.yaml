@@ -154,11 +154,7 @@ docker_mounts_subfolders:
     container_managed: true
     container_name: searxng
   # stirling-pdf docker mounts
-  # configs/logs/customFiles/pipeline are chowned and chmodded by the container on start
-  - name: files_stirling_pdf_tessdata
-    dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/tessdata
-    mode: '0775'
-    container_name: stirling-pdf
+  # the container chowns and chmods these dirs on start
   - name: files_stirling_pdf_configs
     dest: /home/{{ default_user }}/docker_mounts/files/stirling-pdf/configs
     container_managed: true
