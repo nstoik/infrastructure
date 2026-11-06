@@ -104,7 +104,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+(\\.\\d+)?$"
       - "wud.link.template=https://www.postgresql.org/docs/release/"
   healthchecks:
-    image: healthchecks/healthchecks:v4.1.1
+    image: healthchecks/healthchecks:v5.0.3
     networks:
       - traefik
       - hc_postgres
@@ -129,7 +129,7 @@ services:
         - SITE_LOGO_URL={{ hc_site_logo_url }}
         - SITE_ROOT={{ hc_site_root }}
         # Reduce the number of worker processes to 1
-        - UWSGI_PROCESSES=1
+        - GUNICORN_WORKERS=1
     depends_on:
         - postgres_hc_db
     restart: unless-stopped
@@ -152,7 +152,7 @@ services:
       - "homepage.widgets[1].type=healthchecks"
       - "homepage.widgets[1].url=https://hc.stechsolutions.ca"
       - "homepage.widgets[1].key={{ secret_hc_projects['Proxmox Backups'].api_key }}"
-      - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
+      - "wud.tag.include=^v?\\d+\\.\\d+(\\.\\d+)?$"
       - "wud.link.template=https://github.com/healthchecks/healthchecks/releases"
   uptime-kuma:
     image: louislam/uptime-kuma:2.5.8
