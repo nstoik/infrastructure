@@ -3,7 +3,7 @@ name: tdarr
 
 services:
   tdarr:
-    image: haveagitgat/tdarr:2.75.01
+    image: haveagitgat/tdarr:3.06.00
     networks:
       - traefik
     container_name: tdarr
@@ -19,6 +19,8 @@ services:
         - inContainer=true
         - ffmpegVersion=7
         - nodeName=MyInternalNode
+        # Tdarr 3 enables auth by default on new installs; keep it off (internal only, and the GPU node has no apiKey)
+        - auth=false
     volumes:
         - /mnt/scratch/tdarr:/temp
         - /mnt/nfs/movies:/movies
