@@ -97,7 +97,7 @@ all:
                 scsi: "scsi4"
                 device: "data:5,discard=on"
                 backup: 1
-              - comment: 10 GB disk for docker compose prometheus volume
+              - comment: 10 GB disk for docker compose monitoring volume
                 scsi: "scsi5"
                 device: "data:10,discard=on"
                 backup: 1
