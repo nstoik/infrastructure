@@ -10,7 +10,7 @@ services:
     container_name: wud
     environment:
         # WUD 9+ requires authentication; this seeds the admin account on startup
-        - WUD_AUTH_ADMIN_USER={{ wud_admin_user }}
+        - WUD_AUTH_ADMIN_USER={{ default_user }}
         - WUD_AUTH_ADMIN_PASSWORD={{ secret_wud_admin_password }}
         # Stable secret so browser sessions survive container recreation and upgrades
         - WUD_AUTH_SESSION_SECRET={{ secret_wud_session_secret }}
@@ -49,7 +49,7 @@ services:
       - "homepage.siteMonitor=https://wud.home.stechsolutions.ca"
       - "homepage.widget.type=whatsupdocker"
       - "homepage.widget.url=https://wud.home.stechsolutions.ca"
-      - "homepage.widget.username={{ wud_admin_user }}"
+      - "homepage.widget.username={{ default_user }}"
       - "homepage.widget.password={{ secret_wud_admin_password }}"
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/getwud/wud/releases"
