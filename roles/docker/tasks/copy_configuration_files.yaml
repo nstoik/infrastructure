@@ -11,7 +11,7 @@
 
 # create any docker mounts subdirectories if required
 # container_managed: true leaves owner/group/mode alone for dirs the container
-# chowns itself (e.g. it runs as a different UID)
+# chowns or chmods itself (e.g. it runs as a different UID)
 - name: Create any docker mounts subdirectories if required
   ansible.builtin.file:
     path: "{{ folder.dest }}"

@@ -24,8 +24,9 @@ docker_daemon_options:
 #     dest: directory path
 #     mode: directory mode
 #     owner / group: optional, default to default_user
-#     container_managed: optional, set to true for dirs the container chowns
-#       itself (e.g. it runs as another UID). The dir is created if missing but
+#     container_managed: optional, set to true for dirs the container chowns or
+#       chmods itself (e.g. it runs as another UID, or its entrypoint resets
+#       permissions on start). The dir is created if missing but
 #       owner/group/mode are never changed afterwards.
 #     container_name: container that uses the dir (informational)
 #
