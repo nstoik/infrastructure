@@ -35,7 +35,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/caronc/apprise/releases"
   ntfy:
-    image: binwiederhier/ntfy:v2.34.0
+    image: binwiederhier/ntfy:v2.37.2
     networks:
       - traefik
     container_name: ntfy
@@ -155,7 +155,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+(\\.\\d+)?$"
       - "wud.link.template=https://github.com/healthchecks/healthchecks/releases"
   uptime-kuma:
-    image: louislam/uptime-kuma:2.5.8
+    image: louislam/uptime-kuma:2.5.9
     networks:
       - traefik
     container_name: uptime-kuma

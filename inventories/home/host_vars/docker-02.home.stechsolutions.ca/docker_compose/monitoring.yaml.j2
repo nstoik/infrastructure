@@ -3,7 +3,7 @@ name: monitoring
 
 services:
   prometheus:
-    image: prom/prometheus:v3.15.1
+    image: prom/prometheus:v3.16.0
     user: 1000:1000
     networks:
       - traefik
@@ -80,7 +80,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus/alertmanager/releases"
   ntfy-alertmanager:
-    image: xenrox/ntfy-alertmanager:1.0.1
+    image: xenrox/ntfy-alertmanager:1.0.2
     networks:
       - traefik
       - prometheus_exporter
@@ -131,7 +131,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/google/cadvisor/releases"
   prometheus-pve-exporter:
-    image: prompve/prometheus-pve-exporter:3.10.2
+    image: prompve/prometheus-pve-exporter:3.11.0
     networks:
       - prometheus_exporter
     container_name: prometheus-pve-exporter
@@ -146,7 +146,7 @@ services:
       - "wud.link.template=https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
   prometheus-pbs-exporter:
     # held at v0.9.1 until #206 is resolved (PBS 4.2 auth bug); bump together with PBS
-    image: ghcr.io/natrontech/pbs-exporter:v0.9.1
+    image: ghcr.io/natrontech/pbs-exporter:v0.10.0
     networks:
       - prometheus_exporter
     container_name: prometheus-pbs-exporter
@@ -161,7 +161,7 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/natrontech/pbs-exporter/releases"
   prometheus-pihole-exporter:
-    image: ekofr/pihole-exporter:v1.3.0
+    image: ekofr/pihole-exporter:v1.3.1
     networks:
       - prometheus_exporter
     container_name: prometheus-pihole-exporter

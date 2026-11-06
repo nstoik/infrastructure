@@ -5,6 +5,8 @@ services:
   filestash:
     container_name: filestash
     image: docker.io/machines/filestash:latest
+    # tracks latest: pull on every deploy so WUD's digest check and the host stay in sync
+    pull_policy: always
     networks:
       - traefik
     volumes:
