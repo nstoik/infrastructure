@@ -3,7 +3,7 @@ name: ai
 
 services:
   open-webui:
-    image: ghcr.io/open-webui/open-webui:v0.9.5
+    image: ghcr.io/open-webui/open-webui:v0.13.0
     container_name: open-webui
     networks:
       - traefik
@@ -32,6 +32,8 @@ services:
 
   searxng:
     image: searxng/searxng:latest
+    # tracks latest: pull on every deploy so WUD's digest check and the host stay in sync
+    pull_policy: always
     container_name: searxng
     networks:
       - ai
@@ -39,7 +41,7 @@ services:
       - /home/{{ default_user }}/docker_mounts/ai/searxng:/etc/searxng
     restart: unless-stopped
     labels:
-      - "wud.tag.include=^\\d{4}\\.\\d{2}\\.\\d{2}-\\d+$"
+      - wud.watch.digest=true
       - "wud.link.template=https://github.com/searxng/searxng/releases"
 
 networks:
