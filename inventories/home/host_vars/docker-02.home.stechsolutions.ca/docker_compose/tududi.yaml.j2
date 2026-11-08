@@ -2,21 +2,51 @@
 name: tududi
 
 services:
+  postgres_tududi_db:
+    image: postgres:18.6
+    user: 1000:1000
+    networks:
+      - tududi_postgres
+    container_name: postgres_tududi_db
+    environment:
+      - POSTGRES_DB={{ tududi_db_name }}
+      - POSTGRES_USER={{ tududi_db_user }}
+      - POSTGRES_PASSWORD={{ secret_tududi_db_password }}
+    volumes:
+      - /home/{{ default_user }}/docker_mounts/files/tududi/postgres:/var/lib/postgresql
+      - /etc/passwd:/etc/passwd:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{ tududi_db_user }} -d {{ tududi_db_name }}"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      # check every 5s while starting, so tududi isn't held for a full interval
+      start_interval: 5s
+    restart: unless-stopped
+    labels:
+      - "wud.tag.include=^v?\\d+\\.\\d+(\\.\\d+)?$"
+      - "wud.link.template=https://www.postgresql.org/docs/release/"
+
   tududi:
-    image: chrisvel/tududi:1.15.1
+    image: chrisvel/tududi:2.1.0
     container_name: tududi
     networks:
       - traefik
+      - tududi_postgres
     environment:
+      - DATABASE_URL=postgres://{{ tududi_db_user }}:{{ secret_tududi_db_password }}@postgres_tududi_db:5432/{{ tududi_db_name }}
       - TUDUDI_USER_EMAIL={{ default_user_email }}
       - TUDUDI_USER_PASSWORD={{ secret_tududi_user_password }}
       - TUDUDI_SESSION_SECRET={{ secret_tududi_session_secret }}
       - TUDUDI_ALLOWED_ORIGINS=https://tududi.home.stechsolutions.ca
       - TUDUDI_TRUST_PROXY=true
-      - TUDUDI_UPLOAD_PATH=/app/backend/uploads
     volumes:
-      - /home/{{ default_user }}/docker_mounts/files/tududi/db:/app/backend/db
-      - /home/{{ default_user }}/docker_mounts/files/tududi/uploads:/app/backend/uploads
+      - /home/{{ default_user }}/docker_mounts/files/tududi/uploads:/app/uploads
+      - /home/{{ default_user }}/docker_mounts/files/tududi/backups:/app/backups
+    depends_on:
+      postgres_tududi_db:
+        condition: service_healthy
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -38,3 +68,5 @@ networks:
   traefik:
     name: traefik
     external: true
+  tududi_postgres:
+    name: tududi_postgres
