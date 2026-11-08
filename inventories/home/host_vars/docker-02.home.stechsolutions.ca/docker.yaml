@@ -10,6 +10,10 @@ vehicle_db_user: vehicle_user
 vehicle_db_password: vehicle_password
 vehicle_connection_string: "Host=postgres_vehicle_db:5432;Database={{ vehicle_db_name }};Username={{ vehicle_db_user }};Password={{ vehicle_db_password }}"
 
+# tududi setup (PostgreSQL since tududi 2.0)
+tududi_db_name: tududi
+tududi_db_user: tududi_user
+
 # wud configuration
 wud_registry_hub_public_login: nstoik
 wud_registry_hub_public_password: "{{ secret_docker_hub_wud_access_token }}"
@@ -177,12 +181,16 @@ docker_mounts_subfolders:
     container_managed: true
     container_name: stirling-pdf
   # tududi docker mounts
-  - name: files_tududi_db
-    dest: /home/{{ default_user }}/docker_mounts/files/tududi/db
-    container_managed: true
-    container_name: tududi
+  - name: files_tududi_postgres
+    dest: /home/{{ default_user }}/docker_mounts/files/tududi/postgres
+    mode: '0775'
+    container_name: postgres_tududi_db
   - name: files_tududi_uploads
     dest: /home/{{ default_user }}/docker_mounts/files/tududi/uploads
+    container_managed: true
+    container_name: tududi
+  - name: files_tududi_backups
+    dest: /home/{{ default_user }}/docker_mounts/files/tududi/backups
     container_managed: true
     container_name: tududi
   # homebox docker mounts
