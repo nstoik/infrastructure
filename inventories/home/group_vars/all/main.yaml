@@ -45,8 +45,8 @@ loki_push_url: "https://{{ loki_domain }}/loki/api/v1/push"
 
 # scrutiny variables
 # Shared by the scrutiny web container (docker-02) and the collector binary on
-# PVE/PBS hosts (scrutiny role); they must match, collectors older than 0.9
-# are rejected by a 0.9 web server.
+# PVE/PBS hosts (scrutiny role); they must match, since the web server can
+# reject collectors from an older version.
 scrutiny_version: "v0.10.0"
 
 # traefik variables
