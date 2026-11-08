@@ -145,7 +145,8 @@ services:
       - "wud.tag.include=^v?\\d+\\.\\d+\\.\\d+$"
       - "wud.link.template=https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
   prometheus-pbs-exporter:
-    # held at v0.9.1 until #206 is resolved (PBS 4.2 auth bug); bump together with PBS
+    # PBS 4.2 rejects this exporter's API token auth (#206, open upstream as of v0.10.0):
+    # check for a fix before upgrading PBS past 3.x
     image: ghcr.io/natrontech/pbs-exporter:v0.10.0
     networks:
       - prometheus_exporter
