@@ -11,7 +11,7 @@ The media services are accessible via the external webpage at [media.stechsoluti
 - `downloader`: This service runs qBittorrent with VPN for downloading torrents securely. [qbittorrentvpn docker](https://github.com/nstoik/docker-qBittorrentvpn) is a forked version of an older image. This version focuses on using WireGuard for VPN connectivity.
 - `qbit_manage`: This service manages qBittorrent downloads, including automatic rechecking, categorization, and notifications. It uses [qbit_manage](https://github.com/StuffAnThings/qbit_manage) with a user-defined configuration.
 - `prowlarr`: This service is an indexer manager for torrent and usenet indexers. It integrates with download clients to automate the search and download process.
-    - indexers behind Cloudflare must be given the `flaresolverr` tag to route their requests through FlareSolverr (see [Prowlarr](#prowlarr) below).
+    - indexers behind Cloudflare need the `flaresolverr` tag (see [Prowlarr](#prowlarr)).
 - `flaresolverr`: This service provides automatic CAPTCHA solving for Prowlarr indexers using FlareSolverr. It exposes Prometheus metrics at `/flaresolverrmetrics` via Traefik.
 - `profilarr`: This service manages profiles for media management applications like Radarr and Sonarr. It helps in organizing and maintaining consistent settings across multiple applications.
 - `radarr`: This service manages movie downloads and organization. It integrates with download clients and indexers to automate the process of finding, downloading, and organizing movies.
@@ -76,16 +76,16 @@ Prowlarr is configured via its web interface.
     - one general one for all grabs
     - one alert one for issues
 - Add indexers
-    - Give the `flaresolverr` tag to any indexer behind Cloudflare. Without it, Prowlarr never sends the indexer through FlareSolverr, even though the proxy is configured.
+    - Tag any indexer behind Cloudflare with `flaresolverr`. To tag several at once, use **Select Mode → Set Tags** on the Indexers page.
 - Add Applications
     - Radarr
     - Sonarr
 
 #### Troubleshooting indexers
-- **"Blocked by CloudFlare Protection" / "Cloudflare protection detected, Flaresolverr may be required"**: the site has added a Cloudflare challenge. Add the `flaresolverr` tag to the indexer. Sites add Cloudflare over time, so an indexer that worked before can start failing this way.
+- **"Blocked by CloudFlare Protection" / "Cloudflare protection detected, Flaresolverr may be required"**: the site added a Cloudflare challenge (this can hit indexers that used to work). Add the `flaresolverr` tag.
 - **"Empty cookies returned by FlareSolverr"**: FlareSolverr could not solve the site's challenge. Disable the indexer if a working alternative exists.
-- **"Resource temporarily unavailable"** or **"Unable to connect to indexer ... DNS/SSL issues"**: a DNS lookup failed. The Alpine-based image fails the whole lookup if either the A or the AAAA query returns SERVFAIL. Check the Pi-hole that docker-01 resolves through.
-- **Indexers stay disabled after the cause is fixed**: Prowlarr backs off failing indexers for escalating periods (up to days). Run **Test** on each indexer to clear the backoff immediately. **System → Status** lists indexers that are currently unavailable.
+- **"Resource temporarily unavailable"** or **"Unable to connect to indexer ... DNS/SSL issues"**: a DNS lookup failed (the Alpine image fails if either the A or the AAAA query returns SERVFAIL). docker-01 resolves only through pihole-2, so check pihole-2.
+- **Indexers stay disabled after the cause is fixed**: Prowlarr backs off failing indexers for up to days. Use **Test All Indexers** on the Indexers page to clear the backoff on every indexer that passes. **System → Status** lists indexers that are still unavailable.
 
 ### Profilarr
 Profilarr is configured via its web interface.
