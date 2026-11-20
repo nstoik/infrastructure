@@ -110,7 +110,7 @@ fileserver_zfs_pools:
         recordsize: 1M
       - name: storage2/tv
         mount_point: /mnt/zfs/storage2/tv
-        quota: 30T
+        quota: 35T
         canmount: "on"
         encryption: false
         recordsize: 1M

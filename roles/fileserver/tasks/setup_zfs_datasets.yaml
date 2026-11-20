@@ -42,6 +42,8 @@
       loop: "{{ fileserver_zfs_pool.datasets }}"
       loop_control:
         loop_var: dataset
+        # label by name so the full dataset dict (incl. encryption_passphrase) isn't printed
+        label: "{{ dataset.name }}"
       become: true
 
     # Check if the ZFS dataset exists
@@ -52,6 +54,7 @@
       loop: "{{ fileserver_zfs_pool.datasets }}"
       loop_control:
         loop_var: dataset
+        label: "{{ dataset.name }}"
       changed_when: false
       failed_when: false
 
@@ -141,6 +144,26 @@
             result.dataset.encryption and
             result.dataset.encryption_keylocation == 'none'
       changed_when: result.rc != 0
+      become: true
+
+    # The create tasks above only set properties when a dataset is first created.
+    # Apply quota and recordsize changes from host_vars to existing datasets too.
+    # Values are passed in bytes because the module compares them as strings against
+    # `zfs get -p` output (so 2T and 2TB both match). mountpoint is left create-only
+    # (changing it remounts a live, exported dataset), and so is canmount (the module
+    # would rewrite default-sourced values, and every dataset uses "on").
+    - name: Update quota and recordsize of existing ZFS datasets
+      community.general.zfs:
+        name: "{{ result.dataset.name }}"
+        state: present
+        extra_zfs_properties: "{{ {'quota': result.dataset.quota | human_to_bytes | string}
+          | combine({'recordsize': result.dataset.recordsize | human_to_bytes | string}
+          if result.dataset.recordsize is defined else {}) }}"
+      loop: "{{ fileserver_zfs_dataset_check.results }}"
+      loop_control:
+        loop_var: result
+        label: "{{ result.dataset.name }}"
+      when: result.rc == 0
       become: true
 
     # Ensure datasets are mounted before setting permissions.
