@@ -143,6 +143,34 @@
       changed_when: result.rc != 0
       become: true
 
+    # The create tasks above only set the quota when a dataset is first created.
+    # Read the current quota of existing datasets (in bytes) so changes to
+    # `quota` in host_vars are applied to them too.
+    - name: Get the current quota of existing ZFS datasets
+      ansible.builtin.command: >
+        zfs get -Hp -o value quota "{{ result.dataset.name }}"
+      register: fileserver_zfs_quota_check
+      loop: "{{ fileserver_zfs_dataset_check.results }}"
+      loop_control:
+        loop_var: result
+        label: "{{ result.dataset.name }}"
+      when: result.rc == 0 and result.dataset.quota is defined
+      changed_when: false
+      become: true
+
+    # Compare in bytes so equivalent spellings (e.g. 2T and 2TB) don't trigger a change
+    - name: Update the quota of existing ZFS datasets
+      ansible.builtin.command: >
+        zfs set quota="{{ quota.result.dataset.quota }}" "{{ quota.result.dataset.name }}"
+      loop: "{{ fileserver_zfs_quota_check.results }}"
+      loop_control:
+        loop_var: quota
+        label: "{{ quota.result.dataset.name }}"
+      when: quota is not skipped and
+            quota.stdout | int != quota.result.dataset.quota | human_to_bytes
+      changed_when: true
+      become: true
+
     # Ensure datasets are mounted before setting permissions.
     # The base role's apt upgrade can trigger a ZFS service restart that temporarily
     # unmounts datasets. Without this, the file task below would chown the underlying
