@@ -140,6 +140,7 @@ secret_searxng_secret_key: generate with 'openssl rand -hex 32'
 # Tududi secrets
 secret_tududi_user_password: change_me
 secret_tududi_session_secret: generate with 'openssl rand -hex 32'
+secret_tududi_db_password: generate with 'openssl rand -hex 32'
 
 # Homebox secrets
 secret_homebox_api_key_pepper: generate with 'openssl rand -base64 48'
