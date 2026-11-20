@@ -5,7 +5,7 @@ groups:
   - name: Storage Alerts
     rules:
       # Filesystem alerts (covers ext4 and other mounted filesystems)
-      # ZFS datasets are excluded here — ZFS pool alerts below cover that case
+      # ZFS datasets are excluded here — the ZFS pool and dataset alerts below cover them
       - alert: HostFilesystemHighUsage
         expr: (1 - node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|zfs"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|zfs"}) * 100 > 85
         for: 5m
@@ -53,6 +53,30 @@ groups:
         annotations:
           summary: "ZFS pool over 95% full (instance {{ $labels.instance }})"
           description: "ZFS pool {{ $labels.pool }} on {{ $labels.instance }} is {{ $value | humanize }}% full\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      # ZFS dataset alerts: the pool alerts above miss a dataset that hits its quota while
+      # the pool still has room (e.g. storage2/tv at 99% of its quota with the pool at 69%).
+      # node_exporter's avail for a ZFS mount already respects the quota, and size is
+      # referenced + avail, so this is usage against whichever limit is closer: the quota
+      # or the pool. Snapshot space isn't in size, so it can read a little low on
+      # datasets with large snapshots, but avail (what actually runs out) is exact.
+      - alert: ZfsDatasetHighUsage
+        expr: (1 - node_filesystem_avail_bytes{fstype="zfs",mountpoint!~".+/\\.zfs/snapshot/.+"} / node_filesystem_size_bytes{fstype="zfs",mountpoint!~".+/\\.zfs/snapshot/.+"}) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "ZFS dataset over 90% full (instance {{ $labels.instance }})"
+          description: "ZFS dataset {{ $labels.device }} ({{ $labels.mountpoint }}) on {{ $labels.instance }} is {{ $value | humanize }}% full, counting its quota\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: ZfsDatasetCriticalUsage
+        expr: (1 - node_filesystem_avail_bytes{fstype="zfs",mountpoint!~".+/\\.zfs/snapshot/.+"} / node_filesystem_size_bytes{fstype="zfs",mountpoint!~".+/\\.zfs/snapshot/.+"}) * 100 > 95
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ZFS dataset over 95% full (instance {{ $labels.instance }})"
+          description: "ZFS dataset {{ $labels.device }} ({{ $labels.mountpoint }}) on {{ $labels.instance }} is {{ $value | humanize }}% full, counting its quota\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
       # ZFS snapshot alerts — uses zfs_snapshot_type_age_seconds from textfile collector (zfs_snapshot_metrics.sh)
       # Only fires on hosts running the fileserver role (where sanoid manages snapshots)
