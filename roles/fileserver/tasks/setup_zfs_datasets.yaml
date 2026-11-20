@@ -42,6 +42,8 @@
       loop: "{{ fileserver_zfs_pool.datasets }}"
       loop_control:
         loop_var: dataset
+        # label by name so the full dataset dict (incl. encryption_passphrase) isn't printed
+        label: "{{ dataset.name }}"
       become: true
 
     # Check if the ZFS dataset exists
@@ -52,6 +54,7 @@
       loop: "{{ fileserver_zfs_pool.datasets }}"
       loop_control:
         loop_var: dataset
+        label: "{{ dataset.name }}"
       changed_when: false
       failed_when: false
 
