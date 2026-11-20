@@ -143,34 +143,24 @@
       changed_when: result.rc != 0
       become: true
 
-    # The create tasks above only set the quota when a dataset is first created.
-    # Read the current quota of existing datasets (in bytes) so changes to
-    # `quota` in host_vars are applied to them too.
-    - name: Get the current quota of existing ZFS datasets
-      ansible.builtin.command: >
-        zfs get -Hp -o value quota "{{ result.dataset.name }}"
-      register: fileserver_zfs_quota_check
+    # The create tasks above only set properties when a dataset is first created.
+    # Apply quota and recordsize changes from host_vars to existing datasets too.
+    # Values are passed in bytes because the module compares them as strings against
+    # `zfs get -p` output (so 2T and 2TB both match). mountpoint is left create-only
+    # (changing it remounts a live, exported dataset), and so is canmount (the module
+    # would rewrite default-sourced values, and every dataset uses "on").
+    - name: Update quota and recordsize of existing ZFS datasets
+      community.general.zfs:
+        name: "{{ result.dataset.name }}"
+        state: present
+        extra_zfs_properties: "{{ {'quota': result.dataset.quota | human_to_bytes | string}
+          | combine({'recordsize': result.dataset.recordsize | human_to_bytes | string}
+          if result.dataset.recordsize is defined else {}) }}"
       loop: "{{ fileserver_zfs_dataset_check.results }}"
       loop_control:
         loop_var: result
         label: "{{ result.dataset.name }}"
-      when: result.rc == 0 and result.dataset.quota is defined
-      changed_when: false
-      # read-only, so run it in --check too and let the update task show what would change
-      check_mode: false
-      become: true
-
-    # Compare in bytes so equivalent spellings (e.g. 2T and 2TB) don't trigger a change
-    - name: Update the quota of existing ZFS datasets
-      ansible.builtin.command: >
-        zfs set quota="{{ quota.result.dataset.quota }}" "{{ quota.result.dataset.name }}"
-      loop: "{{ fileserver_zfs_quota_check.results }}"
-      loop_control:
-        loop_var: quota
-        label: "{{ quota.result.dataset.name }}"
-      when: quota is not skipped and
-            quota.stdout | int != quota.result.dataset.quota | human_to_bytes
-      changed_when: true
+      when: result.rc == 0
       become: true
 
     # Ensure datasets are mounted before setting permissions.
