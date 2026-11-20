@@ -156,6 +156,8 @@
         label: "{{ result.dataset.name }}"
       when: result.rc == 0 and result.dataset.quota is defined
       changed_when: false
+      # read-only, so run it in --check too and let the update task show what would change
+      check_mode: false
       become: true
 
     # Compare in bytes so equivalent spellings (e.g. 2T and 2TB) don't trigger a change
